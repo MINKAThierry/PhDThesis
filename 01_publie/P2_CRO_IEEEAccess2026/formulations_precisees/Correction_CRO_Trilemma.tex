@@ -1,0 +1,268 @@
+%==============================================================================
+%  Correction to "The Conditional CRO Trilemma" -- IEEE Access 14 (2026) 33263
+%  DOI 10.1109/ACCESS.2026.3669065
+%
+%  Note: this draft uses the standard article class so that it compiles
+%  anywhere. For submission, paste the body into the official IEEE Access
+%  template (ieeeaccess.cls), keeping the section structure unchanged.
+%==============================================================================
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem*{assumptionB}{Assumption 2$'$}
+\newtheorem*{assumptionD}{Assumption 4}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+% Notation of the original article
+\newcommand{\Conf}{\mathsf{Conf}}
+\newcommand{\Rel}{\mathsf{Rel}}
+\newcommand{\Opp}{\mathsf{Opp}}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\KL}{\mathrm{D}_{\mathrm{KL}}}
+\newcommand{\negl}{\mathsf{negl}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\IMS}{I(M;\Sigma\mid C)}
+
+% Restart numbering so that labels match the original article
+\renewcommand{\thelemma}{4}
+\renewcommand{\thetheorem}{1}
+\renewcommand{\thecorollary}{1}
+
+\title{\textbf{Correction to ``The Conditional CRO Trilemma: Impossibility Bounds
+on Confidentiality, Reliability, and Opposability Under Institutional
+Extraction Limits''}}
+\author{Thierry Emmanuel Minka Mi Nguidjo\"{\i}$^{1,2}$,
+        Flavien Serge Mani Onana$^{1}$,
+        and Thomas Djotio Ndi\'e$^{1}$\\[4pt]
+\small $^{1}$Laboratory of Mathematical Engineering and Information Systems,
+National Advanced School of Engineering,\\
+\small University of Yaound\'e I, Yaound\'e, Cameroon\\
+\small $^{2}$Supreme State Audit Office, Yaound\'e, Cameroon\\[2pt]
+\small Corresponding author: Thierry Emmanuel Minka Mi Nguidjo\"{\i}
+(minkathierry@gmail.com)}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent In the above article~\cite{orig}, the statement of Lemma~4
+(Confidentiality--Mutual Information Trade-off) contains an error in the
+direction of the inequality, and Steps~3--6 of the proof of Theorem~1 rely
+on this statement and on an optimization step that is incorrectly solved.
+These errors were identified by the authors during the machine-checked
+formalization of the results in Lean~4. This correction
+(i)~restates Lemma~4 in the form actually established by its proof;
+(ii)~makes explicit the verdict-efficiency condition used in Step~3;
+(iii)~states explicitly the leakage regime in which Theorem~1 holds and gives
+a complete proof with explicit constants; and
+(iv)~corrects Remark~10 and clarifies the reading of Section~VI-B.
+The institutional model (Assumptions~1--3), the role of the institutional
+parameters $(\Delta,\alpha,\beta)$, and the form of the main bound
+$\Conf\cdot\Rel\cdot\Opp \le \Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$
+are preserved within the stated regime. The authors apologize for any
+inconvenience caused.
+
+%------------------------------------------------------------------------------
+\section{Correction of Lemma 4 (Section V-A)}
+%------------------------------------------------------------------------------
+
+The proof of Lemma~4 combines Pinsker's inequality with $\beta$-regularity
+(Assumption~3) and yields, for every pair $(m_0,m_1)$ and context $c$,
+\begin{equation*}
+\TV^2\bigl(P_{\Sigma\mid m_0,c},P_{\Sigma\mid m_1,c}\bigr)
+\le c_0\,\KL\bigl(P_{\Sigma\mid m_0,c}\,\|\,P_{\Sigma\mid m_1,c}\bigr)
+\le c_0\,\beta\,\IMS ,
+\end{equation*}
+that is, an \emph{upper} bound on the distinguishing advantage, hence a
+\emph{lower} bound on $\Conf$ (as written in (22)). The published statement
+(17) asserts an upper bound on $\Conf$, which does not follow from this
+argument and does not hold in general; in addition, the normalization by
+$\lambda$ in (21) is not justified. Lemma~4 and its proof are therefore
+replaced by the following.
+
+\begin{lemma}[Confidentiality guarantee for regular protocols]
+For any $\beta$-regular protocol $\cP$ (Assumption~3),
+\begin{equation*}\tag{17$'$}\label{eq:lemma4}
+\Conf(\cP) \;\ge\; 1-\sqrt{c_0\,\beta\;\IMS}\,.
+\end{equation*}
+\end{lemma}
+
+\begin{proof}
+By Lemma~1 and Assumption~3, for all $m_0,m_1\in\mathcal M_\lambda$ and
+$c\in\mathcal C_\lambda$,
+$\TV(P_{\Sigma\mid m_0,c},P_{\Sigma\mid m_1,c})
+\le\sqrt{c_0\,\KL(P_{\Sigma\mid m_0,c}\|P_{\Sigma\mid m_1,c})}
+\le\sqrt{c_0\,\beta\,\IMS}$.
+Taking the maximum over $(m_0,m_1,c)$ and applying Definition~7 gives
+\eqref{eq:lemma4}.
+\end{proof}
+
+\begin{remark}[Replaces Remark 7]
+Lemma~4 states that low conditional mutual information, together with
+$\beta$-regularity, \emph{guarantees} confidentiality: if
+$\IMS\le\kappa/\lambda$, then
+$\Conf(\cP)\ge 1-\sqrt{c_0\beta\kappa/\lambda}\to 1$ as
+$\lambda\to\infty$.
+\end{remark}
+
+\begin{remark}[Constant $c_0$, Remark 1]
+With divergences in bits, the tight Pinsker constant is $(\ln 2)/2\approx0.347$.
+The constant $c_0=1/(2\ln 2)\approx0.721$ used throughout the article
+is larger, so every inequality stated with $c_0$ remains valid; it is,
+however, not tight, and the word ``tight'' in Remark~1 should be deleted.
+\end{remark}
+
+%------------------------------------------------------------------------------
+\section{Verdict efficiency (Step 3 of the proof of Theorem 1)}
+%------------------------------------------------------------------------------
+
+Inequality (28) states $H(V\mid C)\ge\log_2 k_\lambda-1\ge\alpha H(C)-1$.
+Assumption~2 gives $\log_2 k_\lambda\le\alpha H(C)$, an \emph{upper} bound, so
+the second inequality in (28) does not follow from Assumption~2. The lower
+bound on $H(V\mid C)$ is the efficiency property of verdict functions
+discussed in Section~IV-B.2 (``verdicts effectively utilize the available
+context''), and it is now stated explicitly as Assumption~2$'$.
+
+\begin{assumptionB}[Bounded and efficient verdict space; replaces Assumption 2]
+The institutional verdict space satisfies $k_\lambda\le 2^{\alpha H(C)}$
+for some constant $\alpha$, and the verdict function uses the available
+context efficiently:
+\begin{equation*}\tag{11$'$}\label{eq:eff}
+H(V\mid C)\;\ge\;\alpha H(C)-1 \;\eqqcolon\; \gamma, \qquad \gamma\ge 1 .
+\end{equation*}
+\end{assumptionB}
+
+\noindent For the institutional settings considered in Section~IV-B
+($H(C)\ge 10$ bits, $\alpha\approx 1$), one has $\gamma\ge 9$.
+
+%------------------------------------------------------------------------------
+\section{Corrected statement and proof of Theorem 1 (Section V-B)}
+%------------------------------------------------------------------------------
+
+Remark~10 identifies the regime $\IMS=O(1/\lambda)$ as the relevant operating
+regime of the trilemma. In the published proof this regime was obtained
+from the optimization (33)--(34); that computation is incorrect
+($f'(x)=2x-\tfrac52 a x^{3/2}$ vanishes at $\sqrt{x^*}=4/(5a)$, not $5a/4$,
+and $x^*$ is a maximizer of $f$). The regime is therefore stated explicitly
+as an assumption. By Lemma~4 it is precisely the regime in which regular
+protocols guarantee confidentiality.
+
+\begin{assumptionD}[Confidentiality-preserving regime]
+There exists a constant $\kappa\ge 0$, independent of $\lambda$, such that
+\begin{equation*}\tag{12$'$}\label{eq:regime}
+\IMS\;\le\;\frac{\kappa}{\lambda}.
+\end{equation*}
+\end{assumptionD}
+
+\begin{theorem}[Conditional CRO Trilemma, corrected]
+Under Assumption~1 (bounded extraction), Assumption~2$'$ \eqref{eq:eff}, Assumption~3 ($\beta$-regularity) and
+Assumption~4 \eqref{eq:regime}, for any evidence protocol $\cP$ with
+security parameter $\lambda\ge 64$, message entropy $H(M)=\lambda$,
+$M$ independent of $C$, and institutional parameters $(\Delta,\alpha)$:
+\begin{equation*}\tag{23$'$}\label{eq:main}
+\Conf(\cP)\cdot\Rel(\cP)\cdot\Opp(\cP)
+\;\le\;\frac{1}{\gamma}\left(\frac{\Delta}{\lambda}
++\frac{\kappa(\Delta+1)}{\lambda^{2}}+\frac{\kappa^{2}}{\lambda^{3}}\right)
+\;\le\;\frac{\Delta}{\lambda}+O(\lambda^{-2}).
+\end{equation*}
+In particular, the published bound
+$\Conf\cdot\Rel\cdot\Opp\le\Delta/\lambda+O(\lambda^{-2})+\negl(\lambda)$
+holds under these assumptions. Moreover, $\Conf(\cP)\ge
+1-\sqrt{c_0\beta\kappa/\lambda}$ by Lemma~4.
+\end{theorem}
+
+\begin{proof}
+Write $x=\IMS$.
+
+\emph{Step 1 (reliability forces mutual information).}
+By Fano's inequality (Lemma~2) applied to the optimal estimator
+$\hat M$ of $M$ from $(\Sigma,C)$, with $p_e=1-\Rel$ and $h(p_e)\le1$,
+\[
+H(M\mid\Sigma,C)\le 1+p_e\log_2(2^\lambda-1)\le 1+(1-\Rel)\,\lambda .
+\]
+Hence $I(M;\Sigma,C)\ge\Rel\cdot\lambda-1$, and since $M\perp C$,
+$x=I(M;\Sigma,C)$. Therefore
+\begin{equation*}\tag{26$'$}
+\Rel(\cP)\le\frac{x+1}{\lambda}.
+\end{equation*}
+This holds for every value of $\Rel$; the restriction $\Rel\ge 1/2$
+used before (25) is not needed.
+
+\emph{Step 2 (opposability through institutional extraction).}
+By Definition~9, Assumption~1 and \eqref{eq:eff},
+\begin{equation*}\tag{29$'$}
+\Opp(\cP)=\frac{I(V;\Sigma\mid C)}{H(V\mid C)}\le\frac{x+\Delta}{\gamma}.
+\end{equation*}
+
+\emph{Step 3 (product bound).}
+Since $0\le\Conf(\cP)\le 1$ and all factors are nonnegative,
+\[
+\Conf\cdot\Rel\cdot\Opp\;\le\;\frac{x+1}{\lambda}\cdot\frac{x+\Delta}{\gamma}.
+\]
+The right-hand side is nondecreasing in $x$; by \eqref{eq:regime},
+\[
+\Conf\cdot\Rel\cdot\Opp\;\le\;\frac1\gamma
+\Bigl(\frac1\lambda+\frac{\kappa}{\lambda^{2}}\Bigr)
+\Bigl(\Delta+\frac{\kappa}{\lambda}\Bigr)
+=\frac1\gamma\Bigl(\frac{\Delta}{\lambda}+\frac{\kappa(\Delta+1)}{\lambda^{2}}
++\frac{\kappa^{2}}{\lambda^{3}}\Bigr),
+\]
+which is \eqref{eq:main}; the last inequality in \eqref{eq:main} uses
+$\gamma\ge1$. The lower bound on $\Conf$ is Lemma~4 combined with
+\eqref{eq:regime}.
+\end{proof}
+
+\noindent Equations (30)--(39) and Remark~10 of the original article are
+replaced by the above proof. Corollary~1 ($\Conf\cdot\Rel\cdot\Opp\lesssim
+\Delta/\lambda$ for $\lambda\ge128$, $\beta=O(1)$, $\alpha=O(1)$) holds
+under Assumptions~1, 2$'$, 3 and~4. Remark~11 (institutional capacity $\Delta$ as the
+dominant term) holds under the same assumptions.
+
+\begin{remark}[Scope]
+Assumption~4 is essential. Without a bound on $\IMS$, the product
+$\Conf\cdot\Rel\cdot\Opp$ need not decay with $\lambda$: the protocol that
+reveals $M$ with probability $1/2$ and otherwise outputs a uniformly random
+proof is $\beta$-regular with $\beta\le 1.04$ for all $\lambda\ge 64$, satisfies
+Assumptions~1--3, and has $\Conf=1/2$, $\Rel=1/2+2^{-\lambda-1}$ and, with
+$V$ the first bit of $\Sigma$, $\Opp=1$, for every $\lambda$. Here
+$\IMS=\lambda/2-1+O(\lambda 2^{-\lambda})$ lies outside the regime
+\eqref{eq:regime}.
+\end{remark}
+
+%------------------------------------------------------------------------------
+\section{Clarification of Section VI-B}
+%------------------------------------------------------------------------------
+
+Table~2 was obtained by inverting Corollary~1 on the empirical products
+reported by the CLO framework~\cite{clo}. These products are computed from
+CLO's operational scores, which are measured on a scale different from the
+information-theoretic quantities of Definitions~7--9. Under Assumption~4,
+Step~1 gives $\Rel(\cP)\le(1+\kappa/\lambda)/\lambda$ in the sense of
+Definition~8, so the empirical CLO products are not instances of
+\eqref{eq:main}. The implied capacities of Table~2 and Remark~13 should
+therefore be read as an empirical calibration of $\Delta$ on the CLO scale,
+consistent with the bounded-rationality range of Section~IV-B, and not as
+consequences of Theorem~1. The regime analysis of Section~VI-A and the
+design recommendations of Section~VI-C are unaffected.
+
+\begin{thebibliography}{9}
+\bibitem{orig}
+T.~E. Minka Mi Nguidjo\"{\i}, F.~S. Mani Onana, and T.~Djotio Ndi\'e,
+``The conditional CRO trilemma: Impossibility bounds on confidentiality,
+reliability, and opposability under institutional extraction limits,''
+\emph{IEEE Access}, vol.~14, pp.~33263--33274, 2026,
+doi: 10.1109/ACCESS.2026.3669065.
+\bibitem{clo}
+Reference~[23] of~\cite{orig} (Cryptographic Legal Opposability framework).
+\end{thebibliography}
+
+\end{document}

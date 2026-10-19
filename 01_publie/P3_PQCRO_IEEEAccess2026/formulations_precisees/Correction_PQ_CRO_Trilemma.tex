@@ -1,0 +1,262 @@
+%==============================================================================
+%  Correction to "Post-Quantum Extension of the Conditional CRO Trilemma"
+%  IEEE Access 14 (2026) 125130, DOI 10.1109/ACCESS.2026.3722742
+%
+%  Note: this draft uses the standard article class so that it compiles
+%  anywhere. For submission, paste the body into the official IEEE Access
+%  template (ieeeaccess.cls), keeping the section structure unchanged.
+%==============================================================================
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem*{lemmaSeven}{Lemma 7}
+\newtheorem*{theoremTwo}{Theorem 2}
+\newtheorem*{assumptionFourP}{Assumption 4$'$}
+\newtheorem*{assumptionSix}{Assumption 6}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\newcommand{\Confq}{\mathsf{Conf}^q}
+\newcommand{\Relq}{\mathsf{Rel}^q}
+\newcommand{\Oppq}{\mathsf{Opp}^q}
+\newcommand{\negl}{\mathsf{negl}}
+\newcommand{\cP}{\mathcal{P}}
+\newcommand{\IMS}{I(M;\Sigma\mid C)}
+\newcommand{\Iacc}{I_{\mathrm{acc}}(M;\Sigma\mid C)}
+
+\title{\textbf{Correction to ``Post-Quantum Extension of the Conditional CRO
+Trilemma: Impossibility Bounds on Confidentiality, Reliability, and
+Opposability Under Quantum Institutional Extraction Limits''}}
+\author{Thierry Emmanuel Minka Mi Nguidjo\"{\i}$^{1,2}$,
+        Flavien Serge Mani Onana$^{1}$,
+        and Thomas Djotio Ndi\'e$^{1}$\\[4pt]
+\small $^{1}$Laboratory of Mathematical Engineering and Information Systems,
+National Advanced School of Engineering,\\
+\small University of Yaound\'e I, Yaound\'e, Cameroon\\
+\small $^{2}$Supreme State Audit Office, Yaound\'e, Cameroon\\[2pt]
+\small Corresponding author: Thierry Emmanuel Minka Mi Nguidjo\"{\i}
+(minkathierry@gmail.com)}
+\date{}
+
+\begin{document}
+\maketitle
+
+\noindent In the above article~\cite{pq}, the proof of Theorem~2
+(Post-Quantum Conditional CRO Trilemma) inherits the errors corrected
+in~\cite{cor1} for the classical Conditional CRO Trilemma~\cite{cro}:
+Step~4 uses the classical statement of Lemma~4 of~\cite{cro}, whose
+inequality has the wrong direction; Step~3 and Assumption~4 use
+Assumption~2 in the wrong direction; and the constant $C(\beta_q,\alpha_q)$
+of Assumption~5 originates from the incorrectly solved optimization step
+of~\cite{cro}. In addition, inequality~(68) in the proof of Lemma~6 does
+not hold as written, and Remark~17 overstates the range of validity of
+Theorem~2. These errors were identified by the authors during the
+machine-checked formalization of the results in Lean~4. This correction,
+which parallels~\cite{cor1}:
+(i)~withdraws Lemma~6 and the upper bound~(72) of Lemma~7, and restates the
+lower bound~(71) with the Holevo information;
+(ii)~states the verdict-efficiency condition explicitly (Assumption~$4'$);
+(iii)~states explicitly the leakage regime in which Theorem~2 holds
+(Assumption~6) and gives a complete proof with explicit constants; and
+(iv)~corrects Remark~17 and clarifies the reading of Section~VI-C/D.
+The quantum institutional model (Assumptions~1--3), the institutional
+parameters $(\Delta_q,\alpha_q,\beta_q,\eta_q)$, the quantum Fano step
+(81)--(85), and the form of the main bound (80) are preserved within the
+stated regime. The authors apologize for any inconvenience caused.
+
+%------------------------------------------------------------------------------
+\section{Lemmas 6 and 7 (Section V-A)}
+%------------------------------------------------------------------------------
+
+\paragraph{Lemma 6.} Inequality~(68), with the expectation taken over
+\emph{independent} uniform draws of $m_0,m_1$, does not hold in general:
+for two messages encoded in orthogonal (classical, perfectly
+distinguishable) states, $I_{\mathrm{acc}}=1$ bit, whereas the right-hand
+side of~(68) equals $1/2$. Lemma~6 is therefore withdrawn. The derivation
+(78)--(79) of the upper bound~(72) of Lemma~7 depends on Lemma~6 and is
+also withdrawn; note that~(78) is moreover inconsistent with the linear
+form~(70). Neither Lemma~6 nor~(72) is used in the corrected proof below.
+
+\paragraph{Lemma 7.} The lower bound~(71) follows from the quantum Pinsker
+inequality and quantum regularity (Assumption~3), with one adjustment: the
+``simplified form''~(74) replaces the Holevo information
+$\chi(\mathcal E_{m,c})$ of Assumption~3 by the accessible information,
+whereas the Holevo bound gives $I_{\mathrm{acc}}\le\chi(\mathcal E_{m,c})$,
+so that this substitution goes in the wrong direction. Stated with the
+Holevo information, the lower bound holds and is retained:
+
+\begin{lemmaSeven}[Quantum confidentiality guarantee; replaces Lemma 7]
+For any $(\beta_q,\eta_q)$-quantum-regular protocol $\cP$ (Assumption~3),
+\begin{equation*}\tag{71$'$}\label{eq:l7}
+\Confq(\cP)\;\ge\;1-\frac12\sqrt{2\beta_q\,\chi_{\max}+2\eta_q\,D_{\max}}\,,
+\end{equation*}
+where $\chi_{\max}=\max_{c}\chi(\mathcal E_{m,c})$ and
+$D_{\max}=\max_{c}D(\bar\rho^{\,c}_\Sigma\,\|\,\mathbb I/d_\Sigma)$; for the
+NIST PQC schemes of Remark~13, $D_{\max}=\negl(\lambda)$.
+\end{lemmaSeven}
+
+\begin{proof}
+For all $m_0,m_1,c$, the quantum Pinsker inequality~(73) and Assumption~3 give
+$\|\rho^{m_0,c}_\Sigma-\rho^{m_1,c}_\Sigma\|_1^2\le
+2\beta_q\chi(\mathcal E_{m,c})+2\eta_qD(\bar\rho^{\,c}_\Sigma\|\mathbb I/d_\Sigma)
+\le 2\beta_q\chi_{\max}+2\eta_qD_{\max}$.
+Taking the maximum over $(m_0,m_1,c)$ in~(76) gives~\eqref{eq:l7}.
+\end{proof}
+
+\noindent This is the quantum counterpart of Lemma~4 as corrected
+in~\cite{cor1}. Remark~16 is modified accordingly: only the lower
+bound~\eqref{eq:l7} is used.
+
+%------------------------------------------------------------------------------
+\section{Verdict efficiency (Assumption 4 and Step 3)}
+%------------------------------------------------------------------------------
+
+Assumption~2 gives $\log_2 k_\lambda\le\alpha_q H(C)$, an \emph{upper}
+bound. Hence neither the last step of~(58) nor the second inequality
+of~(90) follows from Assumptions~2 and~4. The lower bound on $H(V\mid C)$
+is the efficiency property of institutional verdict functions, which is now
+stated explicitly.
+
+\begin{assumptionFourP}[Verdict non-degeneracy and efficiency; replaces Assumption 4]
+The institutional verdict function uses the available context efficiently:
+\begin{equation*}\tag{57$'$}\label{eq:eff}
+H(V\mid C)\;\ge\;\theta_q\,\alpha_q H(C)\;\eqqcolon\;\gamma_q,
+\qquad \gamma_q\ge 1,
+\end{equation*}
+for a non-degeneracy constant $\theta_q\in(0,1]$.
+\end{assumptionFourP}
+
+\noindent With $\theta_q=1/2$ and the context entropies of Table~2
+($H(C)\ge 9$ bits, $\alpha_q\ge 0.8$), one has $\gamma_q\ge 3.6$.
+Claim~1 remains valid through its second argument
+($\alpha_qH(C)\ge H(V\mid C)\ge 1$).
+
+%------------------------------------------------------------------------------
+\section{Corrected statement and proof of Theorem 2 (Section V-B)}
+%------------------------------------------------------------------------------
+
+The dominant-term analysis of Step~6 assumes $u=x/\lambda=O(\lambda^{-1})$
+(``since $x\le C_{\mathrm{proof}}=O(1)$''), while Remark~17 asserts that the
+bound holds for all $I\in[0,\lambda]$, including $I=\Theta(\lambda)$. The
+latter assertion is incorrect: for $u$ bounded away from $0$, the factor
+$(\lambda u+\Delta_q)/(\alpha_qH(C))$ in~(96) grows linearly with $\lambda$.
+As in~\cite{cor1}, the leakage regime is therefore stated explicitly.
+
+\begin{assumptionSix}[Confidentiality-preserving regime]
+There exists a constant $\kappa\ge 0$, independent of $\lambda$, such that
+\begin{equation*}\tag{59$'$}\label{eq:regime}
+\chi_{\max}=\max_{c}\chi(\mathcal E_{m,c})\;\le\;\frac{\kappa}{\lambda}.
+\end{equation*}
+\end{assumptionSix}
+
+\noindent Since $\IMS$ is the average of $\chi(\mathcal E_{m,c})$ over the
+contexts and $\Iacc\le\IMS$ by the Holevo bound, Assumption~6 implies
+$\Iacc\le\IMS\le\kappa/\lambda$. By Lemma~7, it is the regime in which
+quantum-regular protocols guarantee confidentiality:
+$\Confq\ge1-\tfrac12\sqrt{2\beta_q\kappa/\lambda+2\eta_qD_{\max}}$, which tends
+to $1$ when $D_{\max}=\negl(\lambda)$.
+
+\begin{theoremTwo}[Post-Quantum Conditional CRO Trilemma, corrected]
+Under Assumptions~1--3, Assumption~$4'$ \eqref{eq:eff} and
+Assumption~6 \eqref{eq:regime}, for any post-quantum evidence protocol
+$\cP$ with security parameter $\lambda\ge64$, message entropy
+$H(M)=\lambda$, $M$ independent of $C$, and quantum institutional
+parameters $(\Delta_q,\alpha_q,\beta_q,\eta_q)$:
+\begin{equation*}\tag{80$'$}\label{eq:main}
+\Confq(\cP)\cdot\Relq(\cP)\cdot\Oppq(\cP)
+\;\le\;\frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda}
++\frac{\kappa(\Delta_q+1)}{\lambda^{2}}+\frac{\kappa^{2}}{\lambda^{3}}\right)
+\;\le\;\frac{\Delta_q+\eta_q H(C)}{\lambda}+O(\lambda^{-2})+\negl(\lambda).
+\end{equation*}
+\end{theoremTwo}
+
+\begin{proof}
+Write $x=\IMS$; by Assumption~6, $x\le\kappa/\lambda$.
+
+\emph{Step 1 (unchanged).} By the quantum Fano inequality, (81)--(85) give
+$\Iacc\ge\Relq\cdot\lambda-1$ for every $\Relq\in[0,1]$. Since
+$\Iacc\le x$,
+\begin{equation*}\tag{85$'$}
+\Relq(\cP)\le\frac{x+1}{\lambda}.
+\end{equation*}
+
+\emph{Step 2.} By Definition~23, Assumption~1~(87) and
+Assumption~$4'$,
+\begin{equation*}\tag{89$'$}
+\Oppq(\cP)=\frac{I(V;\Sigma\mid C)}{H(V\mid C)}\le\frac{x+\Delta_q}{\gamma_q}.
+\end{equation*}
+
+\emph{Step 3 (product bound).} Since $0\le\Confq(\cP)\le1$ and all factors
+are nonnegative,
+$\Confq\cdot\Relq\cdot\Oppq\le\frac{x+1}{\lambda}\cdot\frac{x+\Delta_q}{\gamma_q}$.
+The right-hand side is nondecreasing in $x$; since $x\le\kappa/\lambda$,
+\[
+\Confq\cdot\Relq\cdot\Oppq\le\frac1{\gamma_q}
+\Bigl(\frac1\lambda+\frac{\kappa}{\lambda^2}\Bigr)
+\Bigl(\Delta_q+\frac{\kappa}{\lambda}\Bigr)
+=\frac1{\gamma_q}\Bigl(\frac{\Delta_q}{\lambda}
++\frac{\kappa(\Delta_q+1)}{\lambda^2}+\frac{\kappa^2}{\lambda^3}\Bigr).
+\]
+The last inequality in~\eqref{eq:main} follows from $\gamma_q\ge1$ and
+$\eta_qH(C)\ge0$.
+\end{proof}
+
+\noindent Steps~3--7 of the original proof, equations (90)--(111), and
+Assumption~5 with the constant $C(\beta_q,\alpha_q)$ are replaced by the
+above; Assumption~5 is no longer needed. The quantum interpretability loss
+$\eta_q$ enters the confidentiality guarantee (Lemma~7), the channel
+bounds (Lemma~10), and the regime classification of
+Section~VI-A, which are unaffected.
+
+\begin{remark}[Replaces Remark 17]
+Assumption~6 is essential. For the classical diagonal encoding of
+Example~3 (SPHINCS+, $\beta_q=\beta$, $\eta_q=0$), the protocol that reveals
+$M$ with probability $1/2$ and otherwise outputs a uniformly random proof
+satisfies Assumptions~1--3 with $\beta_q\le1.04$ for all $\lambda\ge64$ and
+has $\Confq=1/2$, $\Relq=1/2+2^{-\lambda-1}$ and, with $V$ the first bit of
+$\Sigma$, $\Oppq=1$, for every $\lambda$; here
+$\IMS=\lambda/2-1+O(\lambda2^{-\lambda})$ lies outside
+regime~\eqref{eq:regime}. The bound therefore does not hold uniformly for
+$I=\Theta(\lambda)$.
+\end{remark}
+
+%------------------------------------------------------------------------------
+\section{Clarification of Section VI-C/D and Remark 10}
+%------------------------------------------------------------------------------
+
+The implied capacities of Tables~8--10, the Dilithium-3 case study
+(Section~VI-D) and item~2 of Remark~10 are obtained by inverting~(80) on
+observed or projected CRO products $P_{\mathrm{obs}}$. Under Assumption~6,
+Step~1 gives $\Relq(\cP)\le(1+\kappa/\lambda)/\lambda$ in the sense of
+Definition~22, so these products, computed on the operational CLO scale,
+are not instances of~\eqref{eq:main}. The implied values of $\Delta_q$
+should therefore be read as an empirical calibration on the CLO scale,
+consistent with the bounded-rationality range of Section~IV-D, and not as
+consequences of Theorem~2. The operational regimes of Section~VI-A, the
+sensitivity analysis of Section~VI-B and the design recommendations of
+Section~VIII are unaffected.
+
+\begin{thebibliography}{9}
+\bibitem{pq}
+T.~E. Minka Mi Nguidjo\"{\i}, F.~S. Mani Onana, and T.~Djotio Ndi\'e,
+``Post-quantum extension of the conditional CRO trilemma: Impossibility
+bounds on confidentiality, reliability, and opposability under quantum
+institutional extraction limits,'' \emph{IEEE Access}, vol.~14,
+pp.~125130--125155, 2026, doi: 10.1109/ACCESS.2026.3722742.
+\bibitem{cro}
+T.~E. Minka Mi Nguidjo\"{\i}, F.~S. Mani Onana, and T.~Djotio Ndi\'e,
+``The conditional CRO trilemma: Impossibility bounds on confidentiality,
+reliability, and opposability under institutional extraction limits,''
+\emph{IEEE Access}, vol.~14, pp.~33263--33274, 2026,
+doi: 10.1109/ACCESS.2026.3669065.
+\bibitem{cor1}
+T.~E. Minka Mi Nguidjo\"{\i}, F.~S. Mani Onana, and T.~Djotio Ndi\'e,
+``Correction to `The conditional CRO trilemma: Impossibility bounds on
+confidentiality, reliability, and opposability under institutional
+extraction limits','' \emph{IEEE Access}, submitted, 2026.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,1207 @@
+\documentclass{ieeeaccess}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{url}
+\usepackage[utf8]{inputenc}
+\usepackage{textgreek}
+\usepackage{textalpha}
+\usepackage{makecell}
+%\usepackage{etex}
+%\usepackage{tikz}
+%\usepackage{pgfplots}
+%\usetikzlibrary{shapes,arrows,positioning,decorations.pathreplacing}
+%\usepgfplotslibrary{fillbetween}
+%\pgfplotsset{compat=1.18}
+
+% Custom commands from CLO for consistency
+\newcommand{\Conf}{\mathsf{Conf}}
+\newcommand{\Rel}{\mathsf{Rel}}
+\newcommand{\Opp}{\mathsf{Opp}}
+\newcommand{\negl}{\mathsf{negl}}
+\DeclareMathOperator{\TV}{TV}
+\DeclareMathOperator{\KL}{D_{\text{KL}}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+
+% Theorem environments with labels
+\newtheorem{theorem}{Theorem}[subsection]
+\newtheorem{lemma}{Lemma}[subsection]
+\newtheorem{definition}{Definition}[subsection]
+\newtheorem{corollary}{Corollary}[subsection]
+\newtheorem{remark}{Remark}[subsection]
+\newtheorem{assumption}{Assumption}[subsection]
+\newtheorem{proposition}{Proposition}[subsection]
+\newtheorem{example}{Example}[subsection]
+
+
+
+\begin{document}
+
+\history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
+\doi{10.1109/ACCESS.2026.xxxxxxx}
+
+\title{The Conditional CRO Trilemma: Impossibility Bounds on Confidentiality, Reliability, and Opposability under Institutional Extraction Limits}
+
+\author{
+Thierry Emmanuel \uppercase{Minka Mi Nguidjoï}\authorrefmark{1,2},
+Flavien Serge \uppercase{Mani Onana}\authorrefmark{1}, and
+Thomas \uppercase{Djotio Ndié}\authorrefmark{1}
+}
+
+\address[1]{Laboratory of Mathematical Engineering and Information Systems, National Advanced School of Engineering, University of Yaoundé I, Cameroon (e-mail: minkathierry@gmail.com, serge.mani@digitworldacademy.com, tdjotio@gmail.com)}
+
+\address[2]{Supreme State Audit Office, Yaoundé, Cameroon (e-mail: minkathierry@gmail.com)}
+
+
+\markboth
+{Thierry Minka \headeretal: The Conditional CRO Trilemma}
+{Thierry Minka \headeretal: The Conditional CRO Trilemma}
+
+\corresp{Corresponding author: Thierry Emmanuel Minka Mi Nguidjoï (e-mail: minkathierry@gmail.com).}
+
+\begin{abstract}
+Cryptographic evidence systems face fundamental trade-offs between confidentiality ($\Conf$), reliability ($\Rel$), and opposability ($\Opp$), with $\Conf\cdot\Rel\cdot\Opp$ products ranging from 0.27 to 0.57 in deployed systems. Although  documented empirically in recent work, these limits lack a theoretical explanation.
+
+
+We present the \emph{Conditional CRO Trilemma}, establishing that institutional capacity fundamentally constrains achievable trade-offs. Under explicit assumptions about cognitive limits, we prove $\Conf\cdot\Rel\cdot\Opp \leq \Delta/\lambda + \epsilon(\lambda)$ where $\Delta$ quantifies the institutional extraction capacity and $\lambda$ is the security parameter.
+
+
+Our main contributions are as follows: (1) a formal model with parameters $\Delta$ (extraction capacity) and $\alpha$ (verdict granularity); (2) an information-theoretic proof using Pinsker's and Fano's inequalities; (3) an analysis showing deployed systems implies $\Delta = 35$--73 bits, consistent with bounded rationality; and (4) a framework for matching protocols to institutional capacity.
+
+
+Overall, this trilemma shifts the protocol design from mathematical optimization to constraint-aware engineering. We provide validation pathways and discuss their applications to legal evidence and regulatory compliance systems.
+\end{abstract}
+
+\begin{keywords}
+Cryptographic evidence, institutional cryptography, information theory, impossibility results, legal opposability, bounded rationality, trade-off analysis
+\end{keywords}
+
+\titlepgskip=-15pt
+\maketitle
+
+\section{Introduction}\label{sec:introduction}
+
+Cryptographic evidence systems face fundamental tension between mathematical security and institutional utility. The Cryptographic Legal Opposability (CLO) framework~\cite{Minka2026CLO} formalizes this tension through confidentiality ($\Conf$), reliability ($\Rel$), and opposability ($\Opp$) measures, revealing consistent trade-off patterns across deployed systems.
+
+While the CLO documented the trade-offs that occur, their theoretical foundation remains unexplained. This study addresses the central question: Do these empirical patterns reflect temporary engineering limitations, or do they reveal fundamental constraints related to institutional cognition?
+
+We posit that institutional interpreters (judges, auditors, and regulators) operate under \emph{bounded extraction capacity}. Their ability to extract decision-relevant information from cryptographic proofs is limited. We formalize this as the \emph{Institutional Extraction Hypothesis} and derive the \emph{Conditional CRO Trilemma}.
+
+\subsection{Our Contributions}
+
+\begin{enumerate}
+\item \textbf{C1. Institutional Capacity Model}: Parameters $\Delta$ (extraction capacity) and $\alpha$ (verdict granularity) quantify cognitive constraints.
+
+\item \textbf{C2. Conditional CRO Trilemma}: Theoretical proof that $\Delta$ fundamentally bounds achievable $\Conf\cdot\Rel\cdot\Opp$ trade-offs.
+
+\item \textbf{C3. Theoretical-Empirical Bridge}: Framework explaining CLO's empirical observations through institutional capacity limits.
+
+\item \textbf{C4. Operational Design Framework}: Capacity-based protocol selection shifting design to constraint-aware engineering.
+
+\item \textbf{C5. Validation Roadmap}: Experimental protocols establishing institutional cryptography as a research focus.
+\end{enumerate}
+
+\subsection{Paper Organization}
+
+Section~\ref{sec:preliminaries} covers information-theoretic preliminaries. Section~\ref{sec:model} presents an extended protocol model with explicit institutional parameters. Section~\ref{sec:assumptions} introduces and justifies the two core assumptions regarding institutional cognition. Section~\ref{sec:cro_trilemma} states and proves the Conditional CRO Trilemma for regular protocols. Section~\ref{sec:regimes} analyzes the operational regimes and validates the CLO empirical data. Section~\ref{sec:related_work} positions our work relative to the information theory and bounded rationality literature. Section~\ref{sec:discussion} discusses implications, limitations, and outlines the experimental validation pathways. Section~\ref{sec:conclusion} concludes.
+
+\section{Preliminaries}\label{sec:preliminaries}
+
+We use standard information-theoretic notation following Cover and Thomas~\cite{CoverThomas06}. Random variables are denoted by capital letters ($X$, $Y$), realizations by lowercase ($x$, $y$), and alphabets by calligraphic letters ($\mathcal{X}$, $\mathcal{Y}$). All logarithms are base 2 unless otherwise specified.
+
+\subsection{Information-Theoretic Measures}
+
+\begin{definition}[Shannon Entropy]\label{def:entropy}
+For a discrete random variable $X$ with distribution $P_X$:
+\begin{equation}
+H(X) = -\sum_{x \in \mathcal{X}} P_X(x)\log P_X(x)
+\end{equation}
+\end{definition}
+
+\begin{definition}[Conditional Entropy]\label{def:cond_entropy}
+$H(X|Y) = \sum_{y} P_Y(y)H(X|Y=y) = H(X,Y) - H(Y)$
+\end{definition}
+
+\begin{definition}[Mutual Information]\label{def:mutual_info}
+$I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X) = H(X) + H(Y) - H(X,Y)$
+\end{definition}
+
+\begin{definition}[Kullback-Leibler Divergence]\label{def:kl_divergence}
+For distributions $P$, $Q$ over $\mathcal{X}$:
+\begin{equation}
+\KL(P\|Q) = \sum_{x \in \mathcal{X}} P(x)\log\frac{P(x)}{Q(x)}
+\end{equation}
+Convention: $0\log(0/q) = 0$ and $p\log(p/0) = \infty$ if $p > 0$.
+\end{definition}
+
+\subsection{Statistical Distances}
+
+\begin{definition}[Total Variation Distance]\label{def:tv_distance}
+For distributions $P$, $Q$ over $\mathcal{X}$:
+\begin{equation}
+\TV(P,Q) = \frac{1}{2}\sum_{x \in \mathcal{X}} |P(x) - Q(x)| = \max_{A \subseteq \mathcal{X}} |P(A) - Q(A)|
+\end{equation}
+\end{definition}
+
+\begin{lemma}[Pinsker's Inequality]\label{lem:pinsker}
+For any distribution $P$, $Q$ over a finite alphabet:
+\begin{equation}
+\TV(P,Q)^2 \leq \frac{1}{2\ln 2} \KL(P\|Q) \approx 0.721 \cdot \KL(P\|Q)
+\end{equation}
+where $\ln$ is a natural logarithm.
+\end{lemma}
+
+\begin{proof}
+Standard results; see~\cite{CoverThomas06} Theorem 11.6.1. The constant $c_0 = \frac{1}{2\ln 2}$ appears because KL divergence is defined with base-2 logarithms whereas the optimal Pinsker constant is derived from natural logarithms.
+\end{proof}
+
+\begin{remark}[Pinsker Constant]
+Throughout this paper, we denote $c_0 = \frac{1}{2\ln 2} \approx 0.721$ as the Pinsker constant. This is a tight constant for  inequality $\TV^2 \leq c_0 \cdot \KL$.
+\end{remark}
+
+\subsection{Estimation Limits}
+
+\begin{lemma}[Fano's Inequality]\label{lem:fano}
+Let $X$ be a random variable with finite alphabet $\mathcal{X}$ where $|\mathcal{X}| = k$, let $\hat{X}$ be an estimator, and let $p_e = \Pr[X \neq \hat{X}]$. Then:
+\begin{equation}
+H(X|\hat{X}) \leq h(p_e) + p_e\log(k-1)
+\end{equation}
+where $h(p) = -p\log p - (1-p)\log(1-p)$ is the binary entropy function.
+\end{lemma}
+
+\begin{lemma}[Data Processing Inequality]\label{lem:dpi}
+If random variables form a Markov chain $X \to Y \to Z$, then:
+\begin{equation}
+I(X;Z) \leq I(X;Y)
+\end{equation}
+Processing cannot create information.
+\end{lemma}
+
+\subsection{Cryptographic Notation}
+
+$\lambda \in \mathbb{N}$ denotes the security parameter. A function $f(\lambda)$ is \emph{negligible}, written $f(\lambda) = \negl(\lambda)$, if for every positive polynomial $p(\lambda)$, there exists $\lambda_0$ such that $f(\lambda) < 1/p(\lambda)$ for all $\lambda > \lambda_0$.
+
+\section{Formal Model}\label{sec:model}
+
+Our model extends the CLO framework~\cite{Minka2026CLO} with explicit parameters for institutional limits. We maintain definitional consistency for the three core security properties.
+
+\subsection{Evidence Protocol Syntax}
+
+\begin{definition}[Evidence Protocol]\label{def:protocol}
+An \emph{evidence protocol} $\mathcal{P}$ with security parameter $\lambda$ comprises the following:
+\begin{itemize}
+\item Message space $\mathcal{M}_\lambda$ with $|\mathcal{M}_\lambda| = 2^\lambda$
+\item Context space $\mathcal{C}_\lambda$ with distribution $P_C$ and entropy $H(C)$
+\item Proof space $\Sigma_\lambda$
+\item Prover algorithm $P(\lambda, m, c) \to \sigma$ for $m \in \mathcal{M}_\lambda$, $c \in \mathcal{C}_\lambda$
+\item Verdict space $\mathcal{Y}_\lambda$ with finite size $k_\lambda$
+\end{itemize}
+\end{definition}
+
+The protocol allows the prover to generate cryptographic evidence $\sigma$ for message $m$ in context $c$. An institutional verifier then produces a verdict $v \in \mathcal{Y}_\lambda$ based on the observation of proof $\sigma$ and context $c$.
+
+\subsection{Security Properties: CLO Definitions}
+
+We adopt CLO's definitions verbatim for continuity with prior work.
+
+\begin{definition}[Confidentiality]\label{def:confidentiality}
+Following~\cite{Minka2026CLO} Definition III-B.1, for protocol $\mathcal{P}$:
+\begin{equation}
+\Conf(\mathcal{P}) = 1 - \max_{\substack{m_0, m_1 \in \mathcal{M}_\lambda \\ c \in \mathcal{C}_\lambda}} 
+    \TV(P_{\Sigma|M=m_0,C=c}, P_{\Sigma|M=m_1,C=c})
+\end{equation}
+This measures the worst-case indistinguishability: even the most informative context $c$ should not enable message discrimination from proofs.
+\end{definition}
+
+\begin{definition}[Reliability]\label{def:reliability}
+Following~\cite{Minka2026CLO} Definition III-B.2, let $\hat{M}$ be the optimal message estimator from $(\Sigma, C)$. Then:
+\begin{equation}
+\Rel(\mathcal{P}) = 1 - \Pr[\hat{M} \neq M]
+\end{equation}
+This measures the fraction of messages correctly recovered from cryptographic evidence.
+\end{definition}
+
+\begin{definition}[Opposability]\label{def:opposability}
+Following~\cite{Minka2026CLO} Definition III-B.3, for a verdict function $V: \Sigma \times \mathcal{C} \to \mathcal{Y}$ representing the institutional interpretation:
+\begin{equation}
+\Opp(\mathcal{P}) = \frac{I(V;\Sigma|C)}{H(V|C)}, \quad V = V(\Sigma, C)
+\end{equation}
+\end{definition}
+
+\begin{remark}[Opposability Interpretation]
+$\Opp$ measures the fraction of institutional verdict uncertainty resolved using cryptographic evidence in a given context. High $\Opp$ means proofs strongly determine verdicts; low $\Opp$ means proofs provide little institutional guidance beyond what the context already provides.
+\end{remark}
+
+\section{Institutional Capacity Assumptions}\label{sec:assumptions}
+
+Our central contribution is making institutional limits explicit through two assumptions about cognitive and structural constraints, as well as a technical regularity condition for tight bounds.
+
+\subsection{Core Assumptions}
+
+\begin{assumption}[Bounded Institutional Extraction]\label{ass:bound_extract}
+For any institutional interpreter with a verdict function $V$, the extractable information satisfies:
+\begin{equation}
+I(V;\Sigma|C) \leq I(M;\Sigma|C) + \Delta
+\end{equation}
+where $\Delta \geq 0$ quantifies institutional prior knowledge or reasoning capacity that is not captured by formal context $C$ alone.
+\end{assumption}
+
+\begin{remark}[Interpretation of $\Delta$]
+The parameter $\Delta$ captures institutional capacity beyond the formal context. It includes:
+\begin{itemize}
+\item Legal precedent and case law
+\item Expert training and domain knowledge
+\item Procedural rules and institutional memory
+\item Collaborative deliberation capabilities
+\end{itemize}
+For individual decision-makers, the bounded rationality theory suggests $\Delta \approx 20$ bits. Institutional amplification through documentation, collaboration, and specialization can increase this to 50--80 bits for well-resourced organizations.
+
+\begin{remark}[$\Delta$ independence from $\lambda$]
+Institutional capacity $\Delta$ is modeled as independent of the security parameter $\lambda$. This reflects the fundamental mismatch between cryptographic scaling (entropy increases with $\lambda$) and human cognitive limits (capacity remains bounded). While cryptographic strength can increase arbitrarily ($\lambda \to \infty$), institutional interpretation capacity $\Delta$ is constrained by biological and organizational factors.
+\end{remark}
+\end{remark}
+\begin{assumption}[Bounded Verdict Space]\label{ass:bound_verdict}
+The institutional verdict space size relates to the context entropy as:
+\begin{equation}
+k_\lambda \leq 2^{\alpha H(C)}
+\end{equation}
+for some constant $\alpha \geq 1$ capturing institutional decision granularity.
+\end{assumption}
+
+\begin{remark}[Interpretation of $\alpha$]
+The parameter $\alpha$ measures how efficiently the context translates into distinguishable verdict options. An institution with a rich legal context ($H(C)$ large) can render nuanced decisions, while one with a poor context cannot. Typical values:
+\begin{itemize}
+\item $\alpha \approx 0.1$--$0.5$: Binary or coarse verdicts (accept/reject with limited gradation)
+\item $\alpha \approx 1$: One bit of verdict granularity per bit of context (baseline)
+\item $\alpha > 1$: Highly specialized institutions extracting fine-grained distinctions
+\end{itemize}
+\end{remark}
+
+\begin{assumption}[Protocol Regularity]\label{ass:regularity}
+A protocol $\mathcal{P}$ is $\beta$-regular if for all contexts $c$ and message pairs $(m_0, m_1)$:
+\begin{equation}
+\KL(P_{\Sigma|m_0,c} \| P_{\Sigma|m_1,c}) \leq \beta \cdot I(M;\Sigma|C)
+\end{equation}
+where $\beta \geq 1$ is the regularity constant.
+\end{assumption}
+
+\begin{remark}[On Protocol Regularity]\label{rem:regularity}
+Regularity captures the intuition that no single message pair should have disproportionately high distinguishability. Many symmetric cryptographic protocols satisfy $\beta$-regularity with a small $\beta$:
+\begin{itemize}
+\item \textbf{Symmetric encryption schemes:} Typically $\beta = O(1)$ by design symmetry
+\item \textbf{Hash-based commitments:} $\beta = O(1)$ under uniform hashing
+\item \textbf{Deployed evidence systems:} Helios, zk-SNARKs, ECDSA all exhibit $\beta = O(1)$
+\end{itemize}
+For our trilemma, we focus on protocols with $\beta = O(1)$, which includes most deployed cryptographic evidence systems.
+\end{remark}
+
+\subsection{Empirical Grounding of Assumptions}\label{subsec:empirical_grounding}
+
+Assumptions~\ref{ass:bound_extract}--\ref{ass:regularity} are the \emph{working hypotheses} and unproven axioms. We provide the theoretical motivation and empirical plausibility arguments.
+
+\subsubsection{Bounded Extraction (Assumption~\ref{ass:bound_extract})}
+
+\paragraph{Information-Theoretic Rationale.}
+The data processing inequality (Lemma~\ref{lem:dpi}) states that processing cannot create information: $I(V;\Sigma|C) \leq I(M;\Sigma|C)$ if $V$ is determined solely by $(\Sigma, C)$.
+
+However, institutional interpreters possess \emph{prior knowledge} $K$ not captured in the formal context $C$. Examples include legal precedents, domain expertise, procedural rules, and collective deliberation capabilities. Formally, the verdicts depend on $(\Sigma, C, K)$. By the chain rule:
+\begin{equation}
+I(V;\Sigma|C) = I(V;\Sigma|C,K) + I(V;K|\Sigma,C) \leq I(M;\Sigma|C,K) + I(K;V|C)
+\end{equation}
+
+If we model $K$ as providing at most $\Delta$ bits of verdict-relevant information, and assume $K$ is approximately independent of $M$ given $C$ (unbiased institution), we recover:
+\begin{equation}
+I(V;\Sigma|C) \lesssim I(M;\Sigma|C) + \Delta
+\end{equation}
+
+\paragraph{Cognitive Science Support.}
+Miller's seminal work~\cite{Miller56} established human working memory capacity at $7 \pm 2$ information chunks. For complex cryptographic evidence, the chunk encoding capacity is limited. Assuming each chunk encodes approximately 3 bits (distinguishing $2^3 = 8$ states):
+\begin{equation}
+\Delta_{\text{individual}} \lesssim 7 \times 3 = 21 \text{ bits}
+\end{equation}
+
+Institutional settings amplify this through:
+\begin{itemize}
+\item \textbf{Documentation:} Written procedures, reference materials ($+5$--$10$ bits)
+\item \textbf{Collaboration:} Multi-person deliberation pooling expertise ($+10$--$20$ bits)
+\item \textbf{Specialization:} Domain-specific training beyond general cognition ($+10$--$15$ bits)
+\end{itemize}
+
+This suggests $\Delta \in [20, 60]$ bits for well-resourced institutions, which is consistent with our empirical analysis in Section~\ref{subsec:clo_interpretation}.
+
+\paragraph{Linearity of $\Delta$.}
+The additive form $I(M;\Sigma|C) + \Delta$ assumes that institutional capacity is \emph{additive} and not multiplicative. Alternative forms considered but rejected:
+\begin{itemize}
+\item \textbf{Multiplicative:} $I(V;\Sigma|C) \leq (1+\gamma) I(M;\Sigma|C)$, implies capacity scales with proof complexity, contradicting bounded rationality.
+\item \textbf{Sublinear:} $I(V;\Sigma|C) \leq \sqrt{I(M;\Sigma|C)} + \Delta$, too pessimistic; implies severe diminishing returns unsupported by evidence.
+\item \textbf{Saturating:} $I(V;\Sigma|C) \leq \min\{I(M;\Sigma|C) + \Delta, \Delta_{\max}\}$, possible refinement for future work.
+\end{itemize}
+
+The linear form balances tractability with realism.
+
+\subsubsection{Bounded Verdict Space (Assumption~\ref{ass:bound_verdict})}
+
+\paragraph{Shannon Coding Argument.}
+A verdict $V$ compresses legal reasoning into a discrete decision. According to Shannon's source coding theorem, efficient encoding requires:
+\begin{equation}
+\log_2 k_\lambda \geq H(V|C) - 1
+\end{equation}
+
+If verdicts effectively utilize the available context to distinguish outcomes, we expect $H(V|C) \sim \alpha H(C)$ for some $\alpha$ that measure verdict granularity relative to context richness.
+
+\paragraph{Empirical Context Entropy Estimates.}
+Approximate $H(C)$ for real institutional settings analyzed in CLO~\cite{Minka2026CLO}:
+\begin{itemize}
+\item \textbf{Electoral context (Helios):} Voter registry, ballot structure, district rules $\Rightarrow$ $H(C) \approx 30$--$50$ bits.
+\item \textbf{Financial compliance (zk-SNARKs):} Transaction history, regulations, audit trails $\Rightarrow$ $H(C) \approx 40$--$70$ bits.
+\item \textbf{Contract signing (ECDSA):} Parties, terms, jurisdiction $\Rightarrow$ $H(C) \approx 20$--$40$ bits.
+\end{itemize}
+
+For binary verdicts ($k_\lambda = 2$: "accept"/"reject"), $\alpha \approx 1/H(C) \ll 1$. For nuanced verdicts ($k_\lambda \sim 10$--$100$), $\alpha \approx 0.1$--$0.5$.
+
+\paragraph{$\alpha \geq 1$ Justification.}
+Constraint $\alpha \geq 1$ in Assumption~\ref{ass:bound_verdict} indicates that verdict spaces should \emph{grow} with context richness. An institution with more contextual knowledge ($H(C)$ high) can make more nuanced decisions. The bound $k_\lambda \leq 2^{\alpha H(C)}$ ensures the monotonicity.
+
+For our trilemma, $\alpha \approx 1$ is a conservative baseline representing "one bit of verdict granularity per bit of context." Specialized institutions may achieve $\alpha < 1$ (coarser verdicts) or $\alpha > 1$ (finer-grained through expert interpretation).
+
+\subsubsection{Validation Pathway}
+
+The above arguments provide \emph{plausibility} but are not proof. Section~\ref{subsec:future_directions} outlines experimental protocols to directly measure $\Delta$ and $\alpha$ for institutional actors, enabling the empirical validation or falsification of these assumptions. This empirical research program is critical for grounding the conditional trilemma in observable institutional behavior.
+
+\section{The Conditional CRO Trilemma}\label{sec:cro_trilemma}
+
+\subsection{Key Lemma: Confidentiality-Mutual Information Relationship}
+
+We establish a relationship between confidentiality and conditional mutual information for regular protocols.
+
+\begin{lemma}[Confidentiality-Mutual Information Trade-off]\label{lem:conf_mi_regular}
+For any $\beta$-regular protocol (Assumption~\ref{ass:regularity}) with message space $|\mathcal{M}_\lambda| = 2^\lambda$ and a uniform message distribution:
+\begin{equation}
+\Conf(\mathcal{P}) \leq 1 - \sqrt{\frac{c_0}{\beta\lambda} I(M;\Sigma|C)}
+\end{equation}
+where $c_0 = \frac{1}{2\ln 2} \approx 0.721$ is the Pinsker constant (Lemma~\ref{lem:pinsker}).
+\end{lemma}
+
+\begin{proof}
+By Assumption~\ref{ass:regularity} and Pinsker's inequality (Lemma~\ref{lem:pinsker}), for any message pair $(m_0, m_1)$ and context $c$:
+\begin{align}
+\TV^2(P_{\Sigma|m_0,c}, P_{\Sigma|m_1,c}) 
+    &\leq c_0 \KL(P_{\Sigma|m_0,c} \| P_{\Sigma|m_1,c}) \\
+    &\leq c_0 \beta \cdot I(M;\Sigma|C)
+\end{align}
+
+Taking the maximum over all pairs and contexts:
+\begin{equation}
+\max_{\substack{m_0, m_1 \in \mathcal{M}_\lambda \\ c \in \mathcal{C}_\lambda}} \TV(P_{\Sigma|m_0,c}, P_{\Sigma|m_1,c}) 
+    \leq \sqrt{c_0\beta \cdot I(M;\Sigma|C)}
+\end{equation}
+
+For uniform message distribution with $H(M) = \lambda$, the effective distinguishability per message bit scales to $1/\sqrt{\lambda}$. Normalizing by $\lambda$ (because $I(M;\Sigma|C) \leq H(M) = \lambda$) yields:
+\begin{equation}
+\max \TV(\cdots) \leq \sqrt{\frac{c_0\beta I(M;\Sigma|C)}{\lambda}}
+\end{equation}
+
+By Definition~\ref{def:confidentiality}:
+\begin{equation}
+\Conf(\mathcal{P}) = 1 - \max \TV(\cdots) \geq 1 - \sqrt{\frac{c_0\beta I(M;\Sigma|C)}{\lambda}}
+\end{equation}
+
+Rearranging gives the stated upper bound on $\Conf$ as a function of $I(M;\Sigma|C)$.
+\end{proof}
+
+\begin{remark}[Interpretation and Usage]
+Lemma~\ref{lem:conf_mi_regular} establishes a fundamental trade-off: higher mutual information $I(M;\Sigma|C)$ (requiered for reliability) forces lower confidentiality. The bound $\Conf \leq 1 - \sqrt{c_0 I/(\beta\lambda)}$ is used in Theorem~\ref{thm:conditional_cro} as an optimization constraint, where $I = I(M;\Sigma|C)$ is treated as a variable to be optimized.
+\end{remark}
+
+\begin{remark}[Normalization by $\lambda$]
+The $1/\sqrt{\lambda}$ factor appears because:
+\begin{enumerate}
+    \item Messages are uniformly distributed over $2^\lambda$ possibilities
+    \item The total variation distance scales as $\sqrt{I(M;\Sigma|C)}$ by Pinsker
+    \item Dividing by $\sqrt{\lambda}$ converts this to a "per-bit" measure, ensuring $\Conf \in [0,1]$ for all $\lambda$
+\end{enumerate}
+This normalization reflects that distinguishing between $2^\lambda$ messages requires proportionally more evidence.
+\end{remark}
+\subsection{Main Theorem}
+
+\begin{theorem}[Conditional CRO Trilemma for Regular Protocols]\label{thm:conditional_cro}
+Under Assumptions~\ref{ass:bound_extract} (bounded extraction), \ref{ass:bound_verdict} (bounded verdict space), and~\ref{ass:regularity} (protocol regularity with $\beta = O(1)$), for any evidence protocol $\mathcal{P}$ with security parameter $\lambda \geq 64$ (ensuring cryptographic security and negligibility of $O(\lambda^{-2})$ terms), message entropy $H(M) = \lambda$, context entropy $H(C)$, and institutional parameters $(\Delta, \alpha)$:
+\begin{equation}
+\Conf(\mathcal{P}) \cdot \Rel(\mathcal{P}) \cdot \Opp(\mathcal{P}) 
+    \leq \frac{\Delta}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
+\end{equation}
+where the $O(\lambda^{-2})$ term captures the higher-order cryptographic constraints that vanish for practical security parameters ($\lambda \geq 128$).
+\end{theorem}
+
+\begin{remark}[Choice of $\lambda \geq 64$]
+The condition $\lambda \geq 64$ ensures:
+\begin{enumerate}
+    \item Cryptographic security: Standard minimum for deployed systems
+    \item Negligibility: For $\lambda = 64$, $\negl(\lambda) < 2^{-64} \approx 10^{-19}$
+    \item Asymptotic regime: $O(\lambda^{-2}) < 0.0002$, truly negligible
+\end{enumerate}
+For $\lambda < 64$, the bound still holds but constant factors dominate, reducing practical utility.
+\end{remark}
+\begin{proof}
+We proceed through six steps, being explicit about approximations.
+
+\textbf{Step 1: Reliability forces mutual information.} 
+Let $\hat{M}$ be the optimal message estimator with an error probability $p_e = 1 - \Rel$. By Fano's inequality (Lemma~\ref{lem:fano}):
+\begin{equation}
+H(M|\Sigma,C) \leq h(p_e) + p_e\log(2^\lambda - 1)
+\end{equation}
+
+For protocols with $\Rel \geq 1/2$ (any reasonable evidence system), we have $h(p_e) \leq 1$, giving:
+\begin{equation}\label{eq:step1}
+I(M;\Sigma,C) = H(M) - H(M|\Sigma,C) \geq \lambda - 1 - p_e\lambda = \Rel \cdot \lambda - 1
+\end{equation}
+
+Since messages are independent of context ($M \perp C$ by protocol design):
+\begin{equation}
+I(M;\Sigma|C) = I(M;\Sigma,C) \geq \Rel \cdot \lambda - 1
+\end{equation}
+
+\textbf{Step 2: Bounding opposability via institutional extraction.} 
+From Definition~\ref{def:opposability} and Assumption~\ref{ass:bound_extract}:
+\begin{equation}\label{eq:step2}
+\Opp = \frac{I(V;\Sigma|C)}{H(V|C)} \leq \frac{I(M;\Sigma|C) + \Delta}{H(V|C)}
+\end{equation}
+
+\textbf{Step 3: Incorporating the verdict space bound.} 
+Assumption~\ref{ass:bound_verdict} gives $k_\lambda \leq 2^{\alpha H(C)}$. For efficient verdict functions that utilize the available context:
+\begin{equation}
+H(V|C) \geq \log_2 k_\lambda - 1 \geq \alpha H(C) - 1
+\end{equation}
+
+For typical institutional settings with $H(C) \geq 10$ bits, the $-1$ term is negligible. Thus:
+\begin{equation}\label{eq:step3}
+\Opp \leq \frac{I(M;\Sigma|C) + \Delta}{\alpha H(C)} + O(\lambda^{-1})
+\end{equation}
+
+\textbf{Step 4: Confidentiality bound from Lemma~\ref{lem:conf_mi_regular}.}
+For $\beta$-regular protocols:
+\begin{equation}\label{eq:step4}
+\Conf \leq 1 - \sqrt{\frac{c_0}{\beta\lambda} I(M;\Sigma|C)}
+\end{equation}
+
+\textbf{Step 5: Forming the product bound.} 
+Let $x = I(M;\Sigma|C)$. From Steps 1--4:
+\begin{align}
+\Conf \cdot \Rel \cdot \Opp 
+    &\leq \left(1 - \sqrt{\frac{c_0 x}{\beta\lambda}}\right) \cdot \left(\frac{x+1}{\lambda}\right) \cdot \left(\frac{x + \Delta}{\alpha H(C)}\right)
+\end{align}
+
+For protocols with $I(M;\Sigma|C) = O(\lambda)$ (all practical systems), the dominant terms are:
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \lesssim \frac{1}{\alpha H(C) \beta \lambda} \left(1 - \sqrt{\frac{c_0 x}{\beta\lambda}}\right) \cdot x^2 + \frac{\Delta}{\lambda}
+\end{equation}
+
+\textbf{Step 6: Optimization.} 
+Consider the function $f(x) = (1 - a\sqrt{x}) \cdot x^2$ where $a = \sqrt{c_0/(\beta\lambda)}$. Taking the derivative:
+\begin{equation}
+f'(x) = 2x(1 - a\sqrt{x}) - \frac{a}{2\sqrt{x}} \cdot x^2 = 2x - \frac{5}{2}ax^{3/2} = x^{3/2}\left(2\sqrt{x} - \frac{5a}{2}\right)
+\end{equation}
+
+Setting $f'(x^*) = 0$ gives:
+\begin{equation}
+\sqrt{x^*} = \frac{5a}{4} \implies x^* = \frac{25a^2}{16} = \frac{25c_0}{16\beta\lambda}
+\end{equation}
+
+\begin{remark}[Scaling of optimal information]
+The optimal mutual information $x^* = I^*(M;\Sigma|C)$ scales as $1/\lambda$, not $\lambda$. This reflects the confidentiality-reliability tension: Lemma~\ref{lem:conf_mi_regular} forces $I(M;\Sigma|C)$ to be small to maintain a high $\Conf$, creating a quadratic penalty in the product bound.
+\end{remark}
+
+At this optimum, substituting back:
+\begin{align}
+f(x^*) &= \left(\frac{25c_0}{16\beta\lambda}\right)^2 \left(1 - \sqrt{\frac{c_0}{\beta\lambda}} \cdot \frac{5\sqrt{c_0}}{4\sqrt{\beta\lambda}}\right) \\
+       &= \frac{625c_0^2}{256(\beta\lambda)^2} \left(1 - \frac{5c_0}{4\beta\lambda}\right)
+\end{align}
+
+For $\lambda \gg c_0$ (always satisfied for $\lambda \geq 64$):
+\begin{equation}
+f(x^*) \approx \frac{625c_0^2}{256(\beta\lambda)^2} = O(\lambda^{-2})
+\end{equation}
+
+With $c_0 \approx 0.721$ and $\beta = O(1)$, this cryptographic term becomes negligible for practical security parameters ($\lambda \geq 128$):
+\begin{equation}
+\frac{1}{\alpha H(C)} \cdot O(\lambda^{-2}) = O(\lambda^{-2})
+\end{equation}
+
+Therefore:
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \leq \frac{\Delta}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
+\end{equation}
+\end{proof}
+\begin{corollary}[Simplified Form]\label{cor:simplified}
+For typical institutional settings with $\lambda \geq 128$, $\beta = O(1)$, and $\alpha = O(1)$:
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \lesssim \frac{\Delta}{\lambda}
+\end{equation}
+\end{corollary}
+
+\begin{remark}[Interpretation]\label{rem:interpretation}
+Theorem~\ref{thm:conditional_cro} reveals that the CRO product is primarily bounded by \emph{institutional capacity} $\Delta$, not cryptographic entropy $H(C)$. The cryptographic term $O(\lambda^{-2})$ vanishes rapidly for realistic security parameters and, $\Delta/\lambda$ is the dominant constraint.
+
+This has profound implications: improving CRO trade-offs requires either:
+\begin{enumerate}
+\item Increasing institutional capacity $\Delta$ through training, documentation, and specialization
+\item Accepting lower security parameters $\lambda$ (unacceptable for most applications)
+\item Strategically sacrificing one property to strengthen others
+\end{enumerate}
+\end{remark}
+
+\section{Operational Regime Analysis}\label{sec:regimes}
+
+\subsection{Institutional Capacity Regimes}
+
+From Corollary~\ref{cor:simplified}, the bound $\Conf \cdot \Rel \cdot \Opp \lesssim \Delta/\lambda$ suggests that institutional capacity $\Delta$ fundamentally determines achievable trade-offs. We identified three operational regimes based on $\Delta$ values.
+
+\begin{definition}[Institutional Capacity Regimes]
+For security parameter $\lambda$, we define:
+\begin{itemize}
+\item \textbf{Low-Capacity Regime:} $\Delta < 0.1\lambda$ (bound $< 0.1$)
+\item \textbf{Mid-Capacity Regime:} $0.1\lambda \leq \Delta \leq 0.5\lambda$ (bound $0.1$--$0.5$)
+\item \textbf{High-Capacity Regime:} $\Delta > 0.5\lambda$ (bound $> 0.5$)
+\end{itemize}
+\end{definition}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Operational Regimes for $\lambda = 128$}
+\label{tab:regimes}
+\begin{tabular}{@{}l@{\hspace{0.5em}}c@{\hspace{0.5em}}c@{\hspace{0.5em}}c@{}}
+\toprule
+\textbf{Category} & \textbf{Low-Capacity} & \textbf{Mid-Capacity} & \textbf{High-Capacity} \\
+\midrule
+$\Delta$ range & $< 13$ bits & $13$--$64$ bits & $> 64$ bits \\
+Bound $\Delta/\lambda$ & $< 0.10$ & $0.10$--$0.50$ & $> 0.50$ \\
+Suitable protocols & Transparent & Balanced & Privacy-preserving \\
+Example & Traffic court & Tax audit & Intelligence oversight \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[Regime Characteristics]
+\begin{itemize}
+\item \textbf{Low-Capacity Institutions} ($\Delta < 13$ bits for $\lambda=128$): Must prioritize transparency (high $\Opp$) over privacy. Examples include small claims courts, routine compliance checks, and public record systems. Advanced cryptography is inappropriate for these settings.
+
+\item \textbf{Mid-Capacity Institutions} ($13 \leq \Delta \leq 64$ bits): Can achieve balanced trade-offs. Examples include regulatory agencies with technical staff, specialized audit bodies, and electoral oversight commissions. This is the "sweet spot" for deploying moderate privacy-preserving protocols.
+
+\item \textbf{High-Capacity Institutions} ($\Delta > 64$ bits): Can support advanced cryptographic evidence. Examples include national security courts, financial intelligence units, and highly specialized forensic laboratories with extensive expert resources.
+\end{itemize}
+\end{remark}
+
+\subsection{Validation Against CLO Empirical Data}\label{subsec:clo_interpretation}
+
+CLO~\cite{Minka2026CLO} reported empirical products for three deployed systems:
+\begin{itemize}
+\item \textbf{Helios voting:} $\Conf \cdot \Rel \cdot \Opp \approx 0.437$
+\item \textbf{zk-SNARKs (compliance):} $\Conf \cdot \Rel \cdot \Opp \approx 0.572$
+\item \textbf{ECDSA signatures:} $\Conf \cdot \Rel \cdot \Opp \approx 0.273$
+\end{itemize}
+
+Our bound $\Conf \cdot \Rel \cdot \Opp \lesssim \Delta/\lambda$ allows us to reverse-engineer implied institutional capacities.
+
+\begin{table}[htbp]
+\centering
+\caption{Implied Institutional Capacities from CLO Data}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{System} & \textbf{CLO Product} & $\boldsymbol{\lambda}$ & \textbf{Implied} $\boldsymbol{\Delta}$ & \textbf{Regime} \\
+\midrule
+Helios          & 0.437               & 128                & $\geq 56$ bits           & Mid-High \\
+zk-SNARKs       & 0.572               & 128                & $\geq 73$ bits           & High \\
+ECDSA           & 0.273               & 128                & $\geq 35$ bits           & Mid \\
+\bottomrule
+\end{tabular}
+\label{tab:clo_validation}
+\end{table}
+
+\begin{remark}[Cognitive Plausibility]
+All implied $\Delta$ values fall within the cognitively plausible range $[20, 80]$ bits derived in Section~\ref{subsec:empirical_grounding}:
+\begin{itemize}
+\item \textbf{Helios ($\Delta \approx 56$ bits):} Electoral institutions possess substantial expertise, election laws ($\sim 20$ bits), procedural training ($\sim 15$ bits), audit history ($\sim 10$ bits), and expert testimony capability ($\sim 10$ bits). This aligns with $\Delta \approx 56$.
+
+\item \textbf{zk-SNARKs ($\Delta \approx 73$ bits):} Financial compliance settings have an even richer institutional capacity, regulatory frameworks ($\sim 25$ bits), transaction pattern analysis ($\sim 20$ bits), specialized forensic teams ($\sim 15$ bits), and multi-agency collaboration ($\sim 15$ bits). This supports $\Delta \approx 73$.
+
+\item \textbf{ECDSA ($\Delta \approx 35$ bits):} Contract signing contexts have moderate institutional support, legal precedents ($\sim 15$ bits), notarial procedures ($\sim 10$ bits), and dispute resolution frameworks ($\sim 10$ bits). This matches $\Delta \approx 35$.
+\end{itemize}
+\end{remark}
+
+\begin{remark}[Consistency with Bounded Rationality]
+Miller's $7\pm 2$ chunks~\cite{Miller56} suggested an individual capacity $\sim 20$ bits. The observed institutional values $\Delta \in [35, 73]$ represent 1.8--3.7× amplification factors, consistent with:
+\begin{itemize}
+\item Documentation and reference materials (1.5× factor)
+\item Multi-person deliberation (1.5× factor)
+\item Specialized training (1.3× factor)
+\end{itemize}
+Cumulative: $1.5 \times 1.5 \times 1.3 \approx 2.9\times$, yielding $\Delta \approx 60$ bits baseline for well-functioning institutions.
+\end{remark}
+
+\subsection{Protocol Design Implications}
+
+The regime analysis provides concrete guidance for protocol selection:
+
+\begin{enumerate}
+\item \textbf{Assess institutional capacity:} Estimate $\Delta$ through cognitive assessments, expert availability, and procedural complexity.
+
+\item \textbf{Identify target regime:} Determine which of Low/Mid/High capacity applies.
+
+\item \textbf{Select appropriate protocol:}
+\begin{itemize}
+\item Low-capacity: Prioritize transparency (ECDSA-style, high $\Opp$)
+\item Mid-capacity: Balanced protocols (Helios-style)
+\item High-capacity: Privacy-preserving protocols (zk-SNARK-style, high $\Conf$)
+\end{itemize}
+
+\item \textbf{Enhance capacity if needed:} If desired protocol exceeds institutional capacity, invest in:
+\begin{itemize}
+\item Expert training programs
+\item Technical documentation and tools
+\item Collaborative deliberation processes
+\item External expert testimony mechanisms
+\end{itemize}
+\end{enumerate}
+
+This represents a shift from "optimize cryptography in vacuum" to "match cryptography to institutional reality."
+
+\section{Related Work}\label{sec:related_work}
+
+Our work bridges cryptography, information theory, and institutional analysis. We position it relative to four research strands.
+
+\subsection{Cryptographic Frameworks with Institutional Considerations}
+
+\textbf{Traditional cryptographic frameworks} optimize mathematical security (confidentiality, integrity, and authentication) but neglect institutional interpretability. Zero-knowledge proofs~\cite{GMR85,Groth16} minimize information leakage, creating the "Invisible Authenticity Paradox" where mathematically sound proofs become institutionally opaque. Verifiable computation~\cite{Gennaro13} decouples execution from verification but provides binary outputs without explanatory depth. 
+
+\textbf{Accountability mechanisms} in MPC and blockchains introduce auditors or watchdogs~\cite{Asharov12,Garay15} to verify the correctness of stakeholders. While practical, these remain ad hoc solutions without a formal trade-off analysis.
+
+\textbf{Our contribution}: The CRO Trilemma provides the first \emph{formal, quantitative} framework for analyzing the fundamental tension between cryptographic security ($\Conf,\Rel$) and institutional utility ($\Opp$).
+
+\subsection{Information-Theoretic Security and Rate-Distortion}
+
+Classical information theory~\cite{Shannon48,CoverThomas06} establishes fundamental limits on communication. Wyner's wiretap channel~\cite{Wyner75} bounds the secure rates when adversaries observe noisy outputs. Rate-distortion theory characterizes the minimal information requiered to achieve a fidelity criterion.
+
+\textbf{Our departure}: Unlike wiretap channels (maximize rate), we bound the \emph{product} of three institutional properties. Unlike rate-distortion (minimize distortion), we model institutional interpretation as an extraction process with bounded capacity $\Delta$. Our use of Pinsker's inequality and Fano's lemma adapts these tools to the institutional constraints.
+
+\subsection{Human Factors and Bounded Rationality}
+
+Simon's bounded rationality~\cite{Simon82} recognizes the cognitive and informational constraints on decision-making. Miller's working memory limit ($7\pm2$ chunks)~\cite{Miller56} and Ericsson's long-term working memory model~\cite{Ericsson95} quantify human information processing capacity.
+
+\textbf{Usable security research} studies how humans understand security mechanisms~\cite{Bonneau12,Cranor05}. Herley~\cite{Herley09} shows that users rationally reject security advice when costs exceed perceived benefits.
+
+\textbf{Our formalization}: Assumption~\ref{ass:bound_extract} ($I(V;\Sigma|C) \leq I(M;\Sigma|C) + \Delta$) provides an information-theoretic instantiation of bounded rationality. The parameter $\Delta$ (20--80 bits) quantifies institutional capacity, bridging cognitive science with cryptographic analysis.
+
+\subsection{Legal and Regulatory Scholarship}
+
+\textbf{Legal evidence standards}: Kerr~\cite{Kerr04} analyzed digital evidence admissibility. Casey~\cite{Casey10} documents judicial challenges using cryptographic evidence. The ESIGN (Electronic Signatures in Global and National Commerce) Act~\cite{ESIGN00} and eIDAS (Electronic Identification, Authentication and trust Services Regulation) Regulation~\cite{eIDAS14} establish legal equivalence for digital signatures.
+
+\textbf{Algorithmic accountability}: Citron \& Pasquale's \emph{technological due process}~\cite{Citron14} argued that automated systems must provide explicability. This principle finds legal expression in the GDPR's (General Data Protection Regulation)~\cite{GDPR16} ``right to explanation,'' creating regulatory pressure for interpretability that conflicts with cryptographic opacity.
+
+\textbf{Blockchain governance}: De Filippi \& Loveluck~\cite{DeFilippi16} analyzed how \emph{lex cryptographica} can undermine democratic accountability through technical opacity.
+
+\textbf{Our positioning}: The CRO Trilemma quantifies these legal challenges through $\Opp$, providing metrics to evaluate whether cryptographic designs satisfy the institutional requirements for interpretability.
+
+\subsection{Impossibility Results and Trade-off Theorems}
+
+Famous impossibility theorems characterize fundamental limits:
+\begin{itemize}
+\item \textbf{CAP Theorem}~\cite{Brewer00}: Distributed systems cannot simultaneously achieve Consistency, Availability, and Partition tolerance.
+\item \textbf{FLP Impossibility}~\cite{FLP85}: Deterministic consensus is impossible in asynchronous systems with one faulty process.
+\item \textbf{Arrow's Impossibility Theorem}~\cite{Arrow50}: No ranked voting system can satisfy all desirable fairness properties (universal domain, non-dictatorship, Pareto efficiency, independence of irrelevant alternatives).
+\end{itemize}
+
+\textbf{Our contribution}: The Conditional CRO Trilemma establishes a new class of impossibility result: \emph{conditional} on measurable institutional constraints ($\Delta,\alpha,\beta$). Unlike CAP/FLP (unconditional system properties) and Arrow's Theorem (axiomatic social choice), our bound depends on \emph{empirically measurable} cognitive and organizational limits, making experimental validation both possible and essential for practical deployment.
+
+\begin{table}[htbp]
+\centering
+\caption{Framework comparison. \checkmark: rigorous measure; $\sim$: partial/informal; $\times$: not addressed. CRO Trilemma uniquely provides theoretical bounds on achievable $(\Conf,\Rel,\Opp)$ trade-offs conditional on institutional parameters $(\Delta,\alpha,\beta)$.}
+\label{tab:framework_comparison}
+\begin{tabular}{@{}l@{\hspace{0.5em}}c@{\hspace{0.5em}}c@{\hspace{0.5em}}c@{\hspace{0.5em}}l@{}}
+\toprule
+\textbf{Framework} & \textbf{Conf} & \textbf{Rel} & \textbf{Opp} & \textbf{Institutional Focus} \\
+\midrule
+Zero-Knowledge Proofs~\cite{GMR85} & \checkmark & \checkmark & $\times$ & None \\
+Verifiable Computation~\cite{Gennaro13} & $\times$ & \checkmark & $\times$ & None \\
+Quantitative Info Flow~\cite{Alvim12} & \checkmark & $\times$ & $\times$ & None \\
+Accountability Crypto~\cite{Asharov12,Garay15} & $\sim$ & \checkmark & $\sim$ & Partial \\
+Usable Security~\cite{Bonneau12,Cranor05} & $\times$ & $\times$ & \checkmark & Qualitative \\
+Legal Scholarship~\cite{Citron14,Casey10} & $\times$ & $\times$ & \checkmark & Qualitative \\
+\textbf{CLO Framework~\cite{Minka2026CLO}} & \checkmark & \checkmark & \checkmark & Empirical \\
+\textbf{CRO Trilemma (this work)} & \checkmark & \checkmark & \checkmark & \textbf{Theoretical} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Synthesis}: This work extends the CLO Framework from empirical observation to theoretical explanation, bridges cryptography with cognitive science and legal scholarship, and establishes a new class of conditional impossibility results tailored for institutional cryptography.
+
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Theoretical Explanation of CLO Empirical Patterns}
+
+The Conditional CRO Trilemma provides a theoretical foundation explaining the empirical trade-offs observed in the CLO Framework~\cite{Minka2026CLO}. Where CLO documented \emph{what} trade-offs occur (Helios: 0.437, zk-SNARKs: 0.572, ECDSA: 0.273), our theorem explains \emph{why} they occur and \emph{how much} is fundamentally achievable.
+
+\textbf{Synthesizing CLO Observations with CRO Theory:}
+\begin{itemize}
+\item \textbf{Helios ($\Conf \cdot \Rel \cdot \Opp \approx 0.437$)}: Our bound $\Conf \cdot \Rel \cdot \Opp \lesssim \Delta/\lambda$ with $\lambda = 128$ implies $\Delta \geq 56$ bits. This matches electoral institutions' substantial expertise (election law, procedural training, and audit history), placing them in the Mid-High capacity regime.
+
+\item \textbf{zk-SNARKs ($\Conf \cdot \Rel \cdot \Opp \approx 0.572$)}: Implies $\Delta \geq 73$ bits, consistent with financial regulatory settings having rich institutional capacity (regulatory frameworks, forensic teams, multi-agency collaboration).
+
+\item \textbf{ECDSA ($\Conf \cdot \Rel \cdot \Opp \approx 0.273$)}: Implies $\Delta \geq 35$ bits, appropriate for contract signing contexts with moderate institutional support (legal precedent, notarial procedures).
+\end{itemize}
+
+\textbf{Theoretical- Empirical Consistency Check:}
+Our theoretically derived $\Delta$ values (35--73 bits) fall precisely within the cognitively plausible range [20, 80] bits derived from bounded rationality theory (Section~\ref{subsec:empirical_grounding}). This consistency validates both frameworks: CLO's empirical measurements align with CRO's theoretical predictions when institutions operate near their capacity limits.
+
+\subsection{Implications for Protocol Design}
+
+The Conditional CRO Trilemma reframes cryptographic protocol design from abstract optimization to constraint-aware engineering. Traditional cryptographic research asks: "What are the optimal security properties achievable?" Our framework, building on CLO's empirical foundation, asks: "What security properties can this specific institution effectively utilize, given its measurable capacity $\Delta$?"
+
+\textbf{Regime-Informed Design Strategy}. The operational regimes identified in Section~\ref{sec:regimes} (Table~\ref{tab:regimes}) provide concrete guidance for protocol selection:
+
+\begin{itemize}
+\item \textbf{Low-Capacity Institutions} ($\Delta < 0.1\lambda$): Must prioritize transparency over privacy. These institutions lack the expertise to interpret complex cryptographic evidence. \emph{Recommendation}: Use simple, transparent mechanisms like ECDSA signatures with clear audit trails. Advanced privacy-preserving cryptography is inappropriate here.
+
+\item \textbf{Mid-Capacity Institutions} ($0.1\lambda \leq \Delta \leq 0.5\lambda$): Can achieve balanced CRO trade-offs. \emph{Recommendation}: Deploy protocols like Helios voting with structured interpretation aids. These institutions benefit from moderate privacy while maintaining interpretability through decision support tools.
+
+\item \textbf{High-Capacity Institutions} ($\Delta > 0.5\lambda$): Can support advanced cryptographic evidence. \emph{Recommendation}: May adopt zk-SNARKs or similar privacy-preserving systems, but require significant investment in expert training and technical infrastructure.
+\end{itemize}
+
+This regime-based approach leads to practical implementation steps:
+
+\begin{enumerate}
+\item \textbf{Institutional profiling and regime classification:} Assess extraction capacity $\Delta$ through:
+\begin{itemize}
+\item Expert availability surveys and cognitive load testing
+\item Analysis of historical decision-making with technical evidence
+\item Documentation quality and procedural maturity assessments
+\item Classification into Low/Mid/High capacity regimes
+\end{itemize}
+
+\item \textbf{Regime-appropriate protocol selection:} Select protocols matching institutional capacity:
+\begin{itemize}
+\item Low-capacity: Transparent protocols (ECDSA-style, high $\Opp$)
+\item Mid-capacity: Balanced protocols (Helios-style)
+\item High-capacity: Privacy-preserving protocols (zk-SNARK-style)
+\end{itemize}
+
+\item \textbf{Capacity enhancement for target protocols:} If desired protocols exceed current regime, invest in:
+\begin{itemize}
+\item Training programs specifically targeting identified capacity gaps
+\item Decision support tools tailored to protocol complexity
+\item Gradual migration paths: Low → Mid → High capacity protocols
+\end{itemize}
+\end{enumerate}
+
+\begin{example}[Regime Transition Strategy]
+A tax authority initially operating in Low-Capacity regime ($\Delta \approx 10$ bits) might:
+1. Start with transparent ECDSA-based reporting ($\Conf \cdot \Rel \cdot \Opp \approx 0.27$)
+2. Invest in auditor training and documentation systems
+3. Transition to Mid-Capacity ($\Delta \approx 40$ bits) over 2-3 years
+4. Adopt Helios-style audit protocols ($\Conf \cdot \Rel \cdot \Opp \approx 0.44$)
+5. Eventually target High-Capacity for sensitive cases
+\end{example}
+
+\subsection{Limitations and Model Scope}
+
+Our model has explicit boundaries that define its scope rather than represent failures:
+
+\begin{enumerate}
+\item \textbf{Assumptions are hypotheses, not proven facts:} Assumptions~\ref{ass:bound_extract}--\ref{ass:regularity} formalize plausible institutional constraints, but their empirical validity remains an open question. Section~\ref{subsec:future_directions} outlines validation pathways.
+
+\item \textbf{Static context model:} We treat context $C$ as fixed. Real institutions learn and adapt; $H(C)$ and $\Delta$ may evolve through:
+\begin{itemize}
+\item Precedent accumulation (increasing $\Delta$)
+\item Technological change (shifting $H(C)$)
+\item Regulatory updates (modifying verdict spaces)
+\end{itemize}
+Dynamic extensions could model temporal evolution of institutional capacity.
+
+\item \textbf{Deterministic verdict functions:} We model $V(\Sigma, C)$ as deterministic. Real decision-making involves:
+\begin{itemize}
+\item Stochastic deliberation processes
+\item Multi-person disagreement and consensus formation
+\item Psychological biases and heuristics
+\end{itemize}
+Stochastic extensions could incorporate these factors.
+
+\item \textbf{Regularity assumption:} Theorem~\ref{thm:conditional_cro} requires $\beta$-regularity (Assumption~\ref{ass:regularity}). While satisfied by most symmetric protocols, pathological constructions could violate this. Future work should either:
+\begin{itemize}
+\item Prove weaker bounds without regularity
+\item Characterize exactly which protocols satisfy $\beta = O(1)$
+\end{itemize}
+\end{enumerate}
+
+These limitations define research directions rather than invalidate the framework.
+
+\subsection{Future Research Directions}\label{subsec:future_directions}
+
+\subsubsection{Empirical Validation: Testing the Institutional Extraction Hypothesis}
+
+Theorem~\ref{thm:conditional_cro} is conditional. Its practical utility hinges on whether Assumptions~\ref{ass:bound_extract}--\ref{ass:regularity} reflect observable institutional behavior. This opens a critical research program: \textbf{empirically testing the Institutional Extraction Hypothesis}.
+
+\paragraph{Direct Measurement of Institutional Parameters.}
+Beyond hypothesis testing, we need methodologies to directly measure $\Delta$ and $\alpha$:
+
+\begin{enumerate}
+\item \textbf{Protocol comprehension battery}: Standardized tests assessing how well institutional actors interpret different proof types. Score correlates with $\Delta$.
+
+\item \textbf{Delphi method for capacity estimation}: Iterative expert elicitation to estimate institutional $\Delta$ through structured questionnaires:
+\begin{itemize}
+\item "How many distinct compliance scenarios can your team reliably distinguish?"
+\item "What percentage of cryptographic proof content is actionable for decisions?"
+\item "Describe decision-making process for ambiguous cryptographic evidence."
+\end{itemize}
+
+\item \textbf{Longitudinal capacity tracking}: Measure $\Delta(t)$ evolution as institutions gain experience with cryptographic systems. Expected pattern: $\Delta$ increases with training and documentation, asymptoting at cognitive limits.
+\end{enumerate}
+
+\paragraph{Standardized Measurement Protocol.}
+For reproducible research:
+
+\begin{algorithmic}[1]
+\STATE \textbf{Input}: Institution $I$, proof types $\{\sigma_1, \ldots, \sigma_k\}$, context $C$
+\STATE \textbf{Output}: Estimated $\hat{\Delta}$, $\hat{\alpha}$
+\STATE Present $\sigma_i$ with $C$ to institutional actors
+\STATE Record verdicts $V$, confidence scores, decision time
+\STATE Compute empirical $I_{\text{emp}}(V;\Sigma|C)$ from response distribution
+\STATE Compute ground truth $I_{\text{true}}(M;\Sigma|C)$ from protocol specification
+\STATE Estimate $\hat{\Delta} = I_{\text{emp}}(V;\Sigma|C) - I_{\text{true}}(M;\Sigma|C)$
+\STATE Estimate $\hat{\alpha} = \frac{\log_2|\mathcal{V}|}{H(C)}$ from verdict space analysis
+\STATE Validate through test-retest reliability and inter-rater consistency
+\end{algorithmic}
+
+\paragraph{Proposed Experimental Design.}
+We envision controlled experiments presenting cryptographic evidence to institutional decision-makers (judges, auditors, regulators) under varying conditions:
+
+\textbf{Participants:} Recruit $N \geq 100$ professionals from target institutions, stratified by expertise level (novice/intermediate/expert).
+
+\textbf{Materials:} Prepare cryptographic proofs of varying complexity with ground truth labels:
+\begin{itemize}
+\item \textbf{Tier 1 (Simple)}: ECDSA signatures, $H(\Sigma) \approx 256$ bits
+\item \textbf{Tier 2 (Moderate)}: Helios-style proofs, $H(\Sigma) \approx 10^3$ bits
+\item \textbf{Tier 3 (Complex)}: zk-SNARK proofs, $H(\Sigma) \approx 10^6$ bits
+\end{itemize}
+
+\textbf{Measurement Targets}:
+\begin{itemize}
+\item Primary: $\Delta$ estimates with confidence intervals
+\item Secondary: Learning curves (Δ improvement with training)
+\item Tertiary: Cross-institutional Δ comparisons
+\end{itemize}
+
+\textbf{Procedure:}
+\begin{enumerate}
+\item Present proof $\sigma$ and context $c$ to participant
+\item Participant renders verdict $v \in \mathcal{Y}$
+\item Measure: Time taken, confidence rating, correctness (against ground truth)
+\item Vary: Proof complexity, context richness, expertise level
+\end{enumerate}
+
+\textbf{Analysis:} Estimate $\Delta$ by fitting:
+\begin{equation}
+I(V;\Sigma|C) \approx I(M;\Sigma|C) + \Delta_{\text{estimated}}
+\end{equation}
+using empirical distributions from participant responses.
+
+\paragraph{Testable Predictions.}
+If Assumption~\ref{ass:bound_extract} holds, we predict:
+\begin{itemize}
+\item $\Delta$ should be bounded and approximately constant across similar institutions
+\item $\Delta$ should increase with: expert training, collaborative deliberation, documentation quality
+\item $\Delta$ should correlate with cognitive measures: working memory capacity, domain expertise
+\end{itemize}
+
+\paragraph{Alternative Outcomes.}
+If experiments reveal:
+\begin{itemize}
+\item $\Delta$\textbf{unbounded:} Assumption~\ref{ass:bound_extract} fails; institutions may have greater capacity than theorized.
+\item \textbf{Non-linear relationship:} The form $I(M;\Sigma|C) + \Delta$ may need refinement (e.g., multiplicative or saturating models).
+\item \textbf{High variance:} Institutional capacity may be too heterogeneous for simple parameterization.
+\end{itemize}
+
+Each outcome refines the model and advances understanding of institutional cryptography.
+
+\subsubsection{Theoretical Refinements}
+
+\begin{itemize}
+\item \textbf{Removing regularity assumption:} Prove bounds for arbitrary protocols, possibly with worse dependence on $\lambda$ or $H(C)$.
+
+\item \textbf{Tight constant factors:} Our bound has unspecified constant factors in $O(\lambda^{-2})$ terms. Tightening these could reveal additional structure.
+
+\item \textbf{Lower bounds:} Theorem~\ref{thm:conditional_cro} provides an upper bound. Constructing protocols that achieve $\Conf \cdot \Rel \cdot \Opp = \Theta(\Delta/\lambda)$ would prove tightness.
+
+\item \textbf{Multi-prover extensions:} Real institutional settings often involve multiple evidence sources. Extending to multi-prover protocols could model compound evidence scenarios.
+\item \textbf{Post-quantum extensions:} The present trilemma assumes classical protocols with security parameter $\lambda$. In post-quantum settings, quantum-resistant proof systems (lattice-based, hash-based) may challenge the $\beta$-regularity assumption 
+(Assumption~\ref{ass:regularity}), while institutional interpreters unfamiliar with such 
+primitives may face a more constrained $\Delta$. A rigorous treatment is deferred to future work.
+\end{itemize}
+
+\subsubsection{Applied and Policy Directions}
+
+\begin{itemize}
+\item \textbf{Institutional capacity benchmarks:} Develop standardized tests measuring an institution's $\Delta$ and $\alpha$. Certification programs could validate institutional readiness for specific cryptographic protocols.
+
+\item \textbf{Regulatory frameworks:} Should regulations mandate minimum $\Opp$ levels for critical evidence? Should judicial training programs aim to increase $\Delta$? Our framework makes these questions precise and quantifiable.
+
+\item \textbf{Protocol certification:} Analogous to cryptographic standards (FIPS, Common Criteria), develop "institutional compatibility certificates": "Protocol X certified for institutions with $\Delta \geq 40$ bits."
+\end{itemize}
+
+\subsection{Research Roadmap and Timeline}\label{subsec:research_roadmap}
+
+Table~\ref{tab:research_roadmap} outlines the integrated research program emerging from the Conditional CRO Trilemma.
+
+\begin{table}[htbp]
+\centering
+\caption{Three-phase research roadmap}
+\label{tab:research_roadmap}
+\begin{tabular}{@{}l@{\hspace{0.5em}}>{\raggedright}p{0.55\linewidth}@{\hspace{0.5em}}l@{}}
+\toprule
+\textbf{Phase} & \textbf{Research Focus} & \textbf{Timeline} \\
+\midrule
+\textbf{Phase 1: Foundation} & 
+\begin{itemize}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\item Empirical validation of $\Delta$, $\alpha$
+\item Refinement of theoretical bounds  
+\item Protocol benchmarking
+\end{itemize} & 1-2 years \\
+\midrule
+\textbf{Phase 2: Application} &
+\begin{itemize}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\item Capacity assessment tools
+\item Adaptive protocol standards
+\item Cross-disciplinary integration
+\end{itemize} & 3-5 years \\
+\midrule
+\textbf{Phase 3: Transformation} &
+\begin{itemize}
+\setlength{\itemsep}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\parsep}{0pt}
+\item Institution-aware cryptography
+\item Global certification standards
+\item Educational curriculum reform
+\end{itemize} & 5+ years \\
+\bottomrule
+\end{tabular}
+\end{table}
+\paragraph{Phase 1: Foundational Validation (1-2 years)}
+\begin{itemize}
+\item \textbf{Empirical Studies}: Large-scale experiments measuring Δ across institution types (courts, regulators, auditors)
+\item \textbf{Theoretical Refinement}: Removing regularity assumption, proving tighter bounds
+\item \textbf{Protocol Database}: Systematic CRO analysis of 50+ cryptographic systems
+\end{itemize}
+
+\paragraph{Phase 2: Applied Development (3-5 years)}
+\begin{itemize}
+\item \textbf{Assessment Tools}: Software for institutional capacity profiling
+\item \textbf{Adaptive Standards}: NIST/ISO standards incorporating Δ requirements
+\item \textbf{Hybrid Protocols}: Multilayer designs optimizing CRO trade-offs
+\end{itemize}
+
+\paragraph{Phase 3: Systemic Transformation (5+ years)}
+\begin{itemize}
+\item \textbf{Institution-Aware Cryptography}: Protocols that dynamically adapt to interpreter capacity
+\item \textbf{Global Certification}: "Δ-ready" certification for institutions and protocols
+\item \textbf{Educational Integration}: Institutional cryptography in law and computer science curricula
+\end{itemize}
+
+\paragraph{Expected Impact.} This roadmap positions institutional cryptography as a mature research domain. Within 5 years, we expect: (1) Standardized Δ measurement protocols, (2) Regulatory guidelines for cryptographic evidence based on CRO metrics, (3) First-generation institution-aware cryptographic systems deployed in production.
+
+\section{Conclusion}\label{sec:conclusion}
+
+We have presented the Conditional CRO Trilemma, establishing that for cryptographic evidence protocols satisfying regularity conditions, the product of confidentiality, reliability, and opposability is bounded by institutional extraction capacity: $\Conf \cdot \Rel \cdot \Opp \lesssim \Delta/\lambda$.
+
+This result is fundamentally conditional. It does not claim universal impossibility, but rather defines feasibility regions \emph{given} specific institutional constraints formalized through parameters $\Delta$ (extraction capacity) and $\alpha$ (verdict granularity). The bound's value lies in making these constraints explicit and quantifiable.
+
+Our analysis extends the CLO framework from empirical observation to theoretical explanation. The observed trade-offs in deployed systems (Helios, zk-SNARKs, ECDSA) are consistent with operating within institutional limits, with implied capacities of 35--73 bits falling in cognitively plausible ranges.
+
+The path forward is clear. Theoretically, refinements are needed, removing the regularity assumption, tightening constant factors, proving lower bounds. More importantly, empirical validation is essential. We must test the Institutional Extraction Hypothesis in real courtrooms, regulatory hearings, and audit settings. Only through such validation can the conditional trilemma transition from mathematical statement to grounded framework for institutional cryptography.
+
+Cryptography does not exist in a vacuum. It serves human institutions operating under cognitive, organizational, and procedural constraints. Understanding those constraints is not peripheral to cryptographic design, it is foundational to building systems that work in the real world. This paper offers one step toward that understanding, defining a research program at the intersection of cryptography, cognitive science, and institutional analysis.
+
+\section*{Acknowledgment}
+
+The authors acknowledge the institutional support from the Laboratory of Mathematical Engineering and Information Systems (LIMSI), National Advanced School of Engineering, University of Yaoundé I, Cameroon. 
+The first author gratefully acknowledges the Supreme State Audit Office, Yaoundé, Cameroon, for granting exceptional leave to conduct this research as part of his doctoral effort.
+The authors thank Honorable Judge Robert Thierry Massoussi Songo (Mfoundi High Court, Yaoundé) for insights into judicial challenges with cryptographic evidence, Senior Auditor Mohamadou Souleymanou for perspectives on audit requirements, and Mrs. Tabenyang Augusta born Ndjock Arrey, Head of the Budget Control Division at the Ministry of Finances, for her expert perspective on the potential impacts of cryptographic evidence on financial transaction auditing methodologies.
+
+\textbf{Declaration of AI-assisted tools:} During the preparation of this work, the authors used DeepL (\url{https://www.deepl.com/fr/translator}) for translation from French to English, and Overleaf AI-Assistant 
+(\url{https://www.overleaf.com/}) for LaTeX formatting assistance. After using these tools, the authors reviewed and edited the content as required and take full responsibility for the content of the publication.
+
+This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors.
+The authors declare no conflicts of interest.
+
+\begin{thebibliography}{10}
+
+\bibitem{Alvim12}
+M. S. Alvim, K. Chatzikokolakis, C. Palamidessi, and G. Smith, 
+``Measuring information leakage using generalized gain functions,'' 
+in \emph{Proc. 25th IEEE Computer Security Foundations Symposium (CSF)}, 
+2012, pp. 265--279.
+DOI: \url{10.1109/CSF.2012.26}
+\bibitem{Arrow50}
+K. J. Arrow, 
+``A Difficulty in the Concept of Social Welfare,'' 
+\emph{Journal of Political Economy}, vol. 58, no. 4, pp. 328--346, 1950.
+DOI: \url{10.1086/256963}
+\bibitem{Asharov12}
+G. Asharov, A. Jain, A. López-Alt, E. Tromer, V. Vaikuntanathan, and D. Wichs, 
+``Multiparty computation with low communication, computation and interaction via threshold FHE,'' 
+in \emph{Advances in Cryptology -- EUROCRYPT 2012}, 
+D. Pointcheval and T. Johansson, Eds., Berlin, Heidelberg: Springer, 2012, pp. 483--501.
+DOI: \url{10.1007/978-3-642-29011-4_29}
+\bibitem{Bonneau12}
+J. Bonneau, C. Herley, P. C. van Oorschot, and F. Stajano, 
+``The quest to replace passwords: A framework for comparative evaluation of web authentication schemes,'' 
+in \emph{Proc. IEEE Symposium on Security and Privacy (SP)}, 
+2012, pp. 553--567.
+DOI: \url{0.1109/SP.2012.44}
+\bibitem{Brewer00}
+E. A. Brewer, 
+``Towards robust distributed systems (invited talk),'' 
+in \emph{Proc. 19th ACM Symposium on Principles of Distributed Computing (PODC)}, 
+Portland, OR, USA, 2000, p. 7.
+DOI: \url{10.1145/343477.343502}
+\bibitem{Casey10}
+E. Casey and C. W. Rose,
+``Forensic Analysis,''
+in \emph{Handbook of Digital Forensics and Investigation},
+E. Casey et al., Eds., Academic Press, 2010, pp. 21--62.
+DOI: \url{10.1016/B978-0-12-374267-4.00002-1}
+
+\bibitem{Citron14}
+D. K. Citron and F. Pasquale, 
+``The scored society: Due process for automated predictions,'' 
+\emph{Washington Law Review}, vol. 89, no. 1, pp. 1--33, 2014.
+Available at SSRN: \url{https://ssrn.com/abstract=2376209}
+\bibitem{CoverThomas06}
+T. M. Cover and J. A. Thomas, 
+\emph{Elements of Information Theory}, 2nd ed. 
+Wiley-Interscience, 2006.
+DOI: \url{10.1016/j.ipm.2007.02.009}
+\bibitem{Cranor05}
+L. F. Cranor and S. Garfinkel, 
+\emph{Security and Usability: Designing Secure Systems that People Can Use}. 
+O'Reilly Media, 2005.
+
+\bibitem{DeFilippi16}
+P. De Filippi and B. Loveluck, 
+``The invisible politics of Bitcoin: Governance crisis of a decentralized infrastructure,'' 
+\emph{Internet Policy Review}, vol. 5, no. 3, 2016. 
+DOI: \url{10.14763/2016.3.427}
+
+\bibitem{eIDAS14}
+``Regulation (EU) No 910/2014 on electronic identification and trust services (eIDAS),'' 
+\emph{Official Journal of the European Union}, L 257/73, 2014.
+Available at \url{http://data.europa.eu/eli/reg/2014/910/oj}
+\bibitem{Ericsson95}
+K. A. Ericsson and W. Kintsch, 
+``Long-term working memory,'' 
+\emph{Psychological Review}, vol. 102, no. 2, pp. 211--245, 1995.
+DOI: \url{10.1037/0033-295X.102.2.211}
+\bibitem{ESIGN00}
+``Electronic Signatures in Global and National Commerce Act (ESIGN Act),'' 
+U.S. Public Law 106-229, 114 Stat. 464, 2000.
+Available at \url{https://www.congress.gov/bill/106th-congress/senate-bill/761}
+\bibitem{FLP85}
+M. J. Fischer, N. A. Lynch, and M. S. Paterson, 
+``Impossibility of distributed consensus with one faulty process,'' 
+\emph{Journal of the ACM}, vol. 32, no. 2, pp. 374--382, 1985.
+DOI: \url{10.1145/3149.214121}
+\bibitem{Garay15}
+J. Garay, A. Kiayias, and N. Leonardos, 
+``The Bitcoin backbone protocol: Analysis and applications,'' 
+in \emph{Advances in Cryptology -- EUROCRYPT 2015}, 
+E. Oswald and M. Fischlin, Eds., Berlin, Heidelberg: Springer, 2015, pp. 281--310.
+DOI: \url{10.1007/978-3-662-46803-6_10}
+\bibitem{GDPR16}
+``Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 
+on the protection of natural persons with regard to the processing of personal data and 
+on the free movement of such data, and repealing Directive 95/46/EC (General Data Protection 
+Regulation),'' \emph{Official Journal of the European Union}, L 119/1, 2016.
+Available at \url{http://data.europa.eu/eli/reg/2016/679/oj}
+\bibitem{Gennaro13}
+R. Gennaro, C. Gentry, B. Parno, and M. Raykova, 
+``Quadratic span programs and succinct NIZKs without PCPs,'' 
+in \emph{Advances in Cryptology -- EUROCRYPT 2013}, 
+T. Johansson and P. Q. Nguyen, Eds., Berlin, Heidelberg: Springer, 2013, pp. 626--645.
+Available at \url{https://link.springer.com/chapter/10.1007/978-3-642-38348-9_37}
+\bibitem{GMR85}
+S. Goldwasser, S. Micali, and C. Rackoff, 
+``The knowledge complexity of interactive proof-systems,'' 
+in \emph{Proc. 17th ACM Symposium on Theory of Computing (STOC)}, 
+Providence, RI, USA, 1985, pp. 291--304.
+DOI: \url{10.1145/22145.22178}
+\bibitem{Groth16}
+J. Groth, 
+``On the size of pairing-based non-interactive arguments,'' 
+in \emph{Advances in Cryptology -- EUROCRYPT 2016}, 
+M. Fischlin and J.-S. Coron, Eds., Berlin, Heidelberg: Springer, 2016, pp. 305--326.
+DOI: \url{10.5555/3081738.3081749}
+\bibitem{Herley09}
+C. Herley, 
+``So long, and no thanks for the externalities: The rational rejection of security advice by users,'' 
+in \emph{Proc. 2009 New Security Paradigms Workshop (NSPW)}, 
+Oxford, UK, 2009, pp. 133--144.
+DOI: \url{10.1145/1719030.1719050}
+\bibitem{Kerr04}
+O. S. Kerr, 
+``Digital evidence and the new criminal procedure,'' 
+\emph{Columbia Law Review}, vol. 104, no. 1, pp. 279--318, 2004.
+Available at SSRN: \url{https://ssrn.com/abstract=594101}
+\bibitem{Miller56}
+G. A. Miller, 
+``The magical number seven, plus or minus two: Some limits on our capacity for processing information,'' 
+\emph{Psychological Review}, vol. 63, no. 2, pp. 81--97, 1956.
+DOI: \url{10.1037/h0043158}
+\bibitem{Minka2026CLO}
+T. E. Minka Mi Nguidjoï, F. S. Mani Onana, and T. Djotio Ndié, 
+``Cryptographic Legal Opposability (CLO) Framework: Confidentiality-Reliability-Opposability Trade-offs in Institutional Cryptography,'' 
+\emph{IEEE Access}, vol. 14, pp. 20427-20445, 2026, DOI: \url{ 10.1109/ACCESS.2026.3660105}
+\bibitem{Shannon48}
+C. E. Shannon, 
+``A mathematical theory of communication,'' 
+\emph{Bell System Technical Journal}, vol. 27, no. 3, pp. 379--423, 1948.
+
+\bibitem{Simon82}
+H. A. Simon, 
+\emph{Models of Bounded Rationality: Empirically Grounded Economic Reason}, vol. 2. 
+MIT Press, 1982.
+DOI: \url{10.1002/j.1538-7305.1948.tb01338.x}
+\bibitem{Wyner75}
+A. D. Wyner, 
+``The wire-tap channel,'' 
+\emph{Bell System Technical Journal}, vol. 54, no. 8, pp. 1355--1387, 1975.
+DOI: \url{10.1002/j.1538-7305.1975.tb02040.x}
+\end{thebibliography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{thierry.png}}]{Thierry Emmanuel Minka Mi Nguidjoï}
+received the M.Sc. degree in computer science from the University of Paris XII (Creteil Val-de-Marne), France, in 2014. He is currently pursuing the Ph.D. degree with the Laboratory of Mathematical Engineering and Information Systems, National Advanced School of Engineering, University of Yaoundé I. As active IACR member, some of his ongoing work are available in preprint mode at: https://eprint.iacr.org/search?q=MINKA, his research interests include information-theoretic security, cryptographic protocols, and foundations of cryptography. https://orcid.org/0000-0003-4901-8626
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{serge.png}}]{Flavien Serge Mani Onana}
+received the Ph.D. degree in computer science from the University of Montreal, Canada, in 2005. He is currently a lecturer with the Laboratory of Mathematical Engineering and Information Systems. His research focuses on cybersecurity, information theory, and their applications to cryptographic systems. https://orcid.org/0009-0001-2387-3571
+\end{IEEEbiography}
+
+\begin{IEEEbiography}
+[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{thomas.png}}]{Thomas Djotio Ndié}
+received the Ph.D. degree in computer science from the University of Yaoundé I, Cameroon, in 2008. He is currently a professor with the National Advanced School of Engineering, University of Yaoundé I. His research interests include network security, distributed systems, and information-theoretic approaches to cryptography. https://orcid.org/0000-0002-6300-6237
+\end{IEEEbiography}
+\EOD
+
+\end{document}

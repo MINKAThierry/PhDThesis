@@ -1,0 +1,1268 @@
+\documentclass{ieeeaccess}
+%\usepackage{tikz}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+%\usepackage{caption}
+\usepackage{lipsum}
+\usepackage{url}
+\usepackage{bm}
+\usepackage{booktabs}
+%\usepackage{xcolor}
+%\usepackage{calc}
+%\usepackage{etex}
+
+\AtBeginDocument{\DeclareMathVersion{bold}
+\SetSymbolFont{operators}{bold}{T1}{times}{b}{n}
+\SetSymbolFont{NewLetters}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathrm}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathit}{bold}{T1}{times}{b}{it}
+\SetMathAlphabet{\mathbf}{bold}{T1}{times}{b}{n}
+\SetMathAlphabet{\mathtt}{bold}{OT1}{pcr}{b}{n}
+\SetSymbolFont{symbols}{bold}{OMS}{cmsy}{b}{n}
+\renewcommand\boldmath{\@nomath\boldmath\mathversion{bold}}}
+% Custom commands 
+\newcommand{\Conf}{\mathsf{Conf}}
+\newcommand{\Rel}{\mathsf{Rel}}
+\newcommand{\Opp}{\mathsf{Opp}}
+\newcommand{\TV}{\mathsf{TV}}
+\newcommand{\negl}{\mathsf{negl}}
+\makeatother
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+    
+\newtheorem{theorem}{Theorem}[subsection]
+\newtheorem{definition}{Definition}[subsection]
+\newtheorem{corollary}{Corollary}[subsection]
+\newtheorem{proposition}{Proposition}[subsection]
+\newtheorem{remark}{Remark}[subsection]
+\newtheorem{observation}{Observation}[subsection]
+\newtheorem{proof}{Proof}[section]
+\newtheorem{example}{Example}[subsection]
+\newtheorem{construction}{Construction}[subsection]
+
+
+%\usepackage{etoolbox}
+%\makeatletter
+%\def\c@pgfmath@counta{0}
+%\def\c@pgfmath@countb{0}
+%\def\c@pgfmath@countc{0}
+
+%\let\oldtikzpicture\tikzpicture
+%\let\endoldtikzpicture\endtikzpicture
+%\renewenvironment{tikzpicture}[1][]{%
+  %\begingroup%
+  %\makeatletter%
+  %\def\c@pgfmath@counta{0}%
+  %\def\c@pgfmath@countb{0}%
+  %\def\c@pgfmath@countc{0}%
+  %\oldtikzpicture[#1]%
+%}{%
+ % \endoldtikzpicture%
+  %\endgroup%
+%}
+\makeatother
+
+%Your document starts from here ___________________________________________________
+\begin{document}
+\history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
+\doi{xx.xxxx/ACCESS.2025.xxxxxxx}
+
+\title{Cryptographic Legal Opposability (CLO) Framework: Confidentiality-Reliability-Opposability Trade-offs in Institutional Cryptography}
+\author{Thierry Emmanuel \uppercase{Minka Mi Nguidjoï}\authorrefmark{1,2}
+Flavien Serge \uppercase{Mani Onana}\authorrefmark{1}, and Thomas \uppercase{Djotio Ndjé}\authorrefmark{1}}
+
+\address[1]{Laboratory of Mathematical Engineering and Information Systems, National Advanced School of Engineering, University of Yaoundé I, Cameroon (e-mail: minkathierry@gmail.com, serge.mani@digitworldacademy.com, tdjotio@gmail.com)}
+
+\address[2]{Supreme State Audit Office, Po.Box 376 Administrative Center, Yaoundé, Cameroon (e-mail: minkathierry@gmail.com)}
+
+
+\markboth
+{Minka Mi Nguidjoï \headeretal: Cryptographic Legal Opposability (CLO) Framework}
+{Minka Mi Nguidjoï \headeretal: Cryptographic Legal Opposability (CLO) Framework}
+
+\corresp{Corresponding author: Thierry Emmanuel Minka Mi Nguidjoï (e-mail: minkathierry@gmail.com).}
+
+
+\begin{abstract}
+Cryptographic evidence systems exhibit a fundamental tension: increased cryptographic strength often induces institutional opacity. We present the Cryptographic Legal Opposability (CLO) framework, which establishes an information-theoretic foundation for institutional cryptography via rigorous definitions of confidentiality ($\mathsf{Conf}$), reliability ($\mathsf{Rel}$), and opposability ($\mathsf{Opp}$), where $\mathsf{Opp}$ is a novel metric capturing the extent to which institutional actors can effectively interpret and operationalize cryptographic proofs.
+
+ Our main contributions are: (1) a mathematical formalization of the CLO framework with rigorous definitions of confidentiality ($\mathsf{Conf}$), reliability ($\mathsf{Rel}$), and opposability ($\mathsf{Opp}$), including proven bounds on these measures and fundamental feasibility constraints; (2) the Semantic One-Time Pad (S-OTP) construction, which achieves optimal $(\mathsf{Conf}, \mathsf{Rel}, \mathsf{Opp})$ trade-offs within the S-OTP construction class; (3) theoretical analysis suggesting inherent limitations on jointly optimizing all three quantities, with context entropy $H(\mathcal{C})$ emerging as a critical bottleneck; and (4) theoretical case studies of deployed systems (Helios voting, zk-SNARKs, and ECDSA) revealing consistent privacy-opposability trade-off patterns. 
+ 
+ Our analysis indicates that these protocols occupy different points on the trade-off surface (with $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp}$ values ranging from 0.27 to 0.57), providing evidence consistent with the fundamental CRO trade-offs established in our framework.
+
+Overall, the CLO framework demonstrates that institutional cryptography must be designed not only for mathematical security but also for principled interpretability by institutional stakeholders. Establishing rigorous, general impossibility bounds on achievable $(\mathsf{Conf}, \mathsf{Rel}, \mathsf{Opp})$ trade-offs remains the central open theoretical problem.
+\end{abstract}
+
+\begin{keywords}
+Cryptography, information theory, institutional cryptography, legal opposability, zero-knowledge proofs, impossibility results, context entropy, interpretability
+\end{keywords}
+
+\titlepgskip=-21pt
+
+\maketitle
+
+\section{Introduction}\label{sec:introduction}
+\subsection{Background and Historical Context}
+
+The integration of cryptographic evidence into legal and regulatory frameworks represents a fundamental shift in institutional verification mechanisms. Over the past three decades, digital signatures have evolved from experimental cryptographic constructs to legally recognized authentication methods, formalized through landmark legislation, including the U.S. Electronic Signatures in Global and National Commerce Act (ESIGN Act, 2000)~\cite{ESIGN00} and the European Union's eIDAS (Electronic Identification, Authentication and trust Services) Regulation (2014)~\cite{eIDAS14}. These frameworks established that cryptographic signatures carry the same legal weight as handwritten signatures, provided that they meet specific technical standards~\cite{Kerr04,Mason07}.
+
+However, the emergence of \emph{privacy-preserving cryptography}, particularly zero-knowledge proofs~\cite{GMR85}, homomorphic encryption, and advanced commitment schemes, has introduced institutional challenges that existing legal frameworks do not anticipate. Unlike traditional digital signatures, which provide transparent verification, privacy-preserving protocols deliberately obscure verification mechanisms to protect confidentiality~\cite{Bonneau16}. This creates the \textbf{Invisible Authenticity Paradox}: cryptographic evidence that is mathematically impeccable yet institutionally opaque.
+
+\textbf{The institutional cryptography gap.} Existing cryptographic research optimizes mathematical security properties, confidentiality via indistinguishability, integrity via collision resistance, authenticity via unforgeability, while neglecting institutional utility and the capacity of non-expert decision-makers (judges, regulators, auditors) to extract actionable insights from cryptographic proofs. Standard security definitions~\cite{GMR85} measure adversarial advantage in distinguishing protocol executions but provide no metrics for human interpretability~\cite{Zohar15,Grimmelmann15}.
+
+This gap between cryptographic design and institutional deployment creates systemic risks: (1) institutions reject privacy-preserving cryptography due to opacity concerns, forcing regression to less secure but transparent mechanisms, or (2) institutions adopt opaque cryptographic systems, creating unaccountable decision-making processes vulnerable to expert manipulation. Our framework addresses this challenge by formalizing institutional interpretability as a first-class cryptographic objective.
+
+\subsection{Motivating Examples: The Invisible Authenticity Paradox}
+\label{subsec:motivating_examples}
+
+Modern cryptographic deployments reveal a troubling pattern: \emph{increasing cryptographic strength often undermines institutional utility}. Three systems illustrate this paradox across distinct governance contexts.
+
+\textbf{Electoral verification (Helios)}~\cite{Adida08}: The Helios voting protocol provides end-to-end verifiable elections through ElGamal encryption and zero-knowledge proofs. Voters can verify their ballots were recorded correctly, and anyone can verify the final tally without compromising ballot secrecy. However, real-world deployments reveal institutional interpretation challenges. In the Université catholique de Louvain presidential election (March 2009), election trustees, selected from diverse constituencies (students, administrative staff, faculty) to ensure representation, lacked the cryptographic expertise to perform key generation and decryption operations~\cite{Adida09UCL}. External cryptographic experts were required to execute these procedures on trustees' behalf, demonstrating that non-expert institutional actors cannot independently operate cryptographic verification systems. More dramatically, the IACR (International Association for Cryptologic Research) was forced to cancel its November 2025 board election entirely after a trustee irretrievably lost their portion of the distributed decryption key, making it technically impossible to decrypt or verify results~\cite{IACR2025incident}. These incidents demonstrate that cryptographic verifiability creates institutional dependencies: non-expert decision-makers (election officials, trustees, judges in hypothetical disputes) cannot independently verify encrypted ballots, forcing unconditional reliance on cryptographic experts. \emph{The very cryptographic properties that ensure voter privacy prevent institutional oversight}.
+
+\textbf{Financial compliance (zk-SNARKs)}~\cite{Groth16}: Modern zero-knowledge succinct arguments enable financial institutions to prove regulatory compliance (anti-money laundering, sanctions screening) through 200-byte proofs asserting ``all transactions satisfy regulatory rules'' without revealing transaction details. Research on privacy-preserving mechanisms in financial systems~\cite{Garratt19} demonstrates the theoretical potential for such cryptographic approaches. However, when suspicious patterns emerge requiring investigation, regulators cannot audit specific transactions, the cryptographic opacity that protects customer privacy prevents the targeted investigation essential for enforcement. Basel III capital frameworks and GDPR data protection regulations demand both privacy \emph{and} regulatory oversight; zk-SNARKs deliver the former while eliminating the latter. This institutional opacity challenge extends to broader contexts: courts increasingly encounter cryptographic evidence in cryptocurrency disputes~\cite{Narayanan16} and digital forensics cases~\cite{Casey16}, requiring expert interpretation to assess cryptographic validity, a dependency that undermines judicial independence principles. \emph{Privacy-preserving verification creates accountability vacuums}.
+
+\textbf{Legal evidence (ECDSA)}~\cite{Johnson01}: In stark contrast, elliptic curve digital signatures achieve near-universal judicial acceptance. Courts understand the semantic claim ``party A authorized document D'' without cryptographic training; verification proceeds through established PKI infrastructure supported by decades of case law (ESIGN Act~\cite{ESIGN00}, eIDAS Regulation~\cite{eIDAS14}). Judges independently assess signature validity, chain of custody, and temporal validity through familiar legal frameworks. However, this institutional interpretability requires revealing signed messages publicly and exposing signature-key relationships. Privacy-sensitive applications (confidential contracts, sealed court documents) cannot use standard ECDSA without compromising confidentiality. \emph{Judicial transparency demands cryptographic exposure}.
+
+\textbf{The systematic tension}: These examples reveal a consistent pattern, protocols maximizing confidentiality (Helios, zk-SNARKs) achieve weak institutional interpretability, while transparent protocols (ECDSA) sacrifice privacy for legal utility. This tension manifests across diverse domains (electoral integrity, financial regulation, contract enforcement) and persists despite decades of cryptographic advances. Is this trade-off fundamental to cryptographic design, or can engineering ingenuity overcome it? 
+
+Section~\ref{sec:clo_framework} addresses this question by formalizing the \emph{Confidentiality-Reliability-Opposability (CRO) trilemma} (Corollary~\ref{cor:trilemma}), establishing information-theoretic foundations for institutional cryptography. Our framework quantifies the institutional interpretability gap as a measurable property (\emph{opposability}, $\mathsf{Opp}$) alongside traditional security metrics (confidentiality $\mathsf{Conf}$, reliability $\mathsf{Rel}$), enabling systematic analysis of achievable trade-offs. Section~\ref{sec:validation} returns to these examples with quantitative analysis, demonstrating that the observed patterns reflect deeper theoretical constraints rooted in context entropy bottlenecks.
+
+
+\subsection{The Institutional Cryptography Challenge}
+
+These examples expose a critical gap: \textbf{cryptographic systems designed for mathematical security fail when deployed in institutional contexts that require human interpretation}. Existing frameworks optimize confidentiality (information-theoretic privacy) and reliability (cryptographic soundness) but ignore a third essential dimension: \textbf{opposability} that is the capacity of institutional interpreters to extract meaningful information from cryptographic evidence.
+
+We formalize this challenge as the \textbf{Confidentiality-Reliability-Opposability (CRO) trilemma} (formalized in Corollary~\ref{cor:trilemma}), where context entropy $H(\mathcal{C})$ emerges as a critical bottleneck.
+
+\subsection{Contributions}\label{subsec:Contributions}
+
+This work establishes information-theoretic foundations for institutional cryptography:
+
+\begin{enumerate}
+\item \textbf{C1. Formal Framework}: Mathematical definitions of confidentiality ($\mathsf{Conf}$), reliability ($\mathsf{Rel}$), and opposability ($\mathsf{Opp}$) using information-theoretic measures. Opposability formalizes institutional interpretability as $\mathsf{Opp}(\mathcal{P}, C) = I(V;\Sigma|C)/H(V|C)$, where $V$ represents institutional verdicts, $\Sigma$ denotes cryptographic proofs, and $\mathcal{C}$ captures institutional context.
+
+\item \textbf{C2. Mathematical Formalization}: A formalization establishing measurement properties, context bottleneck constraints, and composition rules with accompanying proofs. The definitions employ standard information-theoretic tools (entropy, mutual information, total variation distance) to enable systematic analysis of institutional cryptography trade-offs.
+
+\item \textbf{C3. Construction with Analyzed Optimality}: The Semantic One-Time Pad (S-OTP) achieves $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} = H(\mathcal{C})/\lambda \cdot (1-\mathsf{negl}(\lambda))$, with explicit layer allocation: Gold (message privacy), Iron (commitment binding), Clay (context preservation). Our analysis shows this construction achieves optimal trade-offs within the one-time pad construction class.
+
+\item \textbf{C4. Theoretical Analysis and Insights}: Our analysis suggests fundamental constraints on CRO optimization, with context entropy $H(\mathcal{C})$ emerging as a critical bottleneck. The context bottleneck theorem establishes $I(V;\Sigma|C) \leq H(\mathcal{C})$, indicating that institutional interpretability is bounded by interpreter knowledge capacity. Establishing general impossibility bounds remains an open problem.
+
+\item \textbf{C5. Theoretical Case Studies}: Analysis of three real-world protocol specifications (Helios: $\mathsf{Opp} \approx 0.50$, zk-SNARKs: $\mathsf{Opp} \approx 0.67$, ECDSA: $\mathsf{Opp} \approx 0.90$) reveals patterns consistent with privacy-opposability trade-offs. Theoretical estimates suggest high-privacy systems achieve moderate institutional interpretability while high-opposability protocols typically sacrifice confidentiality.
+
+\item \textbf{C6. Design Methodology}: The framework provides a systematic approach to protocol design that characterizes institutional context $H(\mathcal{C})$, specifies minimum CRO requirements, checks theoretical feasibility, and guides construction optimization. The Gold-Iron-Clay paradigm offers a structured approach to balancing cryptographic security with institutional utility.
+\end{enumerate}
+
+
+\subsection{Paper Organization}
+
+Section~\ref{sec:preliminaries} establishes information-theoretic preliminaries. Section~\ref{sec:clo_framework} introduces the CLO framework with formal measure definitions and fundamental theorems. Section~\ref{sec:constructions} presents protocol construction and composition theorems. Section~\ref{sec:validation} provides a theoretical case study analysis of deployed systems. Section~\ref{sec:related_work} discusses the framework relative to existing paradigms. Section~\ref{sec:discussion} discusses theoretical implications, limitations, and future directions of this study. Section~\ref{sec:conclusion} concludes.
+\section{Preliminaries}\label{sec:preliminaries}
+
+\subsection{Information-Theoretic Foundations}
+
+\textbf{Entropy}. For discrete random variable $X$ with probability mass function $p_X$:
+\begin{equation}
+H(X) = -\sum_{x \in \mathcal{X}} p_X(x) \log_2 p_X(x)
+\end{equation}
+measures uncertainty in bits. Conditional entropy $H(X|Y) = \mathbb{E}_Y[H(X|Y=y)]$ quantifies remaining uncertainty after observing $Y$.
+
+\textbf{Mutual information}.
+\begin{equation}
+I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)
+\end{equation}
+measures information shared between $X$ and $Y$. Conditional mutual information $I(X;Y|Z) = H(X|Z) - H(X|Y,Z)$ quantifies information $X$ and $Y$ share beyond $Z$.
+
+\textbf{Total variation distance}. For probability distributions $P$, $Q$ over $\mathcal{X}$:
+\begin{equation}
+\mathsf{TV}(P,Q) = \frac{1}{2}\sum_{x \in \mathcal{X}} |P(x) - Q(x)| = \max_{A \subseteq \mathcal{X}} |P(A) - Q(A)|
+\end{equation}
+measures distinguishability. $\mathsf{TV}(P,Q) = 0$ iff $P = Q$; $\mathsf{TV}(P,Q) \leq 1$ always.
+
+\textbf{Key inequalities}. Data processing inequality: If $X \to Y \to Z$ forms a Markov chain, then $I(X;Z) \leq I(X;Y)$. Mutual information bounds: $I(X;Y) \leq \min\{H(X), H(Y)\}$.
+
+\subsection{Cryptographic Foundations}
+
+\textbf{Security parameter}. $\lambda \in \mathbb{N}$ determines the cryptographic strength. Function $f(\lambda)$ is negligible and is denoted as $\mathsf{negl}(\lambda)$, if $f(\lambda) = o(\lambda^{-c})$ for all constants $c > 0$.
+
+\textbf{Commitment schemes}. A commitment scheme $\mathsf{Com}$ consists of:
+\begin{itemize}
+\item $\mathsf{Commit}(m;r) \to c$: Commit to message $m$ with randomness $r$
+\item $\mathsf{Open}(c,m,r) \to \{0,1\}$: Verify commitment opening
+\end{itemize}
+Properties: \emph{Hiding} (commitments reveal no information about $m$), \emph{Binding} (cannot be open to different messages).
+
+\textbf{Zero-knowledge proofs}. A zero-knowledge proof system consists of:
+\begin{itemize}
+\item $\mathsf{Prove}(x,w) \to \pi$: Generate proof that $x \in L$ using witness $w$
+\item $\mathsf{Verify}(x,\pi) \to \{0,1\}$: Verify proof validity
+\end{itemize}
+Properties: \emph{Completeness} (honest proofs verify), \emph{Soundness} (false statements have no convincing proofs) and \emph{Zero-knowledge} (proofs reveal nothing beyond statement truth).
+
+\section{The CLO Framework}\label{sec:clo_framework}
+
+\subsection{Protocol Model}
+
+\begin{definition}[CLO Protocol]\label{def:clo_protocol}
+A \textbf{CLO protocol} $\mathcal{P}$ consists of:
+\begin{itemize}
+\item \textbf{Spaces}: Message space $\mathcal{M}$, proof space $\Sigma$, context space $\mathcal{C}$, verdict space $\mathcal{V}$
+\item \textbf{Algorithms}:
+\begin{itemize}
+\item $\mathsf{Setup}(1^\lambda) \to (pk, sk)$: Key generation algorithm
+\item $\mathsf{Prove}(sk, m, c) \to \sigma$: Proof generation algorithm for message $m$ with context $c$
+\item $\mathsf{Verify}(pk, \sigma, c) \to \{0,1\}$: Cryptographic verification algorithm
+\item $\mathsf{Interpret}(\sigma, c) \to v$: \textbf{Institutional interpretation algorithm} mapping cryptographic proofs $\sigma$ to verdicts $v$ given context $c$
+
+\end{itemize}
+\item \textbf{Distributions}: Message distribution $P_M$, context distribution $P_\mathcal{C}$ from which a \textbf{random variable} $C$ is drawn.
+\item \textbf{Correctness}: For all $m \in \mathcal{M}$, $c \in \mathcal{C}$:
+\begin{equation}
+\Pr[\mathsf{Verify}(pk, \mathsf{Prove}(sk,m,c), c) = 1] \geq 1 - \mathsf{negl}(\lambda)
+\end{equation}
+where probability is over $\mathsf{Setup}$ and $\mathsf{Prove}$ randomness.
+\end{itemize}
+\end{definition}
+
+The key insight: institutional cryptography requires \emph{two} verification layers. Cryptographic verification ($\mathsf{Verify}$) ensures mathematical correctness. Institutional interpretation ($\mathsf{Interpret}$) extracts semantic meanings for decision-making. Traditional cryptography focuses solely on $\mathsf{Verify}$, whereas  CLO formalizes both.
+
+\begin{example}[Simple CLO Illustration]
+Consider a \emph{proof of age} system in which users prove that they are over 18 without revealing the exact birthdate. The CLO framework analyzes the following.
+\begin{itemize}
+\item \textbf{Confidentiality}: How well the proof hides the actual birthdate
+\item \textbf{Reliability}: Probability the proof verifies correctly when the user is indeed over 18
+\item \textbf{Opposability}: How effectively a bouncer can interpret the proof to make admission decisions
+\end{itemize}
+A perfectly confidential proof ($\mathsf{Conf} = 1$) that reveals nothing about birthdate provides minimal institutional utility ($\mathsf{Opp} \approx 0$) for age verification. Conversely, showing a driver's license achieves high opposability ($\mathsf{Opp} \approx 1$), but sacrifices confidentiality ($\mathsf{Conf} \approx 0$). The CRO trilemma quantifies this fundamental tension.
+\end{example}
+
+\subsection{The Three Dimensions}
+
+\begin{definition}[Confidentiality]\label{def:confidentiality}
+The \textbf{confidentiality} of protocol $\mathcal{P}$ is:
+\begin{equation}
+\mathsf{Conf}(\mathcal{P}) = 1 - \max_{m_0, m_1 \in \mathcal{M}} \mathsf{TV}(P_{\Sigma|M=m_0}, P_{\Sigma|M=m_1})
+\end{equation}
+where $P_{\Sigma|M=m}$ is the proof distribution given message $m$, marginalizing context and protocol randomness.
+\end{definition}
+
+Interpretation: $\mathsf{Conf} = 1$ indicates that the proofs are perfectly indistinguishable across messages (information-theoretic privacy). $\mathsf{Conf} = 0$ indicates that the proofs completely reveal the messages.
+
+\begin{definition}[Reliability]\label{def:reliability}
+The \textbf{reliability} of Protocol $\mathcal{P}$ is:
+\begin{equation}
+\mathsf{Rel}(\mathcal{P}) = \min_{m \in \mathcal{M}, c \in \mathcal{C}} \Pr[\mathsf{Verify}(pk, \mathsf{Prove}(sk,m,c), c) = 1]
+\end{equation}
+where the probability is taken over the randomness of both $\mathsf{Setup}$ and $\mathsf{Prove}$.
+\end{definition}
+
+Interpretation: $\mathsf{Rel} = 1$ indicates that honest proofs always verify (perfect completeness). Lower values indicate failure of verification. Soundness (adversaries cannot forge proofs) is implicit in cryptographic assumptions.
+
+\begin{definition}[Opposability]\label{def:opposability}
+The \textbf{opposability} of protocol $\mathcal{P}$ in institutional context $\mathcal{C}$ is
+\begin{equation}
+\mathsf{Opp}(\mathcal{P}, C) = \frac{I(V;\Sigma|C)}{H(V|C)}
+\end{equation}
+where $V = \mathsf{Interpret}(\Sigma, \mathcal{C})$ are institutional verdicts, and mutual information is computed over joint distribution $(M, \mathcal{C}, \Sigma, V)$.
+\end{definition}
+
+Interpretation: $\mathsf{Opp}$ measures the fraction of verdict uncertainty resolved by observing proofs, given the institutional context. $\mathsf{Opp} = 1$ indicates that the proofs fully determine the verdicts (perfect opposability). $\mathsf{Opp} = 0$ indicates that proofs provide no institutional information beyond the context.
+
+
+\subsection{Fundamental Properties}
+
+\begin{theorem}[Measure Bounds]\label{thm:measure_bounds}
+For any CLO protocol $\mathcal{P}$ and context distribution $\mathcal{C}$:
+\begin{align}
+0 \leq \mathsf{Conf}(\mathcal{P}) &\leq 1 \\
+0 \leq \mathsf{Rel}(\mathcal{P}) &\leq 1 \\
+0 \leq \mathsf{Opp}(\mathcal{P}, \mu) &\leq 1
+\end{align}
+\end{theorem}
+
+\begin{proof}
+\textbf{Confidentiality}: By definition, $\mathsf{Conf}(\mathcal{P}) = 1 - \max_{m_0,m_1} \mathsf{TV}(P_{\Sigma|M=m_0}, P_{\Sigma|M=m_1})$. Because total variation distance satisfies $\mathsf{TV}(P,Q) \in [0,1]$ for any probability measures $P,Q$, we have $0 \leq 1 - \max \mathsf{TV}(\cdot) \leq 1$, thus $\mathsf{Conf} \in [0,1]$.
+
+\textbf{Reliability}: By definition, $\mathsf{Rel}(\mathcal{P}) = \min_{m,c} \Pr[\mathsf{Verify}(pk, \mathsf{Prove}(sk,m,c), c) = 1]$. Because verification outputs binary values, the probabilities are bounded $\Pr[\cdot] \in [0,1]$, thus $\mathsf{Rel} \in [0,1]$.
+
+\textbf{Opposability}: By definition, $\mathsf{Opp}(\mathcal{P},\mu) = I(V;\Sigma|C)/H(V|C)$. Based on fundamental properties of mutual information, $0 \leq I(V;\Sigma|C) \leq H(V|C)$ (conditional mutual information cannot exceed conditional entropy); thus, $\mathsf{Opp} \in [0,1]$.
+\end{proof}
+
+\begin{theorem}[Context Bottleneck]\label{thm:context_bottleneck}
+For any CLO protocol $\mathcal{P}$ with interpretation function $\mathsf{Interpret}: \Sigma \times \mathcal{C} \to V$ and context distribution $\mu$ over $\mathcal{C}$, institutional information extraction is fundamentally constrained by
+\begin{equation}
+I(V;\Sigma|C) \leq \min\{H(\Sigma|C), H(V|C)\}
+\end{equation}
+Moreover, the opposability metric satisfies:
+\begin{equation}
+\mathsf{Opp}(\mathcal{P}, C) = \frac{I(V;\Sigma|C)}{H(V|C)} \leq \min\left\{1, \frac{H(V|C))}{H(V|C)}\right\}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+We establish the bound using fundamental information-theoretic inequalities that require no structural assumptions beyond the basic properties of entropy and mutual information.
+
+\textbf{Bound 1 (Proof Capacity Constraint)}: By definition conditional mutual information:
+\begin{equation}
+I(V;\Sigma|C) = H(V|C)) - H(\Sigma|V,\mathcal{C})
+\end{equation}
+Since conditional entropy is non-negative, $H(\Sigma|V,\mathcal{C}) \geq 0$, we obtain:
+\begin{equation}
+I(V;\Sigma|C) \leq H(V|C))
+\end{equation}
+This establishes that the information verdicts extracted from proofs cannot exceed the informational content of proofs, given the institutional context.
+
+\textbf{Bound 2 (Verdict Uncertainty Constraint)}: By the symmetric property of mutual information,
+\begin{equation}
+I(V;\Sigma|C) = H(V|C) - H(V|\Sigma,\mathcal{C})
+\end{equation}
+Since $H(V|\Sigma,\mathcal{C}) \geq 0$, we have:
+\begin{equation}
+I(V;\Sigma|C) \leq H(V|C)
+\end{equation}
+This bound indicates that proofs cannot provide more information about verdicts than the original uncertainty in those verdicts.
+
+\textbf{Dependency Structure Clarification}: Verdicts are deterministically derived from proofs and context via $V = \mathsf{Interpret}(\Sigma, \mathcal{C})$, which implies $H(V|\Sigma,\mathcal{C}) = 0$ and establishes the dependency structure 
+$(\Sigma, \mathcal{C}) \to V$. This deterministic interpretation is fundamental to institutional legal systems, where verdict derivation must be reproducible given the same evidence and context. Note that this differs from assuming a 
+Markov chain $V \to \mathcal{C} \to \Sigma$ with conditional independence $P(V,\Sigma|C) = P(V|C)P(\Sigma|C)$, which would incorrectly model the causality.
+
+\textbf{Opposability Constraint}: Combining both bounds with the definition $\mathsf{Opp}(\mathcal{P}, C) = I(V;\Sigma|C)/H(V|C)$ yields:
+\begin{equation}
+\mathsf{Opp}(\mathcal{P}, C) \leq \frac{\min\{H(V|C)), H(V|C)\}}{H(V|C)} = \min\left\{1, \frac{H(V|C))}{H(V|C)}\right\}
+\end{equation}
+completing the proof.
+\end{proof}
+
+\begin{proposition}[Achievability of Context Bottleneck]\label{prop:achievability}
+Bounds in Theorem~\ref{thm:context_bottleneck} are tight. Specifically, for any $\epsilon > 0$, there exist proof distributions $p(\sigma)$ and interpretation functions $\mathsf{Interpret}$, such that
+\begin{equation}
+I(V;\Sigma|C) \geq \min\{H(V|C)), H(V|C)\} - \epsilon
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+We construct explicit protocols achieving the bounds for both cases:
+
+\textbf{Case 1} ($H(V|C)) \leq H(V|C)$): We define an injective interpretation function $\mathsf{Interpret}: \Sigma \to V$ such that each proof $\sigma$ maps deterministically to a unique verdict $v$. This construction requires $|\Sigma| \leq |V|$ (proof space cardinality at most verdict space cardinality). Under this mapping:
+\begin{align*}
+H(V|\Sigma,\mathcal{C}) &= 0 \quad \text{(deterministic mapping)} \\
+\implies I(V;\Sigma|C) &= H(V|C) - H(V|\Sigma,\mathcal{C}) = H(V|C)
+\end{align*}
+Since we assumed $H(V|C)) \leq H(V|C)$ and the injection ensures $H(V|C) \geq H(V|C))$, we have:
+\begin{equation}
+I(V;\Sigma|C) = H(V|C) \geq H(V|C)) = \min\{H(V|C)), H(V|C)\}
+\end{equation}
+
+\textbf{Case 2} ($H(V|C) < H(V|C))$): Define a surjective interpretation function where multiple proofs are mapped to the same verdict. Choose a uniform distribution over proofs $\sigma$ mapping to each verdict. This yields:
+\begin{equation}
+I(V;\Sigma|C) = H(V|C) < H(V|C))
+\end{equation}
+achieving the minimum $\min\{H(V|C)), H(V|C)\} = H(V|C)$.
+
+In both cases, the bounds were achieved exactly in the discrete finite case. For continuous distributions, the $\epsilon$-approximation accounts for the discretization effects.
+\end{proof}
+
+\begin{example}[Cryptographic Proof Systems Comparison]\label{ex:proof_comparison}
+Consider two proof systems authenticating the same transaction statement $m$:
+
+\textbf{System 1 (ECDSA Digital Signature)}:
+\begin{itemize}
+\item Proof entropy: $H(\Sigma) \approx 256$ bits (signature randomness)
+\item Conditional entropy given institutional context: $H(V|C)) \approx 250$ bits
+\item The institutional context provides minimal information: $I(\Sigma;C) \approx 6$ bits (e.g., a known signer identity reduces entropy).
+\item Verdict entropy: $H(V|C) \approx 1$ bit (binary: valid/invalid signature)
+\item Mutual information: $I(V;\Sigma|C) \approx 1$ bit (signature fully determines verdict)
+\item Opposability: $\mathsf{Opp} = 1/1 = 1.0$ (perfect institutional interpretability)
+\item Bound verification: $\min\{1, 250/1\} = 1.0$ \checkmark
+\end{itemize}
+
+\textbf{System 2 (ZK-SNARK for Confidential Transaction)}:
+\begin{itemize}
+\item Proof entropy: $H(\Sigma) \approx 10^6$ bits (elliptic curve pairings, polynomial commitments)
+\item Conditional entropy given institutional context: $H(V|C)) \approx 10^6$ bits
+\item Institutional context provides negligible information: cryptographic structures remain opaque
+\item Verdict entropy: $H(V|C) \approx 10$ bits (1024 possible compliance outcomes)
+\item Mutual information: $I(V;\Sigma|C) \approx 0.1$ bits (institutions extract minimal information from opaque proofs)
+\item Opposability: $\mathsf{Opp} = 0.1/10 = 0.01$ (1\% interpretability despite cryptographic soundness)
+\item Bound verification: $\min\{1, 10^6/10\} = 1.0$ (theoretical), but $I(V;\Sigma|C) \ll H(V|C)$ in practice
+\end{itemize}
+
+\textbf{Key Insight}: Cryptographic soundness ($\mathsf{Rel} \approx 1$) and perfect confidentiality ($\mathsf{Conf} \approx 1$) do not guarantee institutional acceptability. ZK-SNARK achieves superior confidentiality but catastrophic opposability owing to the massive gap between cryptographic complexity $H(\Sigma)$ and institutional comprehension capacity $I(V;\Sigma|C)$.
+\end{example}
+
+\begin{corollary}[Security-Opposability Tension]\label{cor:security_opp_tension}
+For cryptosystems with proof entropy $H(V|C)) = \Theta(\lambda)$ and bounded decision capacity $H(V|C) = O(1)$, Theorem~\ref{thm:context_bottleneck} implies $\mathsf{Opp} = O(H(\mathcal{C})/\lambda)$ when $H(\mathcal{C})$ is fixed relative to $\lambda$. Thus, increasing $\lambda$ reduces $\mathsf{Opp}$, formalizing the \emph{Invisible Authenticity Paradox}.
+\end{corollary}
+
+\begin{remark}[Implications]
+Institutional information extraction is capped at $H(\mathcal{C})$ (by Theorem~\ref{thm:context_bottleneck}), while proof entropy grows as $\Theta(\lambda)$, making the proportion of extractable information scale as $\approx H(\mathcal{C})/\lambda$. Post-quantum migration (e.g., doubling $\lambda$ from 128-bit to 256-bit security) could approximately halve $\mathsf{Opp}$, creating a \emph{transparency gap}. Maintaining opposability may require richer contexts (increasing $H(\mathcal{C})$) or hybrid designs.
+\end{remark}
+\begin{remark}[The S-OTP Institutional Paradox]
+The Security-Opposability Tension (Corollary~\ref{cor:security_opp_tension}) has profound implications for the S-OTP construction (Section~\ref{sec:constructions}). S-OTP achieves information-theoretic optimality $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} = H(\mathcal{C})/\lambda \cdot (1-\mathsf{negl}(\lambda))$ within its construction class, yet this optimality reveals a fundamental institutional paradox: achieving meaningful opposability ($\mathsf{Opp} \gtrsim 0.5$) requires institutional contexts with $H(\mathcal{C}) \approx 64$--$128$ bits for typical security parameters $\lambda = 128$--$256$ bits.
+
+However, empirical evidence from cognitive science and institutional analysis suggests real-world interpreters operate at substantially lower context entropy: general jurisdiction courts distinguish $\approx 256$ evidentiary contexts ($H(\mathcal{C}) \approx 8$ bits), specialized regulators handle $\approx 2048$ contexts (11 bits), and domain experts manage $\approx 10^6$ contexts (20 bits) (see Section~\ref{sec:validation} for detailed estimates). This creates a systematic $\sim$5--10$\times$ gap between cryptographically required context ($H(\mathcal{C}) \geq 64$ bits) and institutionally available context ($H(\mathcal{C}) \approx 8$--$20$ bits).
+
+The paradox admits three potential resolutions, none straightforward: (1) \emph{Reduce security parameters} ($\lambda \to 32$--$64$ bits) to match institutional capacity, unacceptable for high-stakes applications requiring post-quantum security. (2) \emph{Augment institutional context} through specialized training, standardized frameworks, and expert witness protocols to increase $H(\mathcal{C})$ toward 64 bits, feasible but requiring decades of legal/regulatory evolution. (3) \emph{Adopt multilayer architectures} that distribute interpretability across heterogeneous protocol layers with distinct CRO profiles, enabling high system-level opposability despite individual layer constraints (explored in Section~\ref{subsec:future_directions}).
+
+This paradox explains why cryptographically sophisticated systems (zk-SNARKs, lattice-based protocols) face institutional adoption barriers despite superior mathematical security: the very properties that ensure cryptographic strength (high $\lambda$, complex algebraic structures) create interpretation bottlenecks that realistic institutional contexts ($H(\mathcal{C}) = O(1)$ relative to $\lambda$) cannot overcome. Resolving this tension requires fundamentally rethinking protocol architecture beyond single-layer monolithic designs.
+\end{remark}
+\begin{remark}[Institutional Interpretation as Communication Channel]\label{rem:channel}
+The CLO framework can be formalized as a communication system with side information.
+\begin{itemize}
+\item \textbf{Source}: Transaction or claim $M$ with entropy $H(M)$
+\item \textbf{Encoder}: Cryptographic proof generation $\mathsf{Prove}(sk, m, c) \to \sigma$
+\item \textbf{Channel}: Institutional interpretation $\mathsf{Interpret}(\sigma, c) \to v$ with capacity $C_{\text{inst}}$
+\item \textbf{Decoder side information}: Institutional context $\mathcal{C}$ (legal frameworks, technical expertise)
+\item \textbf{Output}: Legal verdict $V$ with distortion $D = \Pr[V \neq V^*]$ relative to ideal verdict $V^*$
+\end{itemize}
+
+The institutional channel capacity with side information is
+\begin{equation}
+C_{\text{inst}} = \max_{p(\sigma)} I(V;\Sigma|C)
+\end{equation}
+subject to cryptographic constraints:
+\begin{equation}
+\mathsf{Conf}(\mathcal{P}) \geq \alpha, \quad \mathsf{Rel}(\mathcal{P}, C) \geq \beta
+\end{equation}
+where $\alpha, \beta$ are institutional acceptability thresholds (e.g., $\alpha = 0.95$ for privacy-critical applications; $\beta = 1 - 2^{-\lambda}$ for $\lambda$-bit security).
+
+This formulation reveals a fundamental asymmetry compared to classical Wyner-Ziv coding~\cite{WynerZiv76}: in traditional rate-distortion theory, decoder side information $Y$ correlated with source $X$ strictly reduces the required encoding rate $R^*(D) = \min I(X;\hat{X}|Y)$. However, in CLO systems, the institutional context $\mathcal{C}$ may be \emph{uncorrelated} with cryptographic proof structures (e.g., $I(\Sigma;C) \approx 0$ for advanced cryptographic primitives), providing no reduction in interpretation complexity. This explains why, $H(V|C)) \approx H(\Sigma)$ for systems such as ZK-SNARKs, creating an interpretation bottleneck independent of the cryptographic security parameters.
+\end{remark}
+
+\begin{corollary}[Information-Theoretic Trilemma]\label{cor:trilemma}
+For any CLO protocol $\mathcal{P}$ achieving confidentiality $\mathsf{Conf}(\mathcal{P}) \geq \alpha$ and reliability $\mathsf{Rel}(\mathcal{P}, C) \geq \beta$, the opposability is information-theoretically constrained by
+\begin{equation}
+\mathsf{Opp}(\mathcal{P}, C) \leq \min\left\{1, \frac{H(V|C))}{H(V|C)}\right\}
+\end{equation}
+This constraint is independent of computational hardness assumptions. The fundamental tension arises because:
+\begin{enumerate}
+\item \textbf{Confidentiality} requires cryptographically complex proofs: $H(\Sigma) \to \infty$ as $\lambda \to \infty$
+\item \textbf{Reliability} requires deterministic verification: $H(V|\Sigma, \mathcal{C}) \to 0$ for sound protocols
+\item \textbf{Opposability} requires bounded institutional comprehension: $H(V|C)) = O(1)$ for interpretable proofs
+\end{enumerate}
+Since high confidentiality typically implies $H(V|C)) \approx H(\Sigma)$ (context provides no simplification of cryptographic structures), the product $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp}$ cannot simultaneously approach unity for all three metrics.  Our analysis suggests this trade-off appears irreducible under the information-theoretic bounds of Theorem~\ref{thm:context_bottleneck}.
+\end{corollary}
+
+
+\begin{proof}
+From Theorem~\ref{thm:context_bottleneck}, we have $\mathsf{Opp} \leq \min\{1, H(V|C))/H(V|C)\}$.
+
+For high confidentiality ($\mathsf{Conf} \to 1$), cryptographic proofs must be computationally indistinguishable from random (semantic security), implying high entropy $H(\Sigma) \gg 1$. If the institutional context $\mathcal{C}$ does not simplify cryptographic structures, then $I(\Sigma;C) \approx 0$, yielding
+\begin{equation}
+H(V|C)) = H(\Sigma) - I(\Sigma;C) \approx H(\Sigma) \gg H(V|C)
+\end{equation}
+
+However, institutional interpretability requires bounded proof complexity $H(V|C)) = O(\log |V|)$ (polynomial in the verdict space size). This creates a fundamental contradiction:
+\begin{equation}
+H(\Sigma) \gg 1 \quad \text{(confidentiality)} \quad \text{vs.} \quad H(V|C)) = O(1) \quad \text{(opposability)}.
+\end{equation}
+
+The only resolution is to sacrifice either confidentiality (reduce $H(\Sigma)$), reliability (introduce randomness in $\mathsf{Interpret}$), or opposability (accept $\mathsf{Opp} \ll 1$). Our analysis suggests this trade-off appears 
+irreducible under the information-theoretic bounds of Theorem~\ref{thm:context_bottleneck}, though establishing tight general bounds 
+remains an open problem.
+\end{proof}
+
+\section{Protocol Constructions}\label{sec:constructions}
+
+We develop protocols achieving favorable CRO trade-offs and establish composition theorems.
+
+\subsection{The Semantic One-Time Pad}
+
+\begin{construction}[Semantic One-Time Pad (S-OTP)]\label{constr:sotp}
+The \textbf{Semantic One-Time Pad} balances the information allocation across three layers:
+
+\textbf{Layer 1 - Confidentiality (Gold)}: Perfect message privacy via one-time pad: $M^* = m \oplus \mathsf{mask}_m$ where $\mathsf{mask}_m \xleftarrow{\$} \{0,1\}^{|m|}$.
+
+\textbf{Layer 2 - Reliability (Iron)}: Binding commitment: $c_\Sigma = \mathsf{Com}(M^* \| h \| k)$ where $\mathsf{Com}$ is statistically binding (e.g., Pedersen commitment).
+
+\textbf{Layer 3 - Opposability (Clay)}: Context-preserving auxiliary: $h = \phi(c)[1:\ell_{\text{aux}}] \oplus \mathsf{mask}_{\text{aux}}$ where $\phi: \mathcal{C} \to \{0,1\}^*$ encodes context and $\ell_{\text{aux}} = \lfloor H(\mathcal{C}) \rfloor$ bits.
+
+\textbf{Protocol}: $\mathsf{Prove}(sk, m, c)$ samples masks, computes $M^* = m \oplus \mathsf{mask}_m$, encodes context $h$, commits $c_\Sigma \gets \mathsf{Com}(M^* \| h \| k)$, outputs $\sigma = (c_\Sigma, h, \mathsf{mask}_m, \mathsf{mask}_{\text{aux}}, k)$. $\mathsf{Verify}(pk, \sigma, c)$ checks context consistency and commitment validity. $\mathsf{Interpret}(\sigma, c)$ extracts the context from $h$ and maps it to verdict.
+\end{construction}
+
+\begin{remark}[Material Metaphor Rationale]
+The three-layer nomenclature reflects its core properties: \emph{Gold} for precious confidentiality, \emph{Iron} for robust reliability, and \emph{Clay} for contextual adaptability, mirroring how these materials historically embody value, strength, and malleability.
+\end{remark}
+
+\begin{theorem}[S-OTP Properties]\label{thm:sotp_properties}
+The Semantic One-Time Pad achieves:
+\begin{align}
+\mathsf{Conf}(\text{S-OTP}) &= 1 - \mathsf{negl}(\lambda) \\
+\mathsf{Rel}(\text{S-OTP}) &= 1 - \mathsf{negl}(\lambda) \\
+\mathsf{Opp}(\text{S-OTP}, C) &= \frac{H(C)}{\lambda} + O\left(\frac{1}{\lambda}\right)
+\end{align}
+\end{theorem}
+
+\begin{proof}
+\textbf{Confidentiality}: By one-time pad construction, $M^* = m \oplus \mathsf{mask}_m$ where $\mathsf{mask}_m$ is uniformly random. For any message $m_0, m_1 \in \mathcal{M}$:
+\begin{equation}
+\mathsf{TV}(P_{M^*|M=m_0}, P_{M^*|M=m_1}) = 0
+\end{equation}
+Because both distributions are uniform over $\{0,1\}^{|m|}$. The commitment $c_\Sigma = \mathsf{Com}(M^*)$ inherits this indistinguishability up to the commitment scheme's hiding property, which is $\mathsf{negl}(\lambda)$ for statistically hiding commitments. Thus,
+\begin{equation}
+\mathsf{Conf}(\text{S-OTP}) = 1 - \max_{m_0,m_1} \mathsf{TV}(P_{\Sigma|M=m_0}, P_{\Sigma|M=m_1}) = 1 - \mathsf{negl}(\lambda)
+\end{equation}
+
+\textbf{Reliability}: Correctness follows from commitment scheme completeness. For any $(m,c)$:
+\begin{equation}
+\Pr[\mathsf{Verify}(pk, \mathsf{Prove}(sk,m,c), c) = 1] = 1 - \delta_{\mathsf{Com}}
+\end{equation}
+where $\delta_{\mathsf{Com}} = \mathsf{negl}(\lambda)$ denotes the commitment error. For soundness, suppose adversary $\mathcal{A}$ produces $\sigma^* = (c_\Sigma^*, h^*, \ldots)$ with $\mathsf{Verify}(\sigma^*, c) = 1$ but $\sigma^*$ is not generated via $\mathsf{Prove}$. Then, $\mathcal{A}$ must have opened commitment $c_\Sigma^*$ to valid content, contradicting statistical binding (probability $\leq \mathsf{negl}(\lambda)$). Thus $\mathsf{Rel} = 1 - \mathsf{negl}(\lambda)$.
+
+\textbf{Opposability}: The auxiliary information $h$ encodes $\ell_{\text{aux}} = H(\mathcal{C})$ bits of context. By construction:
+\begin{equation}
+I(V;\Sigma|C) \leq I(V;h|C) = H(h|C) - H(h|V,C) \leq H(\mathcal{C})
+\end{equation}
+where the inequality follows because $h$ is the only component of $\Sigma$ carrying context information (the message mask $M^*$ is information-theoretically independent of the verdicts, and the commitment $c_\Sigma$ is perfectly hidden).
+
+Assuming that institutional verdicts have entropy $H(V|C) \approx \lambda$ (security-parameter-sized decision space):
+\begin{equation}
+\mathsf{Opp} = \frac{I(V;\Sigma|C)}{H(V|C)} \leq \frac{H(\mathcal{C})}{\lambda}
+\end{equation}
+The $O(1/\lambda)$ term accounts for the encoding overhead in the context mapping function $\phi(\cdot)$ and the masking operation applied to the auxiliary bits.
+\end{proof}
+
+\begin{theorem}[S-OTP Optimality within OTP Class]\label{thm:sotp_optimal}
+Among the protocols using one-time pads for confidentiality, S-OTP achieves the best asymptotic CRO product: $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} = H(\mathcal{C})/\lambda \cdot (1 - \mathsf{negl}(\lambda))$.
+\end{theorem}
+
+\begin{proof}
+From Theorem~\ref{thm:sotp_properties}, the product directly follows:
+\begin{equation}
+(1 - \mathsf{negl}(\lambda)) \cdot (1 - \mathsf{negl}(\lambda)) \cdot \frac{H(\mathcal{C})}{\lambda} = \frac{H(\mathcal{C})}{\lambda} \cdot (1 - \mathsf{negl}(\lambda))
+\end{equation}
+
+For optimality within the OTP class: any protocol using one-time pad for message confidentiality requires $|\mathsf{mask}_m| = |m| = \lambda$ bits of randomness to achieve perfect secrecy. The context information can only be encoded in auxiliary bits, which are bounded by $H(\mathcal{C})$ via Theorem~\ref{thm:context_bottleneck}. Therefore, the opposability $\mathsf{Opp} = O(H(\mathcal{C})/\lambda)$ is optimal for OTP-style constructions.
+
+Alternative constructions that achieve higher opposability must either (i) abandon information-theoretic confidentiality in favor of computational assumptions, (ii) use interactive protocols with multiple rounds, or (iii) employ fundamentally different primitives beyond OTP-style encryption. Within the OTP paradigm with single-round non-interactive protocols, the S-OTP is optimal.
+\end{proof}
+
+\subsection{Composition Theorems}
+
+\begin{theorem}[Sequential Composition]\label{thm:sequential_composition}
+For CLO protocols $\mathcal{P}_1, \mathcal{P}_2$ with independent contexts $\mathcal{C}_1 \perp \mathcal{C}_2$, the sequential composition $\mathcal{P}_1 \circ \mathcal{P}_2$ (where $\mathcal{P}_2$ takes $\mathcal{P}_1$'s output as input) satisfies
+\begin{align}
+\mathsf{Conf}(\mathcal{P}_1 \circ \mathcal{P}_2) &\geq \mathsf{Conf}(\mathcal{P}_1) \cdot \mathsf{Conf}(\mathcal{P}_2) \\
+\mathsf{Rel}(\mathcal{P}_1 \circ \mathcal{P}_2) &\geq \mathsf{Rel}(\mathcal{P}_1) \cdot \mathsf{Rel}(\mathcal{P}_2) \\
+\mathsf{Opp}(\mathcal{P}_1 \circ \mathcal{P}_2) &\geq \min\{\mathsf{Opp}(\mathcal{P}_1), \mathsf{Opp}(\mathcal{P}_2)\}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Let $\Sigma_1$ be $\mathcal{P}_1$'s proof and $\Sigma_2$ be $\mathcal{P}_2$'s proof.
+
+\textbf{Confidentiality}: For messages $m_0, m_1$
+\begin{align*}
+\mathsf{TV}&(P_{\Sigma_2|M=m_0}, P_{\Sigma_2|M=m_1}) \\
+&\leq \mathsf{TV}(P_{\Sigma_1|M=m_0}, P_{\Sigma_1|M=m_1}) + \max_{\sigma_1} \mathsf{TV}(P_{\Sigma_2|\Sigma_1=\sigma_1}, P_{\Sigma_2|\Sigma_1=\sigma_1}) \\
+&\leq (1 - \mathsf{Conf}(\mathcal{P}_1)) + (1 - \mathsf{Conf}(\mathcal{P}_2))
+\end{align*}
+by triangle inequality. Rearranging: $\mathsf{Conf}(\mathcal{P}_1 \circ \mathcal{P}_2) \geq \mathsf{Conf}(\mathcal{P}_1) + \mathsf{Conf}(\mathcal{P}_2) - 1$. For $\mathsf{Conf}(\mathcal{P}_1), \mathsf{Conf}(\mathcal{P}_2) \geq 1/2$, this gives the product bound.
+
+\textbf{Reliability}: Verification succeeds if both components verify:
+\begin{equation}
+\mathsf{Rel}(\mathcal{P}_1 \circ \mathcal{P}_2) = \Pr[\text{Verify}_1 \land \text{Verify}_2] = \mathsf{Rel}(\mathcal{P}_1) \cdot \mathsf{Rel}(\mathcal{P}_2)
+\end{equation}
+assuming independent verification failures (worst-case scenario).
+
+\textbf{Opposability}: Institutional interpretation uses information from both $\Sigma_1$ and $\Sigma_2$:
+\begin{equation}
+I(V;\Sigma_1,\Sigma_2|C_1,C_2) \geq \max\{I(V;\Sigma_1|C_1), I(V;\Sigma_2|C_2)\}
+\end{equation}
+by data processing. Thus, opposability is lower bounded by the maximum of the individual opposabilities.
+\end{proof}
+
+\begin{theorem}[Parallel Composition]\label{thm:parallel_composition}
+For protocols on independent messages $M_1 \perp M_2$ with independent contexts, the parallel composition $\mathcal{P}_1 \| \mathcal{P}_2$ satisfies:
+\begin{align}
+\mathsf{Conf}(\mathcal{P}_1 \| \mathcal{P}_2) &= \min\{\mathsf{Conf}(\mathcal{P}_1), \mathsf{Conf}(\mathcal{P}_2)\} \\
+\mathsf{Rel}(\mathcal{P}_1 \| \mathcal{P}_2) &= \mathsf{Rel}(\mathcal{P}_1) \cdot \mathsf{Rel}(\mathcal{P}_2) \\
+\mathsf{Opp}(\mathcal{P}_1 \| \mathcal{P}_2) &\approx \mathsf{Opp}(\mathcal{P}_1) \cdot \mathsf{Opp}(\mathcal{P}_2)
+\end{align}
+(where $\approx$ holds for equal verdict entropies $H(V_1) = H(V_2)$).
+\end{theorem}
+
+\begin{proof}
+\textbf{Confidentiality}: An adversary attacking a parallel composition can distinguish either $\Sigma_1$ or $\Sigma_2$:
+\begin{equation}
+\mathsf{TV}(P_{\Sigma_1,\Sigma_2|M_1,M_2}, \cdots) \geq \max\{\mathsf{TV}(P_{\Sigma_1|\cdots}), \mathsf{TV}(P_{\Sigma_2|\cdots})\}
+\end{equation}
+by marginalizing. Thus confidentiality is determined by the weaker component: $\mathsf{Conf}(\mathcal{P}_1 \| \mathcal{P}_2) = \min\{\mathsf{Conf}(\mathcal{P}_1), \mathsf{Conf}(\mathcal{P}_2)\}$.
+
+\textbf{Reliability}: Both proofs must verify independently:
+\begin{equation}
+\mathsf{Rel}(\mathcal{P}_1 \| \mathcal{P}_2) = \Pr[\text{Verify}_1] \cdot \Pr[\text{Verify}_2] = \mathsf{Rel}(\mathcal{P}_1) \cdot \mathsf{Rel}(\mathcal{P}_2)
+\end{equation}
+
+\textbf{Opposability}: For independent verdicts $V_1 \perp V_2$:
+\begin{align*}
+\mathsf{Opp}(\mathcal{P}_1 \| \mathcal{P}_2) &= \frac{I(V_1,V_2; \Sigma_1,\Sigma_2|C)}{H(V_1,V_2|C)} \\
+&= \frac{I(V_1;\Sigma_1|C_1) + I(V_2;\Sigma_2|C_2)}{H(V_1|C_1) + H(V_2|C_2)}
+\end{align*}
+by independence. When $H(V_1|C_1) = H(V_2|C_2)$, this simplifies to product $\mathsf{Opp}(\mathcal{P}_1) \cdot \mathsf{Opp}(\mathcal{P}_2)$.
+\end{proof}
+
+
+
+\begin{corollary}[Design Guidelines from Composition]
+\begin{enumerate}
+\item Sequential composition amplifies confidentiality (multiplicative improvement) but degrades reliability (product rule)
+\item Parallel composition's confidentiality is limited by weakest component (security bottleneck)
+\item Adding multiple low-opposability proofs in parallel does not improve the interpretability (multiplicative penalty).
+\end{enumerate}
+\end{corollary}
+
+\section{Theoretical Case Study Analysis}\label{sec:validation}
+
+\textbf{Methodological note}: This section provides \emph{theoretical estimates} based on protocol specifications and modeled institutional contexts, serving as a proof-of-concept application of the CLO framework. Numerical values for $\mathsf{Conf}$, $\mathsf{Rel}$, and $\mathsf{Opp}$ are illustrative estimates derived from the methodology in Appendix~\ref{app:opp_calculations}. These estimates demonstrate analytical capabilities and identify trade-off patterns; empirical validation with institutional decision-makers remains future work.
+
+\textbf{Opposability calculation clarification}: All $\mathsf{Opp}$ values are computed using the formal definition $\mathsf{Opp}(\mathcal{P}, C) = I(V;\Sigma|C)/H(V|C)$, where $H(V|C)$ represents verdict entropy (institutional decision uncertainty) and $I(V;\Sigma|C)$ represents information about verdicts extractable from proofs given institutional context. Context entropy $H(\mathcal{C})$ constrains the extractable information $I(V;\Sigma|C)$ but is not used directly as the denominator. Detailed calculations appear in Appendix~\ref{app:opp_calculations}.
+
+\subsection{Methodology}
+
+For each system, we (1) formalize the protocol within the CLO framework (define $\mathcal{M}, \Sigma, \mathcal{C}, \mathcal{V}$ from published specifications), (2) estimate the context entropy $H(\mathcal{C})$ using triangulated theoretical bounds, (3) calculate or bound CRO measures from cryptographic properties, and (4) derive institutional implications.
+
+\textbf{Context entropy estimation}: We use three complementary theoretical approaches:
+
+\textbf{Method 1 - Structural bounds}: Count distinguishable contextual features from legal and regulatory documentation. Example: General jurisdiction courts distinguish $\approx 16$ evidence types and $\approx 16$ procedural contexts, giving a lower bound $H(\mathcal{C}) \geq \log_2(16 \times 16) = 8$ bits.
+
+\textbf{Method 2 - Expert literature}: Cognitive science research (Ericsson \& Kintsch 1995)\cite{Ericsson95} reported expert long-term working memory capacity $\approx 2^{12}$-$2^{15}$ chunks, suggesting domain expert context entropy $H \approx 12$-$15$ bits.
+
+\textbf{Method 3 - Information-theoretic modeling}: Institutional decision-making is modeled as probabilistic mapping from evidence to verdicts, estimating mutual information bounds.
+
+These methods converge on the following theoretical ranges: general courts $H(\mathcal{C}) \approx 8$-$16$ bits, specialized regulators $\approx 10$-$32$ bits, and domain experts $\approx 20$-$64$ bits.
+
+\textbf{Important limitations}: (1) Context entropy estimates are theoretical approximations and, not empirical measurements with actual judges/regulators. (2) CRO values represent protocol properties under standard cryptographic assumptions, and not measure institutional outcomes. (3) Empirical validation with real institutional participants is required to confirm these theoretical predictions.
+
+\subsection{Case Study 1: Helios Voting System}
+
+As motivated in Section~\ref{subsec:motivating_examples}, Helios exemplifies privacy-maximizing protocols where cryptographic strength creates institutional dependencies, real-world deployments (UCL 2009, IACR 2025) revealed that even elected trustees and cryptography experts face operational challenges with distributed key management~\cite{Adida09UCL,IACR2025incident}.
+
+\textbf{Protocol specification}~\cite{Adida08}: Open-audit voting using ElGamal encryption and zero-knowledge proofs over 2048-bit discrete log groups.
+
+\textbf{CLO formalization}:
+\begin{itemize}
+\item Messages: Individual votes $v \in \{1,\ldots,K\}$
+\item Proofs: $\sigma = (\text{Enc}(v), \pi_{\text{valid}}, \pi_{\text{tally}})$ where $\text{Enc}$ is ElGamal ciphertext, $\pi$ are Fiat-Shamir zero-knowledge proofs
+\item Context $\mathcal{C}$: Electoral dispute in general jurisdiction court, $H(\mathcal{C}) \approx 8$ bits
+\item Verdicts: $\mathcal{V} = \{\text{Valid election}, \text{Invalid election}, \text{Order recount}, \text{Demand investigation}\}$, $H(V|C) = 2$ bits
+\end{itemize}
+
+\textbf{Quantitative analysis} (methodology Appendix~\ref{app:opp_calculations}):
+\begin{align}
+\mathsf{Conf}(\text{Helios}) &\approx 0.92 \quad \text{(ElGamal semantic security under DDH)} \\
+\mathsf{Rel}(\text{Helios}) &\approx 0.95 \quad \text{(ZKP soundness $< 2^{-80}$)} \\
+\mathsf{Opp}(\text{Helios}) &\approx 0.50 \quad \text{(See Appendix~\ref{app:helios})}
+\end{align}
+
+The moderate opposability ($\mathsf{Opp} = 0.50$) quantifies the institutional interpretability barrier described in Section~\ref{subsec:motivating_examples}: courts can extract $I(V;\Sigma|C) \approx 1$ bit from cryptographic proofs (binary expert signal: valid/invalid), resolving only half of verdict uncertainty $H(V|C) = 2$ bits. The remaining uncertainty requires legal reasoning on procedural compliance and jurisdiction-specific electoral law, dimensions inaccessible through cryptographic verification alone.
+
+\textbf{Theoretical product}: $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} \approx 0.92 \times 0.95 \times 0.50 \approx 0.437$.
+
+\subsection{Case Study 2: zk-SNARK Regulatory Compliance}
+
+As motivated in Section~\ref{subsec:motivating_examples}, zk-SNARKs exemplify the privacy-oversight tension where cryptographic opacity prevents regulators from auditing specific transactions despite receiving cryptographic assurance of compliance.
+
+\textbf{Protocol specification}~\cite{Groth16}: Zero-knowledge proofs for privacy-preserving compliance verification. Financial institutions prove "all transactions satisfy AML rules" without revealing details (Groth16 over BN254 curve, 200-byte proofs).
+
+\textbf{CLO formalization}:
+\begin{itemize}
+\item Messages: Transaction databases $\{(t_i, a_i, v_i)\}$ (transactions, accounts, values)
+\item Proofs: zk-SNARK $\pi$ (Groth16 construction)
+\item Context $\mathcal{C}$: Regulatory audit by financial authority, $H(\mathcal{C}) \approx 11$ bits
+\item Verdicts: $\mathcal{V} = \{\text{Compliant}, \text{Non-compliant}, \text{Investigation required}, \text{Penalty assessment}, \text{Corrective action}, \text{Escalation}, \text{Conditional approval}, \text{Forensic audit}\}$, $H(V|C) = 3$ bits
+\end{itemize}
+
+\textbf{Quantitative analysis} (methodology Appendix~\ref{app:opp_calculations}):
+\begin{align}
+\mathsf{Conf}(\text{zk-SNARK}) &\approx 0.89 \quad \text{(Computational zero-knowledge under pairing assumptions)} \\
+\mathsf{Rel}(\text{zk-SNARK}) &\approx 0.96 \quad \text{(Knowledge soundness, accounting for trusted setup)} \\
+\mathsf{Opp}(\text{zk-SNARK}) &\approx 0.67 \quad \text{(See Appendix~\ref{app:zksnark})}
+\end{align}
+
+The enhanced opposability ($\mathsf{Opp} = 0.67$) compared to Helios reflects specialized regulatory context ($H(\mathcal{C}) = 11$ bits vs. 8 bits for general courts) enabling extraction of $I(V;\Sigma|C) \approx 2$ bits through computational verification and compliance categorization. However, regulators still cannot perform the targeted transaction audits described in Section~\ref{subsec:motivating_examples}, resolving only two-thirds of regulatory decision uncertainty.
+
+\textbf{Theoretical product}: $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} \approx 0.89 \times 0.96 \times 0.67 \approx 0.572$.
+
+\subsection{Case Study 3: ECDSA Digital Signatures}
+
+As motivated in Section~\ref{subsec:motivating_examples}, ECDSA achieves near-universal judicial acceptance through transparent verification, demonstrating the inverse trade-off where cryptographic exposure enables institutional interpretability.
+
+\textbf{Protocol specification}~\cite{Johnson01}: Standard authentication via ECDSA over NIST P-256 curve (256-bit security).
+
+\textbf{CLO formalization}:
+\begin{itemize}
+\item Messages: Contract documents (public plaintexts)
+\item Proofs: ECDSA signatures $(r,s)$ with public verification equation $sG = R + eP_{\text{pub}}$
+\item Context $\mathcal{C}$: Civil court contract dispute with established PKI infrastructure, $H(\mathcal{C}) \approx 20$ bits
+\item Verdicts: Rich decision space encompassing validity, authentication strength, legal weight, procedural admissibility, and contextual appropriateness, $H(V|C) \approx 20$ bits (see Appendix~\ref{app:ecdsa})
+\end{itemize}
+
+\textbf{Quantitative analysis} (methodology Appendix~\ref{app:opp_calculations}):
+\begin{align}
+\mathsf{Conf}(\text{ECDSA}) &\approx 0.31 \quad \text{(Messages public; only private keys hidden)} \\
+\mathsf{Rel}(\text{ECDSA}) &\approx 0.98 \quad \text{(Deterministic verification; forgery requires ECDLP)} \\
+\mathsf{Opp}(\text{ECDSA}) &\approx 0.90 \quad \text{(See Appendix~\ref{app:ecdsa})}
+\end{align}
+
+The high opposability ($\mathsf{Opp} = 0.90$) demonstrates how transparency enables institutional utility: courts extract $I(V;\Sigma|C) \approx 18$ bits through established legal frameworks (ESIGN Act~\cite{ESIGN00}, eIDAS~\cite{eIDAS14}), resolving 90\% of verdict uncertainty across multiple assessment dimensions (validity, authentication strength, legal weight, procedural admissibility). This validates the privacy-opposability tension described in Section~\ref{subsec:motivating_examples}, ECDSA achieves institutional interpretability by sacrificing message confidentiality.
+
+\textbf{Theoretical product}: $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} \approx 0.31 \times 0.98 \times 0.90 \approx 0.273$.
+
+\subsection{Comparative Theoretical Analysis}
+
+Table~\ref{tab:cri_comparison} summarizes the theoretical CRO analyses.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+\textbf{System} & $\mathsf{Conf}$ & $\mathsf{Rel}$ & $\mathsf{Opp}$ & $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp}$ \\
+\midrule
+Helios Voting & 0.92 & 0.95 & 0.50 & 0.437 \\
+zk-SNARK Compliance & 0.89 & 0.96 & 0.67 & 0.572 \\
+ECDSA Signatures & 0.31 & 0.98 & 0.90 & 0.273 \\
+S-OTP (Construction) & 0.99 & 0.99 & $H(\mathcal{C})/\lambda$ & Variable \\
+\bottomrule
+\end{tabular}
+\caption{Theoretical CRO analysis of real-world protocol specifications. Values represent theoretical estimates based on published cryptographic properties and modeled institutional contexts. Empirical validation with actual institutional participants is needed to confirm these predictions.}
+\label{tab:cri_comparison}
+\end{table}
+
+\begin{observation}[Framework Validation and Theoretical Patterns]
+The theoretical case studies demonstrate:
+\begin{enumerate}
+\item \textbf{Analytical applicability}: The CLO framework can analyze existing protocol specifications and derive testable predictions regarding institutional deployment challenges.
+
+\item \textbf{Privacy-opposability tension}: Protocols maximizing confidentiality (Helios, zk-SNARKs) theoretically achieve moderate opposability ($\mathsf{Opp} \approx 0.5\text{--}0.7$), whereas high-opposability protocols (ECDSA: $\mathsf{Opp}=0.90$) sacrifice privacy, confirming the systematic tension described in Section~\ref{subsec:motivating_examples}.
+
+\item \textbf{Context dependence}: Theoretical opposability varies significantly with the modeled institutional context (general court 8 bits vs. specialized regulator 11 bits vs. PKI-experienced court 20 bits), validating context entropy $H(\mathcal{C})$ as a critical design parameter.
+
+\item \textbf{Consistent patterns}: Theoretical estimates show that all analyzed protocols achieve $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} < 0.6$, with ECDSA achieving the lowest product (0.273) due to its transparency-confidentiality trade-off, revealing consistent patterns that merit formal investigation.
+
+\item \textbf{Design guidance}: The framework provides theoretical guidance for protocol design, which requires explicit consideration of the target context entropy $H(\mathcal{C})$ and opposability requirements.
+\end{enumerate}
+\end{observation}
+
+Limitations are discussed in Section~\ref{subsec:limitations}
+
+\textbf{Future empirical research directions}: (1) Controlled experiments measuring judge/regulator interpretation accuracy for different proof types, (2) case law analysis quantifying verdict entropy given evidence types, (3) development of standardized institutional context benchmarks, and (4) longitudinal studies of cryptographic evidence acceptance in legal proceedings.
+
+\section{Related Work}\label{sec:related_work}
+
+The CLO framework emerges at the intersection of cryptography, institutional analysis, and human-centered design, addressing critical gaps in existing paradigms.
+
+\subsection{Cryptographic Frameworks}
+
+\textbf{Zero-knowledge and verifiable computation}~\cite{GMR85,Groth16,Gennaro13,Wahby18} achieve remarkable efficiency in minimizing information leakage and decoupling execution from verification. Yet, their very strengths create institutional vulnerabilities: mathematically impeccable proofs remain semantically opaque. A zk-SNARK compliance proof offers regulators binary verification without explanatory insight. The CLO framework formalizes this opacity through \emph{Opposability} ($\mathsf{Opp}$), enabling quantitative analysis of privacy-utility trade-offs that ZKPs' "reveal nothing" paradigm inherently overlooks.
+
+\textbf{Transparent proof systems}~\cite{Bunz19,Boneh20} address setup trust but miss a crucial distinction: cryptographic transparency differs from institutional interpretability. A proof with transparent setup may remain opaque to non-experts. CLO disentangles these: $\mathsf{Rel}$ incorporates setup assumptions while $\mathsf{Opp}$ measures post-setup semantic interpretability.
+
+\textbf{Quantitative Information Flow (QIF)}~\cite{Clarkson05,Alvim12} rigorously measures information leakage, treating confidentiality as flow \emph{absence}. CLO extends QIF by formalizing institutional utility as \emph{positive} flow ($I(V;\Sigma|C)$) that must be maximized alongside leakage constraints, revealing the trilemma where maximizing $\mathsf{Opp}$ requires intentional disclosure conflicting with QIF's minimization goal.
+
+\subsection{Accountability Mechanisms in Cryptographic Systems}
+
+Prior work explored making cryptographic verification accessible beyond experts without formalizing the underlying trade-offs. Early approaches introduced physical verification artifacts (encrypted overlay systems with visual decryption) and interactive challenge-response protocols in electronic voting, achieving "voter-verifiability" through simple interactions requiring no cryptographic expertise. In secure multi-party computation and blockchain systems, \emph{accountability frameworks} introduce trusted intermediary roles, auditors or watchdog entities, who verify protocol correctness on behalf of stakeholders, while blockchain protocols incorporate public verifiability through transparent ledgers.
+
+These approaches, physical artifacts, challenge protocols, trusted auditors, transparent ledgers, provide practical opacity solutions but remain ad hoc designs lacking unified theoretical foundations. Our CLO framework provides the missing formal model, quantifying how such mechanisms trade cryptographic security ($\mathsf{Conf}$, $\mathsf{Rel}$) for institutional interpretability ($\mathsf{Opp}$) through rigorous information-theoretic bounds.
+
+\subsection{Human Factors: Usable Security and Legal Interpretation}
+
+The concept of \emph{opposability} fundamentally concerns human comprehension, placing it within usable security research~\cite{Cranor08,Herley09}. Research on \emph{security ceremonies} recognizes that real-world security depends on human actors correctly interpreting protocol steps within institutional contexts. Empirical research demonstrates users construct \emph{folk models} of security, intuitive but often incorrect mental representations diverging from cryptographic specifications, creating vulnerabilities in mathematically sound systems. Our $\mathsf{Opp}$ metric quantitatively formalizes this comprehension gap, bridging usable security's qualitative insights with information-theoretic rigor.
+
+In the legal domain, recent scholarship examines algorithmic evidence challenges. \emph{Technological due process} argues automated decision systems must provide explicability to satisfy constitutional requirements, judges must understand evidentiary bases to ensure fair adjudication. Legal frameworks increasingly require explanation in automated decisions, creating institutional pressure for interpretability that cryptographic opacity directly contradicts. Courts evaluate evidence through \emph{narrative coherence} rather than formal verification. Blockchain governance literature reveals how \emph{lex cryptographica}, rule systems enforced cryptographically rather than through legal institutions, can undermine democratic accountability by rendering governance opaque to non-experts, creating \emph{cryptographic technocracy}. The \emph{governance-by-design} principle advocates embedding legal values (transparency, accountability) into technical architectures from inception. CLO operationalizes these legal requirements and design principles through quantitative metrics ($\mathsf{Conf}$, $\mathsf{Rel}$, $\mathsf{Opp}$) enabling systematic evaluation of whether cryptographic designs satisfy institutional requirements.
+
+\subsection{Interdisciplinary Connections and Theoretical Foundations}
+
+\textbf{Explainable AI (XAI)}~\cite{Ribeiro16} addresses learned model interpretability, whereas cryptographic protocols have precise specifications. The challenge differs fundamentally: XAI explains statistical correlations in opaque models; CLO translates mathematical precision into institutional understanding. Both confront tension between system complexity and human comprehension. CLO's information-theoretic approach through context entropy $H(\mathcal{C})$ provides quantitative tools potentially applicable to XAI interpretability analysis.
+
+\textbf{Legal informatics}~\cite{Kerr04,Casey11} explores digital evidence admissibility qualitatively through case analysis. CLO provides complementary quantitative foundations enabling systematic comparison of cryptographic evidence types through information-theoretic metrics, operationalizing legal concepts like "reliability" and "probative value" through formal definitions amenable to mathematical analysis.
+
+\textbf{Theoretical foundations} build on Shannon's information theory~\cite{Shannon48} and Wyner-Ziv coding with side information~\cite{WynerZiv76}. We identify a critical asymmetry overlooked in classical theory: institutional context $C$ may be uncorrelated with cryptographic proofs ($I(\Sigma;C) \approx 0$) despite substantial entropy $H(\mathcal{C})$, providing no reduction in interpretation complexity. A judge with extensive legal knowledge gains no advantage interpreting zero-knowledge proofs whose algebraic structure remains equally opaque regardless of legal expertise, the knowledge domains are orthogonal. Our context bottleneck theorem formalizes this limitation: $I(V;\Sigma|C) \leq H(\mathcal{C})$ bounds institutional information extraction independent of protocol design.
+
+Like classical impossibility results, CAP theorem for distributed systems~\cite{Brewer00}, FLP impossibility for consensus~\cite{FLP85}, CLO quantitatively characterizes achievable $(\mathsf{Conf},\mathsf{Rel},\mathsf{Opp})$ surfaces from information-theoretic constraints.
+
+\begin{table}[h]
+\centering
+\small
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Framework} & \textbf{Conf} & \textbf{Rel} & \textbf{Opp} & \textbf{Bounds} \\
+\midrule
+Zero-Knowledge~\cite{GMR85} & \checkmark & \checkmark & $\times$ & Qualitative \\
+Verifiable Comp.~\cite{Gennaro13} & $\times$ & \checkmark & $\times$ & None \\
+QIF~\cite{Alvim12} & \checkmark & $\times$ & $\times$ & None \\
+Accountability Mechanisms & $\times$ & $\sim$ & $\sim$ & Ad hoc \\
+Usable Security Research & $\times$ & $\times$ & $\sim$ & Qualitative \\
+Legal Scholarship & $\times$ & $\times$ & $\sim$ & Qualitative \\
+XAI~\cite{Ribeiro16} & $\times$ & $\times$ & $\sim$ & None \\
+\textbf{CLO (This Work)} & \checkmark & \checkmark & \checkmark & \textbf{Quantitative} \\
+\bottomrule
+\end{tabular}
+\caption{Framework comparison. \checkmark: rigorous measure; $\sim$: informal or partial; $\times$: not addressed. CLO uniquely offers rigorous quantitative integration of all three dimensions with explicit impossibility bounds derived from context entropy $H(\mathcal{C})$.}
+\label{tab:framework_comparison}
+\end{table}
+
+\textbf{Positioning}: The CLO framework differs fundamentally from prior work by (1) recognizing institutional interpretability as a requirement potentially conflicting with privacy (versus ZK's leakage minimization), (2) integrating all three dimensions with rigorous information-theoretic proofs (versus QIF's single-dimension focus or usable security's qualitative approaches), (3) addressing cryptographic protocols specifically (versus XAI's focus on learned models), and (4) providing a unified quantitative model with proven impossibility bounds for analyzing transparency mechanisms (versus ad hoc accountability solutions). CLO enables principled design of cryptosystems for institutional deployment while establishing a research agenda at the cryptography-institution interface.
+
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Theoretical Contributions and Limitations}
+
+\textbf{Institutional cryptography as a research domain}: The CLO framework establishes foundations with distinct evaluation metrics (confidentiality, reliability and opposability) and design principles (context-aware protocol optimization). This development parallels other specialized cryptographic domains: just as secure MPC (Multi-Party Computation) focuses on privacy-preserving distributed computation and homomorphic encryption on encrypted data processing, institutional cryptography focuses on cryptosystems designed for human interpretability within legal and regulatory frameworks.
+
+\textbf{Theoretical status}: Corollary~\ref{cor:trilemma} establishes information-theoretic constraints on CRO trade-offs. Proving tight, general impossibility bounds remains an open problem requiring advanced information-theoretic techniques.
+
+\textbf{Proof status}: The framework includes complete proofs for measuring properties (Theorem~\ref{thm:measure_bounds}), context bottleneck constraints (Theorem~\ref{thm:context_bottleneck}), protocol construction optimality (Theorem~\ref{thm:sotp_optimal}), and composition rules (Theorems~\ref{thm:sequential_composition}, \ref{thm:parallel_composition}). The central theoretical challenge, rigorous bounds on achievable $(\mathsf{Conf}, \mathsf{Rel}, \mathsf{Opp})$ trade-offs, remains open, representing the primary direction for future work.
+
+\textbf{Measurement challenges}: Quantifying context entropy $H(\mathcal{C})$ and opposability $\mathsf{Opp}$ requires bridging information theory with empirical social science, which is methodologically novel. Our triangulated approach (structural bounds, expertise literature and information-theoretic modeling) provides theoretical estimates. Critical need: Systematic empirical studies with actual judges/regulators to validate theoretical predictions. Future work: Standardized benchmarks for institutional interpretative capacity (analogous to NIST cryptographic standards).
+
+\subsection{Practical Implications}
+
+\textbf{Protocol design}: The CLO framework enables systematic design by (1) characterizing the institutional context ($H(\mathcal{C})$ estimation), (2) specifying minimum CRO requirements, (3) checking theoretical feasibility, (4) optimizing construction (e.g., S-OTP-style layered architecture), and (5) providing complete mathematical proofs.
+
+\textbf{Regulatory considerations}: Opposability measures can provide evidence of admissibility. Example thresholds: criminal proceedings might require $\mathsf{Opp} \geq 0.7$ (high interpretability for "beyond reasonable doubt"), civil litigation $\mathsf{Opp} \geq 0.5$ (preponderance standard), and regulatory compliance $\mathsf{Opp} \geq 0.3$ (expert oversight). Cryptographic evidence below the thresholds would require expert testimony and supplementary evidence.
+
+\textbf{Standardization opportunities}: Framework could inform: NIST post-quantum standards (opposability considerations), ISO/IEC institutional cryptography standards, and W3C web authentication (minimum $\mathsf{Opp}$ for legal contexts).
+
+\subsection{Limitations}\label{subsec:limitations}
+
+While this work establishes formal foundations for institutional cryptography, several limitations merit emphasis:
+
+\textbf{Theoretical nature:} CRO measures and trade-off analyses remain as theoretical constructs. Empirical validation with actual institutional actors (judges, regulators, and auditors) is necessary to confirm the predicted opposability values and context entropy estimates.
+
+\textbf{Context quantification:} Our $H(\mathcal{C})$ estimates rely on theoretical bounds and cognitive science literature rather than direct measurement of institutional knowledge. Standardized benchmarks for institutional interpretative capacity are lacking.
+
+\textbf{Computational realism:} The framework focuses on information-theoretic limits, whereas practical systems operate under computational assumptions. The relationship between computational security and institutional interpretability requires further exploration.
+
+\textbf{Scope boundary:} The current analysis addresses non-interactive proof systems. Interactive protocols and multi-party institutional processes may exhibit different trade-off characteristics.
+
+These limitations define critical directions for future work, particularly empirical studies with institutional participants and the development of standardized context measurement methodologies.
+
+\subsection{Future Research Directions}\label{subsec:future_directions}
+
+The CRO trilemma and S-OTP paradox (Corollary~\ref{cor:trilemma}, Section~\ref{sec:constructions}) reveal fundamental constraints on monolithic protocol design: single-layer systems cannot simultaneously achieve high confidentiality, reliability, and opposability within realistic institutional contexts. This motivates exploration of \emph{architectural solutions} that distribute interpretability requirements across protocol layers with heterogeneous security properties.
+
+\textbf{Multilayer protocol architecture}: The Gold-Iron-Clay paradigm suggests a promising direction: protocols composed of \emph{multiple verification layers} with distinct CRO profiles, where institutional interpreters extract information from high-opposability layers while cryptographic security resides in low-opposability layers. Consider a three-tier architecture:
+
+\begin{enumerate}
+\item \textbf{Gold Layer (Confidentiality preservation)}: Core cryptographic protocol achieving near-perfect confidentiality ($\mathsf{Conf} \approx 1$) through information-theoretic or post-quantum primitives. This layer operates with high entropy $H(\Sigma_{\text{gold}}) = \Theta(\lambda)$ and provides minimal institutional information $I(V;\Sigma_{\text{gold}}|C) \approx 0$. Examples: one-time pads, lattice-based commitments, or quantum key distribution.
+
+\item \textbf{Iron Layer (Reliability anchoring)}: Binding mechanisms ensuring cryptographic soundness ($\mathsf{Rel} \approx 1$) through computationally secure primitives with established security proofs. This layer links Gold confidentiality to verifiable claims via commitments, signatures, or zero-knowledge proofs. Moderate interpretability $I(V;\Sigma_{\text{iron}}|C) \approx 1$--$2$ bits through binary cryptographic verification signals.
+
+\item \textbf{Clay Layer (Opposability interface)}: Context-rich auxiliary information designed for institutional interpretation, achieving high opposability ($\mathsf{Opp} \geq 0.7$) by encoding verdict-relevant metadata in transparent formats. This layer sacrifices confidentiality ($\mathsf{Conf}_{\text{clay}} \ll 1$) to provide semantic bridges between cryptographic proofs and legal reasoning. Examples: structured audit logs, compliance certificates, or human-readable summaries.
+\end{enumerate}
+
+\textbf{Managed heterogeneity principle}: Unlike traditional protocol composition (Theorems~\ref{thm:sequential_composition}, \ref{thm:parallel_composition}), multilayer architecture exploits \emph{intentional heterogeneity}, different layers optimize different CRO dimensions. The overall system achieves:
+\begin{align}
+\mathsf{Conf}_{\text{system}} &\approx \mathsf{Conf}_{\text{gold}} \quad \text{(dominated by strongest layer)} \\
+\mathsf{Rel}_{\text{system}} &\approx \mathsf{Rel}_{\text{iron}} \quad \text{(anchored by binding layer)} \\
+\mathsf{Opp}_{\text{system}} &\approx \mathsf{Opp}_{\text{clay}} \quad \text{(accessible through interface layer)}
+\end{align}
+escaping single-layer $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} \leq H(\mathcal{C})/\lambda$ constraints by decoupling security from interpretability.
+
+\textbf{Concrete example, regulated confidential transactions}: A financial institution proves regulatory compliance while preserving customer privacy:
+\begin{itemize}
+\item \textbf{Gold}: Transaction amounts encrypted via Pedersen commitments (perfect hiding)
+\item \textbf{Iron}: zk-SNARK proving ``all committed values satisfy AML thresholds'' (computational soundness)
+\item \textbf{Clay}: Structured compliance certificate containing: transaction count, aggregate volume range (``\$1M--\$10M''), risk category (``low/medium/high''), timestamp, institution identity, regulatory framework version
+\end{itemize}
+Regulators with $H(\mathcal{C}) = 16$ bits can extract $I(V;\Sigma_{\text{clay}}|C) \approx 12$ bits from Clay layer (compliance categorization, risk assessment, temporal validity, institutional reputation), achieving $\mathsf{Opp}_{\text{system}} \approx 0.75$ despite Gold layer's $\mathsf{Opp}_{\text{gold}} \approx 0$ and Iron layer's $\mathsf{Opp}_{\text{iron}} \approx 0.1$.
+
+\textbf{Open research questions}:
+\begin{enumerate}
+\item \textbf{Optimal layer allocation}: Given institutional context $H(\mathcal{C})$ and minimum CRO requirements $(\alpha, \beta, \gamma)$, determine optimal information distribution across layers minimizing total entropy $H(\Sigma_{\text{gold}}) + H(\Sigma_{\text{iron}}) + H(\Sigma_{\text{clay}})$.
+
+\item \textbf{Context augmentation strategies}: Develop systematic methods to increase institutional context entropy $H(\mathcal{C})$ through: (a) specialized training programs teaching judges/regulators cryptographic verification basics, (b) standardized evidentiary frameworks analogous to Daubert standards for scientific evidence, (c) expert witness protocols that preserve judicial independence while leveraging technical expertise.
+
+\item \textbf{Adaptive security parameters}: Design protocols that dynamically adjust $\lambda$ based on institutional capacity: high-$H(\mathcal{C})$ regulators (sophisticated financial authorities) receive standard 128-bit security with moderate opposability, while low-$H(\mathcal{C})$ courts (general jurisdiction) receive 64-bit security with enhanced interpretability for non-critical applications.
+
+\item \textbf{Formal verification}: Prove that multilayer architectures satisfy information-flow properties: Gold layer leakage $I(M;\Sigma_{\text{clay}}|C) \leq \epsilon$ (Clay cannot compromise confidentiality), Iron layer binding (adversaries cannot forge Clay certificates contradicting Gold commitments), and compositionality (combining layers preserves individual security properties).
+
+\item \textbf{Empirical validation}: Conduct controlled experiments with actual judges/regulators comparing: (a) single-layer protocols (baseline), (b) multilayer protocols with varying Clay complexity, measuring interpretation accuracy, decision confidence, and verdict consistency. Quantify how $H(\mathcal{C})$ training programs improve opposability.
+\end{enumerate}
+
+\textbf{Broader research directions}: Beyond multilayer architecture, the CLO framework motivates:
+
+\textbf{Theoretical foundations}: (1) Prove tight CRO impossibility bounds using advanced information inequalities (Pinsker, tensorization, optimal transport), (2) characterize exact Pareto frontiers of achievable $(\mathsf{Conf}, \mathsf{Rel}, \mathsf{Opp})$ surfaces, (3) extend to computational settings with concrete hardness assumptions, (4) explore quantum protocols where $H(\Sigma)$ scales differently.
+
+\textbf{Applied systems}: (1) Retrofit existing deployments (blockchain transparency, e-voting auditability) with CLO analysis identifying opposability bottlenecks, (2) develop domain-specific instantiations for electoral systems (voter-verifiable ballots with judge-interpretable disputes), financial compliance (regulator-auditable privacy), and legal contracts (court-enforceable confidential agreements).
+
+\textbf{Standardization and policy}: (1) Propose institutional cryptography standards coordinating NIST (cryptographic parameters), ISO/IEC (verification protocols), and legal frameworks (evidentiary admissibility thresholds), (2) establish opposability benchmarks analogous to Common Criteria security levels, (3) create interdisciplinary training bridging cryptography, law, and public policy.
+
+The multilayer architecture represents a paradigm shift from viewing opposability as a constraint to viewing it as a design dimension enabling \emph{protocol orchestration}, strategic composition of heterogeneous layers achieving institutional goals unattainable through monolithic designs. This opens a rich research agenda at the intersection of cryptography, information theory, and institutional design.
+
+\section{Conclusion}\label{sec:conclusion}
+
+We introduce the Cryptographic Legal Opposability (CLO) framework, establishing formal foundations for institutional cryptography through rigorously verified definitions, constructions, and theoretical analyses. By formalizing the Invisible Authenticity Paradox, whereby cryptographic strength creates institutional opacity, we provide mathematical tools to quantify fundamental tensions in cryptographic systems operating within institutional constraints.
+
+\subsection{Contributions}
+
+Our work establishes six foundational contributions (detailed in Section~\ref{subsec:Contributions}):
+
+\textbf{Mathematical framework (C1-C2):} Formal definitions of $\mathsf{Conf}$, $\mathsf{Rel}$, and $\mathsf{Opp}$ with complete proofs for measurement properties (Theorem~\ref{thm:measure_bounds}), context bottleneck $I(V;\Sigma|C) \leq H(\mathcal{C})$ (Theorem~\ref{thm:context_bottleneck}), and composition rules (Theorems~\ref{thm:sequential_composition}, \ref{thm:parallel_composition}).
+
+\textbf{Protocol construction (C3):} The S-OTP achieves $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} = H(\mathcal{C})/\lambda \cdot (1-\mathsf{negl}(\lambda))$ with proven optimality within its construction class (Theorems~\ref{thm:sotp_properties}, \ref{thm:sotp_optimal}). Whether this represents a fundamental limit across broader families remains open.
+
+\textbf{Protocol analysis (C5):} Theoretical estimates for deployed protocols (Helios, zk-SNARKs, ECDSA) suggest privacy-opposability trade-off patterns, with high-privacy systems achieving $\mathsf{Opp} \approx 0.5\text{--}0.7$. These estimates require empirical validation with institutional participants.
+
+\textbf{Theoretical insights (C4):} Our analysis suggests context entropy $H(\mathcal{C})$ is a critical bottleneck in CRO optimization. However, establishing tight general impossibility bounds, analogous to Shannon's channel capacity or the CAP theorem, remains the central open problem requiring techniques beyond this foundational work.
+
+\textbf{Methodology (C6):} Context entropy estimation techniques and opposability measurement frameworks demonstrating analytical applicability while highlighting needs for standardized benchmarks and empirical calibration.
+
+\subsection{Open Challenges and Future Work}
+
+The central theoretical challenge is to prove rigorous bounds on achievable $(\mathsf{Conf}, \mathsf{Rel}, \mathsf{Opp})$ trade-offs. Although our theoretical analysis suggests fundamental constraints analogous to Shannon's channel capacity, formal proof using advanced information inequalities remains open. This is the primary theoretical problem in institutional cryptography.
+
+Critical empirical work is needed, including systematic validation with actual judges, regulators, and domain experts to confirm theoretical predictions about context entropy and opposability. Standardized benchmarks for institutional interpretative capacity (analogous to NIST cryptographic standards) are essential for field maturation.
+
+Broader research directions: (1) computational security extensions with concrete hardness assumptions, (2) quantum protocol analysis, (3) domain-specific instantiations for voting, compliance, and legal evidence, and (4) interdisciplinary integration with legal theory and policy frameworks.
+
+\subsection{Vision}
+
+The CLO framework establishes institutional cryptography as a research domain with distinct evaluation metrics (beyond confidentiality/reliability) and design principles (context-aware optimization). Our complete mathematical formalization, proven theorems, protocol constructions, and analysis tools provide robust foundations for future research, regardless of the ultimate resolution of the theoretical trade-off bounds.
+
+The framework demonstrates that cryptographic systems serving institutional functions require not only stronger cryptography but also cryptography explicitly designed for interpretation, balancing mathematical security with semantic transparency for human decision-makers. This paradigm shift recognizes institutional utility as a legitimate first-class design goal alongside traditional cryptographic properties.
+
+We invite the community to (1) build upon these mathematical foundations, (2) contribute to resolving the central theoretical open problem through rigorous proof techniques, (3) validate theoretical predictions through empirical studies with actual institutional participants, and (4) advance toward cryptosystems that are both mathematically secure and institutionally meaningful for democratic governance.
+
+
+\appendices
+\section{Opposability Calculation Methodology}\label{app:opp_calculations}
+
+This appendix provides detailed calculations illustrating how the opposability estimates for the three case studies (Section~\ref{sec:validation}) were derived. These calculations are \emph{theoretical and illustrative}, based on publicly documented protocol specifications and modeled institutional contexts rather than empirical measurements with actual judges or regulators.
+
+\subsection{General Methodology}\label{app:methodology}
+
+For each cryptographic system, we estimate opposability $\mathsf{Opp}(\mathcal{P}, C) = I(V;\Sigma|C)/H(V|C)$ through three systematic steps:
+
+\textbf{Step 1 - Model verdict space}: Enumerate possible institutional decisions based on legal/regulatory frameworks and estimate verdict entropy $H(V|{C})$ assuming approximately uniform distribution absent empirical case law data (conservative baseline).
+
+\textbf{Step 2 - Estimate information extraction}: Analyze which institutional interpreters with contextual knowledge $H({C})$ can be extracted from cryptographic proofs $\Sigma$ given their domain expertise and verification capabilities. The extractable information is quantified  as mutual information $I(V;\Sigma|C)$ measured in bits.
+
+\textbf{Step 3 - Compute opposability}: Apply the CLO framework definition $\mathsf{Opp} = I(V;\Sigma|C)/H(V|C)$ to obtain the interpretability fraction.
+
+\subsection{Case 1: Helios Voting System}\label{app:helios}
+
+\textbf{Step 1 - Verdict space modeling}: In electoral dispute adjudication, judges must decide between: \{Valid election (accept results), Invalid election (nullify), Order recount (procedural verification), Demand investigation (fraud suspicion)\}. This gives verdict entropy:
+\begin{equation}
+H(V|C) = \log_2(4) = 2 \text{ bits}
+\end{equation}
+
+\textbf{Step 2 - Information extraction estimation}: General jurisdiction judges with $H(\mathcal{C}) \approx 8$ bits contextual knowledge (distinguishing $\approx 16$ evidence types across $\approx 16$ procedural contexts, structural bound $\log_2(16 \times 16) = 8$) cannot independently verify:
+\begin{itemize}
+\item ElGamal discrete logarithm computations over 2048-bit groups
+\item Fiat-Shamir zero-knowledge proof transformations
+\item Homomorphic tally correctness verification
+\end{itemize}
+
+The cryptographic proof essentially provides a \emph{binary expert signal} through testimony: "cryptographic expert confirms validity" versus "expert identifies cryptographic flaw." This binary categorization convey the following:
+\begin{equation}
+I(V;\Sigma|C) \approx 1 \text{ bit}
+\end{equation}
+
+The remaining verdict uncertainty (1 bit from original 2 bits) must be resolved through legal reasoning on procedural compliance, voter intent interpretation, and jurisdiction-specific electoral law-dimensions inaccessible through cryptographic verification alone.
+
+\textbf{Step 3 - Opposability computation}:
+\begin{equation}
+\mathsf{Opp}(\text{Helios}, \mathcal{C}_{\text{court}}) = \frac{I(V;\Sigma|C)}{H(V|C)} \approx \frac{1 \text{ bit}}{2 \text{ bits}} = 0.50
+\end{equation}
+
+\textbf{Interpretation}: This 50\% institutional interpretability indicates that cryptographic proofs resolve half of the institutional uncertainty, with the remaining 50\% requiring legal reasoning on procedural compliance and jurisdiction-specific electoral law.
+
+\subsection{Case 2: zk-SNARK Regulatory Compliance}\label{app:zksnark}
+
+\textbf{Step 1 - Verdict space modeling}: Financial regulatory decisions span: \{Compliant (approve), Non-compliant (reject), Investigation required, Penalty assessment, Corrective action mandate, Escalation to enforcement, Conditional approval, Full forensic audit\}. This gives:
+\begin{equation}
+H(V|C) = \log_2(8) = 3 \text{ bits}
+\end{equation}
+
+\textbf{Step 2 - Information extraction estimation}: Financial regulators operate with a specialized context $H(\mathcal{C}) \approx 11$ bits (regulatory expertise: $\approx 64$ evidence categories across $\approx 32$ procedural frameworks, bound $\log_2(64 \times 32) \approx 11$). However, the zk-SNARK proofs (Groth16 over BN254 curves) are as follows.
+\begin{itemize}
+\item Elliptic curve pairing operations ($e: \mathbb{G}_1 \times \mathbb{G}_2 \to \mathbb{G}_T$)
+\item Trusted setup verification requirements (CRS parameter validation)
+\item Circuit arithmetic constraints (R1CS satisfaction checks)
+\end{itemize}
+
+Regulators can extract approximately 2 bits of institutional information:
+\begin{enumerate}
+\item \textbf{Computational verification} (1 bit): Whether proof verifies computationally under pairing checks
+\item \textbf{Compliance categorization} (1 bit): Rough classification visible in proof structure (e.g., "passes all constraints" vs "near-boundary compliance" vs "clear violation signal")
+\end{enumerate}
+
+Thus: $I(V;\Sigma|C) \approx 2$ bits.
+
+\textbf{Step 3 - Opposability computation}:
+\begin{equation}
+\mathsf{Opp}(\text{zk-SNARK}, \mathcal{C}_{\text{regulator}}) = \frac{I(V;\Sigma|C)}{H(V|C)} = \frac{2 \text{ bits}}{3 \text{ bits}} \approx 0.67
+\end{equation}
+
+\textbf{Interpretation}: Higher opposability (67\%) compared to Helios (50\%) reflects a specialized regulatory context that provides enhanced interpretation capacity. Cryptographic proofs resolve two-thirds of institutional uncertainty, with the remaining 33\% requiring regulatory judgment on materiality assessment, systemic risk evaluation, and enforcement priority determination.
+
+\subsection{Case 3: ECDSA Digital Signatures}\label{app:ecdsa}
+
+\textbf{Step 1 - Verdict space modeling}: Contract enforcement litigation involves a rich 
+decision space encompassing multiple dimensions: validity verification, authentication strength 
+assessment, legal weight determination, procedural admissibility evaluation, temporal validity 
+checking, authority confirmation, and contextual appropriateness analysis. This multi-dimensional 
+decision space yields:
+\begin{equation}
+H(V|C) \approx 20 \text{ bits}
+\end{equation}
+This reflects the substantial uncertainty courts face when interpreting digital signature evidence 
+across technical, legal, and procedural dimensions.
+
+
+\textbf{Step 2 - Information extraction estimation}: Courts adjudicating digital signature disputes operate with extensive contextual knowledge $H(\mathcal{C}) \approx 20$ bits, comprising:
+\begin{itemize}
+\item PKI infrastructure understanding ($\approx 2^{10} = 1024$ certificate types/issuers): 10 bits
+\item Case law precedents (decades of digital signature jurisprudence, $\approx 2^8 = 256$ precedent categories): 8 bits
+\item Statutory frameworks (ESIGN Act, eIDAS, state-specific regulations, $\approx 2^2 = 4$ interpretive frameworks): 2 bits
+\end{itemize}
+
+ECDSA signatures are \emph{transparent by design}, and the verification equation $sG = R + eP_{\text{pub}}$ over NIST P-256 demonstrates explicit mathematical relationships between public key, message hash, and signature components. Courts can extract approximately 18 bits across multiple dimensions.
+
+\begin{enumerate}
+\item \textbf{Public key ownership verification} (3 bits): Certificate chain validation, issuer trust assessment, key usage restrictions compliance
+\item \textbf{Message-signature binding} (4 bits): Hash integrity verification, signature format compliance, algorithm parameter validation, non-repudiation properties
+\item \textbf{Temporal validity} (3 bits): Timestamp verification, certificate validity period confirmation, and revocation status checking via CRL/OCSP
+\item \textbf{Legal authority assessment} (3 bits): Signatory authorization verification, contract formation requirement satisfaction, jurisdictional compliance
+\item \textbf{Contextual appropriateness} (5 bits): Transaction type alignment, regulatory requirement satisfaction, industry standard compliance, risk profile assessment
+\end{enumerate}
+
+Thus: $I(V;\Sigma|C) \approx 18$ bits.
+
+Unlike zero-knowledge proofs that intentionally minimize information disclosure, ECDSA's transparency enables courts to independently assess multiple institutional dimensions through established legal and technical frameworks without requiring cryptographic expertise beyond basic PKI understanding.
+
+\textbf{Step 3 - Opposability computation}: Given the rich verdict space $H(V|C) \approx 20$ bits 
+and extractable information $I(V;\Sigma|C) \approx 18$ bits, the opposability is:
+\begin{equation}
+\mathsf{Opp}(\text{ECDSA}, \mathcal{C}_{\text{court+PKI}}) = \frac{I(V;\Sigma|C)}{H(V|C)} 
+= \frac{18 \text{ bits}}{20 \text{ bits}} = 0.90
+\end{equation}
+
+\textbf{Interpretation}: This 90\% institutional interpretability demonstrates that cryptographic evidence does not sacrifice interpretability for security purposes. The ECDSA achieves high opposability by revealing sufficient verification structure for multi-dimensional institutional reasoning. The privacy-opposability trade-off is explicit: The ECDSA's relatively low confidentiality ($\mathsf{Conf} \approx 0.31$, messages public, only private keys hidden) enables high institutional utility. The remaining 10\% of verdict entropy reflects irreducible judicial discretion on contract interpretation, good faith assessment, and equitable considerations that transcend cryptographic verification.
+
+\subsection{Comparative Analysis and Trade-off Patterns}\label{app:comparison}
+
+Table~\ref{tab:opp_calc_summary} summarizes the calculation components.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+\textbf{System} & $H(\mathcal{C})$ & $H(V|C)$ & $I(V;\Sigma|C)$ & $\mathsf{Opp}$ & $\mathsf{Conf}$ \\
+\midrule
+Helios & 8 bits & 2 bits & 1 bit & 0.50 & 0.92 \\
+zk-SNARK & 11 bits & 3 bits & 2 bits & 0.67 & 0.89 \\
+ECDSA & 20 bits & 20 bits & 18 bits & 0.90 & 0.31 \\
+\bottomrule
+\end{tabular}
+\caption{Opposability calculation components for three case studies. All values are theoretical estimates based on protocol analysis and modeled institutional contexts.}
+\label{tab:opp_calc_summary}
+\end{table}
+
+\textbf{Observed patterns}:
+\begin{enumerate}
+\item \textbf{Privacy-opposability tension}: Systems maximizing confidentiality (Helios $\mathsf{Conf}=0.92$, zk-SNARK $\mathsf{Conf}=0.89$) achieve moderate opposability ($\mathsf{Opp} \approx 0.5\text{--}0.7$), while high-opposability systems (ECDSA $\mathsf{Opp}=0.90$) sacrifice confidentiality ($\mathsf{Conf}=0.31$).
+
+\item \textbf{Context dependence}: Opposability varies with institutional expertise-specialized regulators (11 bits) extract more information than general courts (8 bits), whereas PKI-experienced courts (20 bits) achieve substantially higher interpretability.
+
+\item \textbf{Information extraction ceiling}: Even with high context entropy, cryptographically opaque systems (zero-knowledge proofs) fundamentally limit institutional information extraction to $\sim$1-2 bits.
+
+\item \textbf{Transparency enables interpretability}: ECDSA's transparent verification structure permits multi-dimensional institutional assessment (18 bits extracted from 20 bits available), demonstrating that revealing an appropriate structure does not compromise cryptographic soundness while enabling institutional utility.
+\end{enumerate}
+
+\subsection{Limitations and Validation Requirements}\label{app:limitations}
+
+These calculations provide theoretical plausibility demonstrations and order-of-magnitude estimates that are consistent with observed institutional cryptography deployment patterns. Critical limitations require future empirical work.
+
+\textbf{Modeling assumptions}:
+\begin{itemize}
+\item Uniform verdict distributions (actual legal proceedings exhibit skewed distributions)
+\item Independent information dimensions (real institutional reasoning involves correlated factors)
+\item Binary/discrete categorizations (human interpretation operates on continuous spectra)
+\item Idealized institutional actors (actual judges/regulators have heterogeneous expertise)
+\end{itemize}
+
+\textbf{Quantification approximations}:
+\begin{itemize}
+\item Context entropy $H(\mathcal{C})$ estimated via structural bounds and cognitive literature, not direct knowledge measurements
+\item Information extraction $I(V;\Sigma|C)$ modeled theoretically through qualitative analysis, not empirical observation
+\item Bit allocations (e.g., "3 bits for temporal validity") represent conceptual decomposition rather than, precise measurements
+\end{itemize}
+
+\textbf{Future validation pathways}:
+\begin{enumerate}
+\item \textbf{Controlled experiments}: Present judges/regulators with cryptographic evidence types and measure the interpretation accuracy, decision variance, and confidence levels
+\item \textbf{Case law analysis}: Quantify actual verdict distributions in digital signature litigation, electoral disputes, and regulatory compliance cases
+\item \textbf{Cognitive assessments}: Measure expert contextual knowledge directly through structured interviews and knowledge elicitation protocols
+\item \textbf{Standardization development}: Establish institutional interpretative capacity benchmarks analogous to NIST cryptographic parameter standards
+\end{enumerate}
+
+\textbf{Methodological status}: These calculations demonstrate CLO framework analytical applicability to real-world protocols and provide design guidance on privacy-opposability trade-offs. Precise opposability values require empirical calibration with actual institutional participants 
+(see Section~\ref{subsec:limitations}).
+
+\section*{Acknowledgment}
+
+The authors acknowledge the institutional support from the Laboratory of Mathematical Engineering and Information Systems (LIMSI), National Advanced School of Engineering, University of Yaoundé I, Cameroon. 
+The first author gratefully acknowledges the Supreme State Audit Office (Services du Contrôle Supérieur de l'État), Yaoundé, Cameroon, for granting exceptional leave to conduct this research as part of his doctoral effort.
+
+The authors thank Honorable Judge Robert Thierry Massoussi Songo (Mfoundi High Court, Yaoundé) for insights into judicial challenges 
+with cryptographic evidence, Senior Auditor Mohamadou Souleymanou for perspectives on audit requirements, and Professor Thomas Bouetou Bouetou (National Advanced School of Engineering of Yaoundé) for facilitating professional engagements.
+
+\textbf{Declaration of AI-assisted tools:} During the preparation of this work, the authors used DeepL (\url{https://www.deepl.com/fr/translator}) for translation from French to English, and Overleaf AI-Assistant 
+(\url{https://www.overleaf.com/}) for LaTeX formatting assistance. After using these tools, the authors reviewed and edited the content as required and take full responsibility for the content of the publication.
+
+This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors.
+
+The authors declare no conflicts of interest.
+
+\begin{thebibliography}{10}
+
+\bibitem{Adida08}
+B. Adida, ``Helios: Web-based open-audit voting,'' in \emph{Proc. 17th USENIX Security Symp.}, 2008, pp. 335--348.
+\bibitem{Adida09UCL}
+B. Adida, O. de Marneffe, O. Pereira, and J.-J. Quisquater, ``Electing a university president using open-audit voting: Analysis of real-world use of Helios,'' in \emph{Proc. 2009 Conf. Electronic Voting Technology/Workshop on Trustworthy Elections (EVT/WOTE)}, 2009, pp. 1--10. [Online]. Available: \url{https://www.usenix.org/legacy/events/evtwote09/tech/full_papers/adida.pdf}
+
+\bibitem{Alvim12}
+M. S. Alvim, K. Chatzikokolakis, C. Palamidessi, and G. Smith, ``Measuring information leakage using generalized gain functions,'' in \emph{Proc. 25th IEEE Computer Security Foundations Symp. (CSF)}, 2012, pp. 265--279.
+
+\bibitem{Androulaki13}
+E. Androulaki, G. O. Karame, M. Roeschlin, T. Scherer, and S. Čapkun, ``Evaluating user privacy in Bitcoin,'' in \emph{Financial Cryptography and Data Security (FC)}, 2013, pp. 34--51.
+
+\bibitem{BenSasson18}
+E. Ben-Sasson, I. Bentov, Y. Horesh, and M. Riabzev, ``Scalable, transparent, and post-quantum secure computational integrity,'' \emph{IACR Cryptology ePrint Archive}, 2018:046, 2018.
+
+\bibitem{Bhargavan15}
+K. Bhargavan \emph{et al.}, ``Formal verification of smart contracts: Short paper,'' in \emph{Proc. ACM Workshop on Programming Languages and Analysis for Security (PLAS)}, 2016, pp. 91--96.
+
+\bibitem{Biryukov14}
+A. Biryukov and I. Pustogarov, ``Bitcoin over Tor isn't a good idea,'' in \emph{Proc. IEEE Symp. Security and Privacy (SP)}, 2015, pp. 122--134.
+
+\bibitem{Boneh20}
+D. Boneh, J. Drake, B. Fisch, and A. Gabizon, ``Efficient polynomial commitment schemes for multiple points and polynomials,'' \emph{IACR Cryptology ePrint Archive}, 2020:081, 2020.
+
+\bibitem{Bonneau16}
+J. Bonneau, A. Miller, J. Clark, A. Narayanan, J. A. Kroll, and E. W. Felten, ``SoK: Research perspectives and challenges for Bitcoin and cryptocurrencies,'' in \emph{Proc. IEEE Symp. Security and Privacy (SP)}, 2016, pp. 104--121.
+
+\bibitem{Brewer00}
+E. A. Brewer, ``Towards robust distributed systems (invited talk),'' in \emph{Proc. 19th ACM Symp. Principles of Distributed Computing (PODC)}, 2000, p. 7.
+
+\bibitem{Bunz19}
+B. Bünz, J. Bootle, D. Boneh, A. Poelstra, P. Wuille, and G. Maxwell, ``Bulletproofs: Short proofs for confidential transactions and more,'' in \emph{Proc. IEEE Symp. Security and Privacy}, 2019, pp. 315--334.
+
+\bibitem{Casey11}
+E. Casey, \emph{Digital Evidence and Computer Crime: Forensic Science, Computers, and the Internet}, 3rd ed. Academic Press, 2011.
+
+\bibitem{Casey16}
+E. Casey, ``Digital evidence: The perspective of the forensic scientist,'' in \emph{Handbook of Digital Forensics and Investigation}, E. Casey, Ed. Academic Press, 2016, pp. 23--48.
+
+\bibitem{Clarkson05}
+M. R. Clarkson and F. B. Schneider, ``Quantifying information flow with beliefs,'' \emph{J. Computer Security}, vol. 13, no. 5, pp. 691--739, 2005.
+\bibitem{Cranor08}
+L. F. Cranor and S. Garfinkel, \emph{Security and Usability: Designing Secure Systems that People Can Use}. O'Reilly Media, 2008.
+\bibitem{Cover06}
+T. M. Cover and J. A. Thomas, \emph{Elements of Information Theory}, 2nd ed. Wiley-Interscience, 2006.
+
+\bibitem{Doshi-Velez17}
+F. Doshi-Velez and B. Kim, ``Towards a rigorous science of interpretable machine learning,'' \emph{arXiv preprint arXiv:1702.08608}, 2017.
+
+\bibitem{eIDAS14}
+``Regulation (EU) No 910/2014 on electronic identification and trust services (eIDAS),'' \emph{Official Journal of the European Union}, L 257/73, 2014.
+
+\bibitem{ESIGN00}
+``Electronic Signatures in Global and National Commerce Act (ESIGN Act),'' U.S. Public Law 106-229, 114 Stat. 464, 2000.
+
+\bibitem{Ericsson95}
+K. A. Ericsson and W. Kintsch, ``Long-term working memory,'' \emph{Psychological Review}, vol. 102, no. 2, pp. 211--245, 1995.
+
+\bibitem{FLP85}
+M. J. Fischer, N. A. Lynch, and M. S. Paterson, ``Impossibility of distributed consensus with one faulty process,'' \emph{J. ACM}, vol. 32, no. 2, pp. 374--382, 1985.
+
+\bibitem{Garratt19}
+R. Garratt and M. van Oordt, ``Privacy as a public good:A case for electronic cash,'' Bank of Canada Staff Working Paper, no. 2019-24, 2019.
+
+\bibitem{Gennaro13}
+R. Gennaro, C. Gentry, B. Parno, and M. Raykova, ``Quadratic span programs and succinct NIZKs without PCPs,'' in \emph{Advances in Cryptology -- EUROCRYPT 2013}, 2013, pp. 626--645.
+
+\bibitem{GMR85}
+S. Goldwasser, S. Micali, and C. Rackoff, ``The knowledge complexity of interactive proof-systems,'' in \emph{Proc. 17th ACM Symp. Theory of Computing (STOC)}, 1985, pp. 291--304.
+
+\bibitem{Goodman15}
+L. M. Goodman, ``Tezos: A self-amending crypto-ledger,'' White Paper, Aug. 2014, revised Sep. 2015. [Online]. Available: \url{https://tezos.com/static/white_paper-2dc8c02267a8fb86bd67a108199441bf.pdf}
+
+\bibitem{Grimmelmann15}
+J. Grimmelmann, ``The virtues of moderation,'' \emph{Yale Journal of Law \& Technology}, vol. 17, no. 1, pp. 42--89, 2015.
+
+\bibitem{Groth16}
+J. Groth, ``On the size of pairing-based non-interactive arguments,'' in \emph{Advances in Cryptology -- EUROCRYPT 2016}, 2016, pp. 305--326.
+\bibitem{Herley09}
+C. Herley, ``So long, and no thanks for the externalities: The rational rejection of security advice by users,'' in \emph{Proc. New Security Paradigms Workshop (NSPW)}, 2009, pp. 133--144.
+\bibitem{IACR2025incident}
+International Association for Cryptologic Research, ``2025 IACR Election Update,'' IACR News, Nov. 2025. [Online]. Available: \url{https://www.iacr.org/news/item/27138}. [Accessed: Nov. 22, 2025].
+\bibitem{Johnson01}
+D. Johnson, A. Menezes, and S. Vanstone, ``The elliptic curve digital signature algorithm (ECDSA),'' \emph{Int. Journal of Information Security}, vol. 1, no. 1, pp. 36--63, 2001.
+
+\bibitem{Kerr04}
+O. S. Kerr, ``Digital evidence and the new criminal procedure,'' \emph{Columbia Law Review}, vol. 104, no. 1, pp. 279--318, 2004.
+
+\bibitem{Lindeman12}
+M. Lindeman and P. B. Stark, ``A gentle introduction to risk-limiting audits,'' \emph{IEEE Security \& Privacy}, vol. 10, no. 5, pp. 42--49, 2012.
+
+\bibitem{Mason07}
+S. Mason, \emph{Electronic Evidence: Disclosure, Discovery \& Admissibility}. LexisNexis Butterworths, 2007.
+
+\bibitem{Meiklejohn13}
+S. Meiklejohn, M. Pomarole, G. Jordan, K. Levchenko, D. McCoy, G. M. Voelker, and S. Savage, ``A fistful of Bitcoins: Characterizing payments among men with no names,'' in \emph{Proc. ACM Conf. Internet Measurement Conf. (IMC)}, 2013, pp. 127--140.
+
+\bibitem{Narayanan16}
+A. Narayanan, J. Bonneau, E. Felten, A. Miller, and S. Goldfeder, \emph{Bitcoin and Cryptocurrency Technologies: A Comprehensive Introduction}. Princeton University Press, 2016.
+
+\bibitem{Parno13}
+B. Parno, J. Howell, C. Gentry, and M. Raykova, ``Pinocchio: Nearly practical verifiable computation,'' in \emph{Proc. IEEE Symp. Security and Privacy}, 2013, pp. 238--252.
+
+\bibitem{Ribeiro16}
+M. T. Ribeiro, S. Singh, and C. Guestrin, ``Why should I trust you? Explaining the predictions of any classifier,'' in \emph{Proc. 22nd ACM SIGKDD Int. Conf. Knowledge Discovery and Data Mining}, 2016, pp. 1135--1144.
+
+\bibitem{Sergey18}
+I. Sergey, A. Kumar, and A. Hobor, ``Scilla: A smart contract intermediate-level language,'' \emph{arXiv preprint arXiv:1801.00687}, 2018.
+
+\bibitem{Shannon48}
+C. E. Shannon, ``A mathematical theory of communication,'' \emph{Bell System Technical J.}, vol. 27, no. 3, pp. 379--423, 1948.
+
+\bibitem{Wahby18}
+R. S. Wahby, I. Tzialla, A. Shelat, J. Thaler, and M. Walfish, ``Doubly-efficient zkSNARKs without trusted setup,'' in \emph{Proc. IEEE Symp. Security and Privacy}, 2018, pp. 926--943.
+
+\bibitem{WynerZiv76}
+A. D. Wyner and J. Ziv, ``The rate-distortion function for source coding with side information at the decoder,'' \emph{IEEE Trans. Inf. Theory}, vol. 22, no. 1, pp. 1--10, Jan. 1976.
+
+\bibitem{Zhang20}
+Y. Zhang, D. Genkin, J. Katz, D. Papadopoulos, and C. Papamanthou, ``vRAM: Faster verifiable RAM with program-independent preprocessing,'' in \emph{Proc. IEEE Symp. Security and Privacy}, 2020, pp. 908--925.
+
+\bibitem{Zohar15}
+A. Zohar, ``Bitcoin: Under the hood,'' \emph{Communications of the ACM}, vol. 58, no. 9, pp. 104--113, Sep. 2015.
+
+
+\end{thebibliography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{thierry.png}}]{Thierry Emmanuel Minka Mi Nguidjoï}
+received the M.Sc. degree in computer science from the University of Paris XII (Creteil Val-de-Marne), France, in 2014. He is currently pursuing the Ph.D. degree with the Laboratory of Mathematical Engineering and Information Systems, National Advanced School of Engineering, University of Yaoundé I. As active IACR member, some of his ongoing work are available in preprint mode at: https://eprint.iacr.org/search?q=MINKA, his research interests include information-theoretic security, cryptographic protocols, and foundations of cryptography. https://orcid.org/0000-0003-4901-8626
+\end{IEEEbiography}
+
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{serge.png}}]{Flavien Serge Mani Onana}
+received the Ph.D. degrees in computer science from the University of Montreal, Canada, in 2005. He is currently a Lecturer with the Laboratory of Mathematical Engineering and Information Systems. His research focuses on Cybersecurity, information theory, and their applications to cryptographic systems. https://orcid.org/0009-0001-2387-3571
+\end{IEEEbiography}
+
+\begin{IEEEbiography}
+[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{thomas.png}}]{Thomas Djotio Ndjé}
+received the Ph.D. degree in computer science from the University of Yaoundé I, Cameroon, in 2008. He is currently a Professor with the National Advanced School of Engineering, University of Yaoundé I. His research interests include network security, distributed systems, and information-theoretic approaches to cryptography. https://orcid.org/0000-0002-6300-6237
+\end{IEEEbiography}
+
+\EOD
+
+\end{document}
