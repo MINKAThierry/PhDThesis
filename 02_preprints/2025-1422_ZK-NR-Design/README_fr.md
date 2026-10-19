@@ -1,4 +1,4 @@
-# ePrint 2025/1422 — Design ZK-NR (v2)
+# ePrint 2025/1422 - Design ZK-NR
 
 > **Statut : PRÉPRINT (non évalué par les pairs)** · Source : Cryptology ePrint Archive, rapport 2025/1422
 
