@@ -1,4 +1,4 @@
-# ePrint 2025/1708 — SH
+# ePrint 2025/1708 - SH
 
 > **Statut : PRÉPRINT (non évalué par les pairs)** · Source : Cryptology ePrint Archive, rapport 2025/1708
 
