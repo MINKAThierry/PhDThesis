@@ -1,4 +1,4 @@
-# P3 — Post-quantum extension of the Conditional CRO Trilemma (IEEE Access, 2026)
+# P3: Post-quantum extension of the Conditional CRO Trilemma (IEEE Access, 2026)
 
 > **Status: PUBLISHED** · Source: *IEEE Access*, vol. 14, pp. 125130–125155, 2026, DOI [10.1109/ACCESS.2026.3722742](https://doi.org/10.1109/ACCESS.2026.3722742) · Thesis, Chapter 2, §2.4
 
