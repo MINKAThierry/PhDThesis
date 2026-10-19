@@ -1,6 +1,6 @@
 # Notice d'information et formulaire de consentement libre et éclairé
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1, §4.2.2 et §4.2.4 (prérequis éthique)
+> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1, §4.2.2 et §4.2.4 (prérequis éthique)
 
 [English version](notice_information_consentement_en.md)
 
@@ -8,7 +8,7 @@ Document en deux parties. La partie A est remise au participant qui la conserve.
 
 ---
 
-## Partie A — Notice d'information
+## Partie A. Notice d'information
 
 **Titre de l'étude.** Mesure des paramètres institutionnels de l'interprétation des preuves cryptographiques
 
@@ -69,7 +69,7 @@ Comité d'éthique (pour toute réclamation) : ____________________ Téléphone 
 
 ---
 
-## Partie B — Formulaire de consentement
+## Partie B. Formulaire de consentement
 
 Code participant : `P__-____-___` (à remplir par l'enquêteur)
 
