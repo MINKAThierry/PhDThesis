@@ -1,6 +1,6 @@
 # Results specific to the thesis
 
-> **Status: PROPOSAL — thesis result** · Source: thesis, Chapters 2 to 4
+> **Status: PROPOSAL: thesis result** · Source: thesis, Chapters 2 to 4
 
 [Version française](README_fr.md)
 
