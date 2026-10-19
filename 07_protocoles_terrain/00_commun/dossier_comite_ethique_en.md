@@ -1,6 +1,6 @@
 # Template application to the research ethics committee
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (ethics prerequisite) and §4.2.8.3
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (ethics prerequisite) and §4.2.8.3
 
 [Version française](dossier_comite_ethique_fr.md)
 
