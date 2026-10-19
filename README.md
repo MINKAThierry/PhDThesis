@@ -1,4 +1,4 @@
-# PhDThesis — Aux Fondements de la Cryptographie Institutionnelle
+# PhDThesis: Aux Fondements de la Cryptographie Institutionnelle
 
 Dépôt de recherche de la thèse de doctorat de Thierry Emmanuel MINKA MI NGUIDJOÏ (LIMSI, ENSP, Université de Yaoundé I).
 Research repository of the doctoral thesis of Thierry Emmanuel MINKA MI NGUIDJOÏ.
