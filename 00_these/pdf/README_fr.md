@@ -5,7 +5,6 @@
 | Fichier | Contenu |
 |---|---|
 | `MaThèse.pdf` | Version finale (247 pages), compilée avec LuaLaTeX le 19 octobre 2026 à partir des sources de [`../manuscrit/`](../manuscrit/) |
-| `these_version_depot.pdf` | Version déposée le 28 septembre 2026 (262 pages), conservée pour référence |
 
 [English version](README_en.md)
 
