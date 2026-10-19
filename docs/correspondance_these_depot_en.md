@@ -1,6 +1,6 @@
 # Correspondence between the thesis and the repository
 
-> **Status: PROPOSAL — repository documentation** · Source: thesis, PDF of the deposited version ([`../00_these/pdf/these_version_depot.pdf`](../00_these/pdf/these_version_depot.pdf)) and sources of the final version ([`../00_these/manuscrit/`](../00_these/manuscrit/))
+> **Status: PROPOSAL: repository documentation** · Source: thesis, PDF of the deposited version ([`../00_these/pdf/these_version_depot.pdf`](../00_these/pdf/these_version_depot.pdf)) and sources of the final version ([`../00_these/manuscrit/`](../00_these/manuscrit/))
 
 [Version française](correspondance_these_depot_fr.md) · [Back to docs](README_en.md)
 
@@ -19,7 +19,7 @@ Section, table and listing numbers are those of the deposited PDF. LaTeX labels 
 | §1.3.7 Formal verification (listing to paste into the online editor) | `chap1/etat_art.tex` | [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean) |
 | §1.4.3 Scientific objectives and programme, reference to the repository | `chap1/problematique.tex` | this repository (home page [`../README_en.md`](../README_en.md)) |
 
-### Chapter 2 — formal framework and impossibility bounds
+### Chapter 2. formal framework and impossibility bounds
 
 | Thesis | Source file | Repository |
 |---|---|---|
@@ -31,7 +31,7 @@ Section, table and listing numbers are those of the deposited PDF. LaTeX labels 
 | §2.4 Quantum extension, `thm:trilemme_pq` | `chap2/cro_pq.tex` | article P3 [`../01_publie/P3_PQCRO_IEEEAccess2026/`](../01_publie/P3_PQCRO_IEEEAccess2026/README_en.md) and its [refined statements](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_en.md); contributions R11 and R12 |
 | §2.4.6 Illustrative calibration of the quantum parameters | `chap2/cro_pq.tex` | [`../06_calcul/data/calibration_pq.csv`](../06_calcul/data/calibration_pq.csv) |
 
-### Chapter 3 — constructions and certification
+### Chapter 3. constructions and certification
 
 | Thesis | Source file | Repository |
 |---|---|---|
@@ -46,7 +46,7 @@ Section, table and listing numbers are those of the deposited PDF. LaTeX labels 
 | §3.4.9 What the formalisation revealed | `chap3/cro_lean4.tex` | refined statements for [P2](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_en.md) and [P3](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_en.md) |
 | Scope witness `regime_assumption_necessary` | `chap3/cro_lean4.tex` | [`../05_formalisation_lean/cas_limite/`](../05_formalisation_lean/cas_limite/README_en.md); check V6 |
 
-### Chapter 4 — experimentation and validation
+### Chapter 4. experimentation and validation
 
 | Thesis | Source file | Repository |
 |---|---|---|
@@ -68,7 +68,7 @@ Section, table and listing numbers are those of the deposited PDF. LaTeX labels 
 | §4.4.12 Reproducibility, `sec:reproductibilite` | `chap4/validation_retrospective.tex` | [`../06_calcul/reproduire.sh`](../06_calcul/reproduire.sh), [`../06_calcul/tests/`](../06_calcul/tests/); see also part 2 |
 | §4.4.12 Table 4.23, `tab:environnement_calcul` | `chap4/validation_retrospective.tex` | [`../06_calcul/python/requirements.txt`](../06_calcul/python/requirements.txt), [`requirements-lock.txt`](../06_calcul/python/requirements-lock.txt), [`../05_formalisation_lean/lean-toolchain`](../05_formalisation_lean/lean-toolchain) |
 
-### Chapter 5, conclusion and appendices
+### Chapter 5. conclusion and appendices
 
 | Thesis | Source file | Repository |
 |---|---|---|
