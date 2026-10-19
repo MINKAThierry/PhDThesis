@@ -1,0 +1,73 @@
+jeu_de_donnees,variable,libelle,type,valeurs_ou_unite,obligatoire
+D3 profil,id_participant,Code pseudonymisé du participant,texte,P1-<strate>-NNN ou P2-EX-NN,oui
+D3 profil,strate,Strate de recrutement,catégoriel,"JG, JS, RJ, RS, AP, AC, EX",oui
+D3 profil,id_institution,Code d'institution (supprimé avant diffusion),texte,INST-NN,oui
+D3 profil,a1_categorie,Catégorie professionnelle (A1),catégoriel,"1 juge, 2 régulateur, 3 auditeur, 4 expert, 9 autre",oui
+D3 profil,a2_sous_groupe,Sous-groupe (A2),catégoriel,1 à 6 dans l'ordre du questionnaire,oui
+D3 profil,a3_anciennete_categorie,Ancienneté dans la catégorie (A3),ordinal,"1 <2 ans, 2 2–4, 3 5–9, 4 10–19, 5 ≥20",oui
+D3 profil,a4_supervision,Fonctions de supervision (A4),binaire,"1 oui, 0 non",oui
+D3 profil,a5_anciennete_totale,Ancienneté professionnelle totale (A5),ordinal,"1 <5 ans, 2 5–9, 3 10–19, 4 ≥20",non
+D3 profil,b1_diplome,Diplôme le plus élevé (B1),catégoriel,"1 licence, 2 master, 3 ingénieur, 4 doctorat, 9 autre",non
+D3 profil,b2_domaine,Domaines de formation (B2),multiple,codes 1 à 6 séparés par ;,non
+D3 profil,b3_certifications,Certifications audit ou sécurité SI (B3),ordinal,"0 aucune, 1 une, 2 deux ou plus",non
+D3 profil,c1_dossiers_signature,Dossiers avec signature électronique sur 12 mois (C1),ordinal,"0 aucun, 1 1–5, 2 6–20, 3 >20",non
+D3 profil,c2_dossiers_vote,Dossiers avec vote électronique sur 12 mois (C2),ordinal,"0 aucun, 1 1–5, 2 6–20, 3 >20",non
+D3 profil,c3_recours_expert,Recours à un expert technique (C3),ordinal,"0 jamais, 1 une fois, 2 plusieurs, 3 régulièrement",non
+D3 profil,d1_formation_crypto,Volume de formation en cryptographie (D1),ordinal,"0 aucune, 1 <10 h, 2 10–40 h, 3 >40 h, 4 diplômante",oui
+D3 profil,d2_formation_pqc,Formation en cryptographie post-quantique (D2),ordinal,"0 aucune, 1 sensibilisation, 2 initiale, 3 avancée, 4 certification",oui
+D3 profil,d3_familiarite_1 … d3_familiarite_8,"Familiarité avec les 8 notions de D3, dans l'ordre du tableau",ordinal,0 à 4,non
+D3 profil,d4_aisance_0_10,Aisance auto-évaluée face à une preuve cryptographique (D4),entier,0 à 10,non
+D3 profil,e1_classe_age,"Classe d'âge (E1, facultatif)",ordinal,"1 <30, 2 30–39, 3 40–49, 4 ≥50, 9 sans réponse",non
+D3 profil,e2_sexe,"Sexe (E2, facultatif)",catégoriel,"1 femme, 2 homme, 9 sans réponse",non
+D4 réponses P1,id_participant,Code pseudonymisé du participant,texte,P1-<strate>-NNN,oui
+D4 réponses P1,strate,Strate,catégoriel,"JG, JS, RJ, RS, AP, AC",oui
+D4 réponses P1,phase,Phase de collecte,catégoriel,"1 séance principale, 2 test-retest J+14",oui
+D4 réponses P1,id_session,Numéro de séance,texte,S-NNNN,oui
+D4 réponses P1,id_enqueteur,Code de l'enquêteur,texte,ENQ-NN,oui
+D4 réponses P1,id_stimulus,Paire contexte–preuve présentée,texte,"<TYPE>-C<NN>, par exemple ECD-C03",oui
+D4 réponses P1,type_preuve,Type de preuve,catégoriel,"ECD ECDSA, HEL Helios, G16 Groth16, PSS RSA-PSS, EGC ElGamal classique",oui
+D4 réponses P1,id_contexte_c,Code du contexte c,texte,identique à id_stimulus,oui
+D4 réponses P1,id_preuve_sigma,Variante de preuve \sigma présentée,texte,<id_stimulus>-S<N>,oui
+D4 réponses P1,id_message_m,"Message engagé m (vérité terrain, inconnue du participant)",texte,<id_stimulus>-M<N>,oui
+D4 réponses P1,rang_presentation,Rang de présentation dans la séance,entier,"1 à 10 (phase 1), 1 à 3 (phase 2)",oui
+D4 réponses P1,verdict_v,Verdict global (Q01),catégoriel,1 à 4 selon l'espace de verdicts de la fiche stimulus,oui
+D4 réponses P1,"q02 … q25 (hors q09, q18)",Items de verdict par dimension (22 items),ordinal,"1 pas du tout établi à 7 tout à fait établi, 0 impossible à déterminer, vide non répondu",oui
+D4 réponses P1,q09_attention,Contrôle d'attention 1 (réponse attendue 3),ordinal,0 à 7,oui
+D4 réponses P1,q18_attention,Contrôle d'attention 2 (réponse attendue 0),ordinal,0 à 7,oui
+D4 réponses P1,confiance_0_10,Confiance subjective dans le verdict global (Q26),entier,0 à 10,oui
+D4 réponses P1,q27_apport_preuve,Part de la décision attribuée à la preuve (Q27),entier,0 à 10,oui
+D4 réponses P1,q28_attention,"Contrôle d'attention 3, rappel du domaine du contexte",catégoriel,"1 contrat, 2 élection, 3 contrôle financier, 4 autre",oui
+D4 réponses P1,q29_expertise,Expertise complémentaire souhaitée (Q29),catégoriel,"0 non, 1 expertise technique, 2 expertise juridique, 3 les deux",oui
+D4 réponses P1,q30_elements,Éléments mobilisés (Q30),multiple,codes 1 à 8 séparés par ;,non
+D4 réponses P1,temps_s,Temps de décision pour le contexte,entier,secondes,oui
+D4 réponses P1,echecs_attention,Nombre d'échecs aux contrôles d'attention (calculé),entier,0 à 3,oui
+D4 réponses P1,exclu,Réponse exclue selon le pré-enregistrement (calculé),binaire,"1 oui, 0 non",oui
+D4 réponses P1,id_ecart,Fiche d'écart associée,texte,ECART-NNNN ou vide,non
+D5 gold standard P1,id_stimulus,Paire contexte–preuve,texte,<TYPE>-C<NN>,oui
+D5 gold standard P1,id_preuve_sigma,Variante de preuve,texte,<id_stimulus>-S<N>,oui
+D5 gold standard P1,id_message_m,Message engagé,texte,<id_stimulus>-M<N>,oui
+D5 gold standard P1,id_expert_gs,Expert du gold standard,catégoriel,"GS-A, GS-B, GS-ARB, CONSENSUS",oui
+D5 gold standard P1,gs_verdict_v,Verdict global de référence,catégoriel,1 à 4,oui
+D5 gold standard P1,gs_q02 … gs_q25,Réponses de référence aux 22 items de dimension,ordinal,0 à 7,oui
+D6a P2 décomposition,id_expert,Code de l'expert,texte,P2-EX-NN,oui
+D6a P2 décomposition,domaine,Domaine institutionnel,catégoriel,"ELEC électoral, FIN conformité financière, CONT contractuel",oui
+D6a P2 décomposition,composante,Composante de la décomposition,catégoriel,"L juridique, T temporelle, R procédurale",oui
+D6a P2 décomposition,element,Élément de la grille (numéro C1…F12 ou libellé ajouté),texte,C1 à F12 ou libellé,oui
+D6a P2 décomposition,nb_modalites,Nombre de modalités distinguables,entier,≥ 1,oui
+D6a P2 décomposition,entropie_bits,Entropie de l'élément,réel,bits,oui
+D6a P2 décomposition,remarques,Remarques de l'expert ou de la saisie,texte,libre,non
+D6b P2 dissimilarité,id_expert,Code de l'expert,texte,P2-EX-NN,oui
+D6b P2 dissimilarité,id_session,Numéro de séance,texte,S-NNNN,oui
+D6b P2 dissimilarité,domaine,Domaine de la séance,catégoriel,"ELEC, FIN, CONT",oui
+D6b P2 dissimilarité,"id_ctx_i, id_ctx_j",Paire de contextes du corpus,texte,CTX-NNN,oui
+D6b P2 dissimilarité,rang_presentation,Rang de présentation dans la séance,entier,"1 à 553 (586 pour ELEC), répétitions comprises",oui
+D6b P2 dissimilarité,dissimilarite_0_10,Dissimilarité jugée,entier,0 identiques à 10 sans rapport,oui
+D6b P2 dissimilarité,remarques,Incident ou hésitation signalée,texte,libre,non
+D6c P2 Delphi,id_expert,Code de l'expert,texte,P2-EX-NN,oui
+D6c P2 Delphi,tour,Tour Delphi,entier,1 à 4,oui
+D6c P2 Delphi,domaine,Domaine estimé,catégoriel,"ELEC, FIN, CONT",oui
+D6c P2 Delphi,h_estimee_bits,Estimation de H(\mathcal{C}),réel,bits,oui
+D6c P2 Delphi,"borne_basse_bits, borne_haute_bits",Intervalle plausible de l'expert,réel,bits,oui
+D6c P2 Delphi,confiance_0_10,Confiance de l'expert dans son estimation,entier,0 à 10,oui
+D6c P2 Delphi,argument,Argument principal ou justification de la révision,texte,libre,non
+D6c P2 Delphi,remarques,Remarques de saisie,texte,libre,non

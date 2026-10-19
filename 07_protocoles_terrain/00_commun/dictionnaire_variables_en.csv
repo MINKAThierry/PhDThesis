@@ -1,0 +1,73 @@
+dataset,variable,label,type,values_or_unit,mandatory
+D3 profile,participant_id,Pseudonymised participant code,text,P1-<stratum>-NNN or P2-EX-NN,yes
+D3 profile,stratum,Recruitment stratum,categorical,"JG, JS, RJ, RS, AP, AC, EX",yes
+D3 profile,institution_id,Institution code (removed before release),text,INST-NN,yes
+D3 profile,a1_category,Professional category (A1),categorical,"1 judge, 2 regulator, 3 auditor, 4 expert, 9 other",yes
+D3 profile,a2_subgroup,Subgroup (A2),categorical,1 to 6 in questionnaire order,yes
+D3 profile,a3_seniority_category,Seniority in category (A3),ordinal,"1 <2 yrs, 2 2–4, 3 5–9, 4 10–19, 5 ≥20",yes
+D3 profile,a4_supervision,Supervisory duties (A4),binary,"1 yes, 0 no",yes
+D3 profile,a5_total_seniority,Total professional seniority (A5),ordinal,"1 <5 yrs, 2 5–9, 3 10–19, 4 ≥20",no
+D3 profile,b1_degree,Highest degree (B1),categorical,"1 bachelor, 2 master, 3 engineering, 4 doctorate, 9 other",no
+D3 profile,b2_field,Fields of education (B2),multiple,codes 1 to 6 separated by ;,no
+D3 profile,b3_certifications,IS audit or security certifications (B3),ordinal,"0 none, 1 one, 2 two or more",no
+D3 profile,c1_files_signature,Files with electronic signature over 12 months (C1),ordinal,"0 none, 1 1–5, 2 6–20, 3 >20",no
+D3 profile,c2_files_voting,Files with electronic voting over 12 months (C2),ordinal,"0 none, 1 1–5, 2 6–20, 3 >20",no
+D3 profile,c3_expert_use,Use of a technical expert (C3),ordinal,"0 never, 1 once, 2 several, 3 regularly",no
+D3 profile,d1_crypto_training,Amount of cryptography training (D1),ordinal,"0 none, 1 <10 h, 2 10–40 h, 3 >40 h, 4 degree",yes
+D3 profile,d2_pqc_training,Post-quantum cryptography training (D2),ordinal,"0 none, 1 awareness, 2 initial, 3 advanced, 4 certification",yes
+D3 profile,d3_familiarity_1 … d3_familiarity_8,"Familiarity with the 8 notions of D3, in table order",ordinal,0 to 4,no
+D3 profile,d4_comfort_0_10,Self-assessed comfort with cryptographic evidence (D4),integer,0 to 10,no
+D3 profile,e1_age_class,"Age class (E1, optional)",ordinal,"1 <30, 2 30–39, 3 40–49, 4 ≥50, 9 no answer",no
+D3 profile,e2_sex,"Sex (E2, optional)",categorical,"1 female, 2 male, 9 no answer",no
+D4 P1 answers,participant_id,Pseudonymised participant code,text,P1-<stratum>-NNN,yes
+D4 P1 answers,stratum,Stratum,categorical,"JG, JS, RJ, RS, AP, AC",yes
+D4 P1 answers,phase,Collection phase,categorical,"1 main session, 2 test-retest D+14",yes
+D4 P1 answers,session_id,Session number,text,S-NNNN,yes
+D4 P1 answers,interviewer_id,Interviewer code,text,ENQ-NN,yes
+D4 P1 answers,stimulus_id,Context–proof pair presented,text,"<TYPE>-C<NN>, e.g. ECD-C03",yes
+D4 P1 answers,proof_type,Proof type,categorical,"ECD ECDSA, HEL Helios, G16 Groth16, PSS RSA-PSS, EGC classical ElGamal",yes
+D4 P1 answers,context_c_id,Code of context c,text,same as stimulus_id,yes
+D4 P1 answers,proof_sigma_id,Proof variant \sigma presented,text,<stimulus_id>-S<N>,yes
+D4 P1 answers,message_m_id,"Committed message m (ground truth, unknown to participant)",text,<stimulus_id>-M<N>,yes
+D4 P1 answers,presentation_rank,Presentation rank in the session,integer,"1 to 10 (phase 1), 1 to 3 (phase 2)",yes
+D4 P1 answers,verdict_v,Overall verdict (Q01),categorical,1 to 4 according to the verdict space of the stimulus sheet,yes
+D4 P1 answers,"q02 … q25 (except q09, q18)",Dimension verdict items (22 items),ordinal,"1 not at all established to 7 fully established, 0 cannot be determined, empty no answer",yes
+D4 P1 answers,q09_attention,Attention check 1 (expected answer 3),ordinal,0 to 7,yes
+D4 P1 answers,q18_attention,Attention check 2 (expected answer 0),ordinal,0 to 7,yes
+D4 P1 answers,confidence_0_10,Subjective confidence in the overall verdict (Q26),integer,0 to 10,yes
+D4 P1 answers,q27_proof_contribution,Share of the decision attributed to the proof (Q27),integer,0 to 10,yes
+D4 P1 answers,q28_attention,"Attention check 3, recall of the context domain",categorical,"1 contract, 2 election, 3 financial control, 4 other",yes
+D4 P1 answers,q29_expertise,Additional expertise wanted (Q29),categorical,"0 no, 1 technical, 2 legal, 3 both",yes
+D4 P1 answers,q30_elements,Elements relied on (Q30),multiple,codes 1 to 8 separated by ;,no
+D4 P1 answers,time_s,Decision time for the context,integer,seconds,yes
+D4 P1 answers,attention_failures,Number of attention-check failures (computed),integer,0 to 3,yes
+D4 P1 answers,excluded,Answer excluded according to pre-registration (computed),binary,"1 yes, 0 no",yes
+D4 P1 answers,deviation_id,Associated deviation form,text,ECART-NNNN or empty,no
+D5 P1 gold standard,stimulus_id,Context–proof pair,text,<TYPE>-C<NN>,yes
+D5 P1 gold standard,proof_sigma_id,Proof variant,text,<stimulus_id>-S<N>,yes
+D5 P1 gold standard,message_m_id,Committed message,text,<stimulus_id>-M<N>,yes
+D5 P1 gold standard,gs_expert_id,Gold-standard expert,categorical,"GS-A, GS-B, GS-ARB, CONSENSUS",yes
+D5 P1 gold standard,gs_verdict_v,Reference overall verdict,categorical,1 to 4,yes
+D5 P1 gold standard,gs_q02 … gs_q25,Reference answers to the 22 dimension items,ordinal,0 to 7,yes
+D6a P2 decomposition,expert_id,Expert code,text,P2-EX-NN,yes
+D6a P2 decomposition,domain,Institutional domain,categorical,"ELEC electoral, FIN financial compliance, CONT contractual",yes
+D6a P2 decomposition,component,Decomposition component,categorical,"L legal, T temporal, R procedural",yes
+D6a P2 decomposition,element,Grid element (number C1…F12 or added label),text,C1 to F12 or label,yes
+D6a P2 decomposition,n_categories,Number of distinguishable categories,integer,≥ 1,yes
+D6a P2 decomposition,entropy_bits,Entropy of the element,real,bits,yes
+D6a P2 decomposition,notes,Remarks of the expert or of data entry,text,free,no
+D6b P2 dissimilarity,expert_id,Expert code,text,P2-EX-NN,yes
+D6b P2 dissimilarity,session_id,Session number,text,S-NNNN,yes
+D6b P2 dissimilarity,domain,Domain of the session,categorical,"ELEC, FIN, CONT",yes
+D6b P2 dissimilarity,"ctx_i_id, ctx_j_id",Pair of corpus contexts,text,CTX-NNN,yes
+D6b P2 dissimilarity,presentation_rank,Presentation rank in the session,integer,"1 to 553 (586 for ELEC), repetitions included",yes
+D6b P2 dissimilarity,dissimilarity_0_10,Judged dissimilarity,integer,0 identical to 10 unrelated,yes
+D6b P2 dissimilarity,notes,Incident or reported hesitation,text,free,no
+D6c P2 Delphi,expert_id,Expert code,text,P2-EX-NN,yes
+D6c P2 Delphi,round,Delphi round,integer,1 to 4,yes
+D6c P2 Delphi,domain,Domain estimated,categorical,"ELEC, FIN, CONT",yes
+D6c P2 Delphi,h_estimate_bits,Estimate of H(\mathcal{C}),real,bits,yes
+D6c P2 Delphi,"lower_bound_bits, upper_bound_bits",Expert's plausible interval,real,bits,yes
+D6c P2 Delphi,confidence_0_10,Expert's confidence in the estimate,integer,0 to 10,yes
+D6c P2 Delphi,argument,Main argument or justification of the revision,text,free,no
+D6c P2 Delphi,notes,Data entry remarks,text,free,no
