@@ -1,6 +1,6 @@
 # Proposed refined statements for P2
 
-> **Status: PROPOSAL — submitted refined statements (not published)** · Source: document submitted to *IEEE Access* for the article DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thesis, Chapter 2, §2.3 and Chapter 3, §3.4.9
+> **Status: PROPOSAL: submitted refined statements (not published)** · Source: document submitted to *IEEE Access* for the article DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thesis, Chapter 2, §2.3 and Chapter 3, §3.4.9
 
 [Version française](README_fr.md)
 
