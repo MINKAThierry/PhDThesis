@@ -1,6 +1,6 @@
 # Recruitment and quota tracking sheet
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.2 (table `tab:stratification_delta`) and §4.2.2.4
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.2 (table `tab:stratification_delta`) and §4.2.2.4
 
 [Version française](fiche_recrutement_stratification_fr.md)
 
@@ -50,7 +50,7 @@ Equivalences in Cameroon **[to be decided by the team]**. The "Court of Audit" s
 
 Tick each completed phase. Enter the phase 2 date at D+14 from phase 1.
 
-### Stratum JG — Judges, Generalists (civil courts)
+### Stratum JG - Judges, Generalists (civil courts)
 
 | Code | Invited on | Consent signed on | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 due D+14 on | Phase 2 (1 h) | Phase 4 (30 min) | Status | Interviewer |
 |---|---|---|---|---|---|---|---|---|---|
@@ -75,7 +75,7 @@ Tick each completed phase. Enter the phase 2 date at D+14 from phase 1.
 | `P1-JG-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 | `P1-JG-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 
-### Stratum JS — Judges, Specialised (contracts, PKI, digital)
+### Stratum JS - Judges, Specialised (contracts, PKI, digital)
 
 | Code | Invited on | Consent signed on | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 due D+14 on | Phase 2 (1 h) | Phase 4 (30 min) | Status | Interviewer |
 |---|---|---|---|---|---|---|---|---|---|
@@ -100,7 +100,7 @@ Tick each completed phase. Enter the phase 2 date at D+14 from phase 1.
 | `P1-JS-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 | `P1-JS-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 
-### Stratum RJ — Financial regulators, Juniors (< 5 years of experience)
+### Stratum RJ - Financial regulators, Juniors (< 5 years of experience)
 
 | Code | Invited on | Consent signed on | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 due D+14 on | Phase 2 (1 h) | Phase 4 (30 min) | Status | Interviewer |
 |---|---|---|---|---|---|---|---|---|---|
@@ -125,7 +125,7 @@ Tick each completed phase. Enter the phase 2 date at D+14 from phase 1.
 | `P1-RJ-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 | `P1-RJ-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 
-### Stratum RS — Financial regulators, Seniors (≥ 5 years, supervisors)
+### Stratum RS - Financial regulators, Seniors (≥ 5 years, supervisors)
 
 | Code | Invited on | Consent signed on | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 due D+14 on | Phase 2 (1 h) | Phase 4 (30 min) | Status | Interviewer |
 |---|---|---|---|---|---|---|---|---|---|
@@ -150,7 +150,7 @@ Tick each completed phase. Enter the phase 2 date at D+14 from phase 1.
 | `P1-RS-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 | `P1-RS-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 
-### Stratum AP — Auditors, Court of Audit (public sector)
+### Stratum AP - Auditors, Court of Audit (public sector)
 
 | Code | Invited on | Consent signed on | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 due D+14 on | Phase 2 (1 h) | Phase 4 (30 min) | Status | Interviewer |
 |---|---|---|---|---|---|---|---|---|---|
@@ -175,7 +175,7 @@ Tick each completed phase. Enter the phase 2 date at D+14 from phase 1.
 | `P1-AP-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 | `P1-AP-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ active ☐ completed ☐ withdrawn ☐ excluded | `ENQ-__` |
 
-### Stratum AC — Auditors, Private firms (Big 4 and equivalent)
+### Stratum AC - Auditors, Private firms (Big 4 and equivalent)
 
 | Code | Invited on | Consent signed on | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 due D+14 on | Phase 2 (1 h) | Phase 4 (30 min) | Status | Interviewer |
 |---|---|---|---|---|---|---|---|---|---|
