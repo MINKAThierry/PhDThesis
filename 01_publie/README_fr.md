@@ -1,6 +1,6 @@
 # Articles publiés
 
-> **Statut : PUBLIÉ** (articles P1, P2, P3) · les documents des sous-dossiers `formulations_precisees/` ont le statut **PROPOSITION — formulations précisées soumises** · Source : thèse, introduction générale, tableau `tab:contributions_these` et annexe C
+> **Statut : PUBLIÉ** (articles P1, P2, P3) · les documents des sous-dossiers `formulations_precisees/` ont le statut **PROPOSITION - formulations précisées soumises** · Source : thèse, introduction générale, tableau `tab:contributions_these` et annexe C
 
 [English version](README_en.md)
 
