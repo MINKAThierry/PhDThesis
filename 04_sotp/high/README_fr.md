@@ -1,6 +1,6 @@
-> **Statut : PROPOSITION — implémentation de référence** (construction SOTP-High, non auditée, démonstration) · Source : thèse, chapitre 3, sous-section SOTP-High (algorithme 3, proposition et remarques) ; annexe A, théorème `thm:ann_sotp_high`
+> **Statut : PROPOSITION: implémentation de référence** (construction SOTP-High, non auditée, démonstration) · Source : thèse, chapitre 3, sous-section SOTP-High (algorithme 3, proposition et remarques) ; annexe A, théorème `thm:ann_sotp_high`
 
-# SOTP-High — implémentation de référence exécutable
+# SOTP-High: implémentation de référence exécutable
 
 [English version](README_en.md)
 
