@@ -1,6 +1,6 @@
 # Correspondance entre la thèse et le dépôt
 
-> **Statut : PROPOSITION — documentation du dépôt** · Source : thèse, PDF de la version de dépôt ([`../00_these/pdf/these_version_depot.pdf`](../00_these/pdf/these_version_depot.pdf)) et sources de la version finale ([`../00_these/manuscrit/`](../00_these/manuscrit/))
+> **Statut : PROPOSITION: documentation du dépôt** · Source : thèse, PDF de la version de dépôt ([`../00_these/pdf/these_version_depot.pdf`](../00_these/pdf/these_version_depot.pdf)) et sources de la version finale ([`../00_these/manuscrit/`](../00_these/manuscrit/))
 
 [English version](correspondance_these_depot_en.md) · [Retour à docs](README_fr.md)
 
@@ -19,7 +19,7 @@ Les numéros de section, de tableau et de listing sont ceux du PDF de dépôt. L
 | §1.3.7 Vérification formelle (listing à coller dans l'éditeur en ligne) | `chap1/etat_art.tex` | [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean) |
 | §1.4.3 Objectifs scientifiques et programme, renvoi au dépôt | `chap1/problematique.tex` | ce dépôt (accueil [`../README_fr.md`](../README_fr.md)) |
 
-### Chapitre 2 — cadre formel et bornes d'impossibilité
+### Chapitre 2. cadre formel et bornes d'impossibilité
 
 | Thèse | Fichier source | Dépôt |
 |---|---|---|
@@ -31,7 +31,7 @@ Les numéros de section, de tableau et de listing sont ceux du PDF de dépôt. L
 | §2.4 Extension quantique, `thm:trilemme_pq` | `chap2/cro_pq.tex` | article P3 [`../01_publie/P3_PQCRO_IEEEAccess2026/`](../01_publie/P3_PQCRO_IEEEAccess2026/README_fr.md) et ses [formulations précisées](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_fr.md) ; apports R11 et R12 |
 | §2.4.6 Calibration illustrative des paramètres quantiques | `chap2/cro_pq.tex` | [`../06_calcul/data/calibration_pq.csv`](../06_calcul/data/calibration_pq.csv) |
 
-### Chapitre 3 — constructions et certification
+### Chapitre 3. constructions et certification
 
 | Thèse | Fichier source | Dépôt |
 |---|---|---|
@@ -46,7 +46,7 @@ Les numéros de section, de tableau et de listing sont ceux du PDF de dépôt. L
 | §3.4.9 Ce que la formalisation a révélé | `chap3/cro_lean4.tex` | formulations précisées de [P2](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_fr.md) et de [P3](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
 | Témoin de portée `regime_assumption_necessary` | `chap3/cro_lean4.tex` | [`../05_formalisation_lean/cas_limite/`](../05_formalisation_lean/cas_limite/README_fr.md) ; contrôle V6 |
 
-### Chapitre 4 — expérimentation et validation
+### Chapitre 4. expérimentation et validation
 
 | Thèse | Fichier source | Dépôt |
 |---|---|---|
@@ -68,7 +68,7 @@ Les numéros de section, de tableau et de listing sont ceux du PDF de dépôt. L
 | §4.4.12 Reproductibilité, `sec:reproductibilite` | `chap4/validation_retrospective.tex` | [`../06_calcul/reproduire.sh`](../06_calcul/reproduire.sh), [`../06_calcul/tests/`](../06_calcul/tests/) ; voir aussi la partie 2 |
 | §4.4.12 Tableau 4.23, `tab:environnement_calcul` | `chap4/validation_retrospective.tex` | [`../06_calcul/python/requirements.txt`](../06_calcul/python/requirements.txt), [`requirements-lock.txt`](../06_calcul/python/requirements-lock.txt), [`../05_formalisation_lean/lean-toolchain`](../05_formalisation_lean/lean-toolchain) |
 
-### Chapitre 5, conclusion et annexes
+### Chapitre 5. conclusion et annexes
 
 | Thèse | Fichier source | Dépôt |
 |---|---|---|
