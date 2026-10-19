@@ -1,4 +1,4 @@
-# ePrint 2025/1348 — CRO Trilemma (earlier form)
+# ePrint 2025/1348 - CRO Trilemma (earlier form)
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1348
 
