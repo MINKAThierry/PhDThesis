@@ -1,6 +1,6 @@
-# Doctoral thesis — submitted version
+# Doctoral thesis - submitted version
 
-> **Status: PROPOSAL — thesis submitted, defence pending** · Source: thesis manuscript, submitted version (`style` branch of the LaTeX sources)
+> **Status: PROPOSAL: thesis submitted, defence pending** · Source: thesis manuscript, submitted version (`style` branch of the LaTeX sources)
 
 [Version française](README_fr.md)
 
@@ -15,7 +15,7 @@ The thesis has been submitted. It has not been defended yet, so its own results 
 | Folder | Contents |
 |---|---|
 | [`manuscrit/`](manuscrit/) | Complete LaTeX sources of the final version of the manuscript (chapters, appendices, style, figures, bibliography) and `Makefile` |
-| [`pdf/`](pdf/) | `MaThèse.pdf`, the PDF of the final version (247 pages), and `these_version_depot.pdf`, that of the submitted version (262 pages) |
+| [`pdf/`](pdf/) | `MaThèse.pdf`, the PDF of the final submitted version (247 pages)|
 
 ## Building the manuscript
 
