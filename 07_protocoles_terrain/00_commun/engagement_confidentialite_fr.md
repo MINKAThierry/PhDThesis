@@ -1,6 +1,6 @@
 # Engagement de confidentialité des enquêteurs et des experts
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3 (phase 3, gold standard) et §4.2.4
+> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3 (phase 3, gold standard) et §4.2.4
 
 [English version](engagement_confidentialite_en.md)
 
