@@ -1,6 +1,6 @@
 # Template research collaboration agreement with a partner institution
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (institutional agreement prerequisite) and §4.2.8.3
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (institutional agreement prerequisite) and §4.2.8.3
 
 [Version française](convention_institution_partenaire_fr.md)
 
