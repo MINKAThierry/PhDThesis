@@ -1,6 +1,6 @@
 # Publication procedure for the repository
 
-> **Status: PROPOSAL — repository documentation** · Source: author's decisions (repository private until the defence), [`../CITATION.cff`](../CITATION.cff), [`../.zenodo.json`](../.zenodo.json), discrepancies listed in the [correspondence](correspondance_these_depot_en.md)
+> **Status: PROPOSAL: repository documentation** · Source: author's decisions (repository private until the defence), [`../CITATION.cff`](../CITATION.cff), [`../.zenodo.json`](../.zenodo.json), discrepancies listed in the [correspondence](correspondance_these_depot_en.md)
 
 [Version française](procedure_publication_fr.md) · [Back to docs](README_en.md)
 
