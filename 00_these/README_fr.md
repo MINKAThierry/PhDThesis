@@ -1,6 +1,6 @@
-# Thèse de doctorat — version de dépôt
+# Thèse de doctorat - version de dépôt
 
-> **Statut : PROPOSITION — thèse déposée, soutenance à venir** · Source : manuscrit de thèse, version de dépôt (branche `style` des sources LaTeX)
+> **Statut : PROPOSITION: thèse déposée, soutenance à venir** · Source : manuscrit de thèse, version de dépôt (branche `style` des sources LaTeX)
 
 [English version](README_en.md)
 
@@ -15,7 +15,7 @@ La thèse a été déposée. Elle n'a pas encore été soutenue ; ses résultats
 | Dossier | Contenu |
 |---|---|
 | [`manuscrit/`](manuscrit/) | Sources LaTeX complètes de la version finale du manuscrit (chapitres, annexes, style, figures, bibliographie) et `Makefile` |
-| [`pdf/`](pdf/) | `MaThèse.pdf`, le PDF de la version finale (247 pages), et `these_version_depot.pdf`, celui de la version déposée (262 pages) |
+| [`pdf/`](pdf/) | `MaThèse.pdf`, le PDF de la version finale déposée (247 pages) |
 
 ## Compiler le manuscrit
 
