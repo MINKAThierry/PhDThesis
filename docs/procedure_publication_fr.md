@@ -1,6 +1,6 @@
 # Procédure de publication du dépôt
 
-> **Statut : PROPOSITION — documentation du dépôt** · Source : décisions de l'auteur (dépôt privé jusqu'à la soutenance), [`../CITATION.cff`](../CITATION.cff), [`../.zenodo.json`](../.zenodo.json), écarts recensés dans la [correspondance](correspondance_these_depot_fr.md)
+> **Statut : PROPOSITION: documentation du dépôt** · Source : décisions de l'auteur (dépôt privé jusqu'à la soutenance), [`../CITATION.cff`](../CITATION.cff), [`../.zenodo.json`](../.zenodo.json), écarts recensés dans la [correspondance](correspondance_these_depot_fr.md)
 
 [English version](procedure_publication_en.md) · [Retour à docs](README_fr.md)
 
