@@ -1,6 +1,6 @@
 # Sources LaTeX du manuscrit
 
-> **Statut : PROPOSITION — thèse déposée, soutenance à venir** · Source : sources LaTeX de la version finale de la thèse (octobre 2026)
+> **Statut : PROPOSITION: thèse déposée, soutenance à venir** · Source : sources LaTeX de la version finale de la thèse (octobre 2026)
 
 [English version](README_en.md)
 
