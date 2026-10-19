@@ -1,6 +1,6 @@
 # Protocol deviation report form
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (reproducibility of the standardised protocol) and §4.2.7.3 (criteria fixed before any data collection)
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (reproducibility of the standardised protocol) and §4.2.7.3 (criteria fixed before any data collection)
 
 [Version française](fiche_ecart_protocole_fr.md)
 
