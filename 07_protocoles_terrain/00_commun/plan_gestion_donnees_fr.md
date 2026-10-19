@@ -1,6 +1,6 @@
 # Plan de gestion des données
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1, §4.2.2, §4.2.4 et §4.2.8.3
+> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1, §4.2.2, §4.2.4 et §4.2.8.3
 
 [English version](plan_gestion_donnees_en.md)
 
