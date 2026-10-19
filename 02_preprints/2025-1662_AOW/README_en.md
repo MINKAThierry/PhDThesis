@@ -1,4 +1,4 @@
-# ePrint 2025/1662 — AOW
+# ePrint 2025/1662 - AOW
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1662
 
