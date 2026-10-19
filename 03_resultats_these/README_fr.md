@@ -1,6 +1,6 @@
 # Résultats propres à la thèse
 
-> **Statut : PROPOSITION — résultat de thèse** · Source : thèse, chapitres 2 à 4
+> **Statut : PROPOSITION: résultat de thèse** · Source : thèse, chapitres 2 à 4
 
 [English version](README_en.md)
 
