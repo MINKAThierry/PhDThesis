@@ -1,4 +1,4 @@
-# ePrint 2025/1348 — CRO Trilemma (forme antérieure)
+# ePrint 2025/1348 - CRO Trilemma (forme antérieure)
 
 > **Statut : PRÉPRINT (non évalué par les pairs)** · Source : Cryptology ePrint Archive, rapport 2025/1348
 
