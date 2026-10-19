@@ -1,6 +1,6 @@
 # Variable dictionary
 
-> **Status: PROPOSAL/ protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.4 and §4.2.2
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.4 and §4.2.2
 
 [Version française](dictionnaire_variables_fr.md)
 
