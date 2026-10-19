@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cro_terrain"
+version = "0.1.0"
+description = "Analysis code for the field protocols of the thesis (chapter 4): estimators of Delta, Opp, alpha, eta_q and refutation criteria. Status: proposal, reference implementation, tested on simulated data only."
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = ["numpy>=1.22", "scipy>=1.8"]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[tool.setuptools]
+packages = ["cro_terrain"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
