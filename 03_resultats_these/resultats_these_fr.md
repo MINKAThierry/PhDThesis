@@ -1,6 +1,6 @@
 # Apports de la thèse par rapport aux articles publiés
 
-> **Statut : PROPOSITION — résultat de thèse** · Source : thèse, chapitres 2, 3 et 4 (sources dans [`../00_these/manuscrit/`](../00_these/manuscrit/))
+> **Statut : PROPOSITION: résultat de thèse** · Source : thèse, chapitres 2, 3 et 4 (sources dans [`../00_these/manuscrit/`](../00_these/manuscrit/))
 
 [English version](resultats_these_en.md)
 
