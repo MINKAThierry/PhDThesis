@@ -1,6 +1,6 @@
-> **Status: PROPOSAL — illustrative calibration** · Source: thesis, Chapter 4 (reference parameter table, retrospective calibration)
+> **Status: PROPOSAL: illustrative calibration** · Source: thesis, Chapter 4 (reference parameter table, retrospective calibration)
 
-# 06_calcul — Illustrative calibration and numerical checks
+# 06_calcul: Illustrative calibration and numerical checks
 
 *Version française : [README_fr.md](README_fr.md)*
 
