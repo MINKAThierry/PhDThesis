@@ -1,6 +1,6 @@
 # Journal de séance de l'enquêteur
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3 (phases 0 à 4) et §4.2.1.4 (enregistrement des temps et de la confiance)
+> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3 (phases 0 à 4) et §4.2.1.4 (enregistrement des temps et de la confiance)
 
 [English version](journal_session_en.md)
 
