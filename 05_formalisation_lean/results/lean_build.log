@@ -1,0 +1,21 @@
+@ConditionalCRO.lemma4_confidentiality_guarantee : ∀ {lam : ℕ} (P : ConditionalCRO.ProtocolInstance lam),
+  P.KLmax ≤ P.params.β * P.I → 1 - √(ConditionalCRO.c0 * P.params.β * P.I) ≤ P.Conf
+ConditionalCRO.conditional_CRO_trilemma : ∀ (F : ConditionalCRO.ProtocolFamily) (κ : ℝ),
+  0 ≤ κ →
+    (∀ (lam : ℕ), ConditionalCRO.InstitutionalAssumptions (F.inst lam)) →
+      (∀ (lam : ℕ), (F.inst lam).I ≤ κ / ↑lam) →
+        ∃ K ε,
+          ConditionalCRO.Negligible ε ∧
+            ∀ (lam : ℕ),
+              64 ≤ lam →
+                (F.inst lam).Conf * (F.inst lam).Rel * (F.inst lam).Opp ≤ F.params.Δ / ↑lam + K / ↑lam ^ 2 + ε lam
+'ConditionalCRO.lemma4_confidentiality_guarantee' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_explicit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.conditional_CRO_trilemma' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.assumptions_consistent_and_bound_attained' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.regime_assumption_necessary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.zkSNARK_regime_at_256' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.opp_eq_one_of_deterministic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.deterministic_forces_capacity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_refined' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.refined_bound_is_fano_when_delta_ge_gamma' depends on axioms: [propext, Classical.choice, Quot.sound]
