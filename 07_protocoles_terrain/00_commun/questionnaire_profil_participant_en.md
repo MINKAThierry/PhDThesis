@@ -1,6 +1,6 @@
 # Participant profile questionnaire
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.2 (stratification) and §4.2.5.2 (PQC training)
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.2 (stratification) and §4.2.5.2 (PQC training)
 
 [Version française](questionnaire_profil_participant_fr.md)
 
