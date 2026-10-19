@@ -1,6 +1,6 @@
-# docs — documentation transversale du dépôt
+# docs: documentation transversale du dépôt
 
-> **Statut : PROPOSITION — documentation du dépôt** · Source : thèse, version de dépôt ([`../00_these/`](../00_these/README_fr.md)) et registre [`../STATUS_fr.md`](../STATUS_fr.md)
+> **Statut : PROPOSITION: documentation du dépôt** · Source : thèse, version de dépôt ([`../00_these/`](../00_these/README_fr.md)) et registre [`../STATUS_fr.md`](../STATUS_fr.md)
 
 [English version](README_en.md) · [Retour à l'accueil](../README_fr.md)
 
