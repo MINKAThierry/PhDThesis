@@ -1,6 +1,6 @@
 # LaTeX sources of the manuscript
 
-> **Status: PROPOSAL — thesis submitted, defence pending** · Source: LaTeX sources of the final version of the thesis (October 2026)
+> **Status: PROPOSAL: thesis submitted, defence pending** · Source: LaTeX sources of the final version of the thesis (October 2026)
 
 [Version française](README_fr.md)
 
