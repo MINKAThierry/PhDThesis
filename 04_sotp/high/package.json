@@ -1,0 +1,23 @@
+{
+  "name": "sotp-high",
+  "version": "0.1.0",
+  "description": "Reference implementation (demonstration, not audited) of the SOTP-High construction: Groth16 proof over BN254 of Poseidon context hash, in-circuit Baby Jubjub Pedersen commitment and an example compliance predicate.",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "bash scripts/build.sh",
+    "prove": "node scripts/prove.js inputs/conforme.json build/out/conforme",
+    "verify": "bash scripts/verify.sh build/out/conforme",
+    "test": "node --test test/sotp_high.test.js",
+    "all": "bash scripts/run_all.sh"
+  },
+  "dependencies": {
+    "circom2": "0.2.22",
+    "circomlib": "2.0.5",
+    "circomlibjs": "0.1.7",
+    "snarkjs": "0.7.6"
+  }
+}

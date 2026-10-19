@@ -1,0 +1,5 @@
+{
+  "_comment": "Non-compliant: m = threshold (the rule is strict, m < c[0]). Witness generation must fail.",
+  "m": 1000000,
+  "c": [1000000, 2, 120, 2026]
+}

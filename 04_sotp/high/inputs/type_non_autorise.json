@@ -1,0 +1,5 @@
+{
+  "_comment": "Non-compliant: operation type 7 is not in the allowed list {1,2,3}. Witness generation must fail.",
+  "m": 500000,
+  "c": [1000000, 7, 120, 2026]
+}

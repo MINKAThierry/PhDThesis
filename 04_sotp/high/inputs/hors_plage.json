@@ -1,0 +1,5 @@
+{
+  "_comment": "Out of range: m = p - 1 (i.e. -1 in the BN254 scalar field), a 'negative amount'. Without the 64-bit range check, field wrap-around could fool the comparator; the Num2Bits(64) check makes witness generation fail.",
+  "m": "21888242871839275222246405745257275088548364400416034343698204186575808495616",
+  "c": [1000000, 1, 120, 2026]
+}

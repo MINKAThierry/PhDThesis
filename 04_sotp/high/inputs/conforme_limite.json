@@ -1,0 +1,5 @@
+{
+  "_comment": "Compliant boundary case: m = threshold - 1, operation type 3 (allowed).",
+  "m": 999999,
+  "c": [1000000, 3, 120, 2026]
+}

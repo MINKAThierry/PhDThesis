@@ -1,0 +1,5 @@
+{
+  "_comment": "Compliant example: amount below threshold, operation type 1 (allowed). c = [threshold, op_type, jurisdiction, rule_version].",
+  "m": 750000,
+  "c": [1000000, 1, 120, 2026]
+}
