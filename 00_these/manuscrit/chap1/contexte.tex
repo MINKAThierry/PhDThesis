@@ -1,0 +1,429 @@
+% ============================================================================
+% CHAPITRE 1 — CONTEXTE, \'ETAT DE L'ART ET PROBL\'eMATIQUE
+% Section 1.2 : Contexte
+% source : partie1/contexte.tex
+% ============================================================================
+
+\section{CONTEXTE}
+\label{sec:contexte}
+\begin{sloppypar}
+La cryptographie et le droit ont toujours entretenu une relation asym\'etrique~\cite{Mason07,Twining1999}.
+La premi\`ere produit des garanties absolues, prouvables sous hypoth\`eses
+math\'ematiques~\cite{Goldreich01,GMR88}, alors que le second exige des preuves que des
+acteurs non-experts puissent comprendre et contester dans le cadre de
+proc\'edures \'etablies~\cite{Daubert1993,Casey10}. Longtemps g\'erable, cette asym\'etrie s'est
+creus\'ee avec les protocoles modernes au point de devenir une fracture structurelle~\cite{Citron14,Kerr04}.
+
+Pour en d\'ecrire les contours, ce chapitre s'appuie sur trois syst\`emes
+cryptographiques employ\'es comme construits illustratifs th\'eoriques, \`a savoir Helios pour le vote
+\'electronique, les zk-SNARKs pour la conformit\'e financi\`ere et ECDSA pour
+les signatures contractuelles. Leurs profils CLO ($\Conf$, $\Rel$, $\Opp$)
+sont des estimations param\'etriques calcul\'ees analytiquement depuis leurs
+sp\'ecifications publi\'ees, sous des hypoth\`eses institutionnelles d\'etaill\'ees
+\`a la section~\ref{subsubsec:parametres_institutionnels}. Ils ne proviennent pas d'exp\'eriences
+contr\^ol\'ees men\'ees avec des acteurs r\'eels. Ils servent \`a ancrer le paradoxe
+dans des cas document\'es tout en motivant la formalisation des chapitres~\ref{chap:cadre_formel} \`a~\ref{chap:experimentation}.
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsection{Cadre de recherche}
+\label{subsec:cadre_recherche}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Le laboratoire LIMSI}
+\label{subsubsec:limsi}
+
+Les travaux pr\'esent\'es dans cette th\`ese ont \'et\'e conduits au
+\textbf{Laboratoire d'Ing\'enierie Math\'ematique et Syst\`emes d'Information
+(LIMSI)} de l'\'ecole Nationale Sup\'erieure Polytechnique de l'Universit\'e
+de Yaound\'e~I, Cameroun. Le LIMSI accueille notamment des recherches situ\'ees \`a la
+jonction de la cryptographie, des syst\`emes d'information, des m\'ethodes formelles et des math\'ematiques appliqu\'ees. Ce voisinage a permis de confronter les exigences de rigueur formelle aux difficult\'es que rencontre la pratique institutionnelle.
+
+\subsubsection{L'exp\'erience professionnelle de l'auteur}
+\label{subsubsec:experience_auteur}
+
+Notre parcours professionnel associe plusieurs expertises compl\'ementaires, puisque nous exer\c{c}ons comme Auditeur des finances publiques au sein des \textbf{Services du Contr\^ole Sup\'erieur de l'\'Etat (CONSUPE)}, comme Expert judiciaire pr\`es les tribunaux du Cameroun ainsi que comme Expert certifi\'e en cybers\'ecurit\'e.
+
+L'exercice de ces fonctions nous a souvent mis face \`a une situation d\'econcertante, dans laquelle des syst\`emes d'information robustes sur le plan cryptographique et s\^urs sur le plan math\'ematique ne parvenaient pas \`a convaincre les institutions qui devaient s'en servir~\cite{Bonneau16,Narayanan16}. En audit financier comme en expertise judiciaire, la validit\'e de la preuve technique suffisait rarement \`a fonder la confiance s\'emantique qu'exige une d\'ecision administrative ou juridictionnelle~\cite{Casey16,Grimmelmann15}.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsection{Gen\`ese de la question centrale de recherche}
+\label{subsec:genese_question}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+La question centrale de cette th\`ese proc\`ede donc moins d'une r\'eflexion men\'ee \textit{in abstracto} que de l'observation r\'ep\'et\'ee d'un ph\'enom\`ene auquel nous avons donn\'e le nom de \textbf{paradoxe de l'authenticit\'e invisible}.
+
+Le paradoxe tient \`a la conception m\^eme des protocoles cryptographiques actuels, qui ne prennent pas en compte la capacit\'e cognitive de leurs interpr\`etes~\cite{Simon82,Miller56,Herley09}, bien davantage qu'\`a un d\'efaut d'acculturation ou de formation des acteurs institutionnels.
+
+Afin de d\'epasser le seul cadre national dans lequel ces constats avaient \'et\'e faits, nous avons retenu trois cas d'\'etude de port\'ee internationale (Helios pour le vote, les zk-SNARKs pour la conformit\'e, ECDSA pour la signature), dont les enseignements valent au-del\`a de leur contexte d'origine pour les questions de confiance num\'erique~\cite{DeFilippi16,Garay15}.
+
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre a plusieurs dossiers sur sa table. Dans celui d'Helios figure une
+\'election v\'erifiable de bout en bout que les garants \'electoraux n'ont pas su
+d\'echiffrer sans assistance externe. Celui des zk-SNARKs contient une preuve de
+quelques centaines d'octets qui atteste la conformit\'e de milliers de
+transactions sans permettre au r\'egulateur de cibler la moindre op\'eration
+suspecte. Le dossier d'ECDSA offre au contraire une transparence totale ainsi
+qu'une tra\c{c}abilit\'e parfaite, obtenues au prix d'une confidentialit\'e nulle.
+Chacun t\'emoigne d'une impuissance diff\'erente. Le pr\'esent chapitre les d\'ecrit
+tandis que les chapitres suivants cherchent pourquoi elles convergent toutes
+vers la m\^eme contrainte.
+\end{boiteArbitre}
+
+% ----------------------------------------------------------------------------
+\subsection{Note de m\'ethodologie~: statut des exemples illustratifs}
+\label{subsec:note_methodo}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+Cette th\`ese est une contribution th\'eorique. Les syst\`emes \'evoqu\'es au fil
+du texte, Helios~\cite{Adida08,Adida09UCL}, ECDSA~\cite{Johnson01,NIST.FIPS.186-5},
+zk-SNARKs~\cite{Groth16,Gennaro13,BCTV14} de conformit\'e, servent d'ancrages
+illustratifs et de supports de validation th\'eorique, non de sujets d'\'etude
+empirique. Les valeurs num\'eriques associ\'ees ($\Conf$, $\Rel$, $\Opp$) sont
+des estimations param\'etriques d\'eriv\'ees analytiquement depuis les sp\'ecifications
+publi\'ees de ces protocoles, sous des hypoth\`eses institutionnelles explicitement
+formul\'ees (sous-section~\ref{subsubsec:hypotheses_capacite},
+section~\ref{subsubsec:parametres_institutionnels}). Elles ne sont pas issues
+d'exp\'eriences contr\^ol\'ees avec des acteurs institutionnels r\'eels. Ces
+syst\`emes, dont la fiabilit\'e de v\'erification est proche de~$1$, ne sont pas
+des instances du Trilemme CRO (Remarque~\ref{rem:portee_cas_etude}). Ils
+servent \`a une \textbf{calibration illustrative} des ordres de grandeur des
+param\`etres institutionnels, non \`a une validation, ni empirique au sens des
+sciences exp\'erimentales~\cite{Tsybakov2009}, ni th\'eorique.
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsection{Cas d'\'etude d\'eploy\'es}
+\label{subsec:cas_etude}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+Les trois cas d'\'etude introduits \`a la section~\ref{subsec:genese_question} permettent de pr\'eciser le paradoxe. Leur choix tient \`a ce qu'ils
+parcourent l'ensemble des compromis possibles entre confidentialit\'e et
+opposabilit\'e, depuis les syst\`emes tr\`es confidentiels mais peu opposables
+(Helios, zk-SNARKs) jusqu'\`a un syst\`eme tr\`es opposable dont la confidentialit\'e
+est quasi nulle (ECDSA). Pris ensemble, ils font appara\^itre une r\'egularit\'e,
+puisque aucun protocole d\'eploy\'e n'atteint un produit $\Conf \cdot \Rel \cdot \Opp$
+sup\'erieur \`a $0{,}57$. Cette observation laisse supposer l'existence d'une
+contrainte de fond.
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsubsection{Vote \'electronique~: le cas Helios}
+\label{subsubsec:cas_helios}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+\paragraph{Architecture cryptographique.}
+\label{par:helios_architecture}
+
+Le protocole Helios, con\c{c}u par Ben Adida en 2008~\cite{Adida08}, est
+une r\'ef\'erence pour le vote \'electronique v\'erifiable de bout en bout~\cite{Benaloh94,Lindeman12}. Il
+associe le chiffrement homomorphe ElGamal~\cite{ElGamal85}, gr\^ace auquel les
+bulletins chiffr\'es peuvent \^etre agr\'eg\'es sans \^etre d\'echiffr\'es un \`a un, \`a des
+preuves non-interactives zero-knowledge
+(protocole de Chaum-Pedersen~\cite{ChaumPedersen92} rendu non interactif par Fiat-Shamir~\cite{FiatShamir87})
+qui attestent la validit\'e de chaque bulletin sans en r\'ev\'eler le contenu.
+Pour un bulletin binaire $m \in \{0,1\}$, le chiffr\'e est
+$c = (g^r,\, h^r \cdot g^m)$ o\`u $h = g^x$ est la cl\'e publique
+de l'\'election. Le d\'epouillement requiert la participation d'un seuil de garants ($t$
+parmi $k$), la cl\'e de d\'echiffrement \'etant r\'epartie par le partage de secret de Shamir.
+
+Les garanties qui en r\'esultent (confidentialit\'e individuelle, v\'erifiabilit\'e
+universelle, r\'esistance partielle \`a la coercition~\cite{Benaloh94}) reposent
+sur des fondements math\'ematiques solides~\cite{CramerDamgardSchoenmakers}. Rien
+n'assure pour autant qu'elles soient accessibles aux institutions qui les
+mettent en \oe uvre~\cite{Bonneau12,Whitten99}.
+
+\paragraph{L'\'echec de Louvain (2009) et l'incident IACR (2025).}
+\label{par:echec_louvain}
+
+En mars 2009, l'Universit\'e Catholique de Louvain a d\'eploy\'e Helios pour
+l'\'election de son Conseil \'etudiant~\cite{Adida09UCL}. Les garants
+\'electoraux, des membres \'elus d\'epourvus de formation cryptographique, n'ont
+pas pu conduire le d\'echiffrement distribu\'e sans assistance externe. La
+v\'erifiabilit\'e universelle, pourtant garantie par construction, est ainsi
+rest\'ee hors de port\'ee des observateurs auxquels elle \'etait destin\'ee.
+
+En novembre 2025, l'IACR a d\^u annuler son \'election annuelle apr\`es qu'un
+trustee eut perdu de fa\c{c}on irr\'em\'ediable sa cl\'e partielle~\cite{IACR2025incident}.
+La configuration exigeait en effet les parts des trois garants (partage 3-sur-3).
+Le scrutin a donc \'et\'e repris avec un seuil 2-sur-3. Les acteurs concern\'es
+\textit{\'etaient} cette fois des experts en cryptographie, si bien que l'incident
+met en \'evidence, ind\'ependamment de toute question de comp\'etence,
+l'\'ecart entre la complexit\'e op\'erationnelle du protocole et les
+contraintes concr\`etes d'un d\'eploiement institutionnel.
+
+\paragraph{Profil CLO estim\'e.}
+\label{par:helios_clo}
+
+Sous les hypoth\`eses institutionnelles d\'etaill\'ees \`a la
+section~\ref{sec:derivation_helios} et \`a la section~\ref{subsubsec:parametres_institutionnels},
+les estimations param\'etriques analytiques retenues pour Helios sont
+$\Conf \approx 0{,}92$ (confidentialit\'e op\'erationnelle du bulletin chiffr\'e ElGamal~\cite{TsiounisYung}, estim\'ee sur l'\'echelle CLO),
+$\Relver \approx 0{,}95$ (compl\'etude et solidit\'e de la v\'erification des preuves de bien-formation),
+$\Opp \approx 0{,}50$ (d\'ependance structurelle aux experts pour
+l'interpr\'etation, avec capacit\'e d'extraction $\Delta \approx 56$ bits~\cite{MINKA2026CRO}),
+ce qui donne le produit
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \;\approx\; 0{,}437.
+\label{eq:helios_cro}
+\end{equation}
+Cette valeur sert \`a la calibration illustrative des param\`etres
+institutionnels (sous-section~\ref{subsec:analyse_comparative})~; le syst\`eme
+n'est pas une instance du Trilemme CRO (Remarque~\ref{rem:portee_cas_etude}).
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsubsection{Conformit\'e financi\`ere~: les zk-SNARKs}
+\label{subsubsec:cas_zksnark}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+\paragraph{Succinctit\'e et opacit\'e.}
+\label{par:zksnark_architecture}
+
+Les arguments succincts non-interactifs zero-knowledge (zk-SNARKs)~\cite{Groth16,BCTV14,BenSasson2019}
+ont nettement renforc\'e la confidentialit\'e des preuves. Une preuve $\pi$
+de taille constante ($128$--$256$ octets) y certifie que
+$\mathcal{C}(x, w) = 1$ pour un t\'emoin secret $w$, sa v\'erification ne
+demandant que quelques millisecondes~\cite{Parno13,Wahby18}. Ces propri\'et\'es expliquent l'int\'er\^et
+des zk-SNARKs pour la conformit\'e r\'eglementaire, puisqu'elles permettent de prouver
+le respect des r\`egles AML~\cite{FATF12,AMLD4} ou de B\^ale~III~\cite{BaselIII}
+sans divulguer les transactions sous-jacentes~\cite{Garratt19}.
+
+Cette succinctit\'e a toutefois un co\^ut~\cite{Bitansky2017}, car une preuve qui ne r\'ev\`ele rien du t\'emoin
+interdit aussi \`a un r\'egulateur d'auditer apr\`es coup une transaction suspecte.
+Lors d'une crise syst\'emique comparable \`a celle des \textit{subprimes} de 2008~\cite{FCIC2011}, l'analyse de la contagion deviendrait impossible, l'opacit\'e
+qui prot\`ege les clients faisant alors obstacle \`a l'investigation~\cite{Androulaki13,Meiklejohn13}. Le probl\`eme rel\`eve d'un vide de
+contr\^ole~\cite{FinckMoscon19,DeFilippi16} bien plus que d'une d\'efaillance d'impl\'ementation.
+
+\paragraph{Tensions avec le droit de la protection des donn\'ees.}
+\label{par:zksnark_rgpd}
+
+Le RGPD (R\`eglement G\'en\'eral pour la Protection des Donn\'ees \`a caract\`ere personnel)~\cite{GDPR2016} consacre un droit d'acc\`es (Article~15), un droit
+\`a l'effacement (Article~17) ainsi qu'une obligation de rendre compte
+(Article~5(2))~\cite{CCPA2018}. Chacune de ces exigences se heurte aux
+propri\'et\'es zero-knowledge. Le droit d'acc\`es suppose en effet de pouvoir
+d\'echiffrer, le droit \`a l'effacement s'oppose \`a l'immuabilit\'e de la
+blockchain~\cite{Nakamoto08,Garay15} et l'obligation de justification pr\'esuppose
+l'auditabilit\'e. La litt\'erature n'a pas encore r\'esolu ces
+incompatibilit\'es~\cite{FinckMoscon19,Sergey18}.
+
+\paragraph{Profil CLO estim\'e.}
+\label{par:zksnark_clo}
+
+Sous les m\^emes hypoth\`eses, les estimations param\'etriques analytiques donnent
+$\Conf \approx 0{,}89$ (confidentialit\'e op\'erationnelle estim\'ee du dispositif de conformit\'e, au-del\`a de la seule preuve~\cite{Groth16}),
+$\Relver \approx 0{,}96$ (compl\'etude et solidit\'e de la v\'erification),
+$\Opp \approx 0{,}67$ (opposabilit\'e \'elev\'ee pour les institutions dot\'ees
+d'une forte capacit\'e d'extraction $\Delta \approx 73$ bits~\cite{MINKA2026CRO}),
+d'o\`u le produit
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \;\approx\; 0{,}572.
+\label{eq:zksnark_cro}
+\end{equation}
+Ce produit CRO relativement \'elev\'e s'explique par la forte capacit\'e
+d'extraction des institutions financi\`eres sp\'ecialis\'ees ($\Delta \approx 73$ bits), qui disposent d'infrastructures
+d'analyse, d'\'equipes d'experts et de cadres r\'eglementaires d\'etaill\'es~\cite{Ravi2020}.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsubsection{Signatures contractuelles~: ECDSA comme r\'ef\'erence d'opposabilit\'e}
+\label{subsubsec:cas_ecdsa}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+\paragraph{Architecture et acceptation universelle.}
+\label{par:ecdsa_architecture}
+
+L'\emph{Elliptic Curve Digital Signature Algorithm} (ECDSA)~\cite{Johnson01}
+se situe \`a l'autre extr\'emit\'e du spectre. Normalis\'e par le NIST dans FIPS~186-2 (2000) puis FIPS~186-5 (2023)~\cite{NIST.FIPS.186-5},
+il est d\'eploy\'e dans SSL/TLS, dans Bitcoin~\cite{Nakamoto08,Narayanan16} ainsi que dans
+les syst\`emes bancaires. Sa s\'ecurit\'e repose sur la difficult\'e du probl\`eme du logarithme discret sur
+courbes elliptiques (ECDLP)~\cite{RFC6090,RFC6979}, la cl\'e publique $Q = d \cdot G$
+\'etant obtenue \`a partir de la cl\'e secr\`ete $d \in [1, n-1]$. La signature d'un message $m$ produit
+$(r, s)$ v\'erifiable par quiconque conna\^it $Q$ et $m$.
+
+Cette transparence totale fonde l'opposabilit\'e d'ECDSA~\cite{ESIGN00,eIDAS14}, puisque la
+v\'erification ne d\'epend d'aucun expert tiers, peut \^etre rejou\'ee \`a tout moment et
+aboutit \`a une attribution univoque assortie d'une tra\c{c}abilit\'e compl\`ete~\cite{Sasson14}.
+Elle a pour contrepartie directe l'absence de toute confidentialit\'e, le message
+circulant en clair tandis que l'identit\'e est publique et la transaction trac\'ee~\cite{Androulaki13,ECDSA-Fails}.
+
+\paragraph{Profil CLO estim\'e.}
+\label{par:ecdsa_clo}
+
+Les estimations param\'etriques analytiques sont
+$\Conf \approx 0{,}31$ (confidentialit\'e op\'erationnelle estim\'ee du dispositif contractuel~; au sens statistique de la D\'efinition~\ref{def:confidentialite_clo}, un message publi\'e en clair a une confidentialit\'e nulle),
+$\Relver \approx 0{,}98$ (infalsifiabilit\'e existentielle sous ECDLP~\cite{GoldwasserMicali84,GMR88}),
+$\Opp \approx 0{,}90$ (v\'erification rejouable, non-r\'epudiation forte,
+capacit\'e d'extraction $\Delta \approx 35$ bits suffisante~\cite{MINKA2026CRO}),
+soit le produit
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \;\approx\; 0{,}273.
+\label{eq:ecdsa_cro}
+\end{equation}
+La faiblesse de ce produit ne signale aucune d\'efaillance de conception.
+Elle d\'ecoule d'un choix architectural d\'elib\'er\'e, ECDSA privil\'egiant
+l'opposabilit\'e au d\'etriment de la confidentialit\'e~\cite{BonehFranklin}.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsubsection{Analyse comparative et lacune th\'eorique}
+\label{subsubsec:analyse_comparative}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+Le Tableau~\ref{tab:clo_resume_ch1} r\'esume les trois profils pr\'esent\'es plus haut
+et appelle deux observations. En premier lieu, confidentialit\'e et opposabilit\'e
+varient en sens inverse, les protocoles qui maximisent l'une minimisant
+l'autre~\cite{ClarksonSchneider10}. Aucun des trois n'approche la r\'egion $(\Conf, \Rel, \Opp)
+\approx (0{,}8, 0{,}8, 0{,}8)$, qui resterait pourtant en dessous de
+$1$. Ensuite, les produits $\Conf \cdot \Rel \cdot \Opp$ varient de
+$0{,}273$ \`a $0{,}572$, ce qui sugg\`ere l'existence d'une contrainte
+qui d\'epend des param\`etres
+institutionnels ($\Delta$, $\alpha$, $\beta$)~\cite{Simon82,Cowan2001}.
+
+La cryptographie classique ne dispose d'aucun outil pour formaliser cette
+contrainte~\cite{AbadiRogaway00}, car elle mesure l'avantage de l'adversaire~\cite{Goldreich01} sans rien dire de l'utilit\'e institutionnelle. La litt\'erature sur l'\emph{usable
+security}~\cite{Bonneau12,Cranor05,Herley09,Dhamija06,Schechter07} \'etudie l'utilisabilit\'e, mais
+qualitativement, sans m\'etriques quantifiables. L'informatique
+juridique~\cite{Kerr04,Casey11,Mason07} analyse l'admissibilit\'e des preuves,
+mais via la jurisprudence, sans formalisme math\'ematique.
+
+Aucune de ces trois disciplines, qui s'ignorent largement, ne propose donc de
+m\'etrique de l'opposabilit\'e~\cite{Smith09,Alvim12}. La section~\ref{subsec:trois_dimensions} s'attache \`a combler ce manque.
+\end{sloppypar}
+
+\begin{table}[htbp]
+\centering
+\caption{Profils CLO estimés~: trois systèmes représentatifs.
+Toutes les valeurs sont des estimations paramétriques analytiques publiées
+dans les travaux CLO~\cite{MINKA2026CLO} et CRO~\cite{MINKA2026CRO}, sur l'\'echelle
+op\'erationnelle CLO (fiabilit\'e de v\'erification $\Relver$, Remarque~\ref{rem:rel_ver}).}
+\label{tab:clo_resume_ch1}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Système} & $\Conf$ & $\Relver$ & $\Opp$ & $\Conf \cdot \Relver \cdot \Opp$ \\
+\midrule
+Helios (vote)        & $0{,}92$ & $0{,}95$ & $0{,}50$ & $0{,}437$ \\
+zk-SNARKs (finance) & $0{,}89$ & $0{,}96$ & $0{,}67$ & $0{,}572$ \\
+ECDSA (contrats)    & $0{,}31$ & $0{,}98$ & $0{,}90$ & $0{,}273$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ----------------------------------------------------------------------------
+\subsection{Extension quantique~: les standards NIST PQC}
+\label{subsec:extension_quantique_contexte}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{La transition quantique}
+\label{subsubsec:transition_quantique}
+
+En ao\^ut 2024, le National Institute of Standards and Technology (NIST) a publi\'e
+les trois premi\`eres normes de cryptographie post-quantique~\cite{NISTPQC,Alagic2020,NISTPostQuantum2022}, qui ouvrent une nouvelle
+p\'eriode pour la discipline~\cite{Chen2022}. Il s'agit des normes suivantes.
+
+\begin{itemize}
+\item \textbf{FIPS~203 (ML-KEM)}, m\'ecanisme d'encapsulation de cl\'es fond\'e sur
+les r\'eseaux euclidiens et d\'eriv\'e de Kyber~\cite{Kyber2022}, sert \`a l'\'etablissement de cl\'es
+ainsi qu'au chiffrement hybride.
+
+\item \textbf{FIPS~204 (ML-DSA)}, algorithme de signature num\'erique fond\'e sur
+les r\'eseaux euclidiens et d\'eriv\'e de Dilithium~\cite{Dilithium2022}, est appel\'e \`a remplacer ECDSA et RSA
+pour les signatures.
+
+\item \textbf{FIPS~205 (SLH-DSA)}, algorithme de signature fond\'e sur les fonctions
+de hachage et d\'eriv\'e de SPHINCS+~\cite{SPHINCS2022}, constitue une alternative sans trusted setup qui repose sur
+des hypoth\`eses cryptographiques conservatrices.
+\end{itemize}
+
+Le standard FIPS~206 (FN-DSA), d\'eriv\'e de Falcon~\cite{Falcon2022}, en cours de finalisation, compl\'etera cet ensemble.
+
+\subsubsection{Enjeux institutionnels de la migration PQC}
+\label{subsubsec:enjeux_pqc}
+
+La migration vers la cryptographie post-quantique fait na\^itre de nouvelles
+tensions avec les exigences institutionnelles~\cite{Langlois2015,Boneh2011}, qui tiennent \`a la complexit\'e des preuves, \`a leur taille et \`a la nouveaut\'e des hypoth\`eses de s\'ecurit\'e.
+
+\paragraph{Complexit\'e accrue des preuves.}
+Les signatures Dilithium reposent sur des preuves de connaissance dans les r\'eseaux
+euclidiens, dont la v\'erification fait intervenir des op\'erations matricielles et des
+calculs de normes~\cite{Dilithium2022}. Un arbitre habitu\'e \`a ECDSA devra donc se familiariser avec les
+modules sur $\mathbb{Z}_q$ ainsi qu'avec les probl\`emes LWE (Learning With Errors)~\cite{Regev2009}.
+
+\paragraph{Taille des preuves.}
+Une signature ML-DSA-65 (Dilithium-3) occupe 3\,309 octets et sa cl\'e publique 1\,952 octets, contre 64 octets pour une signature ECDSA-256.
+De m\^eme, une cl\'e publique Kyber-1024 atteint 1\,568 octets, l\`a o\`u ECDSA se contente de 64 octets.
+Cet accroissement complique l'examen manuel des preuves comme leur archivage~\cite{Ravi2020}.
+
+\paragraph{Hypoth\`eses de s\'ecurit\'e non standard.}
+LWE et les probl\`emes de r\'eseaux euclidiens constituent des hypoth\`eses r\'ecentes
+(ann\'ees 2000), qui ne b\'en\'eficient pas de la confiance accumul\'ee au fil du temps par RSA (1977) ou
+ECDLP (1985)~\cite{Kiltz2017}. Des institutions prudentes pourraient donc h\'esiter \`a reconna\^itre la m\^eme
+force probante \`a des preuves fond\'ees sur ces hypoth\`eses nouvelles~\cite{Unruh2016}.
+
+\subsubsection{Implications pour le Trilemme CRO}
+\label{subsubsec:implications_cro}
+
+La transition post-quantique conduit \`a se demander si les bornes du Trilemme CRO
+\'etablies dans le contexte classique restent valides dans les trois situations
+suivantes~\cite{NielsenChuang2010,Wilde2017}.
+
+\begin{enumerate}
+\item L'adversaire peut effectuer des requ\^etes quantiques en superposition~\cite{Watrous2009,Boneh2011}.
+\item Les canaux de communication introduisent des d\'egradations quantiques~\cite{Holevo1973,Schumacher1997}.
+\item Les param\`etres institutionnels ($\Delta$, $\alpha$, $\beta$) doivent
+\^etre adapt\'es au contexte quantique~\cite{Mayers1997,Lo1997}.
+\end{enumerate}
+
+C'est pour y r\'epondre que la section~\ref{subsec:modele_formel_pq} d\'eveloppe
+l'extension quantique du Trilemme CRO, en introduisant les param\`etres
+$\Delta_q$ (capacit\'e d'extraction quantique) et $\eta_q$ (perte d'interpr\'etabilit\'e
+quantique).
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+%\subsection{Synth\`ese}
+%\label{sec:synthese_chap1}
+% ----------------------------------------------------------------------------
+
+\begin{boiteArbitre}
+L'arbitre conna\^it ces dossiers pour les avoir tenus entre ses mains.
+Helios, les zk-SNARKs et ECDSA reposent sur des architectures distinctes,
+mais chacun a \'echou\'e \`a sa mani\`ere \`a le convaincre.
+
+Ce qui l'a longtemps troubl\'e tient \`a ce que la d\'efaillance n'\'etait jamais
+d'ordre technique. Les preuves \'etaient correctes et les algorithmes
+irr\'eprochables, sans que cela lui permette pour autant de d\'ecider. Il lui
+manquait moins la comp\'etence qu'un langage commun entre la rigueur
+math\'ematique du protocole et les exigences proc\'edurales de sa fonction. Ce
+chapitre a donn\'e \`a cette situation le nom de paradoxe de l'authenticit\'e
+invisible.
+
+Il en retient quatre enseignements. Une confidentialit\'e tr\`es \'elev\'ee
+(sup\'erieure \`a $0{,}90$) produit une opacit\'e qui paralyse l'interpr\`ete
+institutionnel, comme le montrent Helios et les zk-SNARKs. Les
+produits $\Conf \cdot \Rel \cdot \Opp$ s'\'etagent de $0{,}273$ \`a $0{,}572$
+selon les param\`etres institutionnels ($\Delta$, $\alpha$, $\beta$), ce qui
+d\'esigne une contrainte qui d\'epend du contexte.
+Les protocoles actuels ont aussi \'et\'e con\c{c}us sans tenir compte de
+lui, puisque sa capacit\'e cognitive born\'ee ($\Delta$) n'appara\^it dans aucune
+sp\'ecification. Enfin, la transition post-quantique risque d'aggraver cette
+situation en y ajoutant une complexit\'e que les experts eux-m\^emes peinent \`a
+ma\^itriser.
+
+Il reste \`a passer du constat au th\'eor\`eme, ce que le chapitre suivant
+pr\'epare en posant l'infrastructure th\'eorique n\'ecessaire.
+\end{boiteArbitre}

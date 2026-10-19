@@ -1,0 +1,544 @@
+% ============================================================================
+% CHAPITRE 4 — SECTION 4.2 : RÉSULTATS THÉORIQUES ET FORMELS
+% Fichier : partie4/resultats.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 révisée
+% ============================================================================
+
+\section{R\'ESULTATS TH\'EORIQUES ET FORMELS}
+\label{sec:resultats_theoriques}
+% ============================================================================
+\begin{sloppypar}
+Deux questions distinctes structurent cette section. La premi\`ere, quantitative, consiste \`a savoir si les ordres de grandeur retenus pour des syst\`emes d\'eploy\'es,
+classiques et post-quantiques, sont coh\'erents entre eux et avec le cadre
+CLO-CRO-PQ-SOTP. La seconde, formelle, porte sur les r\'esultats math\'ematiques
+effectivement \'etablis et sur la hi\'erarchie de certitude qui les ordonne.
+Ce sont deux tests ind\'ependants, auxquels correspondent deux sous-sections
+distinctes.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre arrive \`a un moment charni\`ere. Jusqu'ici, on lui a donn\'e un
+cadre, des hypoth\`eses et des d\'erivations~; on lui demande maintenant de
+v\'erifier. Deux questions ind\'ependantes lui sont soumises. La
+premi\`ere porte sur la coh\'erence mutuelle des chiffres retenus pour les syst\`emes r\'eels,
+la seconde sur ce qui a \'et\'e
+math\'ematiquement \'etabli et sur le degr\'e de certitude qui s'y attache. Il note qu'on
+attend de lui qu'il tienne les deux ensemble, sans choisir entre elles.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Calibration r\'etrospective}
+\label{subsec:validation_theorique}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Le cadre CLO-CRO-PQ-SOTP a \'et\'e mis en regard des estimations analytiques
+disponibles pour des syst\`emes cryptographiques repr\'esentant des contextes
+institutionnels distincts, \`a savoir ECDSA~\cite{Johnson01,NIST.FIPS.186-5} pour les
+signatures contractuelles, Helios pour le vote \'electronique
+d\'emocratique~\cite{Adida08,Adida09UCL}, les zk-SNARKs Groth16 pour la
+conformit\'e financi\`ere~\cite{Groth16,Garratt15,BCTV14}, ainsi que
+ML-DSA~\cite{Dilithium2022,NIST.FIPS.204} et SLH-DSA~\cite{SPHINCS2022,NIST.FIPS.205}
+pour les signatures post-quantiques
+NIST~\cite{NIST.PQ.Standardization,Chen2016,Alagic2022}~; ML-KEM~\cite{Kyber2022,NIST.FIPS.203},
+m\'ecanisme d'encapsulation de cl\'e, n'est mentionn\'e que pour la tra\c{c}abilit\'e.
+Les m\'etriques $\Conf$, $\Relver$, $\Opp$ utilis\'ees comme r\'ef\'erence ont \'et\'e
+calcul\'ees par analyse param\'etrique \`a partir de sp\'ecifications publi\'ees
+sans mesure aupr\`es d'acteurs institutionnels r\'eels
+(sous-section~\ref{subsubsec:statut_deploiement}). Ces syst\`emes ne sont pas des
+instances du Trilemme (Remarque~\ref{rem:portee_cas_etude}), de sorte que ce qui suit
+rel\`eve d'une calibration illustrative.
+
+\subsubsection{M\'ethodologie}
+\label{subsubsec:methodologie_validation}
+
+\paragraph{Param\`etres institutionnels.}
+Les param\`etres ($\Delta$, $\alpha$, $\beta$, $H(\mathcal{C})$) et, pour les
+syst\`emes post-quantiques, ($\Delta_q$, $\eta_q$) sont ceux de la table unique
+de r\'ef\'erence (tableau~\ref{tab:parametres_reference}). $\Delta$ est rendu
+plausible par la litt\'erature sur la m\'emoire de travail et la rationalit\'e
+born\'ee~\cite{Miller56,Cowan2001,Simon82,Simon1955} et sur l'expertise~\cite{Ericsson95,Chi2006}~;
+$\Delta_q$ est d\'ecompos\'e en $\Delta_q = \Delta + \delta_{\text{enh}} - \delta_{\text{degr}}$.
+Les valeurs ont \'et\'e fix\'ees par calibration r\'etrospective
+(chapitre~\ref{chap:constructions})~; elles ne constituent pas des pr\'edictions
+ind\'ependantes.
+
+\paragraph{Forme de la borne.}
+Pour les syst\`emes post-quantiques, la forme de r\'ef\'erence est la forme
+raffin\'ee de la Remarque~\ref{rem:forme_raffinee_pq}
+(\'equation~\eqref{eq:trilemme_pq_raffine}), qui ne s'applique qu'aux protocoles
+satisfaisant les hypoth\`eses du th\'eor\`eme.
+
+\label{eq:ecart_relatif}
+
+\subsubsection{Syst\`emes classiques}
+\label{subsubsec:resultats_classiques}
+
+Le tableau~\ref{tab:coherence_classiques} rapproche, pour les trois syst\`emes
+classiques, les valeurs calcul\'ees par les heuristiques SOTP du
+chapitre~\ref{chap:constructions} et les produits CLO de la
+section~\ref{sec:derivation_opposabilite}.
+
+\begin{table}[htbp]
+\centering
+\caption{Calibration illustrative~: heuristiques SOTP et produits CLO
+(syst\`emes classiques, $\lambda = 128$)}
+\label{tab:coherence_classiques}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Syst\`eme} & \textbf{Variante} & \textbf{$H(\mathcal{C})$ domaine} &
+\textbf{Valeur SOTP (ch.~\ref{chap:constructions})} & \textbf{Produit CLO ($\Relver$)} \\
+\midrule
+ECDSA signatures & SOTP-Low & 20 & $0{,}205$ & $0{,}273$ \\
+Helios Vote & SOTP-Base & 40 & $0{,}050$ & $0{,}437$ \\
+zk-SNARKs conformit\'e & SOTP-High & 70 & $0{,}037$ & $0{,}572$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Les deux colonnes ne mesurent pas la m\^eme chose. Les valeurs SOTP sont des
+illustrations de l'heuristique de conception de chaque variante~; les produits
+CLO sont calcul\'es avec la fiabilit\'e de v\'erification, \`a l'\'echelle
+op\'erationnelle. La formulation initiale de ce tableau affichait des
+\og pr\'edictions\fg{} ($0{,}205$--$0{,}273$, $0{,}430$, $0{,}568$) et des \'ecarts de
+$0$ \`a $1{,}6\,\%$, obtenus par ajustement des param\`etres sur les produits CLO.
+La pr\'esente formulation ne les reprend pas.
+
+\subsubsection{Syst\`emes post-quantiques}
+\label{subsubsec:resultats_postquantiques}
+
+Le tableau~\ref{tab:coherence_pqc} rappelle les param\`etres post-quantiques
+retenus (tableau~\ref{tab:parametres_reference} et
+section~\ref{sec:estimation_params_quantiques}).
+
+\begin{table}[htbp]
+\centering
+\caption{Param\`etres post-quantiques retenus ($\lambda = 128$, calibration)}
+\label{tab:coherence_pqc}
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Sch\'ema} & $\boldsymbol{\eta_q}$ \textbf{(r\'eel / sc\'enario)} & $\boldsymbol{\Delta_q}$ &
+\textbf{Majoration} & \textbf{Produit illustratif} & \textbf{D\'epass\'ee~?} \\
+\midrule
+ML-DSA-65 & $0$ / $0{,}08$ & 28 & $0{,}225$ & $0{,}35$ & oui \\
+SLH-DSA & $0$ / $0{,}08$ & 25 & $0{,}201$ & $0{,}30$ & oui \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La formulation initiale de ce tableau retenait un autre jeu de valeurs
+($\Delta_q \in [54, 97]$~bits, $\lambda \in \{192, 256\}$) et des r\'egimes
+\og Q-Ready\fg{} et \og Q-Enhanced\fg{} non d\'efinis, distincts de ceux du
+chapitre~\ref{chap:experimentation}. La table unique de r\'ef\'erence les remplace.
+\label{eq:decomposition_delta_q_validation}
+
+\subsubsection{Analyse comparative}
+\label{subsubsec:analyse_comparative_resultats}
+
+Le tableau~\ref{tab:analyse_cro_comparative} d\'etaille les composantes
+individuelles $\Conf$, $\Relver$, $\Opp$.
+
+\begin{table}[htbp]
+\centering
+\caption{Composantes CLO (calibration illustrative)}
+\label{tab:analyse_cro_comparative}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Syst\`eme} & $\Conf$ & $\Relver$ & $\Opp$ & \textbf{Produit CLO} &
+$H(\mathcal{C})$ esp\`ece & $\Delta$ / $\Delta_q$ \\
+ & & & & & \textbf{(bits)} & \textbf{(bits)} \\
+\midrule
+\multicolumn{7}{c}{\textit{Syst\`emes classiques}} \\
+\midrule
+ECDSA Signatures & $0{,}31$ & $0{,}98$ & $0{,}90$ & $\mathbf{0{,}273}$ & 20 & 35 \\
+Helios Vote & $0{,}92$ & $0{,}95$ & $0{,}50$ & $\mathbf{0{,}437}$ & 8 & 56 \\
+zk-SNARKs Conformit\'e & $0{,}89$ & $0{,}96$ & $0{,}67$ & $\mathbf{0{,}572}$ & 11 & 73 \\
+\midrule
+\multicolumn{7}{c}{\textit{Signatures post-quantiques (hypoth\`ese de travail)}} \\
+\midrule
+ML-DSA-65 & n.d. & n.d. & n.d. & $\mathbf{0{,}35}$ & 10{,}5 & 28 \\
+SLH-DSA & n.d. & n.d. & n.d. & $\mathbf{0{,}30}$ & 9{,}0 & 25 \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+\footnotesize
+Les valeurs classiques sont d\'eriv\'ees \`a la
+section~\ref{sec:derivation_opposabilite}~; les $H(\mathcal{C})$ report\'es
+sont ceux du contexte d'esp\`ece (voir la mise en garde de la
+section~\ref{sec:methodologie_calcul}). Pour les standards
+post-quantiques, la d\'ecomposition n'est pas d\'eriv\'ee faute de contexte
+institutionnel document\'e.
+\end{table}
+
+Trois constats ressortent de ce tableau.
+
+\textbf{Constat 1. Anti-corr\'elation $\Conf$--$\Opp$.} ECDSA
+($\Conf = 0{,}31$, $\Opp = 0{,}90$) s'oppose \`a Helios ($\Conf = 0{,}92$,
+$\Opp = 0{,}50$) et aux zk-SNARK ($\Conf = 0{,}89$, $\Opp = 0{,}67$), ce qui signifie que la
+confidentialit\'e et l'opposabilit\'e varient en sens inverse sur ces trois
+syst\`emes. Ce motif est compatible avec l'intuition du Trilemme, sans que trois points
+calibr\'es suffisent \`a l'\'etablir. Il est analys\'e \`a la
+section~\ref{subsec:quatre_patterns}.
+
+\textbf{Constat 2. Pas de plafond commun d\'eductible.} Les produits CLO
+restent inf\'erieurs \`a $0{,}6$, mais ils sont calcul\'es avec $\Relver$~; ils ne se
+comparent pas \`a la borne du Trilemme, qui porte sur $\Relrec$.
+
+\textbf{Constat 3. Les produits post-quantiques illustratifs d\'epassent la
+majoration.} Ils ne sont pas pour autant sup\'erieurs aux produits classiques
+($0{,}30$--$0{,}35$ contre $0{,}273$--$0{,}572$). L'analyse figure \`a la
+section~\ref{sec:comparaison_produits_cro}.
+
+\subsubsection{Port\'ee de la mise en regard}
+\label{subsubsec:implications_concordance}
+
+La mise en regard ne valide pas le cadre. Elle a une implication
+conditionnelle, puisque \emph{si} les param\`etres $\Delta$, $\alpha$, $\beta$,
+$\Delta_q$, $\eta_q$ d'un syst\`eme satisfaisant les hypoth\`eses du th\'eor\`eme
+sont mesur\'es a priori, la forme raffin\'ee de la borne permet d'anticiper le
+compromis avant d\'eploiement. Que des syst\`emes con\c{c}us ind\'ependamment
+pr\'esentent un motif compatible avec le mod\`ele est un indice, que seule la
+validation exp\'erimentale prospective pourra confirmer ou infirmer.
+
+\subsubsection{Pr\'edictions consolid\'ees}
+\label{subsubsec:predictions_consolidees}
+
+Les valeurs attendues du programme exp\'erimental sont report\'ees au
+tableau~\ref{tab:predictions_consolidees}. Elles sont fix\'ees avant toute
+mesure~; les crit\`eres de r\'efutation associ\'es sont ceux du
+tableau~\ref{tab:criteres_refutation}.
+
+\begin{table}[htbp]
+\centering
+\caption{Valeurs attendues du programme exp\'erimental (\`a pr\'e-enregistrer)}
+\label{tab:predictions_consolidees}
+\small
+\begin{tabular}{@{}p{5cm}p{3.5cm}p{2.5cm}@{}}
+\toprule
+\textbf{Grandeur} & \textbf{Valeur attendue} & \textbf{Contribution} \\
+\midrule
+\multicolumn{3}{c}{\textit{Classique (C2)}} \\
+\midrule
+$\hat\Delta = \hat I(V;\Sigma|M,C)$, juges g\'en\'eraux & $\approx 25$ bits & C2 \\
+$\hat\Delta$, r\'egulateurs seniors & $\approx 65$ bits & C2 \\
+$\Opp_{\mathrm{emp}}(\text{Helios})$ & $0{,}50 \pm 0{,}05$ & C2, C4 \\
+\midrule
+\multicolumn{3}{c}{\textit{Post-quantique (C3)}} \\
+\midrule
+$\hat\Delta_q$ (r\'egulateurs form\'es) & $[25, 67]$ bits & C3 \\
+$\hat\eta_q$ (signature lue comme cha\^{\i}ne de bits) & $0$ & C3 \\
+$\hat\eta_q$ (sc\'enario de support quantique simul\'e) & $[0{,}05;\,0{,}15]$ & C3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Crit\`eres de r\'efutation}
+\label{subsubsec:criteres_reussite}
+
+Un th\'eor\`eme ne se \og valide\fg{} pas \`a la majorit\'e, car une seule violation
+de la borne, sur un protocole qui satisfait les hypoth\`eses et avec des
+param\`etres mesur\'es, r\'efute l'une des hypoth\`eses. Les crit\`eres retenus
+sont donc ceux du tableau~\ref{tab:criteres_refutation}, qui portent sur
+chaque hypoth\`ese (extraction born\'ee, admissibilit\'e de l'interpr\`ete,
+richesse des verdicts, perte $\eta_q$) et sur la borne elle-m\^eme. Les crit\`eres
+majoritaires de la formulation initiale (\og la borne n'est pas viol\'ee pour au
+moins 2 des 3 standards\fg{}, \og 4 des 5 pr\'edictions \`a $\pm 20\,\%$\fg{}) ne
+sont pas repris.
+Si les capacit\'es mesur\'ees s'\'ecartent syst\'ematiquement des plages
+attendues, le mod\`ele d'extraction born\'ee devra \^etre r\'evis\'e~; ce
+r\'esultat serait lui-m\^eme instructif pour la cryptographie institutionnelle.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre referme la partie quantitative. Il y a
+trouv\'e des ordres de grandeur coh\'erents entre eux, des d\'epassements de
+borne expliqu\'es par le fait que les syst\`emes \'etudi\'es sortent du champ du
+th\'eor\`eme ainsi que des crit\`eres de r\'efutation fix\'es \`a l'avance.
+
+Sans constituer une preuve ni m\^eme un signe fort, ce dossier est d\'esormais pr\^et \`a
+\^etre test\'e.
+
+La seconde question l'attend maintenant, \`a savoir ce qui a \'et\'e
+formellement \'etabli.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{R\'esultats formels}
+\label{subsec:resultats_formels}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Au-del\`a de la calibration, cette section dresse le bilan du
+corpus th\'eorique constitu\'e aux sections~\ref{sec:clo}--\ref{sec:lean4}.
+Les r\'esultats sont pr\'esent\'es selon leur \'etape dans la progression
+canonique F$\to$B$\to$E$\to$S$\to$C$\to$X,
+puis selon leur niveau de certitude.
+
+\subsubsection{\'Etape F~: les th\'eor\`emes du cadre CLO}
+\label{subsubsec:resultats_etape_F}
+
+Nous rappelons les d\'efinitions \'etablies par la
+section~\ref{sec:clo} et les th\'eor\`emes qui en d\'ecoulent directement.
+
+Le \textbf{th\'eor\`eme des bornes \'el\'ementaires}~(th\'eor\`eme~\ref{thm:bornes_mesures})
+\'etablit que $\Conf, \Relrec, \Opp \in [0,1]$ pour tout protocole CLO, par
+construction des d\'efinitions issues de la th\'eorie de l'information.
+
+Le \textbf{th\'eor\`eme du goulot d'\'etranglement contextuel}~(th\'eor\`eme~\ref{thm:goulot_contexte})
+\'etablit $I(V;\Sigma|C) \leq \min\{H(\Sigma|C),H(V|C)\} \leq \alpha H(\mathcal{C})$, ce qui signifie que
+l'information extractible sur le verdict est born\'ee par la granularit\'e des
+verdicts rapport\'ee au contexte, ind\'ependamment de la puissance de calcul
+de l'interpr\`ete. Si le verdict est une fonction d\'eterministe de $(\Sigma,C)$,
+alors $\Opp = 1$ (Remarque~\ref{rem:verdict_deterministe}).
+
+Le \textbf{th\'eor\`eme de composition s\'equentielle}~(th\'eor\`eme~\ref{thm:composition_sequentielle})
+\'etablit les r\`egles de composition. Le post-traitement pr\'eserve la
+confidentialit\'e et ne peut accro\^itre la fiabilit\'e de reconstruction,
+$\Conf(\mathcal{P}_1 \circ \mathcal{P}_2) \geq \Conf(\mathcal{P}_1)$ et
+$\Relrec(\mathcal{P}_1 \circ \mathcal{P}_2) \leq \Relrec(\mathcal{P}_1)$~; la publication
+conjointe fait l'inverse,
+$\Conf(\mathcal{P}_1 \| \mathcal{P}_2) \leq \min\{\Conf(\mathcal{P}_1),\Conf(\mathcal{P}_2)\}$ et
+$\Relrec(\mathcal{P}_1 \| \mathcal{P}_2) \geq \max\{\Relrec(\mathcal{P}_1),\Relrec(\mathcal{P}_2)\}$.
+Cette formulation pr\'ecise les formulations initiales de ce r\'esultat.
+
+\subsubsection{\'Etape B~: les th\'eor\`emes du Trilemme CRO classique}
+\label{subsubsec:resultats_etape_B}
+
+Nous rappelons les bornes \'etablies par la
+section~\ref{sec:cro_classique}.
+
+Le \textbf{Trilemme CRO conditionnel}
+(Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}) est le r\'esultat
+central. Dans sa forme explicite, avec $\gamma = \alpha H(C) - 1 \geq 1$ :
+\begin{equation}
+\Conf \cdot \Relrec \cdot \Opp \leq \frac{1}{\gamma}\left(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\label{eq:trilemme_cro_resultat_corrige}
+\end{equation}
+et, sous la d\'efinition admissible de l'interpr\`ete
+(D\'efinition~\ref{def:interp_admissible}), la forme raffin\'ee
+\eqref{eq:trilemme_cro_raffine}, qui rend compte du r\'egime \og rare\fg{} o\`u Fano
+limite l'opposabilit\'e et du r\'egime \og riche\fg{} o\`u $\Delta$ la limite
+(Remarque~\ref{rem:activite_delta}).
+Comme $\gamma \geq 1$, on obtient la forme simplifi\'ee
+\begin{equation}
+\Conf \cdot \Relrec \cdot \Opp \leq \frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}
+\label{eq:trilemme_cro_simplifie_corrige}
+\end{equation}
+o\`u $\kappa \geq 0$ est la constante du r\'egime de pr\'eservation de la
+confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$
+(Hypoth\`ese~\ref{ass:regime}).
+
+\begin{remark}[Port\'ee de la borne]
+\label{rem:portee_borne_corrigee}
+La borne~\eqref{eq:trilemme_cro_resultat_corrige} est valide
+sous l'Hypoth\`ese~\ref{ass:regime} (r\'egime de pr\'eservation
+de la confidentialit\'e). Elle est structurellement identique \`a celle
+v\'erifi\'ee m\'ecaniquement dans l'annexe~\ref{chap:annexe_lean4}. La borne
+publi\'ee $\Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$ s'obtient
+comme cas particulier.
+\end{remark}
+
+\subsubsection{\'Etape E~: les th\'eor\`emes du Trilemme CRO post-quantique}
+\label{subsubsec:resultats_etape_E}
+
+Nous rappelons l'extension quantique \'etablie \`a la
+section~\ref{sec:cro_pq}.
+
+Le \textbf{Trilemme CRO post-quantique}
+(Th\'eor\`eme~\ref{thm:trilemme_pq}) g\'en\'eralise la borne classique
+\begin{equation}
+\Conf^q \cdot \Relrec^q \cdot \Opp^q \leq \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa(\Delta_q+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right) \leq \frac{\Delta_q + \eta_q H(C)}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
+\label{eq:trilemme_pq_resultat_corrige}
+\end{equation}
+o\`u $\Delta_q = \Delta + \delta_{\text{enh}} - \delta_{\text{degr}}$
+avec $\delta_{\text{enh}} = 0$ pour la technologie actuelle (voir
+section~\ref{sec:cro_pq}) tandis que $\eta_q = 0$ pour toute preuve qui est une
+cha\^{\i}ne de bits classique.
+
+\begin{remark}[Port\'ee de la borne post-quantique]
+\label{rem:portee_borne_pq_corrigee}
+Le terme $\eta_q H(C)/\lambda$ n'appara\^it pas dans la borne explicite.
+Il est d'ordre $\lambda^{-1}$, de sorte qu'aucun terme en
+$O(\lambda^{-2})$ ne l'absorbe~; il est simplement absent de cette borne. Il figure uniquement dans
+la majoration affaiblie, obtenue en ajoutant une quantit\'e positive,
+o\`u il rend visible le co\^ut s\'emantique du canal. La borne principale
+est donc structurellement identique \`a la borne classique, avec
+$\Delta_q$ \`a la place de $\Delta$, sous
+l'Hypoth\`ese~\ref{ass:regime_quantique} (r\'egime de pr\'eservation de
+la confidentialit\'e quantique).
+\end{remark}
+
+\subsubsection{\'Etape S~: les constructions SOTP}
+\label{subsubsec:resultats_etape_S}
+
+Nous \'etablissons les propri\'et\'es cryptographiques des trois
+constructions, \`a savoir la confidentialit\'e calculatoire sous
+PRG~\cite{GoldreichKrawczyk99,BlumMicali84} et masquage parfait
+de l'engagement ainsi que la fiabilit\'e de v\'erification sous DLog~\cite{Pedersen91} et
+q-PKE~\cite{Groth16,Boneh2008} (Propositions du chapitre~\ref{chap:constructions}
+et annexe~\ref{chap:annexe_gamebased}). Les minorations d'opposabilit\'e et les
+fractions de la borne atteintes (\og $75\,\%$, $50\,\%$, $45\,\%$\fg{} dans la
+formulation initiale) rel\`event d'heuristiques de conception, car elles supposent une extraction du verdict que la preuve seule ne
+garantit pas (Remarques~\ref{rem:facteur_limitant_low},
+\ref{rem:heuristique_sotp_base} et~\ref{rem:heuristique_sotp_high}).
+\label{eq:saturation_resultat}
+
+L'optimalit\'e universelle de la famille SOTP est formul\'ee comme conjecture
+(Conjecture~\ref{conj:optimalite_universelle}). L'argument initial reposait sur
+ces heuristiques et ne distinguait pas fiabilit\'e de reconstruction et fiabilit\'e
+de v\'erification (Remarque~\ref{rem:statut_optimalite}).
+\label{eq:optimalite_resultat}
+
+\subsubsection{\'Etape C~: la formalisation Lean4}
+\label{subsubsec:resultats_etape_C}
+
+Nous v\'erifions m\'ecaniquement le noyau alg\'ebrique du Trilemme
+CRO~(section~\ref{sec:lean4}).
+
+La formalisation Lean4 couvre l'int\'egralit\'e du noyau alg\'ebrique du
+Trilemme, organis\'e en neuf sections, suivies d'un bloc de v\'erification des axiomes~:
+\begin{itemize}
+    \item La constante de Pinsker $c_0 = 1/(2\ln 2)$ et ses propri\'et\'es
+    \item La n\'egligeabilit\'e de $2^{-\lambda}$ via les outils de Mathlib
+    \item Les param\`etres institutionnels et $\gamma = \alpha H(C) - 1$
+    \item La structure \texttt{ProtocolInstance} avec les propri\'et\'es
+          informationnelles (Pinsker, Fano) int\'egr\'ees
+    \item Les hypoth\`eses institutionnelles 1, 2$'$ et 3
+    \item Le Lemme 4 (garantie de confidentialit\'e) et le
+          Th\'eor\`eme 1 en cinq \'etapes
+    \item Le th\'eor\`eme principal asymptotique et les t\'emoins de
+          coh\'erence et de port\'ee
+    \item La classification par r\'egimes institutionnels
+    \item Les extensions (section~\ref{subsec:lean4_extensions}), \`a savoir le verdict
+          d\'eterministe ($\Opp = 1$), la forme raffin\'ee de la borne et sa
+          co\"{\i}ncidence avec Fano lorsque $\Delta \geq \gamma$
+\end{itemize}
+
+La formalisation \'etablit la borne
+\begin{equation}
+\Conf \cdot \Relrec \cdot \Opp \leq \frac{\Delta}{\lambda}
++ \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3} + \varepsilon(\lambda)
+\end{equation}
+enti\`erement v\'erifi\'ee sans \texttt{sorry} ni axiome d\'eclar\'e (seuls les
+axiomes standard \texttt{propext}, \texttt{Classical.choice} et
+\texttt{Quot.sound} apparaissent). Fano et Pinsker, absents de Mathlib, sont
+pos\'es comme propri\'et\'es des instances de protocole~; l'extraction born\'ee et
+le r\'egime de confidentialit\'e sont des hypoth\`eses du th\'eor\`eme. La
+certification porte donc sur la d\'erivation~; les pr\'emisses restent des hypoth\`eses.
+
+Le p\'erim\`etre couvert garantit la correction du noyau alg\'ebrique
+central. Les constructions SOTP compl\`etes et l'extension post-quantique
+constituent des directions de recherche future. Les formulations
+alternatives issues de la certification sont pr\'esent\'ees \`a la
+sous-section~\ref{subsec:lean4_erreurs}.
+
+\subsubsection{Coh\'erence et port\'ee du th\'eor\`eme v\'erifi\'e}
+\label{subsubsec:coherence_portee}
+
+La formalisation Lean4 produit deux t\'emoins qui d\'emontrent la
+non-vacuit\'e et la n\'ecessit\'e des hypoth\`eses du th\'eor\`eme.
+
+\paragraph{T\'emoin de coh\'erence}
+
+Une instance du mod\`ele abstrait v\'erifie simultan\'ement toutes les
+hypoth\`eses avec $\Conf = \Opp = 1$, $\Rel = 1/\lambda$, $I = 0$. Pour cette
+instance~:
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp = \frac{1}{\lambda}
+= \frac{\Delta}{\gamma \lambda}
+\end{equation}
+Cela d\'emontre que les hypoth\`eses du mod\`ele formel sont compatibles et que
+la borne y est atteinte. Ce t\'emoin n'est pas r\'ealisable par un protocole, car
+avec $I = 0$ Fano impose $\Relrec = 2^{-\lambda}$ au lieu de $1/\lambda$. Le mod\`ele
+formel utilise la forme rel\^ach\'ee de Fano, $I \geq \Rel\cdot\lambda - 1$, qui
+autorise ce point (Remarque~\ref{rem:portee_temoin}).
+
+\paragraph{T\'emoin de port\'ee}
+
+Une instance v\'erifie les Hypoth\`eses 1, 2$'$ et 3 avec $\Delta = 0$
+mais s'\'ecarte du r\'egime de confidentialit\'e ($I = \lambda/2 - 1$)~; elle
+pr\'esente :
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp = \frac{1}{4}
+\end{equation}
+constant pour tout $\lambda \geq 64$. Cela d\'emontre que le r\'egime
+$I \leq \kappa/\lambda$ est n\'ecessaire \`a la borne. Le cas limite
+complet est document\'e \`a la sous-section~\ref{subsec:lean4_erreurs}.
+
+\paragraph{Hi\'erarchie de certitude}
+
+Le tableau~\ref{tab:hierarchie_certitude} synth\'etise les r\'esultats
+formels class\'es selon leur niveau de certitude.
+
+\begin{table}[htbp]
+\centering
+\caption{Bilan des r\'esultats formels et couverture Lean4}
+\label{tab:hierarchie_certitude}
+\small
+\begin{tabular}{p{3.2cm}p{3cm}cp{2.8cm}c}
+\toprule
+\textbf{Cat\'egorie} & \textbf{Niveau de certitude} & \textbf{Nb} &
+\textbf{Statut de v\'erification} & \textbf{Couvert. Lean4} \\
+\midrule
+Trilemme (forme raffin\'ee), Lemme~\ref{lem:confidentiality_guarantee}, Proposition~\ref{prop:fondement_extraction} & Prouv\'es sous Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regime} & 3 & Preuves papier & \textbf{Oui} (noyau, annexe~\ref{chap:annexe_lean4}) \\
+Goulot, composition, bornes \'el\'ementaires (Sec.~\ref{sec:clo}) & Prouv\'es (formulations pr\'ecis\'ees) & 3 & Preuves papier & Non (verdict d\'eterministe~: oui) \\
+Trilemme PQ (Sec.~\ref{sec:cro_pq}) & Sous Hypoth\`eses~\ref{ass:extraction_quantique}--\ref{ass:regime_quantique} & 1 & Preuve papier & Non \\
+Propri\'et\'es SOTP ($\Conf$, $\Relver$) & Prouv\'ees sous PRG et DLog (q-PKE pour High) & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Non \\
+Minorations d'opposabilit\'e SOTP, optimalit\'e & Heuristiques / conjecture & --- & Non prouv\'ees & Non \\
+Valeurs num\'eriques des syst\`emes d\'eploy\'es & Calibration illustrative & --- & Non mesur\'ees & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}[P\'erim\`etre de la couverture Lean4]
+\label{rem:perimetre_lean4}
+La formalisation Lean4 (annexe~\ref{chap:annexe_lean4}) couvre le
+noyau alg\'ebrique du Trilemme CRO classique, y compris les
+t\'emoins de coh\'erence et de port\'ee. Les constructions SOTP et
+l'extension post-quantique constituent des directions de recherche
+futures. La colonne
+\og Couverture Lean4 \fg{} rend ce p\'erim\`etre explicite.
+\end{remark}
+
+Cette hi\'erarchie, prouv\'e sous hypoth\`eses / heuristique ou conjectur\'e /
+calibr\'e, vise la transparence \'epist\'emique que recommandent les
+promoteurs de la preuve formelle~\cite{Wiedijk2008,Avigad2014}, puisque chaque
+\'enonc\'e du manuscrit y est rattach\'e \`a un statut explicite.
+
+\subsubsection{Analyse de la contribution du terme $\eta_q \cdot H(C)$}
+\label{subsubsec:analyse_contribution_eta_q}
+
+La borne post-quantique $(\Delta_q + \eta_q \cdot H(C))/\lambda$ agr\`ege
+deux termes d'ordres de grandeur tr\`es diff\'erents. Le
+tableau~\ref{tab:decomposition_borne_pq} en donne la d\'ecomposition
+compl\`ete et la confronte, pour chaque standard NIST~PQC, au produit
+illustratif.
+
+Pour les signatures post-quantiques r\'eelles, $\eta_q = 0$ et ce terme
+dispara\^it. Dans le sc\'enario hypoth\'etique d'un support quantique
+($\eta_q \approx 0{,}08$), il ne repr\'esente que $2$ \`a $5\,\%$ de la
+majoration, de sorte que la capacit\'e d'extraction reste le terme dominant. Les produits
+illustratifs d\'epassent la majoration~; ces syst\`emes ne sont pas des
+instances du th\'eor\`eme (section~\ref{sec:comparaison_produits_cro}).
+
+\begin{remark}[Clarification sur les valeurs num\'eriques des tableaux]
+\label{rem:clarification_section_VI_B}
+Comme le pr\'ecise la Remarque~\ref{rem:portee_cas_etude}, les produits CLO des syst\`emes
+d\'eploy\'es sont calcul\'es avec $\Relver$. Les capacit\'es $\Delta$ qui en sont
+d\'eduites rel\`event d'une calibration illustrative~; le
+Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} ne les implique pas.
+\end{remark}
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre retient trois choses. Les chiffres qu'on lui montre sont des
+calibrations, ce qu'on prend soin de lui dire. Sa capacit\'e $\Delta$ d\'epasse
+d\'esormais le statut de m\'etaphore puisqu'elle dispose d'un estimateur, $\hat I(V;\Sigma|M,C)$,
+ainsi que de crit\`eres de r\'efutation. Enfin, la rigueur formelle a certifi\'e la
+d\'erivation de la borne
+$\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$ en
+disant exactement ce qu'elle suppose.
+Cette explicitation des hypoth\`eses rel\`eve \`a ses yeux de la d\'emarche scientifique elle-m\^eme.
+\end{boiteArbitre}

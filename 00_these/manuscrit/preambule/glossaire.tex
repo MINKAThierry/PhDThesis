@@ -1,0 +1,247 @@
+% ============================================================================
+% GLOSSAIRE DES ACRONYMES ET NOTATIONS
+% Fichier : preambule/glossaire.tex
+% ============================================================================
+
+\chapter*{GLOSSAIRE DES ACRONYMES ET DES NOTATIONS}
+\markboth{Glossaire des acronymes et des notations}{}
+\addcontentsline{toc}{chapter}{Glossaire des acronymes et des notations}
+\thispagestyle{preliminaire}
+\label{chap:glossaire}
+
+\section*{ACRONYMES}
+\subsection*{A-C}
+\begin{sloppypar}
+\begin{description}[style=nextline,leftmargin=2.4cm,font=\normalfont\bfseries]
+\item[AML] Anti-Money Laundering (Lutte contre le blanchiment d'argent)
+\item[Bâle III] Accords de Bâle III
+\item[CEMAC] Communaut\'e \'Economique et Mon\'etaire de l'Afrique Centrale (\textit{Economic and Monetary Community of Central Africa})
+\item[CIC] Calcul des Constructions Inductives (\textit{Calculus of Inductive Constructions}), syst\`eme de type sous-jacent \`a Lean4 et Coq
+\item[CLO] Cryptographic Legal Opposability (Opposabilit\'e L\'egale Cryptographique), cadre th\'eorique de cette th\`ese
+\item[CPTP] Completely Positive Trace-Preserving (Canal quantique compl\`etement positif pr\'eservant la trace)
+\item[CRO] Confidentiality-Reliability-Opposability (Confidentialit\'e-Fiabilit\'e-Opposabilit\'e), trilemme fondamental
+\item[$\mathsf{Conf}$] M\'etrique de confidentialit\'e (\textit{Confidentiality}), voir D\'efinition~\ref{def:confidentialite_clo}
+\end{description}
+
+\subsection*{D-F}
+
+\begin{description}[style=nextline,leftmargin=2cm,font=\normalfont\bfseries]
+\item[DDH] Decisional Diffie-Hellman (Hypoth\`ese de d\'ecision Diffie-Hellman)
+\item[DLog] Discrete Logarithm (Logarithme discret)
+\item[DPI] Data Processing Inequality (In\'egalit\'e du traitement des donn\'ees), $I(X;Z) \leq I(X;Y)$ pour $X \to Y \to Z$
+\item[ECDSA] Elliptic Curve Digital Signature Algorithm (Algorithme de signature num\'erique sur courbe elliptique)
+\item[eIDAS] Electronic IDentification, Authentication and trust Services (Identification \'electronique, authentification et services de confiance), R\`eglement EU 910/2014
+\item[ENSP] \'Ecole Nationale Sup\'erieure Polytechnique (\textit{National Advanced School of Engineering})
+\item[ESIGN] Electronic Signatures in Global and National Commerce Act, loi am\'ericaine de 2000
+\item[FHE] Fully Homomorphic Encryption (Chiffrement totalement homomorphe)
+\item[FIPS] Federal Information Processing Standards, standards f\'ed\'eraux am\'ericains (FIPS 203, 204, 205 pour PQC)
+\item[FLP] Fischer-Lynch-Paterson (th\'eor\`eme d'impossibilit\'e du consensus asynchrone)
+\end{description}
+
+\subsection*{G-L}
+
+\begin{description}[style=nextline,leftmargin=2cm,font=\normalfont\bfseries]
+\item[GDPR] General Data Protection Regulation (R\`eglement g\'en\'eral sur la protection des donn\'ees), RGPD, R\`eglement EU 2016/679
+\item[GMR] Goldwasser-Micali-Rackoff (auteurs originaux des preuves \`a divulgation nulle)
+\item[Groth16] Sch\'ema zk-SNARK de Groth (2016), preuves succinctes de 128 octets (BN254, forme compress\'ee) ou 192 octets (BLS12-381)
+\item[IACR] International Association for Cryptologic Research
+\item[IND-CCA2] Indistinguishability under Adaptive Chosen Ciphertext Attack (Indistinguabilit\'e sous attaque adaptative \`a texte chiffr\'e choisi)
+\item[IND-CPA] Indistinguishability under Chosen Plaintext Attack (Indistinguabilit\'e sous attaque \`a texte clair choisi)
+\item[JL] Johnson-Lindenstrauss (transformation de compression dimensionnelle)
+\item[KEM] Key Encapsulation Mechanism (M\'ecanisme d'encapsulation de cl\'e)
+\item[KL] Kullback-Leibler (divergence de), $D_{\mathrm{KL}}(P\|Q) = \sum_x P(x)\log\frac{P(x)}{Q(x)}$
+\item[LIMSI] Laboratoire d'Ing\'enierie Math\'ematique et Syst\`emes d'Information, laboratoire de th\`ese
+\item[LWE] Learning With Errors (Apprentissage avec erreurs), probl\`eme cryptographique post-quantique
+\end{description}
+
+\subsection*{M-P}
+
+\begin{description}[style=nextline,leftmargin=2cm,font=\normalfont\bfseries]
+\item[MAP] Maximum A Posteriori (Estimateur du maximum a posteriori)
+\item[Mathlib] Biblioth\`eque math\'ematique de Lean4
+\item[ML-DSA] Module-Lattice-Based Digital Signature Algorithm, FIPS 204, bas\'e sur Dilithium
+\item[ML-KEM] Module-Lattice-Based Key Encapsulation Mechanism, FIPS 203, bas\'e sur Kyber
+\item[MPC] Multi-Party Computation (Calcul multi-parties)
+\item[NIST] National Institute of Standards and Technology (Institut national des normes et de la technologie)
+\item[NISQ] Noisy Intermediate-Scale Quantum (Appareils quantiques interm\'ediaires bruit\'es)
+\item[NIZK] Non-Interactive Zero-Knowledge (Preuve à divulgation nulle non-interactive)
+\item[OTP] One-Time Pad (Masque jetable), chiffrement parfait de Shannon
+\item[$\mathsf{Opp}$] M\'etrique d'opposabilit\'e (\textit{Opposability}), voir D\'efinition~\ref{def:opposabilite_clo}
+\item[Pedersen] Sch\'ema de commitment de Pedersen (1991), $g^m h^r$ parfaitement cachant
+\item[PKE] Public-Key Encryption (Chiffrement \`a cl\'e publique)
+\item[PKI] Public Key Infrastructure (Infrastructure \`a cl\'es publiques)
+\item[Poseidon] Fonction de hachage optimis\'ee pour SNARKs
+\item[POVM] Positive Operator-Valued Measure (Mesure \`a valeur op\'erateur positif), mesure quantique g\'en\'eralis\'ee
+\item[PPT] Probabilistic Polynomial Time (Temps polynomial probabiliste)
+\item[PQC] Post-Quantum Cryptography (Cryptographie post-quantique)
+\item[PRG] Pseudorandom Generator (G\'en\'erateur pseudoal\'eatoire)
+\end{description}
+
+\subsection*{Q-S}
+
+\begin{description}[style=nextline,leftmargin=2.5cm,font=\normalfont\bfseries]
+\item[QPT] Quantum Polynomial Time (Temps polynomial quantique), adversaire quantique born\'e
+\item[$\mathsf{Rel}$] M\'etrique de fiabilit\'e (\textit{Reliability}), voir D\'efinition~\ref{def:fiabilite_clo}
+\item[RGPD] R\`eglement G\'en\'eral sur la Protection des Donn\'ees, voir GDPR
+\item[RSA] Rivest-Shamir-Adleman (algorithme de chiffrement)
+\item[SLH-DSA] Stateless Hash-Based Digital Signature Algorithm, FIPS 205, bas\'e sur SPHINCS+
+\item[SNARK] Succinct Non-interactive ARgument of Knowledge (Argument succinct non-interactif de connaissance)
+\item[SOTP] Semantic One-Time Pad (Masque jetable s\'emantique), famille de protocoles de cette th\`ese
+\item[SOTP-Base] SOTP pour r\'egime de transition ($H^*(\lambda) \leq H(C) \leq \lambda/\log\lambda$)
+\item[SOTP-High] SOTP pour r\'egime \`a contexte riche ($H(C) > \lambda/\log\lambda$)
+\item[SOTP-Low] SOTP pour r\'egime \`a contexte rare ($H(C) < H^*(\lambda)$)
+\item[STARK] Scalable Transparent ARgument of Knowledge (Argument transparent \'evolutif de connaissance)
+\end{description}
+
+\subsection*{T-Z}
+
+\begin{description}[style=nextline,leftmargin=2cm,font=\normalfont\bfseries]
+\item[TV] Total Variation (Distance de variation totale), $\mathsf{TV}(P,Q) = \frac{1}{2}\sum_x|P(x)-Q(x)|$
+\item[UY1] Universit\'e de Yaound\'e I (\textit{University of Yaound\'e I})
+\item[ZK] Zero-Knowledge (\`a divulgation nulle de connaissance)
+\item[zk-SNARK] Zero-Knowledge Succinct Non-interactive ARgument of Knowledge (Argument succinct non-interactif de connaissance \`a divulgation nulle)
+\end{description}
+
+% ============================================================================
+% SYMBOLES MATHÉMATIQUES
+% ============================================================================
+
+\newpage
+\section*{SYMBOLES MATH\'EMATIQUES ET NOTATIONS}
+
+\subsection*{Param\`etres institutionnels}
+
+\begin{description}[style=nextline,leftmargin=1.6cm,font=\normalfont\bfseries]
+\item[$\Delta$] Capacit\'e d'extraction institutionnelle (bits), $I(V;\Sigma|M,C) \leq \Delta$~; quelques dizaines de bits en calibration illustrative
+\item[$\Delta_q$] Capacit\'e d'extraction institutionnelle adapt\'ee au quantum, $\Delta_q = \Delta + \delta_{\mathrm{enh}} - \delta_{\mathrm{degr}}$
+\item[$\alpha$] Granularit\'e des verdicts institutionnels, $\log_2|\mathcal{V}_\lambda| \leq \alpha H(C)$
+\item[$\beta$] Constante de r\'egularit\'e du protocole, $\mathrm{KL}(P_{\Sigma|m_0,c}\|P_{\Sigma|m_1,c}) \leq \beta \cdot I(M;\Sigma|C)$
+\item[$\eta_q$] Coefficient de perte d'interpr\'etabilit\'e quantique, $I(V;\Lambda(\Sigma)|C) \geq I(V;\Sigma|C) - \eta_q H(C)$~; $\eta_q = 0$ pour une preuve qui est une cha\^{\i}ne de bits
+\item[$H(C)$] Entropie du contexte institutionnel, $H(C) = H(L) + H(T|L) + H(R|L,T)$
+\end{description}
+
+\subsection*{Param\`etres cryptographiques}
+
+\begin{description}[style=nextline,leftmargin=1.5cm,font=\normalfont\bfseries]
+\item[$\lambda$] Param\`etre de s\'ecurit\'e cryptographique, typiquement $\lambda \in \{128, 192, 256\}$
+\item[$\mathsf{negl}(\lambda)$] Fonction n\'egligeable en $\lambda$, $\forall c>0, \exists \lambda_0, \forall \lambda > \lambda_0: |f(\lambda)| < \lambda^{-c}$
+\item[$c_0$] Constante de Pinsker, $c_0 = 1/(2\ln 2) \approx 0{,}721$ (classique) ou $c_0 \approx 0{,}3466$ (forme alternative)
+\item[$H^*(\lambda)$] Crit\`ere de construction SOTP, $H^*(\lambda) = \sqrt{\lambda}$ (taille de l'encodage direct du contexte)
+\item[$H^\sharp$] Seuil de la forme raffin\'ee, $H^\sharp = (\Delta + 1 + \kappa/\lambda)/\alpha$~; au-del\`a de ce seuil, la capacit\'e institutionnelle est contraignante (Remarque~\ref{rem:activite_delta})
+\item[$H^\sharp_q$] Seuil quantique, $H^\sharp_q = (\Delta_q + \kappa/\lambda)/(\theta_q\alpha_q)$ (Remarque~\ref{rem:forme_raffinee_pq})
+\end{description}
+
+\subsection*{M\'etriques CRO}
+
+\begin{description}[style=nextline,leftmargin=1.7cm,font=\normalfont\bfseries]
+\item[$\mathsf{Conf}(\mathcal{P})$] Confidentialit\'e du protocole $\mathcal{P}$, $\mathsf{Conf} = 1 - \max_{m_0,m_1,c}\mathsf{TV}(P_{\Sigma|m_0,c}, P_{\Sigma|m_1,c})$
+\item[$\Relrec(\mathcal{P})$] Fiabilit\'e de reconstruction, $\Relrec = 1 - \min_{\hat M}\Pr[\hat{M}(\Sigma,C) \neq M]$ (contr\^ol\'ee par Fano)
+\item[$\Relver(\mathcal{P})$] Fiabilit\'e de v\'erification, compl\'etude et solidit\'e du v\'erificateur
+\item[$\mathsf{Opp}(\mathcal{P})$] Opposabilit\'e du protocole $\mathcal{P}$, $\mathsf{Opp} = I(V;\Sigma|C)/H(V|C)$
+\item[$\mathsf{Conf}^q$] Confidentialit\'e quantique, $1 - \max \tfrac12\|\rho_{m_0,c}-\rho_{m_1,c}\|_1$ (statistique)
+\item[$\mathsf{Rel}^q$] Fiabilit\'e quantique, recouvrement optimal via POVM
+\item[$\mathsf{Opp}^q$] Opposabilit\'e quantique, information extraite par un interpr\`ete admissible, rapport\'ee \`a $H(V|C)$
+\end{description}
+
+\subsection*{Variables al\'eatoires et espaces}
+
+\begin{description}[style=nextline,leftmargin=1cm,font=\normalfont\bfseries]
+\item[$M$] Variable al\'eatoire message, espace $\mathcal{M}_\lambda$ avec $|\mathcal{M}_\lambda| = 2^\lambda$
+\item[$\Sigma$] Variable al\'eatoire preuve cryptographique, espace $\Sigma_\lambda$
+\item[$C$] Variable al\'eatoire contexte institutionnel, espace $\mathcal{C}_\lambda$ avec distribution $P_C$
+\item[$V$] Variable al\'eatoire verdict institutionnel, $V = \mathsf{Interpret}(\Sigma, C)$
+\item[$\mathcal{Y}_\lambda$] Espace des verdicts, $|\mathcal{Y}_\lambda| \leq 2^{\alpha H(C)}$
+\item[$\rho$] \'Etat quantique (matrice de densit\'e)
+\item[$\Lambda$] Canal quantique (application CPTP)
+\end{description}
+
+\subsection*{Mesures d'information}
+
+\begin{description}[style=nextline,leftmargin=2cm,font=\normalfont\bfseries]
+\item[$H(X)$] Entropie de Shannon, $H(X) = -\sum_x P_X(x)\log_2 P_X(x)$
+\item[$H(X|Y)$] Entropie conditionnelle, $H(X|Y) = H(X,Y) - H(Y)$
+\item[$I(X;Y)$] Information mutuelle, $I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X)$
+\item[$I(X;Y|Z)$] Information mutuelle conditionnelle, $I(X;Y|Z) = H(X|Z) - H(X|Y,Z)$
+\item[$D_{\mathrm{KL}}(P\|Q)$] Divergence de Kullback-Leibler, $D_{\mathrm{KL}}(P\|Q) = \sum_x P(x)\log\frac{P(x)}{Q(x)}$
+\item[$\mathsf{TV}(P,Q)$] Distance de variation totale, $\mathsf{TV}(P,Q) = \frac{1}{2}\sum_x|P(x)-Q(x)|$
+\item[$S(\rho)$] Entropie de von Neumann, $S(\rho) = -\mathrm{Tr}(\rho\log\rho)$
+\item[$\chi$] Information de Holevo, $\chi = S(\bar{\rho}) - \sum_x P_X(x)S(\rho_x)$
+\item[$I_{\mathrm{acc}}$] Information accessible, supr\'emum sur toutes les POVMs
+\end{description}
+
+\subsection*{Notions quantiques}
+
+\begin{description}[style=nextline,leftmargin=1.6cm,font=\normalfont\bfseries]
+\item[$\|\rho - \sigma\|_1$] Distance de trace quantique, $\mathrm{Tr}\sqrt{(\rho-\sigma)^\dagger(\rho-\sigma)}$
+\item[$F(\rho,\sigma)$] Fid\'elit\'e quantique, $F(\rho,\sigma) = \|\sqrt{\rho}\sqrt{\sigma}\|_1$
+\item[$\|\Lambda\|_\diamond$] Norme diamant, mesure de distance entre canaux quantiques
+\item[$\Lambda_{\mathrm{dep}}$] Canal d\'epolarisant, $\Lambda_{\mathrm{dep}}(\rho) = (1-p)\rho + \frac{p}{d}I_d$
+\item[$\Lambda_{\mathrm{AD}}$] Canal d'amortissement d'amplitude (amplitude damping)
+\item[$\Lambda_{\mathrm{deph}}$] Canal de d\'ephasing (d\'ecoh\'erence de phase)
+\end{description}
+
+\subsection*{Formalisation Lean4}
+
+\begin{description}[style=nextline,leftmargin=4.3cm,font=\normalfont\bfseries]
+\item[\texttt{ProtocolFamily}] Structure Lean4 repr\'esentant une famille de protocoles index\'ee par $\lambda$
+\item[\texttt{ProtocolInstance}] Structure Lean4 pour une instance \`a $\lambda$ fix\'e
+\item[\texttt{InstitutionalParams}] Structure Lean4 pour les param\`etres $(\Delta, \alpha, \beta, H)$
+\item[\texttt{Negligible}] Pr\'edicat Lean4 pour les fonctions n\'egligeables
+\item[\texttt{atTop}] Filtre Lean4 pour les comportements asymptotiques
+%\item[Quasi-optimalit\'e] Hypoth\`ese $I(M;\Sigma|C) \leq 1$ pour $\lambda$ suffisamment grand
+\end{description}
+
+% ============================================================================
+% CONCEPTS CLÉS
+% ============================================================================
+
+\newpage
+\section*{CONCEPTS CL\'ES DE LA CRYPTOGRAPHIE INSTITUTIONNELLE}
+
+\subsection*{Paradigme architectural}
+
+\begin{description}[style=nextline,leftmargin=2.5cm,font=\normalfont\bfseries]
+\item[Gold Layer] Couche de confidentialit\'e, masquage cryptographique via PRG ou ZK-proofs
+\item[Iron Layer] Couche de fiabilit\'e, commitments assurant le binding
+\item[Clay Layer] Couche d'opposabilit\'e, encodage pr\'eservant le contexte pour l'extraction institutionnelle
+\end{description}
+
+\subsection*{Th\'eor\`emes fondamentaux}
+
+%\subsection*{Th\'eor\`emes fondamentaux}
+
+\begin{description}[style=nextline,leftmargin=6cm,font=\normalfont\bfseries]
+\item[Trilemme CRO] $\mathsf{Conf} \cdot \Relrec \cdot \mathsf{Opp} \leq \frac{1}{\gamma}\bigl(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\bigr)$, $\gamma = \alpha H(\mathcal{C}) - 1$~; forme raffin\'ee $\frac{1+\kappa/\lambda}{\lambda}\min\{1, \frac{\kappa/\lambda+\Delta}{\gamma}\}$
+\item[Trilemme CRO-PQ] $\mathsf{Conf}^q \cdot \Relrec^q \cdot \mathsf{Opp}^q \leq \frac{1}{\gamma_q}\bigl(\frac{\Delta_q}{\lambda} + \dots\bigr)$~; majoration affaiblie $(\Delta_q + \eta_q H(C))/\lambda + O(\lambda^{-2})$
+\item[Goulot d'\'etranglement contextuel] $I(V;\Sigma|C) \leq \min\{H(\Sigma|C), H(V|C)\} \leq \alpha H(\mathcal{C})$
+\item[In\'egalit\'e de Fano] $H(X|\hat{X}) \leq h(p_e) + p_e\log(|\mathcal{X}|-1)$
+\item[In\'egalit\'e de Pinsker] $\mathsf{TV}(P,Q)^2 \leq c_0 \cdot D_{\mathrm{KL}}(P\|Q)$
+\item[In\'egalit\'e de Gentle Measurement] $\|\rho - \rho'\|_1 \leq 2\sqrt{\delta}$ pour mesure \`a probabilit\'e $\geq 1-\delta$
+\item[Fuchs-van de Graaf] $1 - \frac{1}{2}\|\rho-\sigma\|_1 \leq F(\rho,\sigma) \leq \sqrt{1 - \frac{1}{4}\|\rho-\sigma\|_1^2}$
+\end{description}
+
+\subsection*{R\'egimes op\'erationnels}
+
+\begin{description}[style=nextline,leftmargin=4cm,font=\normalfont\bfseries]
+\item[Low-Capacity] $\Delta < 0{,}1\lambda$, protocoles transparents prioritaires
+\item[Mid-Capacity] $0{,}1\lambda \leq \Delta \leq 0{,}5\lambda$, compromis \'equilibr\'es possibles
+\item[High-Capacity] $\Delta > 0{,}5\lambda$, protocoles pr\'eservant la confidentialit\'e possibles
+\item[R\'egime rare] $H(C) \leq H^\sharp$ (ou $H^\sharp_q$), l'in\'egalit\'e de Fano limite le produit
+\item[R\'egime riche] $H(C) > H^\sharp$ (ou $H^\sharp_q$), la capacit\'e $\Delta$ (ou $\Delta_q$) limite le produit
+\end{description}
+
+\subsection*{Syst\`emes analys\'es}
+
+\begin{description}[style=nextline,leftmargin=2.5cm,font=\normalfont\bfseries]
+\item[Helios] Protocole de vote \`a v\'erification de bout en bout, $\mathsf{Conf} \approx 0{,}92$, $\Relver \approx 0{,}95$, $\mathsf{Opp} \approx 0{,}50$ (calibration)
+\item[zk-SNARKs] Preuves succinctes de conformit\'e, $\mathsf{Conf} \approx 0{,}89$, $\Relver \approx 0{,}96$, $\mathsf{Opp} \approx 0{,}67$ (calibration)
+\item[ECDSA] Signatures num\'eriques sur courbes elliptiques, $\mathsf{Conf} \approx 0{,}31$, $\Relver \approx 0{,}98$, $\mathsf{Opp} \approx 0{,}90$ (calibration)
+\item[Dilithium] Signature PQC bas\'ee sur les r\'eseaux, standardis\'ee sous le nom ML-DSA (FIPS 204)
+\item[Kyber] KEM PQC bas\'e sur les r\'eseaux, standardis\'e sous le nom ML-KEM (FIPS 203)~; hors du champ du Trilemme
+\item[SPHINCS+] Signature PQC bas\'ee sur les hachages (FIPS 205)
+\item[Falcon] Signature PQC bas\'ee sur NTRU (standardisation en cours)
+\end{description}
+\end{sloppypar}
+% ============================================================================
+% FIN GLOSSAIRE
+% ============================================================================

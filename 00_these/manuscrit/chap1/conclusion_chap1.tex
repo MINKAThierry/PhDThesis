@@ -1,0 +1,58 @@
+% ============================================================================
+% CONCLUSION DU CHAPITRE 1 
+% source : partie1/conclusion_partie1.tex
+% ============================================================================
+
+\section{CONCLUSION DU CHAPITRE~\ref{chap:contexte}}
+\label{sec:conclusion_contexte}
+
+\begin{sloppypar}
+Le chapitre~\ref{chap:contexte} a pos\'e progressivement les fondements sur lesquels
+s'appuie l'ensemble de la th\`ese. Il en ressort trois acquis.
+
+Le premier acquis, de nature illustrative, porte sur trois syst\`emes cryptographiques d\'eploy\'es,
+\`a savoir Helios pour le vote \'electronique, les zk-SNARKs pour la conformit\'e
+financi\`ere et ECDSA pour la signature contractuelle. Selon des
+estimations param\'etriques sur l'\'echelle op\'erationnelle CLO, leur produit
+$\Conf\cdot\Relver\cdot\Opp$ est compris entre $0{,}273$ et $0{,}572$. Ce motif
+laisse entrevoir, sans la d\'emontrer, une tension structurelle entre deux paradigmes
+de v\'erification.
+Le paradigme cryptographique mesure la r\'esistance aux attaques, alors que le
+paradigme institutionnel requiert l'intelligibilit\'e par des non-experts,
+des traces exploitables pour un audit r\'etrospectif ainsi qu'une responsabilit\'e
+attribuable en cas de d\'efaillance. Aucune m\'etrique formelle n'avait encore
+\'etabli les limites de ce compromis.
+
+Le deuxi\`eme acquis est conceptuel. L'opposabilit\'e
+$\Opp = I(V;\Sigma|C)/H(V|C)$ entre comme troisi\`eme dimension
+cryptographique aux c\^ot\'es de la confidentialit\'e et de la
+fiabilit\'e. Deux arch\'etypes s'en d\'egagent, les syst\`emes \`a
+haute confidentialit\'e (Helios, zk-SNARKs, produits $0{,}437$ et
+$0{,}572$) s'opposant aux syst\`emes \`a haute opposabilit\'e (ECDSA,
+produit $0{,}273$). L'\'equilibre hypoth\'etique
+$\Conf \approx \Rel \approx \Opp \approx 0{,}8$ n'est approch\'e par aucune
+des trois estimations. Cette d\'efinition transforme
+l'interpr\'etabilit\'e institutionnelle d'une contrainte externe
+subie en une propri\'et\'e formelle que l'on peut mesurer et optimiser.
+
+Le troisi\`eme est programmatique. La cryptographie th\'eorique
+formalise $\Conf$ et $\Rel$ via des jeux de s\'ecurit\'e mais ignore
+$\Opp$~; la s\'ecurit\'e utilisable analyse l'utilisabilit\'e
+qualitativement sans formalisation math\'ematique~; l'informatique
+juridique raisonne sur l'admissibilit\'e de la preuve num\'erique
+sans m\'etriques quantitatives. Les six objectifs de recherche
+Obj~\ref{obj:obj1_unification} \`a Obj~\ref{obj:obj6_experimentation} d\'eclinent
+le paradoxe de l'authenticit\'e invisible en probl\`emes formels
+pr\'ecis, chacun associ\'e \`a une contribution et \`a une \'etape
+de la progression canonique
+\textbf{F}$\to$\textbf{B}$\to$\textbf{E}$\to$\textbf{S}$\to$\textbf{C}$\to$\textbf{X},
+comblant ainsi le cloisonnement entre ces trois corpus.
+
+Le chapitre~\ref{chap:cadre_formel} prend le relais. Il dispose d\'esormais
+d'un vocabulaire fix\'e, d'une probl\'ematique formul\'ee avec pr\'ecision
+et d'exemples calibr\'es. La mesure de $\Conf$, $\Rel$ et $\Opp$ remplace le d\'ebat qualitatif entre s\'ecurit\'e et transparence et transforme des choix de conception en
+probl\`emes d'optimisation sous contraintes, susceptibles de r\'eponses
+pr\'ecises. Il peut d\'esormais engager les six \'etapes du programme,
+de la formalisation \`a l'exp\'erimentation.
+\end{sloppypar}
+

@@ -1,0 +1,779 @@
+% ============================================================================
+% CHAPITRE 1 — CONTEXTE, \'ETAT DE L'ART ET PROBL\'EMATIQUE
+% Section 1.3 : \'Etat de l'art
+% source : partie1/etat_art.tex
+% ============================================================================
+
+\section{\'ETAT DE L'ART}
+\label{sec:etat_art}
+\begin{sloppypar}
+La cryptographie institutionnelle ne peut \^etre formalis\'ee qu'en r\'eunissant six corpus th\'eoriques d'ordinaire s\'epar\'es, \`a savoir la th\'eorie de l'information classique~\cite{Shannon48,Shannon49,CoverThomas06}, la th\'eorie de l'information
+quantique~\cite{NielsenChuang2010,Wilde2017}, les primitives cryptographiques d'obscurcissement~\cite{Pedersen91,Groth16}, les
+d\'efinitions pr\'eliminaires du cadre CRO, les trilemmes d'impossibilit\'e~\cite{Arrow50,Brewer00,FLP85} ainsi que la v\'erification formelle~\cite{moura2015lean,Lean4,Coq,Isabelle}. Nous les parcourons ici dans le but de \emph{pr\'eparer des blocs directement utilisables}. Chaque section ne retient donc que les r\'esultats dont les sections~\ref{sec:clo}, \ref{sec:cro_classique},
+\ref{sec:cro_pq}, \ref{sec:sotp_construction} et~\ref{sec:lean4}
+auront besoin, en indiquant le r\^ole exact qu'ils jouent dans la d\'emonstration.
+
+L'ordre suivi reprend la logique annonc\'ee au paragraphe~\ref{par:progression_FBESCX}, qui structure l'ensemble de la th\`ese. Les
+sous-sections~\ref{subsec:fondements_info}, \ref{subsec:fondements_info_quantique}
+et~\ref{subsec:primitives_crypto} rassemblent les outils n\'ecessaires pour
+d\'efinir les m\'etriques (\textbf{F}). La sous-section~\ref{subsec:trilemmes}
+examine ensuite les paradigmes d'impossibilit\'e conditionnelle dont s'inspireront
+l'\'etablissement des bornes (\textbf{B}) puis leur extension
+post-quantique (\textbf{E}). La sous-section~\ref{subsec:definitions_preliminaires_cro} fixe le
+vocabulaire formel dans lequel seront \'enonc\'ees les constructions con\c{c}ues
+pour approcher les bornes (\textbf{S}), avant que la sous-section~\ref{subsec:verification_formelle}
+ne pr\'esente l'infrastructure de certification (\textbf{C}). Les fondements
+cognitifs de la sous-section~\ref{subsec:fondements_cognitifs} motivent enfin
+l'hypoth\`ese de travail sur la capacit\'e $\Delta$, que le programme
+exp\'erimental devra mesurer (\textbf{X}).
+
+Deux pr\'ecisions de m\'ethode doivent \^etre apport\'ees d\`es \`a pr\'esent. En premier lieu, les primitives de la
+cryptographie institutionnelle sont celles de la cryptographie standard~\cite{Goldreich01,DiffieHellman76}.
+Ce qui la distingue des sous-disciplines existantes tient \`a son \emph{objectif}, qui consiste \`a quantifier et \`a optimiser l'utilisabilit\'e
+institutionnelle des garanties cryptographiques, en traitant notamment
+l'\emph{opposabilit\'e} comme une propri\'et\'e de premi\`ere classe. En second lieu,
+les trois m\'etriques ($\Conf$~\ref{def:confidentialite_clo}, $\Rel$~\ref{def:fiabilite_clo}, $\Opp$~\ref{def:opposabilite_clo}) seront d\'efinies ici dans
+leur formulation issue de la th\'eorie de l'information, qui autorise le raisonnement
+asymptotique. Leurs \'equivalents computationnels, \'etablis au moyen de jeux de
+s\'ecurit\'e~\cite{GoldwasserMicali84,GMR88}, sont trait\'es \`a la section~\ref{sec:cro_classique}.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre ne dispose pas encore d'un langage pour décrire ce qu'il vit. Ce chapitre
+lui en fournit les éléments, avec l'entropie pour mesurer ce qu'une preuve révèle,
+l'inégalité de Fano pour borner ce qu'un interprète peut
+récupérer d'un signal bruité, ou encore les trilemmes CAP et FLP qui lui montrent que son incapacité s'apparente à
+d'autres impossibilités déjà connues. Il ignore encore que son cas admet une borne quantitative,
+ce que le chapitre suivant lui apprendra.
+\end{boiteArbitre}
+
+% ----------------------------------------------------------------------------
+\subsection{Fondements en th\'eorie de l'information classique}
+\label{subsec:fondements_info}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+Nous avons retenu l'entropie, l'information
+mutuelle et les in\'egalit\'es classiques de Shannon~\cite{Shannon48,Shannon49} afin
+de quantifier confidentialit\'e et opposabilit\'e dans un m\^eme formalisme.
+Les objets d\'efinis ci-apr\`es interviennent dans chacune des preuves des chapitres~\ref{chap:cadre_formel} et~\ref{chap:constructions}.
+
+\subsubsection{Entropie et information mutuelle}
+\label{subsubsec:entropie_info_mutuelle}
+
+L'entropie de Shannon d'une variable al\'eatoire discr\`ete $X$ sur alphabet
+$\mathcal{X}$ est d\'efinie par~\cite{Shannon48,CoverThomas06,Fano61}
+\begin{equation}
+H(X) = -\sum_{x \in \mathcal{X}} P(x)\log_2 P(x).
+\label{eq:entropie_shannon}
+\end{equation}
+Elle mesure l'incertitude r\'esiduelle sur $X$ avant toute observation.
+L'information mutuelle conditionnelle
+\begin{equation}
+I(X;Y|Z) = H(X|Z) - H(X|Y,Z)
+\label{eq:mi_conditionnelle}
+\end{equation}
+d\'ecrit la r\'eduction d'incertitude sur $X$ apport\'ee par $Y$, une fois $Z$
+connu. L'opposabilit\'e $\Opp$ sera d\'efinie \`a partir de cette quantit\'e, plus adapt\'ee que l'entropie brute~\cite{Wyner75,WynerZiv76}.
+
+\subsubsection{Distances et divergences}
+\label{subsubsec:distances_divergences}
+
+La distance de variation totale entre deux distributions $P$ et $Q$, donn\'ee par
+\begin{equation}
+\TV(P,Q) = \tfrac{1}{2}\sum_x |P(x) - Q(x)|
+\label{eq:tv_distance}
+\end{equation}
+quantifie la distinguabilit\'e au sens du pire adversaire d\'eterministe~\cite{CoverThomas06}. La
+divergence de Kullback-Leibler, d\'efinie par
+\begin{equation}
+\KL(P \| Q) = \sum_x P(x)\log_2\frac{P(x)}{Q(x)}
+\label{eq:kl_divergence}
+\end{equation}
+majore $\TV$ via l'in\'egalit\'e de Pinsker~\cite{Pinsker1964}, que nous utiliserons pour borner
+la confidentialit\'e.
+
+\subsubsection{L'in\'egalit\'e de Pinsker}
+\label{subsubsec:pinsker_classique}
+
+\begin{lemma}[In\'egalit\'e de Pinsker~\cite{Pinsker1964,CoverThomas06}]\label{lem:pinsker}
+Pour toutes distributions $P$ et $Q$ sur un m\^eme alphabet fini, on a
+\begin{equation}
+\TV(P,Q)^2 \leq c_0 \cdot \KL(P \| Q),
+\qquad c_0 = \frac{1}{2\ln 2} \approx 0{,}721.
+\label{eq:pinsker}
+\end{equation}
+\end{lemma}
+
+\noindent Dans la preuve du Trilemme CRO \`a la section~\ref{sec:cro_classique}, cette in\'egalit\'e relie la
+confidentialit\'e $\Conf = 1 - \max_{m_0,m_1} \TV(P_{\Sigma|m_0},
+P_{\Sigma|m_1})$ \`a l'information mutuelle $I(M;\Sigma|C)$ via
+l'hypoth\`ese de $\beta$-r\'egularit\'e. Elle permet ainsi de convertir un
+\'ecart entre distributions en une borne sur le produit $\Conf \cdot \Rel \cdot
+\Opp$~\cite{Tsybakov2009}.
+
+\subsubsection{Le lemme de Fano}
+\label{subsubsec:fano_classique}
+
+\begin{lemma}[Lemme de Fano~\cite{Fano61,CoverThomas06}]\label{lem:fano}
+Soit $X$ une variable al\'eatoire sur un alphabet fini de cardinalit\'e $k$,
+$\hat{X}$ un estimateur et $p_e = \Pr[X \neq \hat{X}]$. On a alors
+\begin{equation}
+H(X|Y) \leq h(p_e) + p_e \log_2(k-1),
+\label{eq:fano_inequality}
+\end{equation}
+o\`u $h(p) = -p\log_2 p - (1-p)\log_2(1-p)$ est la fonction d'entropie
+binaire.
+\end{lemma}
+
+Une fiabilit\'e \'elev\'ee (faible $p_e$) implique donc une information mutuelle \'elev\'ee.
+La contrapos\'ee est tout aussi utile, puisque si $H(X|Y)$ reste grande, aucun
+estimateur ne peut retrouver $X$ \`a partir de $Y$ avec pr\'ecision~\cite{HanVerdu}. Dans notre
+cadre, il en d\'ecoule directement pour le Trilemme CRO l'in\'egalit\'e
+\begin{equation}
+1 - \Rel \;\geq\; \frac{H(M|C) - I(M;\Sigma|C) - 1}{\log_2 |\mathcal{M}|}.
+\label{eq:rel_fano_bound}
+\end{equation}
+
+\subsubsection{L'in\'egalit\'e de traitement des donn\'ees}
+\label{subsubsec:dpi}
+
+\begin{lemma}[Data Processing Inequality~\cite{CoverThomas06,Lindblad}]\label{lem:dpi}
+Pour toute cha\^ine de Markov $X \to Y \to Z$, on a
+\begin{equation}
+I(X;Z) \;\leq\; I(X;Y).
+\label{eq:dpi}
+\end{equation}
+\end{lemma}
+
+\noindent Ce r\'esultat, rarement mobilis\'e en
+cryptographie, intervient directement dans notre analyse~\cite{Smith09,Alvim12}. La
+transformation $M \to (\Sigma, C) \to V = \mathsf{Interpret}(\Sigma, C, K)$ forme
+une cha\^ine de Markov d\`es que les ressources propres $K$ de l'institution sont
+ind\'ependantes du message sachant la preuve et le contexte, que le verdict soit
+d\'eterministe ou non. L'in\'egalit\'e \eqref{eq:dpi} garantit alors que
+$I(M;V|C) \leq I(M;\Sigma|C)$, autrement dit ce que le verdict apprend du \emph{message} ne peut exc\'eder
+ce que la preuve en contient. Cette in\'egalit\'e fournit l'un des deux termes de la
+d\'ecomposition qui fonde, \`a la section~\ref{sec:cro_classique}, l'Hypoth\`ese
+d'extraction born\'ee (Proposition~\ref{prop:fondement_extraction})~\cite{ClarksonSchneider10}.
+
+\subsubsection{Information flow quantitatif}
+\label{subsubsec:qif}
+
+La litt\'erature sur le \emph{Quantitative Information Flow} (QIF)~\cite{Clarkson05,Smith09,Alvim12,Alvim18}
+fournit un cadre formel pour mesurer les fuites d'information dans les syst\`emes
+de s\'ecurit\'e. La mesure $g$-leakage~\cite{Alvim12} \'etend l'information mutuelle
+en pond\'erant chaque fuite par son effet sur les gains de l'adversaire. Notre d\'efinition
+de l'opposabilit\'e, con\c{c}ue comme un ratio de r\'eduction d'incertitude, s'en inspire directement.
+
+\subsubsection{Capacit\'e de canal et codage source-canal}
+\label{subsubsec:capacite_canal}
+
+Le th\'eor\`eme de codage source-canal~\cite{Shannon48,CoverThomas06} \'etablit que
+la transmission fiable d'une source $X$ sur un canal de capacit\'e $C$ est possible
+si et seulement si $H(X) < C$. Transpos\'e au contexte institutionnel, ce r\'esultat conduit \`a
+mod\'eliser l'interpr\`ete comme un canal de capacit\'e born\'ee $\Delta$, qui limite
+la quantit\'e d'information qu'il peut extraire~\cite{WynerZiv76,Maurer1999}.
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsection{Fondements en th\'eorie de l'information quantique}
+\label{subsec:fondements_info_quantique}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+L'extension du Trilemme CRO
+aux contextes quantiques n\'ecessite des outils de th\'eorie de l'information
+quantique qui g\'en\'eralisent les notions classiques~\cite{NielsenChuang2010,Wilde2017,Holevo1973}. Cette section introduit
+les concepts fondamentaux mobilis\'es \`a la section~\ref{sec:cro_pq}.
+
+\subsubsection{\'Etats quantiques et entropie de von Neumann}
+\label{subsubsec:von_neumann}
+
+Un \'etat quantique est repr\'esent\'e par une matrice de densit\'e $\rho$, c'est-\`a-dire un
+op\'erateur positif semi-d\'efini de trace unit\'e sur un espace de Hilbert $\mathcal{H}$~\cite{NielsenChuang2010}.
+L'entropie de von Neumann, qui g\'en\'eralise l'entropie de Shannon, est d\'efinie par
+\begin{equation}
+S(\rho) = -\mathrm{Tr}(\rho \log \rho).
+\label{eq:von_neumann}
+\end{equation}
+Pour un \'etat pur $|\psi\rangle$, l'entropie est nulle ($S(|\psi\rangle\langle\psi|) = 0$). Elle
+vaut $S(\rho) = \log_2 d$ sur l'\'etat compl\`etement m\'elang\'e $\rho = I/d$. Lorsque
+$\rho$ est diagonale dans la base computationnelle, on retrouve $S(\rho) = H(X)$, o\`u $X$
+suit la distribution form\'ee par les probabilit\'es diagonales. La d\'efinition quantique
+contient donc le cadre classique comme cas particulier~\cite{Wilde2017,Hiai1991}.
+
+\subsubsection{Information mutuelle quantique}
+\label{subsubsec:info_mutuelle_quantique}
+
+Pour un \'etat bipartite $\rho_{AB}$, l'information mutuelle quantique s'\'ecrit
+\begin{equation}
+I(A;B)_\rho = S(\rho_A) + S(\rho_B) - S(\rho_{AB}).
+\label{eq:qmi}
+\end{equation}
+L'information mutuelle quantique ob\'eit elle aussi \`a une in\'egalit\'e de traitement
+des donn\'ees~\cite{Lindblad}, puisque l'application d'un canal CPTP $\Lambda$ au
+syst\`eme $B$ ne peut que la r\'eduire,
+\begin{equation}
+I(A;B)_\rho \geq I(A; \Lambda(B))_\rho.
+\label{eq:qdpi}
+\end{equation}
+
+\subsubsection{Information de Holevo}
+\label{subsubsec:holevo}
+
+L'information de Holevo borne l'information classique accessible depuis
+un encodage quantique~\cite{Holevo1973,Schumacher1997}. Pour un ensemble $\{P_X(x), \rho_x\}$ d'\'etat moyen
+$\bar{\rho} = \sum_x P_X(x)\rho_x$, elle vaut
+\begin{equation}
+\chi = S(\bar{\rho}) - \sum_x P_X(x) S(\rho_x).
+\label{eq:holevo}
+\end{equation}
+Le th\'eor\`eme de Holevo \'etablit que l'information accessible $I_{\mathrm{acc}}$
+par toute mesure POVM satisfait $I_{\mathrm{acc}} \leq \chi$. L'extension
+post-quantique de l'opposabilit\'e s'appuie directement sur cette borne. Quels que
+soient les outils quantiques dont il dispose, un interpr\`ete institutionnel n'extrait
+en effet du \textit{proof state} quantique qu'au plus $\chi$ bits d'information~\cite{Winter}.
+
+\subsubsection{Distance de trace et fid\'elit\'e}
+\label{subsubsec:distance_trace_fidelite}
+
+La distance de trace quantique, qui g\'en\'eralise la variation totale~\cite{NielsenChuang2010}, est d\'efinie par
+\begin{equation}
+\|\rho - \sigma\|_1 = \mathrm{Tr}\sqrt{(\rho-\sigma)^\dagger(\rho-\sigma)}.
+\label{eq:trace_distance}
+\end{equation}
+Pour des \'etats classiques (diagonaux), $\|\rho - \sigma\|_1 = 2\TV(P,Q)$.
+La fid\'elit\'e quantique~\cite{Jozsa}
+\begin{equation}
+F(\rho, \sigma) = \|\sqrt{\rho}\sqrt{\sigma}\|_1
+\label{eq:fidelite}
+\end{equation}
+est reli\'ee \`a la distance de trace par les in\'egalit\'es de Fuchs-van de Graaf~\cite{FuchsGraaf}
+\begin{equation}
+1 - \tfrac{1}{2}\|\rho - \sigma\|_1 \leq F(\rho, \sigma) \leq \sqrt{1 - \tfrac{1}{4}\|\rho - \sigma\|_1^2}.
+\label{eq:fuchs_vdg}
+\end{equation}
+
+\subsubsection{In\'egalit\'e de Pinsker quantique}
+\label{subsubsec:pinsker_quantique}
+
+\begin{lemma}[In\'egalit\'e de Pinsker quantique~\cite{Wilde2017,Hiai1991}]\label{lem:pinsker_quantique_etat_art}
+Pour tous \'etats quantiques $\rho$ et $\sigma$, on a
+\begin{equation}
+\|\rho - \sigma\|_1^2 \leq 2 D(\rho\|\sigma),
+\label{eq:qpinsker}
+\end{equation}
+o\`u $D(\rho\|\sigma) = \mathrm{Tr}(\rho\log\rho - \rho\log\sigma)$ est l'entropie
+relative quantique.
+\end{lemma}
+
+Cette in\'egalit\'e sera utilis\'ee dans la section~\ref{sec:cro_pq} (Lemme~\ref{lem:pinsker_quantique}) pour borner la
+confidentialit\'e quantique $\Conf^q$ en fonction de l'information mutuelle
+quantique $I(M;\Sigma|C)$~\cite{Ohya1993}.
+
+\subsubsection{Lemme de gentle measurement}
+\label{subsubsec:gentle_measurement}
+
+\begin{lemma}[Gentle measurement~\cite{Wilde2017,Winter}]\label{lem:mesure_douce_etat_art}
+Soit $\rho$ un \'etat quantique et $\{M_m\}$ une POVM. Si l'issue $m$ se produit
+avec probabilit\'e $p_m = \mathrm{Tr}(M_m\rho) \geq 1 - \delta$, alors l'\'etat
+post-mesure satisfait
+\begin{equation}
+\|\rho - \rho'\|_1 \leq 2\sqrt{\delta}.
+\label{eq:gentle}
+\end{equation}
+\end{lemma}
+
+Ce lemme capture l'id\'ee qu'une mesure \guillemotleft~douce~\guillemotright (haute probabilit\'e) perturbe
+peu l'\'etat quantique~\cite{OgawaNagaoka}. Dans le contexte institutionnel post-quantique, il borne
+la perte d'interpr\'etabilit\'e $\eta_q$ induite par les effets de canal quantique.
+
+\subsubsection{In\'egalit\'e de Fano quantique}
+\label{subsubsec:fano_quantique}
+
+\begin{lemma}[Lemme de Fano quantique~\cite{Wilde2017,Winter}]\label{lem:fano_quantique_etat_art}
+Soient $X$ encod\'e dans l'\'etat quantique $\rho_X$ et $\hat{X}$ le r\'esultat d'une
+mesure POVM avec probabilit\'e d'erreur $p_e$. Alors
+\begin{equation}
+S(X|\hat{X}) \leq h(p_e) + p_e \log_2(|\mathcal{X}| - 1).
+\label{eq:qfano}
+\end{equation}
+\end{lemma}
+
+Cette g\'en\'eralisation du lemme de Fano classique est utilis\'ee dans la section~\ref{sec:cro_pq} (Lemme~\ref{lem:fano_quantique}) pour borner la fiabilit\'e quantique $\Rel^q$~\cite{Hayashi}.
+
+\subsubsection{Canaux quantiques (CPTP)}
+\label{subsubsec:canaux_quantiques}
+
+Un canal quantique est une application compl\`etement positive et pr\'eservant
+la trace (CPTP) $\Lambda~: \mathcal{L}(\mathcal{H}_A) \to \mathcal{L}(\mathcal{H}_B)$~\cite{NielsenChuang2010}.
+Par le th\'eor\`eme de dilatation de Stinespring~\cite{Stinespring}, tout canal admet une repr\'esentation
+unitaire avec environnement auxiliaire de la forme
+\begin{equation}
+\Lambda(\rho) = \mathrm{Tr}_E\left[U (\rho \otimes |0\rangle\langle 0|_E) U^\dagger\right].
+\label{eq:stinespring}
+\end{equation}
+
+Trois mod\`eles de canaux sont pertinents pour l'analyse post-quantique~\cite{Wilde2017}~:
+\begin{itemize}
+\item \textbf{Canal d\'epolarisant}, d\'efini par $\Lambda_{\mathrm{dep}}(\rho) = (1-p)\rho + \frac{p}{d}I_d$
+\item \textbf{Canal d'amortissement d'amplitude} $\Lambda_{\mathrm{AD}}(\rho)$, qui mod\'elise la dissipation d'\'energie
+\item \textbf{Canal de d\'ephasage}, d\'efini par $\Lambda_{\mathrm{deph}}(\rho) = (1-\lambda)\rho + \lambda Z\rho Z$
+\end{itemize}
+
+Ces canaux mod\'elisent les effets de bruit quantique qui d\'egradent
+l'interpr\'etabilit\'e des preuves dans les syst\`emes hybrides ou quantiques~\cite{Zurek2003,Wootters1982}.
+
+\subsubsection{Impossibilit\'es quantiques fondamentales}
+\label{subsubsec:impossibilites_quantiques}
+
+Deux r\'esultats d'impossibilit\'e quantique \'eclairent les contraintes du Trilemme PQ-CRO.
+
+\textbf{No-cloning theorem.} Wootters et Zurek~\cite{Wootters1982} ont prouv\'e qu'un \'etat quantique inconnu ne peut \^etre copi\'e parfaitement. Cette contrainte interdit la duplication arbitraire des preuves quantiques.
+
+\textbf{Impossibilit\'e du bit commitment quantique.} Mayers~\cite{Mayers1997} et Lo-Chau~\cite{Lo1997} ont montr\'e que, dans le mod\`ele quantique non-relativiste, aucun protocole de bit commitment ne garantit simultan\'ement le secret et la liaison. C'est pourquoi les engagements post-quantiques reposent sur des hypoth\`eses calculatoires~\cite{Unruh2016}.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre retient l'essentiel. Même équipé d'outils quantiques optimaux,
+il ne tirera jamais d'un état de preuve quantique plus de $\chi$ bits.
+Cette borne découle des lois de la physique, si bien qu'aucun progrès
+des instruments ne la repoussera.
+\end{boiteArbitre}
+
+% ----------------------------------------------------------------------------
+\subsection{Primitives cryptographiques d'obscurcissement}
+\label{subsec:primitives_crypto}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+Les constructions SOTP du
+chapitre~\ref{chap:constructions} font appel \`a trois primitives. Nous les pr\'esentons
+bri\`evement en nous limitant aux propri\'et\'es que ces constructions exploitent,
+sans viser l'exhaustivit\'e des sch\'emas.
+
+\subsubsection{Engagements de Pedersen}
+\label{subsubsec:pedersen}
+
+Un engagement de Pedersen~\cite{Pedersen91} sur un groupe cyclique $G$ de
+g\'en\'erateurs $g, h$ est le couple $\mathsf{Com}(m; r) = g^m h^r$, o\`u $m$
+est le message secret et $r$ un al\'ea. Le sch\'ema est parfaitement occultant au sens
+de la th\'eorie de l'information, puisque pour tout $m' \neq m$ il existe $r'$ tel que
+$\mathsf{Com}(m'; r') = \mathsf{Com}(m; r)$. Sa propri\'et\'e de liaison n'est en revanche
+que calculatoire, car produire $m' \neq m$ de m\^eme image revient \`a r\'esoudre le probl\`eme
+du logarithme discret~\cite{Schnorr91}. La famille SOTP confie \`a ces engagements un double r\^ole.
+Ils encodent le contexte institutionnel $C$ de mani\`ere v\'erifiable, au b\'en\'efice de $\Rel$,
+tout en pr\'eservant la confidentialit\'e des donn\'ees sous-jacentes, au b\'en\'efice
+de $\Conf$~\cite{ChaumPedersen92}.
+
+\subsubsection{Arguments succincts zero-knowledge (zk-SNARKs)}
+\label{subsubsec:zksnarks}
+
+Pour un circuit $\mathcal{C}$, une entr\'ee publique $x$ et un t\'emoin secret $w$,
+un zk-SNARK~\cite{Groth16,BCTV14,BenSasson2019} atteste que $\mathcal{C}(x, w)
+= 1$ au moyen d'une preuve $\pi$ de taille constante ($\approx 128$--$256$ octets).
+Le sch\'ema se d\'efinit par sa compl\'etude, qui garantit qu'un prouveur
+honn\^ete convainc toujours le v\'erificateur, par sa solidit\'e (soundness) sous les
+hypoth\`eses q-SDH et q-PKE~\cite{Gennaro13,Parno13} ainsi que par la propri\'et\'e de
+zero-knowledge parfait, en vertu de laquelle le v\'erificateur
+n'apprend rien sur $w$ au-del\`a de la validit\'e de l'assertion~\cite{GMR85}.
+SOTP-High recourt \`a ces preuves pour maximiser $\Opp$ dans le r\'egime \`a haute
+entropie contextuelle ($H(\mathcal{C}) > \lambda/\log\lambda$)~\cite{PLONK20,Wahby18,Campanelli2019}.
+
+\subsubsection{Syst\`emes de preuves avanc\'es}
+\label{subsubsec:systemes_preuves}
+
+Plusieurs syst\`emes de preuves compl\`etent les zk-SNARKs dans la palette disponible.
+
+\textbf{Bulletproofs.} B\"unz et al.~\cite{Bunz19} ont introduit des preuves \`a divulgation nulle sans trusted setup, avec des tailles logarithmiques en la taille du t\'emoin. Leur construction repose sur un argument de produit scalaire (\emph{inner-product argument}) et sur la difficult\'e du logarithme discret~; elle n'est donc pas post-quantique.
+
+\textbf{STARKs.} Ben-Sasson et al.~\cite{BenSasson18} ont d\'evelopp\'e des preuves transparentes (sans trusted setup) et post-quantiques, bas\'ees sur des codes correcteurs d'erreurs et la technique FRI (Fast Reed-Solomon Interactive Oracle Proof of Proximity).
+
+\textbf{Fiat-Shamir.} La transformation de Fiat et Shamir~\cite{FiatShamir87} convertit les preuves interactives en preuves non-interactives via l'application de hachage. Sa s\'ecurit\'e dans le mod\`ele de l'oracle al\'eatoire quantique a \'et\'e analys\'ee, pour les signatures, par Kiltz, Lyubashevsky et Schaffner~\cite{Kiltz2017}.
+
+\subsubsection{La transformation de Johnson-Lindenstrauss}
+\label{subsubsec:jl}
+
+La transformation de Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03}
+garantit qu'une famille de $n$ vecteurs de $\mathbb{R}^d$
+peut \^etre projet\'ee dans $\mathbb{R}^k$ avec $k = O(\log n / \epsilon^2)$
+en pr\'eservant toutes les distances euclidiennes \`a un facteur $1 \pm \epsilon$
+pr\`es~\cite{Vempala05,Indyk98,Indyk06}. Dans SOTP-Base (r\'egime de transition), cette transformation compresse
+l'espace contextuel, r\'eduisant la complexit\'e des engagements sans
+sacrifier les distances s\'emantiques~\cite{DasguptaKumar14,Larsen17,Gionis99}.
+
+\subsubsection{Fonctions de hachage et filtres de Bloom}
+\label{subsubsec:hachage}
+
+Les fonctions de hachage cryptographique~\cite{Damgard87} servent aux engagements et \`a la transformation Fiat-Shamir. Les filtres de Bloom~\cite{Bloom70} fournissent des structures de donn\'ees probabilistes pour la v\'erification d'appartenance avec contr\^ole du taux de faux positifs, pertinents pour les contextes institutionnels \`a grande cardinalit\'e.
+
+\subsubsection{Chiffrement homomorphe}
+\label{subsubsec:fhe}
+
+Le chiffrement compl\`etement homomorphe (FHE), introduit par Gentry~\cite{Gentry09} et am\'elior\'e par Brakerski et Vaikuntanathan~\cite{BrakerskiVaikuntanathan11}, permet le calcul sur donn\'ees chiffr\'ees. Les sch\'emas bas\'es sur LWE~\cite{Regev2009} sont consid\'er\'es comme post-quantiques et utilis\'es dans les protocoles de calcul multipartite s\'ecuris\'e~\cite{Yao82,GMW87,Asharov12}.
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsection{Fondements cognitifs~: rationalit\'e born\'ee et param\`etre~$\Delta$}
+\label{subsec:fondements_cognitifs}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+Le choix de la capacit\'e
+d'extraction institutionnelle $\Delta$ et de l'hypoth\`ese de r\'egularit\'e $\beta$
+s'appuie sur des r\'esultats \'etablis en sciences cognitives et en th\'eorie
+de l'information.
+
+\subsubsection{Rationalit\'e born\'ee et capacit\'e de traitement}
+\label{subsubsec:rationalite_bornee}
+
+Selon Herbert Simon~\cite{Simon82,Simon1955}, les d\'ecideurs humains, arbitres compris,
+ne recherchent pas l'optimum. Soumis \`a de s\'ev\`eres contraintes cognitives, ils \emph{satisficent},
+c'est-\`a-dire qu'ils retiennent une solution jug\'ee suffisamment bonne en raisonnant sur des
+mod\`eles mentaux simplifi\'es \`a $O(10)$--$O(100)$ \'el\'ements distinguables. George Miller~\cite{Miller56}
+a estim\'e la capacit\'e de la m\'emoire de travail \`a $7 \pm 2$
+\emph{chunks} d'information, chiffre que Cowan~\cite{Cowan2001} ram\`ene \`a environ
+$4$ \'el\'ements. Pour une t\^ache d'interpr\'etation de preuve cryptographique, un ordre
+de grandeur s'obtient en retenant $\approx 3$ bits par \'el\'ement et la borne haute de Miller,
+ce qui donne
+
+\begin{equation}
+\Delta_{\text{individu}} \;\lesssim\; 7 \times 3 \;=\; 21 \;\text{bits}.
+\label{eq:delta_individu}
+\end{equation}
+Ericsson et Kintsch~\cite{Ericsson95} ont montr\'e que les experts acc\`edent, via
+la m\'emoire \`a long terme, \`a $10^3$--$10^4$ sch\'emas, ajoutant
+$\log_2(10^4) \approx 13$ bits d'indexation. La d\'elib\'eration institutionnelle
+collective amplifie encore cette capacit\'e~\cite{Argyris1978}. Faute de quantification
+dans la litt\'erature, nous retenons pour l'institution l'ordre de grandeur
+\begin{equation}
+\Delta_{\text{institution}} \;\sim\; \text{quelques dizaines de bits}.
+\label{eq:delta_institution}
+\end{equation}
+Ces estimations cumulent des grandeurs h\'et\'erog\`enes, \`a savoir la capacit\'e
+de la m\'emoire de travail et la taille d'un r\'epertoire de sch\'emas. Elles ne valent
+donc pas d\'erivation et servent seulement \`a motiver l'\emph{hypoth\`ese de travail}
+d'une capacit\'e de l'ordre de $20$ \`a $80$ bits, qu'il reviendra au programme
+exp\'erimental du chapitre~\ref{chap:experimentation} de mesurer.
+
+\subsubsection{Biais cognitifs et d\'ecision}
+\label{subsubsec:biais_cognitifs}
+
+Kahneman~\cite{Kahneman11} a document\'e les biais syst\'ematiques affectant
+la d\'ecision humaine, parmi lesquels l'aversion \`a la perte, l'ancrage et la disponibilit\'e. Ces biais
+modulent la capacit\'e d'extraction effective, si bien qu'un juge peut disposer de
+$\Delta$ bits de capacit\'e mais n'en utiliser qu'une fraction selon le contexte
+\'emotionnel ou proc\'edural.
+
+\subsubsection{Extension quantique~: $\Delta_q$ et $\eta_q$}
+\label{subsubsec:extension_quantique_delta}
+
+Dans le contexte post-quantique, la capacit\'e d'extraction institutionnelle
+doit \^etre adapt\'ee. Nous la d\'efinissons par
+\begin{equation}
+\Delta_q = \Delta + \delta_{\mathrm{enh}} - \delta_{\mathrm{degr}},
+\label{eq:delta_q}
+\end{equation}
+o\`u $\delta_{\mathrm{enh}}$ repr\'esente l'am\'elioration potentielle due aux
+outils quantiques (analyse quantique assist\'ee) et $\delta_{\mathrm{degr}}$
+repr\'esente la d\'egradation due \`a la complexit\'e accrue des preuves PQC~\cite{Chatterjee2021}.
+
+Le coefficient de perte d'interpr\'etabilit\'e quantique $\eta_q$ mesure la
+d\'egradation s\'emantique induite par un canal quantique $\Lambda$ sur le
+support de la preuve. Il s'agit du plus petit r\'eel tel que
+\begin{equation}
+I(V;\Lambda(\Sigma)|C) \geq I(V;\Sigma|C) - \eta_q\, H(C)
+\label{eq:eta_q}
+\end{equation}
+(D\'efinition~\ref{def:perte_interp_quantique}). Ces param\`etres sont analys\'es en d\'etail \`a la section~\ref{sec:cro_pq}.
+
+\subsubsection{Justification issue de la th\'eorie de l'information pour $\Delta$}
+\label{subsubsec:justification_delta}
+
+L'interpr\`ete institutionnel (arbitre) poss\`ede une connaissance pr\'ealable $K$
+non captur\'ee dans le contexte formel $C$. Comme il n'acc\`ede au message que par la
+preuve, on a $K \perp M \mid (\Sigma, C)$. La r\`egle de cha\^inage appliqu\'ee de deux
+mani\`eres \`a $I(V;M,\Sigma|C)$ donne alors
+\begin{equation}
+I(V;\Sigma|C) \;=\; I(V;M|C) \;+\; I(V;\Sigma|M,C),
+\label{eq:chaining_knowledge}
+\end{equation}
+et l'in\'egalit\'e de traitement des donn\'ees sur $M \to (\Sigma,C) \to V$ donne
+$I(V;M|C) \leq I(M;\Sigma|C)$. Si l'institution tire de la preuve au plus
+$\Delta$ bits \emph{au-del\`a du message}, $I(V;\Sigma|M,C) \leq \Delta$, d'o\`u
+\begin{equation}
+I(V;\Sigma|C) \;\leq\; I(M;\Sigma|C) + \Delta.
+\label{eq:extraction_bornee_etat_art}
+\end{equation}
+C'est l'Hypoth\`ese d'Extraction Born\'ee~\cite{Smith09}, formalis\'ee \`a la
+section~\ref{sec:cro_classique} par l'\'equation~\eqref{eq:extraction_bornee} et
+fond\'ee par la Proposition~\ref{prop:fondement_extraction}.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre comprend que $\Delta$ le d\'esigne, puisque ce param\`etre mesure ce qu'il tire
+de la preuve au-del\`a du message. Il s'agit peut-\^etre de quelques dizaines de bits, qu'il faudra mesurer.
+\end{boiteArbitre}
+
+% ----------------------------------------------------------------------------
+\subsection{D\'efinitions pr\'eliminaires du cadre CRO}
+\label{subsec:definitions_preliminaires_cro}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+Cette section introduit les trois
+m\'etriques dans leur formulation issue de la th\'eorie de l'information, formulation qui,
+seule, autorise le raisonnement asymptotique du Trilemme CRO.
+
+\subsubsection{Confidentialit\'e, fiabilit\'e, opposabilit\'e}
+\label{subsubsec:definitions_preliminaires}
+
+La confidentialit\'e mesure l'indistinguabilit\'e au pire cas~\cite{GoldwasserMicali84} selon la d\'efinition
+\begin{equation}
+\Conf(\mathcal{P}) = 1 - \max_{m_0,m_1,c} \TV(P_{\Sigma|M=m_0,C=c},
+P_{\Sigma|M=m_1,C=c}).
+\label{eq:conf_def}
+\end{equation}
+La fiabilit\'e, qui quantifie la r\'ecup\'eration correcte, vaut
+\begin{equation}
+\Rel(\mathcal{P}) = 1 - \Pr[\hat{M} \neq M],
+\label{eq:rel_def}
+\end{equation}
+o\`u $\hat{M}$ est l'estimateur optimal. L'opposabilit\'e capture la
+r\'eduction relative d'incertitude sur le verdict institutionnel~\cite{MINKA2026CLO}, d\'efinie par
+\begin{equation}
+\Opp(\mathcal{P}, C) = \frac{I(V;\Sigma|C)}{H(V|C)},
+\label{eq:opp_def}
+\end{equation}
+o\`u $V = \mathsf{Interpret}(\Sigma, C)$ est le verdict produit par
+l'interpr\`ete institutionnel.
+
+\begin{remark}[Coexistence de deux notations de l'opposabilit\'e]\label{rem:deux_notations}
+Deux notations de l'opposabilit\'e coexistent, renvoyant toutes les deux \`a la m\^eme r\'ealit\'e, mais chacune servant un but pr\'ecis.
+La notation de l'\'equation~\eqref{eq:opp_def} sert \`a pr\'eciser le protocole sous revue et le contexte particulier de son examen ou ex\'ecution, c'est une notation purement p\'edagogique, utilis\'ee notamment dans les \'equations~\eqref{eq:opp_helios}, \eqref{eq:opp_zksnark} et \eqref{eq:opp_ecdsa}.
+La notation de l'\'equation~\eqref{eq:opp_clo} est celle utilis\'ee dans les d\'emonstrations et autres d\'eveloppements, pour sa sym\'etrie avec celles des deux autres m\'etriques.
+\end{remark}
+
+\subsubsection{Relation avec les d\'efinitions cryptographiques standard}
+\label{subsubsec:relation_crypto}
+
+Les m\'etriques CRO s'articulent avec les d\'efinitions cryptographiques classiques.
+
+\textbf{S\'emantique s\'ecurit\'e.} La confidentialit\'e $\Conf$ g\'en\'eralise la s\'ecurit\'e s\'emantique de Goldwasser et Micali~\cite{GoldwasserMicali84}, puisque $\Conf = 1$ implique l'indistinguabilit\'e s\'emantique parfaite.
+
+\textbf{Infalsifiabilit\'e existentielle.} La fiabilit\'e de \emph{v\'erification} $\Relver$ (Remarque~\ref{rem:rel_ver}) est reli\'ee \`a la notion d'infalsifiabilit\'e existentielle sous attaque adaptative~\cite{GMR88}, car une signature infalsifiable v\'erifie $\Relver \to 1$. La fiabilit\'e de reconstruction $\Rel$ de l'\'equation~\eqref{eq:rel_def} mesure, elle, la capacit\'e \`a restituer le message.
+
+\textbf{Non-r\'epudiation.} L'opposabilit\'e $\Opp$ n'a pas d'\'equivalent direct dans la litt\'erature cryptographique classique, bien qu'elle soit implicitement vis\'ee par les travaux sur la non-r\'epudiation~\cite{ZhouGollmann}.
+
+\subsubsection{M\'etriques quantiques}
+\label{subsubsec:metriques_quantiques}
+
+Les d\'efinitions quantiques g\'en\'eralisent les m\'etriques classiques~\cite{Watrous2009,Boneh2011}.
+
+\textbf{Confidentialit\'e quantique.} On d\'efinit $\Conf^q$ par
+\begin{equation}
+\Conf^q(\mathcal{P}) = 1 - \frac{1}{2}\max_{m_0,m_1,c}
+\|\rho_\Sigma^{m_0,c} - \rho_\Sigma^{m_1,c}\|_1.
+\label{eq:conf_q_def}
+\end{equation}
+
+\textbf{Fiabilit\'e quantique.} La fiabilit\'e $\Rel^q$ est d\'efinie via l'estimateur POVM optimal
+maximisant la probabilit\'e de r\'ecup\'eration correcte~\cite{Wilde2017}.
+
+\textbf{Opposabilit\'e quantique.} L'institution obtient le verdict $V$
+\`a partir de l'issue classique d'une mesure sur l'\'etat de preuve et l'on pose
+\begin{equation}
+\Opp^q(\mathcal{P}) = \frac{I(V;\Sigma|C)}{H(V|C)}.
+\label{eq:opp_q_def}
+\end{equation}
+La borne de Holevo joue ici un r\^ole d\'ecisif, puisque aucune mesure ne permet \`a un interpr\`ete
+institutionnel d'extraire de l'\'etat de preuve plus que son information de
+Holevo~\cite{Holevo1973}.
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsection{Trilemmes et bornes d'impossibilit\'e}
+\label{subsec:trilemmes}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+Trois r\'esultats
+d'impossibilit\'e ont directement guid\'e la formulation du Trilemme CRO. Tous suivent
+le m\^eme sch\'ema, qui consiste \`a identifier une contrainte externe puis \`a d\'emontrer
+qu'elle borne irr\'em\'ediablement les compromis r\'ealisables.
+
+\subsubsection{Le th\'eor\`eme d'Arrow}
+\label{subsubsec:arrow}
+
+Le th\'eor\`eme d'impossibilit\'e d'Arrow~\cite{Arrow50} \'etablit qu'aucune r\`egle
+d'agr\'egation des pr\'ef\'erences individuelles ne peut satisfaire simultan\'ement
+cinq conditions rationnelles (universalit\'e, unanimit\'e, indiff\'erence aux
+alternatives non pertinentes, souverainet\'e, non-dictature). Ce r\'esultat
+fondateur de la th\'eorie du choix social illustre comment des contraintes
+apparemment mod\'er\'ees peuvent engendrer des impossibilit\'es profondes~\cite{Sen}.
+
+\subsubsection{Le th\'eor\`eme CAP}
+\label{subsubsec:cap}
+
+Le th\'eor\`eme CAP de Brewer~\cite{Brewer00}, prouv\'e formellement par Gilbert
+et Lynch~\cite{GilbertLynch02}, \'etablit qu'un syst\`eme distribu\'e ne peut
+simultan\'ement garantir coh\'erence (Consistency), disponibilit\'e (Availability)
+et tol\'erance aux partitions (Partition tolerance). L'impossibilit\'e est
+conditionnelle, puisqu'elle ne s'applique qu'en pr\'esence de partitions r\'eseau~\cite{ChandraHadzilacos96}.
+
+\subsubsection{L'impossibilit\'e FLP}
+\label{subsubsec:flp}
+
+Fischer, Lynch et Paterson~\cite{FLP85} ont prouv\'e qu'aucun algorithme
+d\'eterministe ne peut r\'esoudre le consensus dans un syst\`eme asynchrone en
+pr\'esence d'une seule d\'efaillance. L'impossibilit\'e est conditionn\'ee \`a l'asynchronie~\cite{BenOr83,DebratMerz2012}.
+
+\subsubsection{Le trilemme blockchain}
+\label{subsubsec:trilemme_blockchain}
+
+Buterin~\cite{Buterin17} a formalis\'e que les syst\`emes blockchain ne peuvent
+simultan\'ement atteindre d\'ecentralisation, s\'ecurit\'e et \'evolutivit\'e
+(scalability). Ce trilemme, contrairement \`a CAP et FLP, n'est pas issu d'une preuve
+formelle mais d'une heuristique d'ing\'enierie~\cite{Nakamoto08,Garay15,Narayanan16}.
+
+\subsubsection{Impossibilit\'es en cryptographie}
+\label{subsubsec:impossibilites_crypto}
+
+Plusieurs r\'esultats d'impossibilit\'e sp\'ecifient les limites fondamentales en cryptographie.
+
+\textbf{Obfuscation.} Barak et al.~\cite{Barak2001} ont prouv\'e l'impossibilit\'e
+de l'obfuscation virtuelle black-box pour les programmes g\'en\'eraux.
+
+\textbf{Privacy-Utility trade-off.} La litt\'erature sur la \textit{privacy}
+diff\'erentielle~\cite{Dwork} \'etablit des bornes sur les compromis entre
+confidentialit\'e et utilit\'e.
+
+\medskip
+Ces paradigmes partagent une m\^eme structure, qui consiste \`a identifier une
+contrainte externe (partition, asynchronie, d\'ecentralisation) puis \`a
+d\'emontrer qu'elle borne les compromis r\'ealisables. Le Trilemme CRO suit ce
+sch\'ema avec $\Delta$ comme contrainte dominante~; son extension post-quantique
+ajoute $\eta_q$ comme contrainte suppl\'ementaire li\'ee aux effets quantiques.
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\subsection{V\'erification formelle}
+\label{subsec:verification_formelle}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+La v\'erification formelle
+modifie le statut \'epist\'emique d'une preuve. Une preuve
+v\'erifi\'ee m\'ecaniquement garantit l'exactitude de chaque \'etape de calcul et r\'ev\`ele
+les hypoth\`eses que la version papier laissait implicites~\cite{Wiedijk2007}.
+
+\subsubsection{Panorama des assistants de preuve}
+\label{subsubsec:assistants_preuve}
+
+Coq~\cite{Coq} (Calcul des Constructions Inductives, preuve du Th\'eor\`eme
+des Quatre Couleurs~\cite{Gonthier08}, compilateur CompCert~\cite{Leroy09}) et Isabelle/HOL~\cite{Isabelle}
+sont matures et largement d\'eploy\'es. Lean4~\cite{Lean4,moura2015lean} combine fondements
+logiques rigoureux et programmation fonctionnelle performante, avec la
+biblioth\`eque Mathlib~\cite{Mathlib} pour l'appui math\'ematique.
+
+\subsubsection{Formalisation de la cryptographie}
+\label{subsubsec:formalisation_crypto}
+
+Plusieurs projets ont formalis\'e des r\'esultats cryptographiques.
+
+\textbf{EasyCrypt.} Barthe et al.~\cite{BartheEA2013} ont d\'evelopp\'e un assistant
+de preuve sp\'ecialis\'e pour les preuves cryptographiques computationnelles,
+utilisant le calcul de relations probabilistes.
+
+\textbf{F* et HACL*.} Le projet Everest~\cite{BhargavanEA2017,FStar,HACL} vise
+une impl\'ementation v\'erifi\'ee de HTTPS, avec la biblioth\`eque cryptographique
+HACL* formellement v\'erifi\'ee.
+
+\textbf{CryptoVerif.} Blanchet~\cite{CryptoVerif} a d\'evelopp\'e un outil automatique
+pour prouver les propri\'et\'es de s\'ecurit\'e des protocoles cryptographiques.
+
+\textbf{CryptHOL.} Lochbihler~\cite{Lochbihler2016} a formalis\'e les jeux
+cryptographiques en Isabelle/HOL.
+
+\textbf{Th\'eorie de l'information avec Coq/Isabelle.} Affeldt et al.~\cite{Affeldt2015}
+et Hibon-Portier~\cite{HibonPortier20} ont formalis\'e la th\'eorie de l'information
+dans Coq et Isabelle respectivement.
+
+\subsubsection{Lean4 pour le trilemme CRO}
+\label{subsubsec:lean4_trilemme}
+
+Lean4 a \'et\'e retenu \`a l'issue d'une comparaison syst\'ematique sur quatre crit\`eres.
+
+\textbf{Couverture math\'ematique.} Mathlib (v4.34.0) fournit l'analyse r\'eelle,
+les probabilit\'es et la divergence de Kullback--Leibler
+(\texttt{InformationTheory.KullbackLeibler})~\cite{Mathlib}~; les in\'egalit\'es
+de Pinsker et de Fano n'y sont pas formalis\'ees et sont donc pos\'ees comme
+propri\'et\'es des instances de protocole (section~\ref{sec:lean4}).
+
+\textbf{Proximit\'e syntaxique.} La syntaxe de Lean4 reste lisible par un
+math\'ematicien sans formation sp\'ecialis\'ee en v\'erification formelle~\cite{moura2015lean}.
+
+\textbf{Performance de compilation.} Lean4 compile vers C natif et
+la v\'erification du noyau alg\'ebrique du Trilemme CRO prend environ une
+minute et demie une fois Mathlib t\'el\'echarg\'ee. Le code fourni en
+Annexe~\ref{chap:annexe_lean4}, fig\'e sur Lean~v4.34.0 et Mathlib~v4.34.0 dans le
+d\'ep\^ot compagnon~\cite{CROTrilemmaDepot}, peut aussi \^etre coll\'e dans
+l'\'editeur en ligne \url{https://live.lean-lang.org/}, qui utilise la version
+courante de Mathlib.
+
+\textbf{Dynamisme de la communaut\'e.} Croissance forte depuis 2022 avec
+contributions actives en cryptographie formelle.
+
+\subsubsection{Apports \'epist\'emiques de la formalisation}
+\label{subsubsec:apports_epistemiques}
+
+Au-del\`a de la certification~\cite{AbadiRogaway00,BanaComon12}, la formalisation
+Lean4 (section~\ref{sec:lean4}) a produit trois apports.
+
+\begin{enumerate}
+\item \textbf{Explicitation d'une hypoth\`ese.} La formalisation a impos\'e de poser
+explicitement le r\'egime de pr\'eservation de la confidentialit\'e
+$I(M;\Sigma|C) \leq \kappa/\lambda$ (Hypoth\`ese~\ref{ass:regime}), que la preuve
+publi\'ee d\'eduisait d'une \'etape d'optimisation. La formulation alternative
+retenue le pose comme hypoth\`ese.
+
+\item \textbf{Formulations alternatives.} La formalisation a conduit \`a des
+formulations plus pr\'ecises de trois \'enonc\'es publi\'es
+(section~\ref{subsec:lean4_erreurs}). La forme raffin\'ee du trilemme, qui
+d\'elimite le r\'egime o\`u la capacit\'e institutionnelle est contraignante, a
+\'egalement \'et\'e certifi\'ee.
+
+\item \textbf{S\'eparation explicite.} La formalisation s\'epare le noyau alg\'ebrique
+v\'erifi\'e des propri\'et\'es pos\'ees (Fano, Pinsker, hypoth\`eses institutionnelles),
+clarifiant le statut \'epist\'emique de chaque composant~\cite{Zellagui2018}.
+\end{enumerate}
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+%\subsection{Synth\`ese}
+%\label{sec:synthese_chap2}
+% ----------------------------------------------------------------------------
+
+\begin{boiteArbitre}
+L'arbitre referme le dossier. Ce seul chapitre lui a fait traverser six corpus
+(th\'eorie de l'information, m\'ecanique quantique, primitives cryptographiques,
+sciences cognitives, trilemmes d'impossibilit\'e, v\'erification formelle),
+ce qui lui a d'abord paru beaucoup. Il comprend maintenant que chaque pi\`ece \'etait n\'ecessaire.
+
+Ce qui le frappe en premier tient \`a une absence. Aucun des corpus pass\'es en
+revue ne nommait l'incapacit\'e qu'il \'eprouve chaque jour \`a extraire
+un verdict d'une preuve pourtant irr\'eprochable. La quantit\'e $\Opp = I(V;\Sigma|C)/H(V|C)$
+n'apparaissait nulle part. Ce travail l'introduit comme m\'etrique de premi\`ere
+classe, ce que l'arbitre re\c{c}oit comme une reconnaissance.
+
+Il note ensuite la coh\'erence de l'\'edifice. Les g\'en\'eralisations quantiques
+(Holevo, Pinsker quantique, Fano quantique) s'encha\^inent avec la m\^eme rigueur
+que leurs analogues classiques, si bien que le cadre s'\'etend au r\'egime quantique
+sans se fracturer.
+
+L'armature analytique repose sur trois in\'egalit\'es dont d\'epend toute la
+m\'ecanique du Trilemme CRO. L'in\'egalit\'e de Pinsker relie la confidentialit\'e
+\`a l'information mutuelle, celle de Fano borne la fiabilit\'e par la probabilit\'e
+d'erreur, tandis que la DPI garantit que le verdict n'invente pas d'information.
+
+Le r\^ole de Lean4 l'\'etonne davantage. Outre la certification, la formalisation
+a contraint \`a expliciter une hypoth\`ese et \`a pr\'eciser plusieurs \'enonc\'es. L'arbitre
+ne s'attendait pas \`a voir la rigueur formelle servir d'instrument de d\'ecouverte.
+
+Il tourne la page. Six objectifs de recherche l'attendent (Obj~\ref{obj:obj1_unification},~Obj~\ref{obj:obj2_impossibilite},~Obj~\ref{obj:obj3_postquantique},~Obj~\ref{obj:obj4_saturation},~Obj~\ref{obj:obj5_verification} et~Obj~\ref{obj:obj6_experimentation}). Il veut savoir
+s'ils tiennent ensemble.
+\end{boiteArbitre}

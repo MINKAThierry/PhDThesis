@@ -1,0 +1,112 @@
+% ============================================================================
+% PUBLICATIONS ISSUES DE LA TH\`eSE
+% ============================================================================
+%\markboth{PUBLICATIONS ISSUES DE LA TH\`ESE}{}
+\chapter{Publications issues de la th\`ese}
+%\addcontentsline{toc}{chapter}{Publications Issues de la Th\`ese}
+\label{chap:annexe_publications}
+\begin{sloppypar}
+
+
+Cette annexe recense les publications scientifiques issues des travaux de
+cette th\`ese. Seules sont list\'ees les publications effectivement fournies
+dans le dossier de th\`ese, publi\'ees dans des revues \`a comit\'e de lecture.
+Trois articles r\'epondent \`a ce crit\`ere \`a la date de soutenance~; ils
+couvrent les contributions C1, C2 et C3, soit les \'etapes F, B et E de la
+progression F$\to$B$\to$E$\to$S$\to$C$\to$X. Le statut et la r\'ef\'erence de
+l'ensemble des contributions figurent au tableau~\ref{tab:contributions_these}.
+\end{sloppypar}
+
+
+
+% ============================================================================
+\section{ARTICLES PUBLI\'ES}
+\addcontentsline{toc}{section}{Articles publi\'es}
+\label{sec:publications_publies}
+% ============================================================================
+\begin{sloppypar}
+\subsection{[P1] The CLO Framework}
+
+\noindent\textbf{Auteurs} : Thierry Emmanuel MINKA MI NGUIDJO\"{I},
+Flavien Serge MANI ONANA, Thomas DJOTIO NDI\'E.
+
+\noindent\textbf{R\'ef\'erence} : \textit{Cryptographic Legal Opposability (CLO) 
+Framework: Confidentiality-Reliability-Opposability Trade-offs in Institutional 
+Cryptography}. \textit{IEEE Access}, 14, 20427--20445, 2026.
+\href{https://doi.org/10.1109/ACCESS.2026.3660105}{\texttt{doi:10.1109/ACCESS.2026.3660105}}
+
+\noindent\textbf{Statut} : Publi\'e (2 f\'evrier 2026).
+
+\noindent\textbf{Contribution} : Cet article \'etablit les fondations de la 
+cryptographie institutionnelle (Contribution C1, \'etape \textbf{F} de la progression
+\textbf{F}$\to$B$\to$E$\to$S$\to$C$\to$X). Il introduit les m\'etriques CLO ($\Conf$, $\Rel$, $\Opp$), 
+le th\'eor\`eme du goulot contextuel (dans la formulation plus pr\'ecise
+$I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$ retenue par la th\`ese)
+et le paradigme architectural Gold-Iron-Clay. Il constitue la section~\ref{sec:clo}
+de cette th\`ese et ouvre la voie aux perspectives de l'Axe~I 
+(fondations computationnelles AIIP/CASH Toolkit) identifi\'ees \`a la section~\ref{sec:perspectives}.
+
+\vspace{0.5cm}
+
+\subsection{[P2] The Conditional CRO Trilemma}
+
+\noindent\textbf{Auteurs} : Thierry Emmanuel MINKA MI NGUIDJO\"{I},
+Flavien Serge MANI ONANA, Thomas DJOTIO NDI\'E.
+
+\noindent\textbf{R\'ef\'erence} : \textit{The Conditional CRO Trilemma: 
+Impossibility Bounds on Confidentiality, Reliability, and Opposability 
+under Institutional Extraction Limits}. \textit{IEEE Access}, 14, 33263--33274, 2026.
+\href{https://doi.org/10.1109/ACCESS.2026.3669065}{\texttt{doi:10.1109/ACCESS.2026.3669065}}
+
+\noindent\textbf{Statut} : Publi\'e (27 f\'evrier 2026).
+
+\noindent\textbf{Contribution} : Cet article \'etablit la borne 
+d'impossibilit\'e fondamentale (Contribution C2, \'etape \textbf{B} de la progression 
+F$\to$\textbf{B}$\to$E$\to$S$\to$C$\to$X)~:
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \leq \frac{\Delta}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
+\end{equation}
+Il introduit les param\`etres institutionnels $(\Delta, \alpha, \beta)$ et
+propose une calibration sur trois syst\`emes d\'eploy\'es. La th\`ese en donne la
+forme explicite $\gamma^{-1}(\Delta/\lambda + \dots)$ et la forme raffin\'ee
+(section~\ref{sec:cro_classique}) tout en pr\'ecisant que la fiabilit\'e de la borne est
+la fiabilit\'e de reconstruction $\Relrec$. Il constitue la section~\ref{sec:cro_classique} de cette th\`ese et 
+fonde les perspectives de l'Axe III (extensions th\'eoriques vers la borne forte, 
+FHE et MPC).
+
+\vspace{0.5cm}
+
+\subsection{[P3] The Post-Quantum Conditional CRO Trilemma}
+
+\noindent\textbf{Auteurs} : Thierry Emmanuel MINKA MI NGUIDJO\"{I},
+Flavien Serge MANI ONANA, Thomas DJOTIO NDI\'E.
+
+\noindent\textbf{R\'ef\'erence} : \textit{Post-Quantum Extension of the
+Conditional CRO Trilemma: Impossibility Bounds on Confidentiality,
+Reliability, and Opposability under Quantum Institutional Extraction Limits}.
+\textit{IEEE Access}, 14, 125130--125155,  2026.
+\href{https://doi.org/10.1109/ACCESS.2026.3722742}{\texttt{doi:10.1109/ACCESS.2026.3722742}}
+
+\noindent\textbf{Statut} : Publi\'e (12 ao\^ut 2026).
+
+\noindent\textbf{Contribution} : Cet article \'etend la borne d'impossibilit\'e
+au r\'egime quantique (Contribution C3, \'etape \textbf{E} de la progression
+F$\to$B$\to$\textbf{E}$\to$S$\to$C$\to$X)~:
+\begin{equation}
+\Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{\Delta_q + \eta_q \cdot H(\mathcal{C})}{\lambda}
+  + O(\lambda^{-2})
+\end{equation}
+Il introduit la capacit\'e d'extraction institutionnelle quantique $\Delta_q$
+et le coefficient de perte d'interpr\'etabilit\'e quantique $\eta_q$. La th\`ese
+en retient une d\'efinition unique (une perte, nulle pour les preuves qui sont
+des cha\^{\i}nes de bits classiques) et pr\'ecise que le terme $\eta_q H(\mathcal{C})$
+n'appara\^it que dans la majoration affaiblie. L'analyse de calibration
+porte sur les signatures ML-DSA et SLH-DSA~; ML-KEM, m\'ecanisme d'encapsulation
+de cl\'e, est hors du champ du Trilemme.
+Il constitue la section~\ref{sec:cro_pq} de cette th\`ese~; les protocoles de
+mesure de $\Delta_q$ et $\eta_q$ qu'il appelle sont sp\'ecifi\'es au
+chapitre~\ref{chap:experimentation}, tandis que ses prolongements rel\`event de l'Axe~III
+(cadre quantique quantitatif) identifi\'e \`a la
+section~\ref{sec:perspectives}.
+
+\end{sloppypar}

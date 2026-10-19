@@ -1,0 +1,956 @@
+% ============================================================================
+% S\'eCURIT\'e GAME-BASED ET R\'eDUCTIONS FORMELLES
+% source : annexes/Gamebased.tex
+% ============================================================================
+
+\chapter{S\'ecurit\'e game-based et r\'eductions formelles pour la famille SOTP}
+\label{chap:annexe_gamebased}
+
+\begin{sloppypar}
+Le cadre CLO d\'efinit $\Conf$, $\Rel$ et $\Opp$ avec des termes issus de la théorie de l'information, \`a savoir les entropies conditionnelles, l'information
+mutuelle et la distance de variation totale~\cite{MINKA2026CLO}. Cette approche
+permet des r\'esultats g\'en\'eraux (th\'eor\`eme du goulot d'\'etranglement
+contextuel, Trilemme CRO conditionnel), mais ne pr\'ecise pas directement
+\emph{ce qu'un adversaire calculatoirement born\'e peut ou ne peut pas
+faire}. En cryptographie computationnelle, la s\'ecurit\'e s'exprime
+classiquement via des \emph{jeux} (games) entre un challenger et un
+adversaire probabiliste polynomial-time (PPT).
+
+\begin{cmtEtape}{Pourquoi cette annexe.}
+Le cadre CLO raisonne en bits et en entropies, alors que la cryptographie classique
+raisonne en jeux et en avantages d'adversaires. Cette annexe construit
+le pont entre les deux en capturant chaque m\'etrique du cadre CLO
+par un jeu cryptographique, puis en reliant chaque jeu \`a une hypoth\`ese
+de duret\'e standard (PRG, DLOG, JL, Groth16).
+\end{cmtEtape}
+
+Cette annexe \'etablit le pont formel entre les deux mondes en trois \'etapes.
+\begin{enumerate}
+\item D\'efinir des jeux cryptographiques (\emph{IND-CONF},
+      \emph{BIND-REL}, \emph{EXT-OPP}) capturant op\'erationnellement
+      $\Conf$ (dans sa version calculatoire), $\Relver$ et $\Opp$
+\item Prouver des \emph{r\'eductions} formelles \'etablissant que, si un adversaire PPT
+      gagne l'un de ces jeux, il r\'esout un probl\`eme suppos\'e difficile
+      (PRG, logarithme discret, JL, Groth16)
+\item D\'eriver une minoration game-based du produit CLO
+      (Corollaire~\ref{cor:ann_cro_from_games}), \`a l'\'echelle op\'erationnelle
+      (confidentialit\'e calculatoire, fiabilit\'e de v\'erification), qui ne se
+      compare pas directement au Trilemme
+      (Remarque~\ref{rem:ann_pas_de_contradiction})
+\end{enumerate}
+
+\begin{cmtEtape}{Trois jeux, trois m\'etriques.}
+\textbf{IND-CONF} capte la confidentialit\'e en exigeant que l'adversaire ne puisse
+distinguer les preuves de deux messages. \textbf{BIND-REL} capte la
+fiabilit\'e, puisque l'adversaire ne doit pas pouvoir ouvrir une preuve sur
+deux messages distincts. Enfin, \textbf{EXT-OPP} capte l'opposabilit\'e,
+l'interpr\`ete institutionnel devant extraire le bon verdict depuis la
+preuve.
+\end{cmtEtape}
+
+\noindent\textbf{Convention.} Tout adversaire $\mathcal{A}$ est
+probabiliste polynomial-time (PPT) en $\lambda$ sauf mention contraire.
+Le challenger est not\'e $\mathcal{C}$. Une r\'eduction construit un
+algorithme $\mathcal{B}$ (r\'educteur) qui exploite $\mathcal{A}$ pour
+r\'esoudre un probl\`eme difficile.
+\cmt{Selon la convention standard en cryptographie, PPT signifie temps polynomial probabiliste.}
+\cmt{Le r\'educteur $\mathcal{B}$ est l'algorithme qui transforme une attaque en solution d'un probl\`eme difficile.}
+
+\begin{table}[htbp]
+\centering
+\caption{Structure de l'Annexe \ref{chap:annexe_gamebased}}
+\label{tab:ann_g_structure}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Section} & \textbf{Contenu} & \textbf{Propri\'et\'e}
+& \textbf{Hypoth\`ese} \\
+\midrule
+\ref{sec:gamebased_primitives} & Primitives et d\'efinitions pr\'ealables & -- & -- \\
+\ref{sec:gamebased_confidentialite} & Jeu IND-CONF + lien $\Conf$ & $\Conf$ & PRG \\
+\ref{sec:gamebased_fiabilite} & Jeu BIND-REL + lien $\Relver$ & $\Relver$ & DLOG \\
+\ref{sec:gamebased_opposabilite} & Jeu EXT-OPP + lien $\Opp$ & $\Opp$ & Fano \\
+\ref{sec:gamebased_SOTP-Low} & R\'eductions SOTP-Low & $\Conf_{\mathrm{calc}}$, $\Relver$ & PRG, DLOG \\
+\ref{sec:gamebased_SOTP-base} & Dimensionnement SOTP-Base & -- & JL \\
+\ref{sec:gamebased_SOTP-High} & R\'eductions SOTP-High & $\Conf$, $\Relver$ & Groth16 \\
+\ref{sec:gamebased_produitCRO} & \'enonc\'es complets + produit CLO & $\Conf_{\mathrm{calc}}\cdot\Relver\cdot\Opp$ & Tous \\
+\ref{sec:gamebased_limitations} & Limitations et port\'ee & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{sloppypar}
+
+% ============================================================================
+\section{PRIMITIVES CRYPTOGRAPHIQUES ET D\'EFINITIONS PR\'EALABLES}
+\addcontentsline{toc}{section}{Primitives et d\'efinitions pr\'ealables}
+\label{sec:gamebased_primitives}
+% ============================================================================
+\begin{sloppypar}
+
+\begin{cmtEtape}{Objectif de cette section.}
+Rappeler les quatre primitives cryptographiques utilis\'ees dans la
+famille SOTP, \`a savoir le PRG (couche Gold), l'engagement de Pedersen (couche Iron),
+le zk-SNARK Groth16 (SOTP-High) et la transformation Johnson-Lindenstrauss
+(SOTP-Base), ainsi que deux outils th\'eoriques, l'in\'egalit\'e de Fano et le DPI.
+\end{cmtEtape}
+
+\subsection{G\'en\'erateur pseudo-al\'eatoire (PRG)}
+\noindent\textbf{Intuition.} Un PRG prend une graine courte
+$s \in \{0,1\}^\lambda$ et produit une longue s\'equence
+$G(s) \in \{0,1\}^{L(\lambda)}$, $L > \lambda$, indiscernable
+d'une s\'equence vraiment al\'eatoire. Il fonde la couche
+Gold de SOTP-Low, dans laquelle le pad $G(s)$ masque le message de sorte que, sans $s$,
+aucun adversaire PPT ne peut r\'ecup\'erer $m$ depuis $m \oplus G(s)$.
+\cmt{Le PRG \'etire une petite graine en un long pad pseudo-al\'eatoire.}
+\cmt{Sans la graine, le pad est indiscernable d'un al\'ea v\'eritable.}
+
+\begin{definition}[Sécurité PRG~\cite{GoldreichKrawczyk99}]\label{def:ann_prg}
+Une fonction calculable en temps polynomial
+$G\colon \{0,1\}^\lambda \to \{0,1\}^{L(\lambda)}$ avec $L(\lambda) > \lambda$
+est un PRG sûr si, pour tout adversaire PPT $\mathcal{A}$, 
+\begin{equation}
+\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{A}}(\lambda) =
+\left|
+\Pr_{s \leftarrow \{0,1\}^\lambda}\!\big[\mathcal{A}(G(s)) = 1\big]
+- \Pr_{y \leftarrow \{0,1\}^{L(\lambda)}}\!\big[\mathcal{A}(y) = 1\big]
+\right| \leq \negl(\lambda)
+\end{equation}
+\cmtFormule{L'avantage mesure la capacit\'e \`a distinguer $G(s)$ d'un al\'ea pur.}
+\cmt{L'avantage doit \^etre n\'egligeable pour tout adversaire PPT.}
+\end{definition}
+
+\noindent\textbf{Impl\'ementations pratiques.} SOTP-Low utilise
+ChaCha20/AES-CTR, deux PRG standardis\'es atteignant cette d\'efinition.
+\cmt{ChaCha20 et AES-CTR sont des PRG concrets, utilis\'es en pratique.}
+
+\subsection{Engagement de Pedersen}
+
+\noindent\textbf{Intuition.} L'engagement de Pedersen permet \`a un
+prouveur de \guillemotleft~s'engager~\guillemotright sur $m$ sans le r\'ev\'eler (\emph{perfect hiding}),
+tout en \'etant incapable de changer d'avis (\emph{computational binding}).
+La construction $\mathsf{Com}(m, r) = g^m h^r$ exploite l'alg\`ebre des
+groupes cycliques, de sorte que toute collision d'engagements permettrait de calculer
+$\log_g h$, r\'esolvant le logarithme discret.
+\cmt{Le hiding parfait signifie que le message est cach\'e inconditionnellement.}
+\cmt{Par le binding computationnel, ouvrir sur deux messages casserait DLOG.}
+
+\begin{definition}[Engagement~de~Pedersen~\cite{Pedersen91}]\label{def:ann_pedersen}
+Soit $\mathbb{G}$ un groupe cyclique d'ordre premier $q$,
+$g, h \in \mathbb{G}$ deux générateurs tels que $\log_g h$ est inconnu.
+\begin{itemize}
+\item $\mathsf{Com}(m, r) = g^m h^r \in \mathbb{G}$, $\quad m,r \in \mathbb{Z}_q$ (op\'eration de groupe)
+\item $\mathsf{Open}(\sigma_2, m, r)$ accepte si $\sigma_2 = g^m h^r$
+\end{itemize}
+\textbf{Perfect Hiding.} Pour tout $m_0, m_1$, les engagements
+$\mathsf{Com}(m_0, r_0)$ et $\mathsf{Com}(m_1, r_1)$ sont identiquement
+distribués pour $r_0, r_1 \xleftarrow{\$} \mathbb{Z}_q$.
+\cmt{Le masque $h^r$ est uniforme, ind\'ependant du message.}
+\textbf{Computational Binding.} Aucun adversaire PPT ne peut trouver
+$(m_0, r_0, m_1, r_1)$ avec $m_0 \neq m_1$ tel que
+$g^{m_0} h^{r_0} = g^{m_1} h^{r_1}$ dans $\mathbb{G}$.
+\cmt{Deux ouvertures distinctes r\'ev\`elent $\log_g h$.}
+\end{definition}
+
+\noindent\textbf{R\^ole dans SOTP.} La couche Iron de toute variante SOTP
+est un engagement de Pedersen (sur la graine $s \in \mathbb{Z}_q$ pour SOTP-Low et
+SOTP-Base, sur $m$ pour SOTP-High). Il garantit la fiabilit\'e de v\'erification
+$\Relver$, puisqu'une preuve ne peut pas \^etre \guillemotleft~ouverte~\guillemotright sur deux messages
+distincts.
+\cmt{C'est la source de la fiabilit\'e de v\'erification dans toutes les variantes SOTP.}
+
+\subsection{zk-SNARK Groth16}
+
+\noindent\textbf{Intuition.} Un zk-SNARK pour une relation $\mathcal{R}$
+permet de prouver qu'on conna\^it un t\'emoin $w$ tel que $(x,w) \in
+\mathcal{R}$, sans r\'ev\'eler $w$, en une preuve de taille constante.
+Une preuve Groth16 compte trois \'el\'ements de groupe, soit 128 octets (points compress\'es) sur BN254
+ou 192 octets sur BLS12-381~; elle se v\'erifie en $O(1)$ couplages.
+\cmt{Preuve de taille constante quel que soit le circuit.}
+\cmt{La v\'erification se fait en temps constant via des couplages.}
+
+\begin{definition}[zk-SNARK~Groth16~\cite{Groth16}]\label{def:ann_groth16}
+$(\mathsf{Setup}, \mathsf{Prove}, \mathsf{Verify})$ satisfait les propri\'et\'es suivantes.
+
+\noindent\textbf{Complétude parfaite.}
+$\Pr[\mathsf{Verify}(\sigma_v,x,\pi)=1 \;|\; (x,w)\in\mathcal{R}] = 1$
+\cmt{Une preuve honn\^ete est toujours accept\'ee.}
+
+\noindent\textbf{Solidité connaissance.} Pour tout PPT $\mathcal{A}$,
+il existe un extracteur $\mathcal{E}$ tel que
+\begin{equation}
+\Pr\!\left[
+\mathsf{Verify}(\sigma_v,x,\pi)=1 \land (x,w)\notin\mathcal{R} :
+(x,\pi)\leftarrow\mathcal{A}(\sigma_p),\; w\leftarrow\mathcal{E}(\sigma_p)
+\right] \leq \negl(\lambda)
+\end{equation}
+\cmtFormule{L'extracteur r\'ecup\`ere un t\'emoin valide si la preuve passe.}
+\cmt{Cette propri\'et\'e est plus forte que la soundness standard puisqu'on peut extraire le t\'emoin.}
+
+\noindent\textbf{Zéro-connaissance parfaite.}
+$\exists$ simulateur $\mathcal{S}$ tel que pour tout $(x,w)\in\mathcal{R}$,
+\begin{equation}
+\{\pi : \pi \leftarrow \mathsf{Prove}(\sigma_p,x,w)\}
+\equiv
+\{\pi : \pi \leftarrow \mathcal{S}(\sigma_p,x)\}
+\quad\text{(distributions identiques)}
+\end{equation}
+\cmtFormule{Les vraies preuves et les preuves simul\'ees sont statistiquement identiques.}
+\cmt{Cette \'egalit\'e exacte explique $\Conf \geq 1 - \negl$.}
+\end{definition}
+
+\noindent\textbf{Lecture pour SOTP-High.} La z\'ero-connaissance
+\emph{parfaite}, jointe au masquage parfait de l'engagement $c_m$, implique que
+$(\pi, c_m)$ est ind\'ependant de $m$ sachant $c$, d'o\`u $\Conf = 1$ au sens statistique.
+La solidit\'e connaissance implique la fiabilit\'e de v\'erification
+$\Relver \geq 1 - \negl(\lambda)$~; elle ne dit rien de la fiabilit\'e de
+reconstruction, qui vaut $2^{-\lambda}$ lorsque $\Conf = 1$
+(Remarque~\ref{rem:rel_ver}).
+\cmt{La ZK parfaite donne la confidentialit\'e~; la solidit\'e donne la fiabilit\'e de v\'erification.}
+
+\subsection{Transformation Johnson-Lindenstrauss (JL)}
+
+\noindent\textbf{Intuition.} La JL-transform projette $N$ points de
+$\mathbb{R}^n$ dans $\mathbb{R}^d$ ($d \ll n$) en pr\'eservant
+approximativement toutes les distances par paires. Dans SOTP-Base,
+les contextes $c \in \mathbb{R}^n$ sont compress\'es en $\Phi c \in
+\mathbb{R}^d$, conservant la structure permettant l'extraction
+institutionnelle.
+\cmt{On compresse un espace de grande dimension en pr\'eservant les distances.}
+\cmt{Cela permet de r\'eduire la taille de la preuve sans perdre l'information utile.}
+
+\begin{definition}[Transformation~JL~\cite{JohnsonLindenstrauss84,DasguptaGupta03}]\label{def:ann_jl}
+Pour $0 < \varepsilon < 1$, $N > 0$, $S \subset \mathbb{R}^n$ avec
+$|S| = N$, il existe $\Phi\colon \mathbb{R}^n \to \mathbb{R}^d$ avec
+$d = O(\varepsilon^{-2} \log N)$ telle que, pour tout $x,y \in S$,
+\begin{equation}
+(1-\varepsilon)\|x-y\|^2 \leq \|\Phi x-\Phi y\|^2 \leq (1+\varepsilon)\|x-y\|^2
+\end{equation}
+\cmtFormule{Les distances sont pr\'eserv\'ees \`a $\varepsilon$ pr\`es.}
+\cmt{$d$ d\'epend logarithmiquement de $N$, pas lin\'eairement.}
+\end{definition}
+
+\noindent\textbf{Lemme de dimension pour SOTP-Base.}
+La dimension minimale $d$ pour pr\'eserver $\Delta$ bits d'extraction
+avec tol\'erance $\varepsilon^2$ est donn\'ee par la condition
+\begin{equation}
+d \geq \frac{4\Delta H(\mathcal{C})}{\varepsilon^2}
+\label{eq:ann_jl_dim}
+\end{equation}
+\cmtFormule{La dimension cro\^it lin\'eairement en $\Delta H(C)$.}
+\cmt{C'est le co\^ut de la compression pr\'eservant l'extraction.}
+
+\subsection{Outils th\'eoriques fondamentaux}
+
+\begin{lemma}[Inégalité~de~Fano~\cite{CoverThomas06}]\label{lem:ann_g_fano}
+Soit $X$ une variable à $k$ valeurs, $\hat{X}$ un estimateur,
+$p_e = \Pr[X \neq \hat{X}]$. Alors
+\begin{equation}
+H(X|\hat{X}) \leq h(p_e) + p_e \log_2(k-1)
+\end{equation}
+\cmtFormule{L'incertitude r\'esiduelle est born\'ee par la probabilit\'e d'erreur.}
+\end{lemma}
+
+\noindent\textbf{Lecture.} Faible erreur d'extraction $p_e$
+$\Rightarrow$ faible incertitude r\'esiduelle $H(X|\hat{X})$
+$\Rightarrow$ grande information mutuelle extraite. Ce lemme est le
+pont direct entre le jeu EXT-OPP et la m\'etrique $\Opp$.
+\cmt{Plus l'interpr\`ete se trompe peu, plus il extrait d'information.}
+\cmt{C'est le lien formel entre le jeu EXT-OPP et la m\'etrique $\Opp$.}
+
+\begin{lemma}[Traitement~de~l'Information~(DPI)~\cite{CoverThomas06}]\label{lem:ann_dpi}
+Si $X \to Y \to Z$ forme une chaîne de Markov, alors
+$I(X;Z) \leq I(X;Y)$.
+\cmtFormule{Traiter une donn\'ee ne peut qu'\'eliminer de l'information.}
+\end{lemma}
+
+\noindent\textbf{Lecture.} Toute transformation de $Y$ ne peut
+qu'augmenter l'incertitude sur $X$. Un adversaire observant $\sigma$
+ne peut extraire au plus que $I(M;\Sigma|C)$ bits sur $m$, fondation
+du lien entre $\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}$ et $I(M;\Sigma|C)$.
+\cmt{Le DPI justifie que la meilleure attaque est born\'ee par $I(M;\Sigma|C)$.}
+\end{sloppypar}
+
+% ============================================================================
+\section{JEU IND-CONF~: CONFIDENTIALIT\'E GAME-BASED}
+\addcontentsline{toc}{section}{Jeu IND-CONF}
+\label{sec:gamebased_confidentialite}
+% ============================================================================
+\begin{sloppypar}
+
+\begin{cmtEtape}{Objectif de cette section.}
+D\'efinir le jeu IND-CONF qui capture la confidentialit\'e, puis
+\'etablir son lien avec la m\'etrique $\Conf$ du cadre CLO.
+\end{cmtEtape}
+
+\subsection{D\'efinition du jeu}
+
+\noindent\textbf{Intuition.} L'adversaire choisit deux messages
+$m_0, m_1$, re\c{c}oit la preuve de l'un des deux (au choix secret du
+challenger) puis doit deviner lequel. Si le protocole est confidentiel,
+l'adversaire ne fait pas mieux qu'une devinette al\'eatoire
+(avantage $\approx 0$).
+\cmt{L'adversaire ne doit pas pouvoir distinguer les preuves des deux messages.}
+
+\begin{definition}[Jeu~IND-CONF (section~\ref{sec:sotp_construction})]\label{def:ann_ind_conf}
+Pour un protocole $\mathcal{P} = (\mathsf{Setup},\mathsf{Prove},
+\mathsf{Verify})$ et un adversaire $\mathcal{A}$, le jeu se d\'eroule comme suit.
+\begin{enumerate}
+\item $\mathcal{A}$ reçoit $pp \leftarrow \mathsf{Setup}(1^\lambda)$
+\item $\mathcal{A}$ choisit $m_0,m_1 \in \mathcal{M}_\lambda$
+      ($|m_0|=|m_1|$) et $c \in \mathcal{C}_\lambda$
+      \hfill\textit{(phase de défi)}
+      \cmt{L'adversaire choisit les deux messages \`a distinguer.}
+\item Le challenger tire $b \xleftarrow{\$} \{0,1\}$ et calcule
+      $\sigma \leftarrow \mathsf{Prove}(pp, m_b, c)$
+      \cmt{Le challenger chiffre l'un des deux messages au hasard.}
+\item $\mathcal{A}$ reçoit $\sigma$ et émet $b' \in \{0,1\}$
+      \hfill\textit{(phase de réponse)}
+      \cmt{L'adversaire devine lequel des deux messages a \'et\'e chiffr\'e.}
+\item L'expérience produit 1 si $b' = b$, sinon 0
+\end{enumerate}
+\begin{equation}
+\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathcal{P}}(\lambda)
+= \left|\Pr\!\left[
+\mathsf{Exp}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathcal{P}}(\lambda)
+= 1\right] - \frac{1}{2}\right|
+\end{equation}
+\cmtFormule{L'avantage est l'\'ecart \`a la devinette al\'eatoire (probabilit\'e 1/2).}
+\cmt{Un avantage n\'egligeable signifie confidentialit\'e.}
+\end{definition}
+
+\subsection{Lien avec $\Conf$ au sens de la th\'eorie de l'information}
+
+\begin{remark}[Pont IND-CONF $\leftrightarrow$ $\Conf$]
+\label{rem:ann_ind_conf_link}
+Pour tout distingueur $\mathcal{A}$, m\^eme non born\'e en calcul, on a
+\begin{equation}
+\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathcal{P}}(\lambda)
+\;\leq\; \frac{1 - \Conf(\mathcal{P})}{2},
+\end{equation}
+\cmtFormule{L'avantage IND-CONF est born\'e par la distinguabilit\'e statistique.}
+avec \'egalit\'e pour le test de Neyman--Pearson sur la paire la plus
+distinguable (Remarque~\ref{rem:jeu_ind_conf_link}). Un protocole avec
+$\Conf \geq 1 - \negl(\lambda)$ r\'esiste donc au jeu IND-CONF. La r\'eciproque
+est fausse, car la r\'esistance \`a IND-CONF contre les adversaires PPT est une
+propri\'et\'e calculatoire, compatible avec une confidentialit\'e statistique faible.
+Les r\'eductions de cette annexe \'etablissent des garanties calculatoires, que
+nous notons $\Conf_{\mathrm{calc}}$ lorsqu'il faut les distinguer de $\Conf$.
+\cmt{La confidentialit\'e statistique implique la confidentialit\'e calculatoire, pas l'inverse.}
+\end{remark}
+
+\end{sloppypar}
+
+% ============================================================================
+\section{JEU BIND-REL~: FIABILIT\'E GAME-BASED}
+\addcontentsline{toc}{section}{Jeu BIND-REL}
+\label{sec:gamebased_fiabilite}
+% ============================================================================
+\begin{sloppypar}
+
+\begin{cmtEtape}{Objectif de cette section.}
+D\'efinir le jeu BIND-REL qui capture la fiabilit\'e (non-\'equivocit\'e),
+puis \'etablir son lien avec la m\'etrique $\Relver$.
+\end{cmtEtape}
+
+\subsection{D\'efinition du jeu}
+
+\noindent\textbf{Intuition.} Le jeu capture la \emph{non-\'equivocit\'e},
+selon laquelle un adversaire ne doit pas pouvoir produire une preuve $\sigma$ ouvrable
+sur deux messages distincts $m_0 \neq m_1$. Contrairement \`a IND-CONF,
+l'adversaire choisit librement $(c, \sigma, s_0, s_1)$, mod\'elisant
+un agent qui forge d\'elib\'er\'ement une preuve ambiguë.
+\cmt{L'adversaire essaie d'ouvrir une m\^eme preuve sur deux messages diff\'erents.}
+
+\begin{definition}[Jeu~BIND-REL (section~\ref{sec:sotp_construction})]\label{def:ann_bind_rel}
+Pour un protocole $\mathcal{P}$ avec $\mathsf{Open}$ et un adversaire
+$\mathcal{A}$, le jeu se d\'eroule comme suit.
+\begin{enumerate}
+\item $\mathcal{A}$ reçoit $pp \leftarrow \mathsf{Setup}(1^\lambda)$
+\item $\mathcal{A}$ produit $(c, \sigma, s_0, s_1)$
+      \cmt{L'adversaire forge une preuve et deux t\'emoins.}
+\item Calculer $m_i = \mathsf{Open}(pp, \sigma, s_i)$ pour $i \in \{0,1\}$
+\item $\mathcal{A}$ \emph{gagne} si et seulement si
+  $\mathsf{Verify}(pp,\sigma,c)=1$,
+  $m_0 \neq m_1$,
+  $m_0 \neq \bot$ et $m_1 \neq \bot$
+  \cmt{Il gagne si la preuve passe et les deux messages sont distincts et valides.}
+\end{enumerate}
+\begin{equation}
+\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathcal{P}}(\lambda)
+= \Pr\!\left[\mathcal{A} \text{ gagne dans }
+\mathsf{Exp}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathcal{P}}(\lambda)
+\right]
+\end{equation}
+\cmtFormule{Probabilit\'e que l'adversaire produise une collision d'engagement.}
+\end{definition}
+
+\subsection{Lien avec $\Relver$ (fiabilit\'e de v\'erification)}
+
+\begin{remark}[Pont BIND-REL $\leftrightarrow$ $\Relver$]
+\label{rem:ann_bind_rel_link}
+Pour un protocole complet dont la probabilit\'e de gain BIND-REL est au plus
+$\varepsilon_{\mathsf{bind}}$, on a
+\begin{equation}
+\Relver \geq 1 - \varepsilon_{\mathsf{bind}} - \negl(\lambda)
+\end{equation}
+\cmtFormule{Fiabilit\'e de v\'erification born\'ee inf\'erieurement par $1 - \varepsilon_{\mathsf{bind}}$.}
+(Remarque~\ref{rem:jeu_bind_rel_link}). BIND-REL ne dit rien de la fiabilit\'e de
+reconstruction $\Relrec$, puisqu'un engagement parfaitement masquant et liant a
+$\Relrec = 2^{-\lambda}$.
+\cmt{Un engagement liant ne r\'ev\`ele pas pour autant le message.}
+\end{remark}
+\end{sloppypar}
+
+% ============================================================================
+\section{JEU EXT-OPP~: OPPOSABILIT\'E GAME-BASED}
+\addcontentsline{toc}{section}{Jeu EXT-OPP}
+\label{sec:gamebased_opposabilite}
+% ============================================================================
+\begin{sloppypar}
+
+\begin{cmtEtape}{Objectif de cette section.}
+D\'efinir le jeu EXT-OPP qui capture l'opposabilit\'e institutionnelle,
+puis \'etablir son lien avec la m\'etrique $\Opp$ via l'in\'egalit\'e de Fano.
+\end{cmtEtape}
+
+\subsection{D\'efinition du jeu}
+
+\noindent\textbf{Intuition.} Le jeu mod\'elise la capacit\'e d'un interpr\`ete
+institutionnel \`a extraire le bon verdict depuis une preuve. L'\guillemotleft~adversaire~\guillemotright
+ici est l'interpr\`ete lui-m\^eme (juge, r\'egulateur), dont on mesure la probabilit\'e
+d'\emph{erreur}. Le verdict de r\'ef\'erence $v^*$ est celui que l'institution rendrait en
+pleine connaissance de cause (D\'efinition~\ref{def:interp_admissible})~;
+l'institution doit rendre une d\'ecision align\'ee sur le contexte l\'egal, au-del\`a
+de la seule v\'erification de la preuve.
+\cmt{Contrairement aux autres jeux, l'adversaire est ici l'interpr\`ete, qui n'est pas malveillant.}
+\cmt{On mesure sa probabilit\'e de se tromper sur le verdict.}
+
+\begin{definition}[Jeu~EXT-OPP (section~\ref{sec:sotp_construction})]\label{def:ann_ext_opp}
+Pour un protocole $\mathcal{P}$, un interprète $\mathsf{Interpret}$
+de capacité $\Delta$ et une distribution $\mathcal{D}_C$ fixée à l'avance, le jeu se d\'eroule comme suit.
+\begin{enumerate}
+\item Le challenger tire $c \leftarrow \mathcal{D}_C$,
+      $m \leftarrow \mathcal{M}_\lambda$
+      \cmt{Le contexte est tir\'e selon la distribution du domaine.}
+\item Le challenger calcule $\sigma \leftarrow \mathsf{Prove}(pp,m,c)$
+\item L'interprète reçoit $(\sigma,c)$ et produit
+      $v \leftarrow \mathsf{Interpret}(pp,\sigma,c,\Delta)$
+      \cmt{L'interpr\`ete rend un verdict \`a partir de la preuve et du contexte.}
+\item Soit $v^*$ le verdict de r\'ef\'erence, r\'ealisation de la variable $V$
+      (qui peut d\'ependre du message, du contexte et des ressources
+      institutionnelles, D\'efinition~\ref{def:interp_admissible})
+      \cmt{Le verdict de r\'ef\'erence est celui que l'institution rendrait en pleine connaissance de cause.}
+\item L'interprète \emph{gagne} si $v = v^*$
+\end{enumerate}
+\begin{equation}
+\mathsf{Err}^{\mathsf{EXT\text{-}OPP}}_{\mathsf{Interpret},\mathcal{P},\mathcal{D}_C}(\lambda)
+= \Pr\!\left[
+\mathsf{Interpret} \text{ perd dans }
+\mathsf{Exp}^{\mathsf{EXT\text{-}OPP}}\right]
+\end{equation}
+\cmtFormule{Probabilit\'e que l'interpr\`ete rende un verdict incorrect.}
+\end{definition}
+
+\noindent\textbf{Pourquoi $\mathcal{D}_C$ est fix\'ee \`a l'avance ?}
+L'opposabilit\'e d\'epend du domaine institutionnel. Un protocole tr\`es
+opposable dans un contexte contractuel simple peut l'\^etre peu dans un
+contexte r\'eglementaire complexe. Fixer $\mathcal{D}_C$ param\'etrise le
+jeu par le domaine.
+\cmt{Le domaine institutionnel conditionne la difficult\'e de l'extraction.}
+
+\subsection{Lien avec $\Opp$ via Fano}
+
+\begin{remark}[Pont EXT-OPP $\leftrightarrow$ $\Opp$]
+\label{rem:ann_ext_opp_link}
+Par Fano (Lemme~\ref{lem:ann_g_fano}) appliqu\'e \`a l'estimation de $V$ \`a
+partir de $(\Sigma,C)$, on obtient
+\begin{equation}
+\Opp = 1 - \frac{H(V|\Sigma,C)}{H(V|C)}
+\geq 1 - \frac{h(\varepsilon_{\mathsf{ext}})
+  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)}
+  {H(V|C)}
+\label{eq:ann_fano_opp}
+\end{equation}
+\cmtFormule{L'opposabilit\'e est born\'ee inf\'erieurement par $1 - \varepsilon_{\mathsf{ext}}$.}
+où $\varepsilon_{\mathsf{ext}} = \mathsf{Err}^{\mathsf{EXT\text{-}OPP}}$
+et $h(\cdot)$ est l'entropie binaire.
+Un interprète avec faible erreur d'extraction implique une forte
+opposabilité.
+\cmt{Moins l'interpr\`ete se trompe, plus l'opposabilit\'e est grande.}
+\end{remark}
+\end{sloppypar}
+
+% ============================================================================
+\section{R\'EDUCTIONS FORMELLES POUR SOTP-LOW}
+\addcontentsline{toc}{section}{R\'eductions SOTP-Low}
+\label{sec:gamebased_SOTP-Low}
+% ============================================================================
+\begin{sloppypar}
+SOTP-Low op\`ere dans le r\'egime \`a contexte rare ($H(\mathcal{C}) < H^*(\lambda)$).
+Ses deux r\'eductions principales ciblent PRG (confidentialit\'e) et
+logarithme discret (fiabilit\'e).
+
+\begin{cmtEtape}{Objectif de cette section.}
+\'Etablir les deux r\'eductions formelles qui relient SOTP-Low aux
+hypoth\`eses standard PRG (couche Gold) et DLOG (couche Iron).
+\end{cmtEtape}
+
+\subsection{R\'eduction PRG pour la confidentialit\'e}
+
+\noindent\textbf{Intuition.} La couche Gold chiffre $m$ par le pad $G(s)$.
+Si $\mathcal{A}$ distingue les preuves de $m_0$ vs $m_1$, il distingue
+n\'ecessairement $G(s)$ d'une cha\^ine al\'eatoire, contredisant la s\'ecurit\'e PRG.
+\cmt{Toute attaque contre la confidentialit\'e devient une attaque contre le PRG.}
+
+\begin{theorem*}[SOTP-Low~:~Réduction~PRG (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_low_conf}
+Soit $\mathcal{A}$ adversaire PPT contre IND-CONF de SOTP-Low avec
+avantage $\varepsilon$. Alors $\exists$ adversaire PPT $\mathcal{B}$
+contre le PRG $G$ avec avantage $\geq \varepsilon/2 - \negl(\lambda)$.
+\cmt{L'avantage contre le PRG est au moins la moiti\'e de l'avantage contre IND-CONF.}
+\end{theorem*}
+
+\begin{Preuve}
+
+\begin{cmtEtape}{Construction du r\'educteur $\mathcal{B}$.}
+$\mathcal{B}$ re\c{c}oit un d\'efi PRG (soit $G(s)$, soit uniforme) et
+simule l'environnement IND-CONF pour $\mathcal{A}$. Il utilise son
+d\'efi comme pad masquant, puis observe si $\mathcal{A}$ devine
+correctement $b$.
+\end{cmtEtape}
+
+\textbf{Construction de $\mathcal{B}$.} $\mathcal{B}$ re\c{c}oit un d\'efi
+PRG $y \in \{0,1\}^L$ (soit $G(s)$ soit uniforme) et simule le jeu
+IND-CONF pour $\mathcal{A}$ de la mani\`ere suivante.
+\begin{enumerate}
+\item G\'en\'erer $(\mathbb{G},q,g,h)$ comme dans le Setup SOTP-Low
+      \cmt{$\mathcal{B}$ peut g\'en\'erer les param\`etres publics car ils ne d\'ependent pas du PRG.}
+\item Quand $\mathcal{A}$ soumet $(m_0,m_1,c)$, choisir
+      $b \xleftarrow{\$} \{0,1\}$
+      \cmt{$\mathcal{B}$ choisit un bit secret comme dans le vrai jeu.}
+\item Poser $\sigma_1 = m_b \oplus y$ \hfill (d\'efi PRG comme pad)
+      \cmt{Le d\'efi PRG joue le r\^ole du pad.}
+\item Poser $\sigma_2 = g^{s'}h^\rho$ pour
+      $s',\rho \xleftarrow{\$} \mathbb{Z}_q$ \hfill (Iron simul\'ee)
+      \cmt{$\mathcal{B}$ simule la couche Iron sans conna\^itre $s$.}
+\item Poser $\sigma_3 = (\phi(c), \mathsf{Hash}(c), V(c))$
+      \hfill (Clay d\'eterministe)
+      \cmt{La couche Clay est simul\'ee exactement comme dans SOTP-Low.}
+\item Retourner $\sigma = (\sigma_1,\sigma_2,\sigma_3)$ \`a $\mathcal{A}$
+\end{enumerate}
+Si $\mathcal{A}$ \'emet $b'=b$, $\mathcal{B}$ retourne 1 ; sinon 0.
+\cmt{$\mathcal{B}$ retourne 1 si $\mathcal{A}$ a devin\'e correctement.}
+
+\textbf{Analyse.}
+\begin{itemize}
+\item \emph{Cas $y = G(s)$.} $\mathcal{A}$ voit une vraie preuve SOTP-Low,
+      gagne avec probabilit\'e $1/2 + \varepsilon$.
+      $\mathcal{B}$ retourne 1 avec probabilit\'e $1/2+\varepsilon$.
+      \cmt{Dans ce cas, $\mathcal{B}$ a bien simul\'e le vrai jeu.}
+\item \emph{Cas $y$ uniforme.} $\sigma_1 = m_b \oplus U_{|m|}$ est un
+      one-time pad parfait, $\mathcal{A}$ n'a aucune information sur $b$.
+      $\mathcal{B}$ retourne 1 avec probabilit\'e $1/2$.
+      \cmt{Dans ce cas, $\mathcal{A}$ ne peut pas mieux faire que 1/2.}
+\end{itemize}
+Donc $\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) \geq
+\varepsilon/2 - \negl(\lambda)$.
+\cmtFormule{Conclusion de la r\'eduction.}
+\end{Preuve}
+
+\subsection{R\'eduction logarithme discret pour la fiabilit\'e}
+
+\noindent\textbf{Intuition.} La couche Iron est
+$\sigma_2 = g^s h^\rho$. Pour gagner BIND-REL, l'adversaire doit trouver
+deux ouvertures $s_0 \neq s_1$ pour le m\^eme $\sigma_2$, ce qui implique
+$g^{s_0}h^{\rho_0} = g^{s_1}h^{\rho_1}$, permettant de calculer
+$\log_g h$, r\'esolvant DLOG.
+\cmt{Deux ouvertures distinctes donnent directement le logarithme discret.}
+
+\begin{theorem}[SOTP-Low~:~Réduction~DLOG (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_low_rel}
+On suppose la graine tir\'ee dans $\mathbb{Z}_q$ et l'engagement de la forme
+$\sigma_2 = g^{s}h^{\rho}$ (Algorithme~\ref{alg:sotp_low}). Soit $\mathcal{A}$ PPT
+gagnant BIND-REL pour SOTP-Low (proc\'edure d'ouverture $\mathsf{Open}$) avec
+probabilit\'e $\varepsilon$. Alors $\exists$ adversaire PPT $\mathcal{B}$ r\'esolvant
+DLOG dans $\mathbb{G}$ avec probabilit\'e $\geq \varepsilon$.
+\cmt{L'avantage contre DLOG est le m\^eme que contre BIND-REL.}
+\end{theorem}
+
+\begin{Preuve}
+
+\begin{cmtEtape}{Construction du r\'educteur DLOG.}
+$\mathcal{B}$ re\c{c}oit une instance DLOG $(g, h)$ et utilise l'attaque
+de $\mathcal{A}$ contre BIND-REL pour extraire $\log_g h$. La cl\'e est
+que deux ouvertures valides sur la m\^eme preuve donnent une \'equation
+alg\'ebrique r\'esoluble.
+\end{cmtEtape}
+
+Soit une instance DLOG $(g,h)$ avec $x = \log_g h$ inconnu.
+\begin{enumerate}
+\item $\mathcal{B}$ configure SOTP-Low avec $(g,h)$ donn\'es
+      \cmt{$\mathcal{B}$ utilise l'instance DLOG comme param\`etres publics~; leur loi est celle du Setup.}
+\item $\mathcal{A}$ produit $(c,\,\sigma{=}(\sigma_1,\sigma_2,\sigma_3))$ et deux
+      ouvertures accept\'ees $(m_0, s_0, \rho_0)$, $(m_1, s_1, \rho_1)$ avec
+      $m_0 \neq m_1$
+      \cmt{$\mathcal{A}$ fournit sa collision d'ouverture.}
+\item Comme $\sigma_1 = m_0 \oplus \mathsf{PRG}(s_0) = m_1 \oplus \mathsf{PRG}(s_1)$ et
+      $m_0 \neq m_1$, on a $\mathsf{PRG}(s_0) \neq \mathsf{PRG}(s_1)$, donc
+      $s_0 \neq s_1$ dans $\mathbb{Z}_q$
+      \cmt{C'est ici que le tirage de la graine dans $\mathbb{Z}_q$ est indispensable, car avec une graine de $\{0,1\}^\lambda$ engag\'ee par $\mathsf{int}(s) \bmod q$, $s$ et $s+q$ donneraient le m\^eme engagement.}
+\item Les deux ouvertures donnent $g^{s_0}h^{\rho_0} = g^{s_1}h^{\rho_1}$, donc
+      $g^{s_0-s_1} = h^{\rho_1-\rho_0}$~; comme $s_0 \neq s_1$ et $g$ engendre
+      $\mathbb{G}$, on a $\rho_1 \neq \rho_0$
+      \cmtFormule{On isole $\log_g h = x$ dans l'\'equation.}
+\item Calculer
+\begin{equation}
+x = \bigl(s_0-s_1\bigr)\cdot\bigl(\rho_1-\rho_0\bigr)^{-1} \bmod q
+\end{equation}
+\cmtFormule{On r\'esout l'\'equation lin\'eaire pour obtenir $x = \log_g h$.}
+\end{enumerate}
+$\mathcal{B}$ r\'eussit chaque fois que $\mathcal{A}$ produit une
+attaque valide, avec probabilit\'e $\varepsilon$.
+\cmt{La r\'eduction est exacte, sans perte d'avantage.}
+\end{Preuve}
+
+\noindent\textbf{Signification pratique.} Avec Curve25519 ($q \approx 2^{252}$,
+s\'ecurit\'e 128 bits), casser la fiabilit\'e de SOTP-Low est aussi difficile
+que r\'esoudre le DLP sur les courbes elliptiques.
+\cmt{Le niveau de s\'ecurit\'e de SOTP-Low h\'erite de celui de DLOG sur la courbe.}
+\end{sloppypar}
+
+% ============================================================================
+\section{R\'EDUCTION JL POUR SOTP-BASE}
+\addcontentsline{toc}{section}{R\'eduction SOTP-Base}
+\label{sec:gamebased_SOTP-base}
+% ============================================================================
+\begin{sloppypar}
+SOTP-Base op\`ere dans le r\'egime de transition
+($H^*(\lambda) \leq H(\mathcal{C}) \leq \lambda/\log_2\lambda$).
+Sa couche Clay applique une projection JL $\Phi\colon \mathbb{R}^n \to
+\mathbb{R}^d$ avec $d = \lceil 4\Delta H(\mathcal{C})/\varepsilon^2
+\rceil$.
+
+\begin{cmtEtape}{Objectif de cette section.}
+Montrer que l'erreur d'extraction de l'interpr\`ete est directement
+reli\'ee \`a la qualit\'e de la pr\'eservation JL. Si la projection
+d\'eforme trop les distances, l'extraction devient erron\'ee.
+\end{cmtEtape}
+
+\noindent\textbf{Intuition.} Si $\Phi$ d\'eforme trop certaines distances,
+les contextes voisins deviennent indiscernables dans l'espace compress\'e,
+causant des erreurs d'extraction. La r\'eduction ci-dessous quantifie
+pr\'ecis\'ement cette relation.
+\cmt{La compression JL est le seul point de perte en SOTP-Base.}
+
+\begin{theorem}[SOTP-Base~:~Dimensionnement~JL (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_base_opp}
+Soit $\mathcal{C} = \{c_1,\ldots,c_N\}$ l'ensemble des contextes plong\'es, $N =
+2^{H(\mathcal{C})}$ et $\delta, \varepsilon' \in (0,1)$. Si la dimension de
+projection v\'erifie
+\begin{equation}
+d \;\geq\; \frac{8}{\delta^2}\,\ln\!\left(\frac{N^2}{\varepsilon'}\right)
+= O\!\left(\delta^{-2}\bigl(H(\mathcal{C}) + \log(1/\varepsilon')\bigr)\right),
+\end{equation}
+alors, avec probabilit\'e au moins $1 - \varepsilon'$ sur le tirage de $\Phi$,
+$\Phi$ pr\'eserve toutes les distances par paires de $\mathcal{C}$ \`a un facteur
+$(1 \pm \delta)$ pr\`es.
+\cmt{La pr\'eservation JL conditionne l'extraction~; la r\'eciproque est fausse.}
+\end{theorem}
+
+\begin{Preuve}
+Par le lemme JL, pour chaque paire $(i,j)$,
+$\Pr\bigl[\,\bigl|\|\Phi c_i-\Phi c_j\|^2/\|c_i-c_j\|^2 - 1\bigr| > \delta\,\bigr]
+\leq 2e^{-d\delta^2/8}$~; une borne de l'union sur les $N^2/2$ paires donne une
+probabilit\'e d'\'echec au plus $N^2 e^{-d\delta^2/8}$, inf\'erieure \`a $\varepsilon'$
+d\`es que $d \geq (8/\delta^2)\ln(N^2/\varepsilon')$.
+\cmtFormule{Borne de l'union sur les paires de contextes.}
+La pr\'eservation des distances est une condition \emph{n\'ecessaire} pour qu'une
+fonction d'extraction fond\'ee sur les distances distingue les contextes~; elle
+n'est pas suffisante pour garantir l'information extractible sur le verdict.
+Elle ne fournit donc aucune minoration de $\Opp$. Cette dimension, en
+$O(H(\mathcal{C}))$, est distincte de la r\`egle de dimensionnement
+$\lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$ du texte principal, qui est
+un choix de conception.
+\end{Preuve}
+
+\noindent\textbf{Interpr\'etation.} SOTP-Base choisit la dimension
+$d$ garantissant la pr\'eservation des distances avec la probabilit\'e voulue~;
+le lien avec l'extraction du verdict reste une hypoth\`ese de conception.
+\cmt{Le choix de $d$ est un compromis entre taille de preuve et qualit\'e d'extraction.}
+\end{sloppypar}
+
+% ============================================================================
+\section{R\'EDUCTIONS POUR SOTP-HIGH}
+\addcontentsline{toc}{section}{R\'eductions SOTP-High}
+\label{sec:gamebased_SOTP-High}
+% ============================================================================
+\begin{sloppypar}
+SOTP-High op\`ere dans le r\'egime \`a contexte riche
+($H(\mathcal{C}) > \lambda/\log_2\lambda$) et s'appuie sur Groth16
+pour sa couche Gold. Sa couche Clay encode $h_c = \mathsf{Poseidon}(c)$.
+
+\begin{cmtEtape}{Objectif de cette section.}
+Montrer que $\Conf$ et $\Relver$ de SOTP-High h\'eritent des propri\'et\'es de
+Groth16 (z\'ero-connaissance parfaite, solidit\'e connaissance)~; l'opposabilit\'e
+n'est pas couverte par une r\'eduction.
+\end{cmtEtape}
+
+\begin{theorem}[SOTP-High~:~Sécurité~héritée~de~Groth16 (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_high}
+Pour la relation $\mathcal{R} = \{((h_c, c_m), (m, c, \rho)) : h_c = \mathsf{Poseidon}(c)
+\wedge c_m = g^m h^\rho \wedge \mathsf{Conforme}(m,c) = 1\}$, les deux propri\'et\'es suivantes sont v\'erifi\'ees.
+\begin{enumerate}
+\item \textbf{Confidentialité.} La z\'ero-connaissance parfaite
+      de Groth16 et le masquage parfait de $c_m$ donnent $\Conf = 1$.
+      \cmt{La preuve et l'engagement sont ind\'ependants de $m$ sachant $c$.}
+\item \textbf{Fiabilité de v\'erification.} La solidité connaissance de
+      Groth16 donne $\Relver \geq 1 - \negl(\lambda)$.
+      \cmt{Un prouveur qui fait accepter conna\^it un t\'emoin valide.}
+\end{enumerate}
+\end{theorem}
+
+\begin{Preuve}
+
+\textbf{Confidentialit\'e.} Par la ZK parfaite, les preuves honn\^etes et les
+preuves simul\'ees $\mathcal{S}(\sigma_p, (h_c, c_m))$ ont la m\^eme loi. Le
+simulateur n'utilise que les entr\'ees publiques~; $h_c$ ne d\'epend que de $c$ tandis que
+$c_m$ est uniforme dans $\mathbb{G}$ quel que soit $m$. La loi de
+$\Sigma = (h_c, \pi, c_m, \mathsf{metadata})$ sachant $(M = m, C = c)$ ne d\'epend donc
+pas de $m$, d'o\`u $\Conf = 1$.
+\cmtFormule{La ZK parfaite implique l'indistinguabilit\'e inconditionnelle.}
+
+\textbf{Fiabilit\'e de v\'erification.} Pour tout $\mathcal{A}$ PPT produisant une
+preuve acceptante $\pi$, l'extracteur $\mathcal{E}$ de Groth16 (qui dispose du
+code de $\mathcal{A}$ et exploite l'hypoth\`ese q-PKE~; ce n'est pas le
+v\'erificateur) produit un t\'emoin $(m,c,\rho)$ avec $((h_c,c_m),(m,c,\rho)) \in
+\mathcal{R}$, sauf avec probabilit\'e n\'egligeable. Ainsi
+\begin{equation}
+\Pr\!\left[\mathsf{Verify}=1 \land (m,c,\rho)\notin\mathcal{R}\right]
+\leq \mathsf{Adv}^{\mathsf{sound}}(\lambda) \leq \negl(\lambda)
+\;\Rightarrow\; \Relver \geq 1-\negl(\lambda).
+\end{equation}
+\cmtFormule{La solidit\'e connaissance implique l'absence de forge.}
+
+\textbf{Opposabilit\'e.} Aucune borne n'est d\'eriv\'ee ici, car $h_c$ et les
+m\'etadonn\'ees sont des fonctions du contexte public, donc $I(V;h_c|C) = 0$~; ce que
+la preuve apporte au verdict tient \`a l'assertion certifi\'ee
+$\mathsf{Conforme}(m,c) = 1$ (Remarque~\ref{rem:heuristique_sotp_high}).
+\end{Preuve}
+
+\begin{remark}[La ZK parfaite] La ZK \emph{parfaite}
+de Groth16 signifie que m\^eme un adversaire \`a calcul infini ne peut
+distinguer vraies preuves de simul\'ees. C'est une garantie inconditionnelle
+une fois le CRS fix\'e, propri\'et\'e forte, qui fait de SOTP-High
+la variante la plus protectrice pour les contextes \`a haute entropie.
+\cmt{La ZK parfaite est inconditionnelle.}
+\end{remark}
+\end{sloppypar}
+
+% ============================================================================
+\section{\'ENONC\'ES COMPLETS ET PRODUIT CRO GAME-BASED}
+\addcontentsline{toc}{section}{\'Enonc\'es complets et produit CLO}
+\label{sec:gamebased_produitCRO}
+% ============================================================================
+\begin{sloppypar}
+
+\begin{cmtEtape}{Objectif de cette section.}
+Rassembler les bornes game-based des trois jeux et en d\'eduire une
+minoration du produit CLO \`a l'\'echelle op\'erationnelle. Elle ne se compare pas
+directement au Trilemme CRO (Remarque~\ref{rem:ann_pas_de_contradiction}).
+\end{cmtEtape}
+
+\subsection{S\'ecurit\'e compl\`ete de SOTP-Low}
+
+\begin{theorem}[SOTP-Low~:~Bornes~game-based~compl\`etes (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_low_games}
+Sous PRG et DLOG dans $\mathbb{G}$ d'ordre $q$, on a
+\begin{align}
+\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda)
+&\leq 2\cdot\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda)
+    + \frac{1}{q}
+\label{eq:ann_sotp_low_conf} \\[4pt]
+\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda)
+&\leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda)
+    + \frac{1}{q}
+\label{eq:ann_sotp_low_rel}
+\end{align}
+\cmtFormule{Confidentialit\'e calculatoire born\'ee par l'avantage PRG.}
+\cmtFormule{Fiabilit\'e de v\'erification born\'ee par l'avantage DLOG.}
+pour tout PPT $\mathcal{A}$.
+\end{theorem}
+
+\begin{remark}[Opposabilit\'e de SOTP-Low~: pas de borne game-based]
+\label{rem:ann_sotp_low_opp_statut}
+La formulation initiale de ce th\'eor\`eme contenait une troisi\`eme in\'egalit\'e,
+$\mathsf{Err}^{\mathsf{EXT\text{-}OPP}} \leq 1 - \Delta/(\alpha H(\mathcal{C}))$,
+tir\'ee du fait que la couche Clay $\sigma_3 = (\phi(c), \mathsf{Hash}(c), V(c))$ d\'etermine
+le verdict. La pr\'esente formulation ne la reprend pas, car $\sigma_3$ est une fonction du
+contexte public $C$, donc $I(V;\sigma_3|C) = 0$~; elle ne contribue ainsi en rien \`a
+l'opposabilit\'e au sens de la D\'efinition~\ref{def:interp_admissible}. Ce que
+SOTP-Low apporte au verdict passe par l'ouverture $(m,s,\rho)$ fournie \`a
+l'institution, ce qui rel\`eve de l'heuristique de conception
+(Remarque~\ref{rem:facteur_limitant_low}), sans r\'eduction associ\'ee.
+\end{remark}
+
+\subsection{Tableau r\'ecapitulatif des r\'eductions}
+
+\begin{table}[htbp]
+\centering
+\caption{Synth\`ese des r\'eductions game-based pour la famille SOTP}
+\label{tab:ann_g_reductions}
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Variante} & \textbf{Propri\'et\'e} & \textbf{Jeu} &
+\textbf{Hypoth\`ese} & \textbf{Borne} \\
+\midrule
+SOTP-Low & $\Conf_{\mathrm{calc}}$ & IND-CONF & PRG
+  & $\mathsf{Adv} \leq 2\varepsilon_{\mathsf{PRG}} + 1/q$ \\
+SOTP-Low & $\Relver$ & BIND-REL & DLOG
+  & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}} + 1/q$ \\
+SOTP-Low & $\Opp$ & -- & --
+  & aucune (Rem.~\ref{rem:ann_sotp_low_opp_statut}) \\
+\midrule
+SOTP-Base & $\Conf_{\mathrm{calc}}$ & IND-CONF & PRG
+  & $\mathsf{Adv} \leq 2\varepsilon_{\mathsf{PRG}} + \negl$ \\
+SOTP-Base & $\Relver$ & BIND-REL & DLOG
+  & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}} + \negl$ \\
+SOTP-Base & -- & -- & Lemme JL
+  & dimensionnement de $d$ (Th.~\ref{thm:ann_sotp_base_opp}) \\
+\midrule
+SOTP-High & $\Conf$ & IND-CONF & Groth16 ZK parfaite
+  & $\Conf = 1$ \\
+SOTP-High & $\Relver$ & BIND-REL & Groth16 (q-PKE)
+  & $\geq 1-\negl(\lambda)$ \\
+SOTP-High & $\Opp$ & -- & --
+  & aucune (Rem.~\ref{rem:heuristique_sotp_high}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+\cmtFormule{Tableau r\'ecapitulatif des neuf r\'eductions.}
+
+\subsection{Corollaire central~: produit CLO game-based}
+
+\begin{corollary}[Produit CLO depuis les jeux (section~\ref{sec:sotp_construction})]\label{cor:ann_cro_from_games}
+Si IND-CONF, BIND-REL et EXT-OPP sont gagn\'es avec avantages respectifs au plus
+$\varepsilon_{\mathsf{ind}}$, $\varepsilon_{\mathsf{bind}}$, $\varepsilon_{\mathsf{ext}}$, alors
+\begin{equation}
+\Conf_{\mathrm{calc}} \cdot \Relver \cdot \Opp
+\geq \!\left(1-2\varepsilon_{\mathsf{ind}}\right)\!
+\left(1-\varepsilon_{\mathsf{bind}}\right)\!
+\left(1 - \frac{h(\varepsilon_{\mathsf{ext}})
+  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)}
+  {H(V|C)}\right)
+\label{eq:ann_cro_product_games}
+\end{equation}
+\cmtFormule{Produit des trois bornes inf\'erieures.}
+o\`u $\Conf_{\mathrm{calc}} = 1 - 2\varepsilon_{\mathsf{ind}}$ d\'esigne la confidentialit\'e
+calculatoire. Pour $\varepsilon_{\mathsf{ind}},\varepsilon_{\mathsf{bind}},
+\varepsilon_{\mathsf{ext}} \ll 1$, il vient
+\begin{equation}
+\Conf_{\mathrm{calc}} \cdot \Relver \cdot \Opp
+\geq 1 - O\!\left(\varepsilon_{\mathsf{ind}}
+  + \varepsilon_{\mathsf{bind}}
+  + \varepsilon_{\mathsf{ext}}\log_2|\mathcal{V}_\lambda| + h(\varepsilon_{\mathsf{ext}})\right)
+\label{eq:ann_cro_approx}
+\end{equation}
+\cmtFormule{Approximation au premier ordre pour petits $\varepsilon$.}
+\end{corollary}
+
+\begin{Preuve}
+\textbf{Terme $\Conf_{\mathrm{calc}}$.} D\'efinition, avec le jeu IND-CONF
+(Remarque~\ref{rem:ann_ind_conf_link}).
+\textbf{Terme $\Relver$.} La Remarque~\ref{rem:ann_bind_rel_link} donne
+$\Relver \geq 1-\varepsilon_{\mathsf{bind}} - \negl(\lambda)$.
+\textbf{Terme $\Opp$.} Remarque~\ref{rem:ann_ext_opp_link}
+(in\'egalit\'e de Fano, \eqref{eq:ann_fano_opp}).
+Le produit $(1-a)(1-b)(1-c) \geq 1-a-b-c$ pour $a,b,c \in [0,1]$
+donne~\eqref{eq:ann_cro_approx}.
+\end{Preuve}
+
+\begin{remark}[Pourquoi ce corollaire ne contredit pas le Trilemme]
+\label{rem:ann_pas_de_contradiction}
+Le Trilemme CRO (Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}) majore le produit
+$\Conf\cdot\Relrec\cdot\Opp$, o\`u $\Conf$ est statistique et $\Relrec$ mesure la
+reconstruction du message. Le corollaire minore un produit d'une autre nature, qui fait intervenir la
+confidentialit\'e \emph{calculatoire} et la fiabilit\'e de \emph{v\'erification}.
+Les deux \'echelles ne se comparent pas. Un protocole peut avoir
+$\Conf_{\mathrm{calc}}\cdot\Relver\cdot\Opp$ proche de~1 tout en ob\'eissant au
+Trilemme, puisque $\Relrec$ reste alors de l'ordre de $2^{-\lambda}$
+(Remarque~\ref{rem:rel_ver}). L'hypoth\`ese que
+$\varepsilon_{\mathsf{ext}}$ est petit est pr\'ecis\'ement ce que le Trilemme rend
+co\^uteux lorsque $\Conf$ statistique est proche de~1~; la
+Remarque~\ref{rem:activite_delta} indique quelle quantit\'e ($\Delta$ ou Fano) limite
+alors $\Opp$. La formulation initiale de ce paragraphe annon\c{c}ait un
+\guillemotleft~encadrement~\guillemotright{} du produit par $\Delta/(\alpha\lambda)$ et une
+constante $c \in [0{,}45;\,0{,}85]$~; la pr\'esente formulation distingue les deux \'echelles.
+\cmt{Les deux produits rel\`event d'\'echelles distinctes et n'admettent pas d'encadrement commun.}
+\end{remark}
+\end{sloppypar}
+
+% ============================================================================
+\section{LIMITATIONS ET PORT\'EE DES R\'EDUCTIONS}
+\addcontentsline{toc}{section}{Limitations et port\'ee}
+\label{sec:gamebased_limitations}
+% ============================================================================
+\begin{sloppypar}
+
+\begin{cmtEtape}{Objectif de cette section.}
+\'Enum\'erer les cinq limitations des r\'eductions game-based, \`a savoir la
+conditionnalit\'e, l'interpr\`ete honn\^ete, la r\'eduction one-way, le terme $1/q$
+et la relation avec Lean4.
+\end{cmtEtape}
+
+\begin{enumerate}
+\item \textbf{Conditionnalit\'e aux hypoth\`eses calculatoires.}
+      La s\'ecurit\'e de SOTP-Low est prouv\'ee sous PRG et DLOG.
+      SOTP-High via Groth16 repose sur la difficult\'e des
+      couplages sur BN254, non post-quantique. Une extension aux
+      primitives r\'esistantes aux quantiques (STARKs, r\'eseaux
+      euclidiens) est une direction de recherche ouverte (section~\ref{sec:sotp_construction}).
+      \cmt{La s\'ecurit\'e d\'epend d'hypoth\`eses non prouv\'ees (PRG, DLOG, couplages).}
+
+\item \textbf{Mod\`ele d'interpr\`ete honn\^ete dans EXT-OPP.}
+      Le jeu suppose que l'interpr\`ete tente sinc\`erement d'extraire
+      le bon verdict. Un interpr\`ete \emph{adversarial} (juge
+      corrompu) n'est pas mod\'elis\'e. Des extensions game-th\'eoriques
+      (r\'egulateur vs entit\'e audit\'ee) sont identifi\'ees comme
+      direction future (section~\ref{sec:sotp_construction}).
+      \cmt{Un juge corrompu n'est pas couvert par le mod\`ele actuel.}
+
+\item \textbf{R\'eduction SOTP-Base one-way.}
+      Le Th\'eor\`eme~\ref{thm:ann_sotp_base_opp} garantit seulement l'implication
+      \textit{dimension suffisante $\Rightarrow$ pr\'eservation JL}. Il ne garantit
+      pas que la pr\'eservation des distances permette d'extraire le verdict,
+      car cela d\'epend de la fonction $f_\Delta$ choisie par l'institution, dont ni
+      l'existence ni la calculabilit\'e efficace ne sont \'etablies.
+      \cmt{La pr\'eservation JL est n\'ecessaire, pas suffisante, pour l'opposabilit\'e.}
+
+\item \textbf{Terme $1/q$ dans les bornes SOTP-Low.}
+      Les \'equations~\eqref{eq:ann_sotp_low_conf}
+      et~\eqref{eq:ann_sotp_low_rel} contiennent $1/q$
+      (probabilit\'e de deviner l'exposant). Il est n\'egligeable en $\lambda$ au
+      sens strict d\`es que l'ordre du groupe v\'erifie $\log_2 q \geq \lambda$, ce
+      qui est le cas des param\`etres utilis\'es ($q \approx 2^{252}$, soit
+      $1/q \approx 10^{-76}$). Le terme est conserv\'e pour que les bornes restent
+      exactes \`a $\lambda$ fix\'e.
+      \cmt{Le terme $1/q$ est n\'egligeable d\`es que $\log_2 q \geq \lambda$.}
+
+\item \textbf{Relation avec la formalisation Lean4 (Annexe~\ref{chap:annexe_lean4}).}
+      Les deux annexes se compl\`etent de la mani\`ere suivante.
+      \begin{itemize}
+      \item \textbf{Lean4 (Annexe~\ref{chap:annexe_lean4})} certifie m\'ecaniquement la
+            d\'erivation alg\'ebrique de la borne
+            $\Conf\cdot\Relrec\cdot\Opp \leq \Delta/\lambda + K/\lambda^2 + \varepsilon(\lambda)$
+            (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}), en posant Fano et
+            Pinsker comme propri\'et\'es de chaque instance et l'extraction born\'ee
+            comme hypoth\`ese
+            \cmt{Certification m\'ecanique de la logique interne.}
+      \item \textbf{Annexe~\ref{chap:annexe_gamebased} (ici)} \'etablit les
+            propri\'et\'es cryptographiques de la famille SOTP (confidentialit\'e
+            calculatoire, fiabilit\'e de v\'erification) sous PRG, DLOG et Groth16~;
+            elle n'instancie pas les hypoth\`eses du Trilemme, qui portent sur
+            $\Conf$ statistique et $\Relrec$
+            \cmt{Instanciation dans des primitives calculatoires concr\`etes.}
+      \end{itemize}
+      Les deux niveaux sont donc compl\'ementaires sans se composer en une preuve
+      unique, puisque le niveau \emph{formel} certifie la logique de la d\'erivation du
+      Trilemme tandis que le niveau \emph{game-based} justifie les garanties
+      cryptographiques des constructions.
+      \cmt{La preuve se d\'eploie sur deux niveaux, formel (Lean4) et game-based (ici).}
+\end{enumerate}
+\end{sloppypar}

@@ -1,0 +1,1282 @@
+% ============================================================================
+% CHAPITRE 4 — SECTION 4.3 : DISCUSSIONS
+% Fichier : partie4/discussions.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 révisée
+% ============================================================================
+
+\section{DISCUSSIONS}
+\label{sec:discussions}
+% ============================================================================
+\begin{sloppypar}
+La
+section~\ref{sec:resultats_theoriques} a mis le cadre CLO-CRO-PQ-SOTP en
+regard des estimations analytiques disponibles pour cinq syst\`emes d\'eploy\'es
+(trois classiques et deux signatures post-quantiques), dans une calibration
+illustrative. Elle a dress\'e le bilan d'un corpus th\'eorique articul\'e selon la
+progression F$\to$B$\to$E$\to$S$\to$C$\to$X.
+\'Etablir ces faits ne suffit toutefois pas \`a en fixer la port\'ee. La pr\'esente section
+examine ce qu'ils signifient au-del\`a de la cryptographie institutionnelle consid\'er\'ee en vase
+clos, c'est-\`a-dire pour l'avancement de la cryptographie comme discipline, pour les
+praticiens qui con\c{c}oivent des syst\`emes et pour les probl\`emes ouverts
+qui restent non r\'esolus.
+
+L'analyse proc\`ede en onze temps. Elle examine d'abord ce que la
+formalisation a r\'ev\'el\'e sur le Trilemme~CRO
+(sous-section~\ref{subsec:ce_que_formalisation_revele}), puis positionne nos
+r\'esultats parmi les impossibilit\'es fondamentales en pr\'esentant la
+classification \'epist\'emologique des contributions
+(sous-section~\ref{subsec:positionnement_impossibilites}). Elle d\'etaille ensuite l'apport
+sp\'ecifique de l'extension post-quantique
+(sous-section~\ref{subsec:apport_extension_quantique}), d\'egage les quatre sch\'emas
+structurels du compromis CLO (sous-section~\ref{subsec:quatre_patterns}) et mesure la sensibilit\'e de
+l'opposabilit\'e \`a la capacit\'e d'extraction
+(sous-section~\ref{subsec:analyse_sensibilite}). Les implications pour
+la conception et la r\'eglementation (sous-section~\ref{subsec:implications_conception})
+pr\'ec\`edent la situation de la contribution
+vis-\`a-vis des travaux existants (sous-section~\ref{subsec:positionnement_travaux}) ainsi qu'un bilan
+des limitations et probl\`emes ouverts
+(sous-section~\ref{subsec:limitations_problemes_ouverts}). Les trois derni\`eres sous-sections montrent comment la
+famille SOTP transforme l'impossibilit\'e en guide
+(sous-section~\ref{subsec:portee_constructive}), tirent la le\c{c}on
+m\'ethodologique de la certification
+(sous-section~\ref{subsec:verification_corrige_lecon}) et clarifient le
+statut \'epist\'emique du programme exp\'erimental
+(sous-section~\ref{subsec:statut_protocoles_experimentaux}).
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre dispose maintenant des faits, \`a savoir des bornes prouv\'ees sous hypoth\`eses,
+des constructions dont les propri\'et\'es cryptographiques sont \'etablies mais
+dont l'opposabilit\'e reste heuristique ainsi qu'une formalisation qui a mis au jour
+des lacunes du raisonnement initial. Ce
+chapitre lui demande ce que tout cela \emph{signifie} pour la discipline
+naissante, pour les praticiens qui choisissent des protocoles et pour les
+questions qui restent ouvertes. Une impossibilit\'e prouv\'ee constitue \`a ses yeux une
+forme nette de connaissance, puisqu'elle lui apprend ce qu'il ne pourra jamais obtenir
+et pour quelle raison.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Ce que la formalisation a r\'ev\'el\'e}
+\label{subsec:ce_que_formalisation_revele}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+La v\'erification m\'ecanique du Trilemme~CRO dans Lean4 a produit,
+au-del\`a de la certification du c\oe ur alg\'ebrique, cinq r\'ev\'elations
+\'epist\'emologiques que le raisonnement informel n'avait pas permis
+d'identifier.
+
+\subsubsection{Hypoth\`ese explicite des propri\'et\'es d'instance}
+\label{subsubsec:hypothese_quasi_optimalite}
+
+La preuve originale~\cite{MINKA2026CRO} utilise les propri\'et\'es
+informationnelles (Fano, Pinsker) sans les expliciter comme conditions
+v\'erifiables du th\'eor\`eme. La formalisation Lean4 les rend
+explicites en les int\'egrant comme champs de la structure
+\texttt{ProtocolInstance}~:
+\begin{equation}
+\texttt{pinsker} : \TV^2 \leq c_0 \cdot \KL, \qquad
+\texttt{fano} : I \geq \Relrec \cdot \lambda - 1.
+\label{eq:hypothese_quasi_optimalite}
+\end{equation}
+Cette explicitation s'aligne avec la rationalit\'e
+born\'ee~\cite{Simon82,Miller56,Ericsson95}, puisque les institutions ne peuvent
+extraire qu'une information limit\'ee d'une preuve cryptographique, ce qui
+force les protocoles \`a op\'erer dans des r\'egimes de faible information
+relativement \`a $\lambda$. La formalisation Lean4 transforme des
+intuitions diffuses en conditions v\'erifiables.
+
+\subsubsection{Structure en trois \'etapes de la preuve formalis\'ee}
+\label{subsubsec:non_derivabilite_borne}
+
+La formalisation \'etablit la borne
+$\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
+en trois \'etapes principales. (1)~Fano borne $\Relrec$~; (2)~l'extraction
+born\'ee et le verdict efficace bornent $\Opp$~; (3)~on forme le produit
+puis on applique le r\'egime de confidentialit\'e
+$I(M;\Sigma|C) \leq \kappa/\lambda$. Cette structure, plus simple que
+l'optimisation sur $[0,\lambda]$, pr\'eserve la borne dominante
+$\Delta/\lambda$ et la propri\'et\'e qualitative centrale du trilemme.
+La formalisation compl\`ete de l'optimisation analytique sur
+$[0,\lambda]$ n\'ecessiterait des outils d'analyse r\'eelle non encore
+disponibles dans Mathlib~\cite{MathlibAnalysis,Tsybakov2009,Scerri14}.
+
+\subsubsection{N\'egligeabilit\'e~: une preuve par limite}
+\label{subsubsec:necessite_analyse_cas}
+
+L'\'enonc\'e informel \og $(1/2)^\lambda$ est n\'egligeable\fg{} est tenu
+pour \'evident dans la litt\'erature
+cryptographique~\cite{Goldreich01,KatzLindell14}. Dans la formalisation, la
+n\'egligeabilit\'e est d\'efinie par un filtre (\og pour tout $c$, \`a partir d'un
+certain rang, $\varepsilon(\lambda)\,\lambda^c \leq 1$\fg)~; la preuve passe par
+la limite $\lambda^c/2^\lambda \to 0$ fournie par Mathlib. Elle n'est pas
+constructive, puisqu'elle ne produit pas de seuil explicite. La formulation initiale
+de ce paragraphe d\'ecrivait une analyse de cas ($c \le 4$ / $c > 4$) et un seuil
+$N(c) = \lceil 2c \rceil + 4$~; la pr\'esente formulation suit le code compil\'e. Le ph\'enom\`ene relev\'e par Scerri~\cite{Scerri14} demeure, car
+formaliser un fait asymptotique \og \'evident\fg{} oblige \`a choisir une
+d\'efinition pr\'ecise.
+
+\subsubsection{Transparence des constantes implicites}
+\label{subsubsec:transparence_constantes}
+
+La notation $O(\lambda^{-2})$ dissimule une d\'ependance sur
+$1/\gamma$ o\`u $\gamma = \alpha H(C) - 1$. Notre borne explicite
+$\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 +
+\kappa^2/\lambda^3)$ expose cette d\'ependance, puisque la constante
+d\'epend \`a la fois de $\Delta$ (capacit\'e d'extraction
+institutionnelle) et de $\gamma$ (granularit\'e des verdicts
+efficace). Pour la cryptographie
+institutionnelle, o\`u les param\`etres doivent \^etre empiriquement
+mesurables, cette transparence constitue une
+exigence op\'erationnelle.
+
+\subsubsection{Les param\`etres institutionnels sont des constantes du th\'eor\`eme}
+\label{subsubsec:parametres_constantes}
+
+La formalisation \'etablit que $\Delta$, $\alpha$, $\beta$, $H(C)$ ont le
+statut de constantes
+du th\'eor\`eme, distinct de celui de param\`etres libres, de sorte que leur mesure empirique devient un
+pr\'erequis pour son application. Un syst\`eme d\'eployant un protocole
+sans mesurer pr\'ealablement sa capacit\'e d'extraction $\Delta$ ne peut
+pas \'evaluer si la borne th\'eorique est satisfaite~\cite{Grossklags10,Herley09}.
+
+\subsubsection{Coh\'erence et port\'ee du th\'eor\`eme principal}
+\label{subsubsec:consequences_empiriques_borne}
+
+La formalisation Lean4 produit deux t\'emoins qui d\'emontrent la
+non-vacuit\'e et la n\'ecessit\'e des hypoth\`eses. Le \textbf{t\'emoin
+de coh\'erence} est une instance qui v\'erifie toutes les hypoth\`eses
+avec $\Conf = \Opp = 1$, $\Rel = 1/\lambda$, $I = 0$~; pour cette
+instance, $\Conf \cdot \Rel \cdot \Opp = 1/\lambda$, ce qui \'egale
+exactement la borne du th\'eor\`eme. Il s'agit d'un point du mod\`ele abstrait,
+qu'aucun protocole ne r\'ealise (avec $I = 0$, $\Relrec = 2^{-\lambda}$~;
+Remarque~\ref{rem:portee_temoin}). Le \textbf{t\'emoin de port\'ee}
+est une instance qui v\'erifie les Hypoth\`eses 1, 2$'$ et 3 avec
+$\Delta = 0$ mais s'\'ecarte du r\'egime de confidentialit\'e
+($I = \lambda/2 - 1$)~; elle pr\'esente $\Conf \cdot \Rel \cdot \Opp = 1/4$
+constant. Ces deux t\'emoins \'etablissent que les hypoth\`eses sont
+satisfiables et que le r\'egime est n\'ecessaire \`a la borne.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre s'arr\^ete sur ce que la machine a trouv\'e, soit cinq points que le
+raisonnement \`a la main n'avait pas vus. Des propri\'et\'es
+informationnelles y deviennent des conditions v\'erifiables, une
+structure de preuve pr\'eserve la borne dominante et un
+fait \og \'evident \fg{} exige une d\'efinition pr\'ecise. S'y ajoutent des constantes que
+la notation $O(\cdot)$ cachait ainsi que des param\`etres institutionnels qui
+se r\'ev\`elent \^etre des constantes du th\'eor\`eme, distinctes de variables
+libres.
+
+Il note que la v\'erification formelle a fait davantage que confirmer le
+r\'esultat, puisqu'elle l'a approfondi, ce qu'il tient pour un gain r\'eel.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Positionnement parmi les impossibilit\'es fondamentales}
+\label{subsec:positionnement_impossibilites}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{La cryptographie institutionnelle comme domaine propre}
+\label{subsubsec:crypto_institutionnelle_domaine}
+
+La m\'etrique $\Opp = I(V;\Sigma|C)/H(V|C)$ est absente de tout cadre
+cryptographique ant\'erieur. Le calcul multi-parties
+s\'ecuris\'e~\cite{Yao82,GMW87,Goldreich1987,Evans2018} optimise le
+nombre de rounds et la confidentialit\'e du calcul distribu\'e~; le
+chiffrement homomorphe~\cite{Gentry09,Vaikuntanathan2012,Brakerski2014}
+optimise la profondeur de circuits sur donn\'ees chiffr\'ees~; les
+syst\`emes zero-knowledge~\cite{GMR85,Groth16,BCTV14} minimisent la
+fuite d'information tout en prouvant l'appartenance. Aucune de ces
+sp\'ecialisations ne pose la question de savoir \emph{dans quelle mesure un
+acteur institutionnel born\'e cognitivement peut extraire une
+information utile de cette preuve pour rendre un verdict
+inform\'e}~\cite{Simon82,Miller56,Kahneman11}.
+
+Les travaux fondateurs de Goldwasser-Micali-Rackoff~\cite{GMR85} ont
+axiomatis\'e la puissance computationnelle de
+l'adversaire~\cite{Goldreich01,Bellare97}~; nous axiomatisons ici la
+capacit\'e interpr\'etative de l'interpr\`ete. Il s'agit du m\^eme objet, un acteur
+born\'e, consid\'er\'e selon une sym\'etrie invers\'ee.
+
+\begin{table}[htbp]
+\centering
+\caption{Positionnement de la cryptographie institutionnelle parmi les
+sp\'ecialisations cryptographiques}
+\label{tab:comparaison_domaines_crypto}
+\begin{tabular}{@{}p{3.5cm}p{3.5cm}p{4.5cm}@{}}
+\toprule
+\textbf{Domaine} & \textbf{Optimise pour} & \textbf{M\'etrique centrale} \\
+\midrule
+Cryptographie classique   & R\'esistance adversaires
+  & Avantage distingueur~\cite{Goldreich01} \\
+MPC                       & Calcul distribu\'e priv\'e
+  & Rounds, parties~\cite{Yao82,Evans2018} \\
+FHE                       & Calcul sur donn\'ees chiffr\'ees
+  & Profondeur circuits~\cite{Gentry09,Brakerski2014} \\
+ZKP                       & Preuves sans r\'ev\'elation
+  & Taille preuve, compl\'etude~\cite{GMR85,Groth16} \\
+\textbf{Crypto institutionnelle}   & \textbf{Interpr\'etabilit\'e l\'egale}
+  & \textbf{Opposabilit\'e $\Opp$}~\cite{MINKA2026CLO,MINKA2026CRO} \\
+\textbf{Crypto PQ institutionnelle} & \textbf{R\'esilience quantique}
+  & \textbf{$\Delta_q$, $\eta_q$}~\cite{MINKA2026PQCRO} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Le Trilemme CRO parmi les impossibilit\'es fondamentales}
+\label{subsubsec:trilemme_parmi_impossibilites}
+
+Le Trilemme CRO conditionnel joue dans la cryptographie institutionnelle
+le m\^eme r\^ole structurant que les th\'eor\`emes d'impossibilit\'e
+dans d'autres branches de l'informatique
+th\'eorique~\cite{Abadi2012,Attiya2004}. Le th\'eor\`eme
+FLP~\cite{FLP85} \'etablit qu'aucun protocole d\'eterministe
+ne garantit le consensus en pr\'esence d'une seule d\'efaillance
+asynchrone~; le th\'eor\`eme CAP~\cite{Brewer00,GilbertLynch02} \'etablit
+qu'un syst\`eme distribu\'e ne peut simultan\'ement garantir coh\'erence
+stricte, disponibilit\'e totale et tol\'erance aux partitions~; le
+Trilemme CRO \'etablit, sous ses hypoth\`eses, que le produit $\Conf\cdot\Relrec\cdot\Opp$ est
+born\'e par
+$\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
+(classique) ou par son analogue quantique
+$\gamma_q^{-1}(\Delta_q/\lambda + \kappa(\Delta_q+1)/\lambda^2 + \kappa^2/\lambda^3)$
+(\cite{MINKA2026CRO} et section~\ref{sec:cro_pq}).
+
+\begin{table}[htbp]
+\centering
+\caption{Comparaison des th\'eor\`emes d'impossibilit\'e fondamentaux}
+\label{tab:comparaison_impossibilites}
+\begin{tabular}{@{}p{2.8cm}p{4cm}p{4.5cm}@{}}
+\toprule
+\textbf{Th\'eor\`eme} & \textbf{Contrainte fondamentale}
+  & \textbf{Hypoth\`eses} \\
+\midrule
+FLP & Consensus impossible (asynchrone + 1 d\'efaillance)
+  & Mod\`ele asynchrone~\cite{FLP85,Attiya2004} \\
+CAP & C\,+\,A\,+\,P impossibles simultan\'ement
+  & Syst\`eme distribu\'e~\cite{Brewer00,GilbertLynch02} \\
+Blockchain Trilemma & D\'ecentralisation + S\'ecurit\'e + Scalabilit\'e
+  & Blockchain~\cite{Buterin2014,Abadi2012} \\
+\textbf{CRO classique} & $\Conf\cdot\Relrec\cdot\Opp \le \gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
+  & \textbf{$\Delta,\alpha,\beta$ institutionnels}~\cite{MINKA2026CRO} \\
+\textbf{CRO post-quantique} &
+  $\Conf^q\!\cdot\!\Relrec^q\!\cdot\!\Opp^q \le
+   \gamma_q^{-1}(\Delta_q/\lambda + \kappa(\Delta_q+1)/\lambda^2 + \kappa^2/\lambda^3)$
+  & \textbf{$\Delta_q$, $\eta_q$ quantiques}~\cite{MINKA2026PQCRO} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Une distinction s'impose toutefois, car FLP et CAP ont \'et\'e prouv\'es dans des
+mod\`eles de calcul formels bien
+\'etablis alors que le Trilemme CRO est conditionnel
+aux hypoth\`eses sur $\Delta$, $\alpha$, $\beta$, $\Delta_q$,
+$\eta_q$, param\`etres dont les valeurs n'ont pas encore \'et\'e
+valid\'ees par des protocoles exp\'erimentaux contr\^ol\'es sur des
+acteurs institutionnels r\'eels. Le Trilemme
+CRO est un th\'eor\`eme correct sous ses hypoth\`eses~; sa pertinence
+empirique reste \`a \'etablir.
+
+Sous cette r\'eserve, le d\'eplacement de perspective est net. Que
+$\Delta \in [35, 73]$~bits s'av\`ere plus restrictif que
+$\lambda \in [128, 256]$~bits signifie que la contrainte dominante sur
+les syst\`emes cryptographiques institutionnels tient \`a la capacit\'e
+interpr\'etative de l'institution, probl\`eme largement ignor\'e
+jusqu'ici. La puissance de calcul de l'adversaire, que la cryptographie sait
+traiter, passe au second plan.
+
+\subsubsection{Classification \'epist\'emologique des r\'esultats}
+\label{subsubsec:classification_epistemologique}
+
+Les r\'esultats de cette th\`ese, qui ne sont pas de m\^eme nature, doivent
+\^etre distingu\'es selon leur niveau de
+certitude.
+
+\begin{table}[htbp]
+\centering
+\caption{Hi\'erarchie de certitude des r\'esultats de la th\`ese}
+\label{tab:classification_epistemologique}
+\begin{tabular}{@{}p{3.8cm}p{3.2cm}p{4.5cm}@{}}
+\toprule
+\textbf{R\'esultat} & \textbf{Niveau de certitude} & \textbf{Statut} \\
+\midrule
+R\'esultats CLO (bornes, goulot, composition) & Prouv\'es (formulations pr\'ecis\'ees)
+  & Preuves papier~(section~\ref{sec:clo}) \\
+Trilemme classique (forme raffin\'ee) & Sous hypoth\`eses institutionnelles
+  & Noyau v\'erifi\'e Lean4~(\cite{MINKA2026CRO} et section~\ref{sec:lean4}) \\
+Trilemme PQ & Sous hypoth\`eses quantiques
+  & Preuve papier~(\cite{MINKA2026PQCRO} et section~\ref{sec:cro_pq}) \\
+Propri\'et\'es SOTP ($\Conf$, $\Relver$) & Sous PRG, DLog, q-PKE
+  & R\'eductions~(annexe~\ref{chap:annexe_gamebased}) \\
+Opposabilit\'e SOTP, optimalit\'e & Heuristique / conjecture
+  & Non prouv\'ees~(Conjecture~\ref{conj:optimalite_universelle}) \\
+Formalisation Lean4 & M\'ecaniquement certifi\'ee
+  & D\'erivation v\'erifi\'ee, pr\'emisses pos\'ees~(section~\ref{sec:lean4}) \\
+\midrule
+\multicolumn{3}{l}{\textit{Falsifiables exp\'erimentalement~:}} \\
+Valeurs de $\Delta$, $\Delta_q$, $\eta_q$ & Empirique
+  & \`A valider par \'etudes contr\^ol\'ees~(chapitre~\ref{chap:experimentation}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Distinguer explicitement ces niveaux est une contribution
+m\'ethodologique propre~\cite{Nosek2015,IOC2019}, puisqu'elle prot\`ege contre
+la sur\'evaluation des r\'esultats conditionnels et ouvre pr\'ecis\'ement
+le programme exp\'erimental futur. La fronti\`ere entre \og th\'eor\`eme
+correct sous hypoth\`eses \fg{} et \og fait empirique \'etabli \fg{} doit
+\^etre maintenue avec rigueur~\cite{Lakatos1978}.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{L'apport de l'extension quantique}
+\label{subsec:apport_extension_quantique}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+L'extension quantique (section~\ref{sec:cro_pq}) introduit deux
+innovations th\'eoriques sans analogue dans le r\'egime classique.
+
+\subsubsection{P\'enalit\'e s\'emantique quantique}
+\label{subsubsec:penalite_semantique}
+
+Le terme $\eta_q \cdot H(C)/\lambda$ repr\'esente une contrainte
+fondamentalement nouvelle, puisqu'il chiffre la part de la preuve qui, sous
+bruit de canal quantique, ne peut plus \^etre interpr\'et\'ee. Il
+n'intervient pas dans la borne explicite. Il est aussi nul pour toute preuve
+qui est une cha\^{\i}ne de bits classique, y compris les signatures ML-DSA et
+SLH-DSA. Il ne devient pertinent que dans le sc\'enario, hypoth\'etique \`a ce
+jour, d'un support ou d'un v\'erificateur quantique, o\`u il fournit une
+pr\'ediction mesurable.
+Cette p\'enalit\'e \'emerge de la th\'eorie de l'information quantique
+(borne de Holevo~\cite{Holevo1973}, lemme de la mesure
+douce~\cite{Winter1999,Ozawa2000}).
+
+\subsubsection{D\'ecomposition de la capacit\'e quantique}
+\label{subsubsec:decomposition_capacite_quantique}
+
+La formule $\Delta_q = \Delta + \delta_{\text{enh}} - \delta_{\text{degr}}$
+d\'ecompose explicitement les effets quantiques sur la capacit\'e
+institutionnelle~:
+\begin{equation}
+\Delta_q = \Delta + \delta_{\text{enh}} - \delta_{\text{degr}}
+\label{eq:decomposition_delta_q_discussion}
+\end{equation}
+\begin{itemize}
+  \item $\delta_{\text{enh}}$ d\'esigne l'am\'elioration par outils quantiques
+    (recherche Grover~\cite{Grover96}, apprentissage machine
+    quantique~\cite{Biamonte2017})~;
+  \item $\delta_{\text{degr}}$ d\'esigne la d\'egradation par bruit
+    quantique~\cite{Preskill1998,Devoret2013} et inadaptation
+    institutionnelle.
+\end{itemize}
+Cette d\'ecomposition permet de mod\'eliser l'\'evolution temporelle de
+$\Delta_q$ \`a mesure que les institutions s'adaptent aux syst\`emes
+post-quantiques et que les technologies quantiques
+m\^urissent. Les valeurs retenues, $\Delta_q \in [25, 67]$~bits, sont
+des hypoth\`eses de travail que le protocole de la
+section~\ref{subsec:protocole_delta_q} permettra de mesurer.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Quatre sch\'emas fondamentaux du compromis CLO}
+\label{subsec:quatre_patterns}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+Les valeurs d\'eriv\'ees au chapitre~\ref{chap:experimentation}
+(tableau~\ref{tab:composantes_opposabilite}) r\'ev\`elent quatre sch\'emas
+structurels r\'ecurrents.
+
+\medskip
+\noindent\textbf{Sch\'ema 1. Tension vie priv\'ee--opposabilit\'e.}
+Les syst\`emes maximisant la confidentialit\'e (Helios $\Conf = 0{,}92$,
+zk-SNARK $\Conf = 0{,}89$) atteignent une opposabilit\'e mod\'er\'ee
+($\Opp \approx 0{,}50$--$0{,}67$), tandis que le syst\`eme \`a haute
+opposabilit\'e (ECDSA $\Opp = 0{,}90$) sacrifie la confidentialit\'e
+($\Conf = 0{,}31$). Ce sch\'ema mat\'erialise la tension d\'ecrite par le
+paradoxe de l'authenticit\'e invisible~\cite{MINKA2026CLO}.
+
+\noindent\textit{Formalisation.} Ce sch\'ema est captur\'e par le Lemme
+Conf-MI (sous-section~\ref{subsec:proprietes_fondamentales}), selon lequel plus
+$I(M;\Sigma|C)$ est grand, plus $\Conf$ est faible. ECDSA op\`ere \`a une
+extr\'emit\'e de ce compromis ($I$ grand, $\Conf$ faible). Helios est \`a
+l'autre extr\'emit\'e pour la confidentialit\'e, mais sa fiabilit\'e
+$\Rel = 0{,}95$ est une fiabilit\'e de \emph{v\'erification}, car sous $\Relrec$ Fano
+imposerait $I(M;\Sigma|C) \geq 0{,}95\lambda - 1 \approx 121$~bits, incompatible
+avec une confidentialit\'e \'elev\'ee. Le sch\'ema illustre donc la tension, sans
+en \^etre une instance.
+
+\medskip
+\noindent\textbf{Sch\'ema 2. D\'ependance au contexte institutionnel.}
+L'opposabilit\'e varie significativement avec l'expertise de
+l'institution. Les r\'egulateurs sp\'ecialis\'es
+($H(\mathcal{C}) = 11$ bits) extraient plus d'information que les
+tribunaux g\'en\'eraux ($H(\mathcal{C}) = 8$ bits), tandis que les
+tribunaux dot\'es d'une expertise PKI ($H(\mathcal{C}) = 20$ bits)
+atteignent une interpr\'etabilit\'e substantiellement plus \'elev\'ee.
+$H(\mathcal{C})$ est donc un param\`etre de conception critique, sur
+lequel le concepteur peut agir. Les valeurs cit\'ees ici sont celles du contexte
+d'esp\`ece~; elles ne se confondent pas avec les entropies de domaine du
+tableau~\ref{tab:estimations_structurelles_HC}, distinction \'etablie
+\`a la section~\ref{sec:methodologie_calcul}.
+
+\noindent\textit{Implication pratique.} D\'eployer un zk-SNARK devant un
+tribunal g\'en\'eral ($H(\mathcal{C}) \approx 8$ bits) au lieu d'un
+r\'egulateur sp\'ecialis\'e ($H(\mathcal{C}) \approx 11$ bits)
+r\'eduirait $I(V;\Sigma|C)$ de $2$ bits \`a environ $1$ bit ainsi que
+l'opposabilit\'e de $0{,}67$ \`a environ $0{,}33$.
+
+\medskip
+\noindent\textbf{Sch\'ema 3. Plafond d'extraction des syst\`emes
+z\'ero-connaissance.} M\^eme avec une entropie contextuelle \'elev\'ee,
+les syst\`emes cryptographiquement opaques limitent fondamentalement
+l'extraction institutionnelle \`a un ou deux bits. Ce plafond manifeste
+l'hypoth\`ese d'extraction born\'ee. En effet, la
+propri\'et\'e z\'ero-connaissance garantit $I(M;\Sigma|C) \approx 0$, de
+sorte que l'hypoth\`ese d'extraction born\'ee donne
+$I(V;\Sigma|C) \leq 0 + \Delta$~; seule la connaissance pr\'ealable
+$\Delta$ permet alors une extraction non nulle.
+
+\medskip
+\noindent\textbf{Sch\'ema 4. La transparence active l'interpr\'etabilit\'e.}
+La structure de v\'erification transparente d'ECDSA permet une
+\'evaluation institutionnelle multidimensionnelle, $18$ bits extraits
+sur $20$ disponibles, ce qui montre qu'une structure appropri\'ee peut \^etre
+r\'ev\'el\'ee sans compromettre la solidit\'e cryptographique, tout en activant
+l'utilit\'e institutionnelle.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Analyse de sensibilit\'e \`a la capacit\'e d'extraction}
+\label{subsec:analyse_sensibilite}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\noindent\textbf{Impact de $\Delta$ sur l'extraction.} Le param\`etre
+$\Delta$ majore l'information que l'interpr\`ete tire de la preuve
+\emph{au-del\`a} de ce qu'elle dit du message. Son impact sur
+$I(V;\Sigma|C)$, donc sur $\Opp$, d\'epend du r\'egime du protocole. Les
+valeurs du tableau~\ref{tab:sensibilite_opp_delta} ne d\'erivent d'aucun mod\`ele
+de r\'eponse. Elles illustrent des tendances plausibles, que le protocole de
+la section~\ref{subsec:protocole_delta} permettrait de mesurer.
+
+\begin{table}[htbp]
+\centering
+\caption{Sensibilit\'e de $\Opp$ \`a la capacit\'e d'extraction $\Delta$ (valeurs illustratives, sans mod\`ele de r\'eponse)}
+\label{tab:sensibilite_opp_delta}
+\small
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+\textbf{Syst\`eme} & \textbf{Sc\'enario} & $\Delta$ (bits) & $I(V;\Sigma|C)$ & $H(V|C)$ & $\Opp$ \\
+\midrule
+ECDSA & Standard (juge PKI) & 35 & 18 & 20 & 0,90 \\
+ECDSA & Expert \'etendu & 50 & 19 & 20 & 0,95 \\
+ECDSA & Novice & 15 & 10 & 20 & 0,50 \\
+\midrule
+Helios & Standard (juge g\'en\'eral) & 56 & 1 & 2 & 0,50 \\
+Helios & Tribunal sp\'ecialis\'e & 70 & 1,4 & 2 & 0,70 \\
+Helios & Novice & 30 & 0,6 & 2 & 0,30 \\
+\midrule
+zk-SNARK & Standard (r\'egulateur financier) & 73 & 2 & 3 & 0,67 \\
+zk-SNARK & Expert cryptographe & 90 & 2,5 & 3 & 0,83 \\
+zk-SNARK & R\'egulateur novice & 40 & 1,2 & 3 & 0,40 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Observation 1. Impact fort sur les syst\`emes
+transparents.} Pour ECDSA, passer de $\Delta = 15$ (juge non initi\'e)
+\`a $\Delta = 50$ (expert \'etendu) fait varier $\Opp$ de $0{,}50$ \`a
+$0{,}95$, soit quarante-cinq points. La transparence de la structure de
+preuve permet \`a l'expertise suppl\'ementaire de se traduire directement
+en capacit\'e d\'ecisionnelle.
+
+\noindent\textbf{Observation 2. Impact limit\'e sur les syst\`emes
+z\'ero-connaissance.} Pour Helios, m\^eme lorsque $\Delta$ passe de
+$30$ \`a $70$ bits, $\Opp$ ne varie que de $0{,}30$ \`a $0{,}70$. La
+propri\'et\'e z\'ero-connaissance cr\'ee un plafond sur
+l'extraction, ind\'ependamment de la capacit\'e institutionnelle, de sorte que
+l'opacit\'e cryptographique ne se compense que partiellement par
+l'expertise pr\'ealable. Ce plafond est compatible avec le goulot
+contextuel, qui majore $I(V;\Sigma|C)$ par $H(V|C) = 2$~bits.
+
+\noindent\textbf{Observation 3. H\'et\'erog\'en\'eit\'e des r\'egimes.}
+Les trois syst\`emes appartiennent \`a des r\'egimes fondamentalement
+diff\'erents selon le rapport $I(V;\Sigma|C)/H(V|C)$ avant l'apport de
+$\Delta$~:
+\begin{itemize}
+\item ECDSA rel\`eve d'un r\'egime riche en information ($I \approx H(V|C)$ m\^eme sans $\Delta$)~;
+\item Helios rel\`eve d'un r\'egime pauvre en information ($I \approx H(V|C)/2$ m\^eme avec $\Delta$ maximal)~;
+\item zk-SNARK rel\`eve d'un r\'egime interm\'ediaire, sensible \`a $\Delta$ mais born\'e.
+\end{itemize}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Implications pour la conception et la r\'eglementation}
+\label{subsec:implications_conception}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Le Trilemme CRO conditionnel r\'eoriente la conception de protocoles
+cryptographiques, qui passe de l'optimisation abstraite (\og quelles propri\'et\'es
+de s\'ecurit\'e sont atteignables~? \fg) \`a l'ing\'enierie contrainte
+par la capacit\'e (\og quelles propri\'et\'es cette institution peut-elle
+effectivement utiliser, \'etant donn\'e sa capacit\'e mesurable
+$\Delta$~? \fg).
+
+\subsubsection{Choix de la variante SOTP}
+\label{subsubsec:tableau_comparatif_sotp}\label{subsubsec:algo_selection_variante}
+
+Les trois variantes SOTP sont compar\'ees au tableau~\ref{tab:comparaison_sotp_construction}
+et l'Algorithme~\ref{alg:selection_variante_sotp} en formalise le choix
+(chapitre~\ref{chap:constructions}).
+
+L'algorithme part des deux seuils qui d\'elimitent les r\'egimes d'entropie
+contextuelle, $H^*(\lambda) = \sqrt{\lambda}$ et $H^{**}(\lambda) =
+\lambda/\log_2\lambda$. Il traite d'abord le cas bloquant. Si le contexte
+est assez riche pour exiger SOTP-High mais que l'institution ne dispose pas
+d'un trusted setup fiable, aucune recommandation optimale n'existe. La
+proc\'edure signale l'impasse sans la masquer~; elle rabat alors
+sur SOTP-Base, au prix d'une perte d'opposabilit\'e explicite. Dans les
+autres cas, elle compare $H(\mathcal{C})$ aux deux seuils et retourne la
+variante du r\'egime correspondant, soit SOTP-Low en contexte rare, SOTP-Base
+en r\'egime de transition (o\`u elle dimensionne au passage la projection
+al\'eatoire) ou SOTP-High en contexte riche, o\`u le circuit de preuve doit
+\^etre compil\'e. Le co\^ut de la d\'ecision se r\'eduit \`a deux
+comparaisons~; l'essentiel du travail reste l'estimation pr\'ealable de
+$H(\mathcal{C})$ et de $\Delta$.
+
+\subsubsection{M\'ethodologie de conception en six phases}
+\label{subsubsec:methodologie_cinq_phases}
+
+La progression F$\to$B$\to$E$\to$S$\to$C$\to$X fournit un cadre de d\'ecision explicite l\`a o\`u la
+pratique actuelle consiste souvent \`a d\'eployer le protocole
+cryptographiquement le plus puissant disponible, ind\'ependamment de
+la capacit\'e institutionnelle de l'environnement cible.
+
+\begin{table}[htbp]
+\centering
+\caption{M\'ethodologie de conception
+F$\to$B$\to$E$\to$S$\to$C$\to$X}
+\label{tab:methodologie_FBESCX}
+\begin{tabular}{@{}p{1.8cm}p{2.8cm}p{6.5cm}@{}}
+\toprule
+\textbf{Phase} & \textbf{Action} & \textbf{Outils} \\
+\midrule
+\textbf{F} & Formaliser le contexte
+  & Estimation $H(\mathcal{C})$~\cite{Shannon48,CoverThomas06} \\
+\textbf{B} & Borner la capacit\'e
+  & Triangulation cognitive ($\Delta$)~\cite{Miller56,Simon82,Ericsson95,Chi2006} \\
+\textbf{E} & \'Etendre au r\'egime~PQ
+  & \'Evaluer $\Delta_q$, $\eta_q$~(section~\ref{sec:cro_pq}) \\
+\textbf{S} & Saturer~: retenir la variante SOTP du r\'egime
+  & Variante SOTP (Low/Base/High), heuristique~(section~\ref{sec:sotp_construction}) \\
+\textbf{C} & Certifier la faisabilit\'e
+  & Exigences comparées \`a la borne raffin\'ee~\cite{MINKA2026CLO,GDPR2016,eIDAS14} \\
+\textbf{X} & eXp\'erimenter la mesure
+  & Protocoles exp\'erimentaux~(chapitre~\ref{chap:experimentation}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Phase C. Test de faisabilit\'e.} V\'erifier~:
+\begin{equation}
+\Conf_{\min} \cdot \mathsf{Rel}_{\mathrm{rec},\min} \cdot \Opp_{\min} \stackrel{?}{\leq}
+\frac{1+\kappa/\lambda}{\lambda}\cdot\min\Bigl\{1,\;\frac{\kappa/\lambda+\Delta}{\gamma}\Bigr\}
+\label{eq:test_faisabilite}
+\end{equation}
+(forme raffin\'ee~\eqref{eq:trilemme_cro_raffine}, applicable aux protocoles qui
+satisfont les hypoth\`eses du th\'eor\`eme).
+Si l'in\'egalit\'e est viol\'ee, trois options s'offrent au concepteur, \`a savoir relaxer une exigence,
+augmenter $\Delta$ par investissement dans la formation institutionnelle
+ou augmenter $\lambda$ (impact marginal si $\Delta$ reste fixe).
+
+\subsubsection{Strat\'egie de conception par r\'egime}
+\label{subsubsec:strategie_par_regime}
+
+\begin{definition}[R\'egime de basse capacit\'e]\label{def:regime_low}
+Une institution op\`ere en r\'egime de \textbf{basse capacit\'e} si
+$\Delta < 0{,}1\lambda$. Elle ne dispose pas de l'expertise n\'ecessaire
+pour interpr\'eter des preuves cryptographiques
+complexes~\cite{Herley09}. \textit{Recommandation.} Des m\'ecanismes
+transparents (ECDSA avec pistes d'audit claires). La cryptographie
+pr\'eservant la vie priv\'ee est inadapt\'ee \`a ce niveau.
+\end{definition}
+
+\begin{definition}[R\'egime de capacit\'e moyenne]\label{def:regime_mid}
+Une institution op\`ere en r\'egime de \textbf{capacit\'e moyenne} si
+$0{,}1\lambda \le \Delta \le 0{,}5\lambda$. Elle peut atteindre des
+compromis CRO \'equilibr\'es~\cite{Grossklags10}.
+\textit{Recommandation.} Des protocoles comme Helios avec des aides
+\`a l'interpr\'etation structur\'ees.
+\end{definition}
+
+\begin{definition}[R\'egime de haute capacit\'e]\label{def:regime_high}
+Une institution op\`ere en r\'egime de \textbf{haute capacit\'e} si
+$\Delta > 0{,}5\lambda$. Elle peut soutenir des preuves cryptographiques
+avanc\'ees~\cite{Grossklags10,Simon82}. \textit{Recommandation.}
+Des zk-SNARKs, avec un investissement substantiel en formation et infrastructure
+d'expertise.
+\end{definition}
+
+L'impl\'ementation se d\'eroule en trois \'etapes. \textbf{\'Etape~1.
+Profilage institutionnel.} \'Evaluer $\Delta$ par inventaire de la
+disponibilit\'e d'experts, tests de charge cognitive sur des preuves
+repr\'esentatives, analyse de d\'ecisions historiques, audit de la
+qualit\'e de documentation~\cite{Miller56,Ericsson95,Simon82}.
+\textbf{\'Etape~2. S\'election protocolaire.} Choisir les protocoles
+correspondant au r\'egime mesur\'e~; ne jamais d\'eployer un protocole
+dont le r\'egime cible d\'epasse la capacit\'e actuelle sans planification
+de transition. \textbf{\'Etape~3. Renforcement de capacit\'e.}
+Investir dans la formation, les outils d'aide \`a la d\'ecision et les
+trajectoires de migration progressives.
+
+\subsubsection{Trois recommandations de conception}
+\label{subsubsec:trois_recommandations}
+
+L\`a o\`u la strat\'egie par r\'egime ci-dessus indique \emph{quel}
+protocole retenir pour une capacit\'e donn\'ee, l'analyse de sensibilit\'e
+de la sous-section~\ref{subsec:analyse_sensibilite} indique \emph{o\`u
+investir} pour faire \'evoluer cette capacit\'e. Elle se traduit en trois
+recommandations directement actionnables.
+
+\noindent\textit{Recommandation 1 (ad\'equation contexte--protocole).} Le
+choix du protocole doit \^etre guid\'e par le $H(\mathcal{C})$ de
+l'institution cible. Un tribunal g\'en\'eral ($\Delta \approx 35$ bits) ne
+tire aucun b\'en\'efice de zk-SNARK avanc\'es ($\Opp \approx 0{,}40$)
+l\`a o\`u ECDSA offrirait $\Opp \approx 0{,}90$.
+
+\noindent\textit{Recommandation 2 (investissement en formation).}
+L'investissement en formation institutionnelle ($\Delta$ croissant) a des
+rendements d\'ecroissants pour les syst\`emes z\'ero-connaissance mais
+croissants pour les syst\`emes transparents. \`A budget de formation
+\'egal, le gain d'opposabilit\'e est plus \'elev\'e sur ECDSA que sur Helios.
+
+\noindent\textit{Recommandation 3 (compromis explicite).} Tout syst\`eme
+visant $\Opp > 0{,}7$ dans un contexte \`a faible $H(\mathcal{C})$ doit
+accepter une r\'eduction de $\Conf$. La fronti\`ere de Pareto
+$(\Conf, \Opp)$ est born\'ee par le Trilemme CRO
+conditionnel~\cite{MINKA2026CRO}, pour les protocoles qui satisfont ses
+hypoth\`eses. Les valeurs chiffr\'ees de ces recommandations sont
+illustratives (tableau~\ref{tab:sensibilite_opp_delta}).
+
+\subsubsection{Seuils d'opposabilit\'e et admissibilit\'e juridique}
+\label{subsubsec:seuils_opposabilite}
+
+La m\'etrique $\Opp$ permet de proposer des seuils minimaux
+diff\'erenci\'es par contexte juridictionnel~\cite{Kerr04,Casey11,Mason07}.
+
+\begin{table}[htbp]
+\centering
+\caption{Seuils d'opposabilit\'e sugg\'er\'es par r\'egime juridictionnel}
+\label{tab:seuils_opposabilite}
+\begin{tabular}{@{}p{3.5cm}p{3.5cm}c@{}}
+\toprule
+\textbf{R\'egime} & \textbf{Standard de preuve} & \textbf{$\Opp_{\min}$} \\
+\midrule
+P\'enal & Certitude raisonn\'ee~\cite{Blackstone1769,Wigmore1983}
+  & $\ge 0{,}70$ \\
+Civil & Balance des probabilit\'es~\cite{Federal1988}
+  & $\ge 0{,}50$ \\
+Arbitrage commercial & Pr\'epond\'erance~\cite{Born2014}
+  & $\ge 0{,}40$ \\
+Conformit\'e r\'eglementaire & Audit interne~\cite{COSO2013}
+  & $\ge 0{,}30$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ces seuils reposent sur des estimations analytiques~; la variabilit\'e
+intra-institutionnelle de $\Delta$ introduit une
+incertitude~\cite{Kahneman11}~; ils constituent un guide
+indicatif~\cite{Casey11}.
+
+\noindent\textbf{Implications pour l'audit des syst\`emes de
+r\'emun\'eration de l'\'Etat.} L'analyse des syst\`emes de gestion de la
+solde et des pensions \`a l'\'echelle nationale, particuli\`erement dans
+le contexte du Cameroun, pose un d\'efi pour l'audit
+informatique en environnement institutionnel contraint. L'extraction et
+l'analyse exhaustive des donn\'ees de paiement d\'epassent la v\'erification
+comptable, car elles sont susceptibles de d\'evoiler
+des informations sensibles pour la s\'ecurit\'e de l'\'Etat. Le cadre
+CLO-CRO sugg\`ere une \emph{hypoth\`ese de travail} selon laquelle, dans les contextes o\`u
+$\Delta \ll \gamma$, la forme raffin\'ee de la borne pr\'edit un plafond
+d'opposabilit\'e bas pour les protocoles tr\`es confidentiels, de sorte que
+l'auditeur pourrait devoir arbitrer entre la force probante de sa preuve et
+la protection des donn\'ees. Cette hypoth\`ese ne d\'ecoule pas du cadre
+sans mesure de $\Delta$ et de $\gamma$ dans ce contexte~; elle est \`a
+\'evaluer empiriquement.
+
+\subsubsection{Implications pour les standards NIST PQC}
+\label{subsubsec:implications_nist_pqc}
+
+L'analyse des standards NIST~PQC r\'ev\`ele des implications directes
+pour le d\'eploiement~\cite{NIST.FIPS.203,NIST.FIPS.204,NIST.FIPS.205,Alagic2022}.
+
+\begin{table}[htbp]
+\centering
+\caption{Implications CRO pour les standards NIST~PQC}
+\label{tab:implications_nist_pqc}
+\begin{tabular}{@{}p{3.2cm}p{2.5cm}p{2.8cm}p{2.8cm}@{}}
+\toprule
+\textbf{Standard} & \textbf{R\'egime} & \textbf{Recommandation}
+  & \textbf{Pr\'ecaution} \\
+\midrule
+FIPS~203 (ML-KEM) & Hors champ (KEM) & --- & Pas de preuve \`a interpr\'eter~\cite{Kyber2022,Peikert2016} \\
+FIPS~204 (ML-DSA) & Signature, $\eta_q = 0$ & Institutions form\'ees
+  & Formation requise~\cite{Dilithium2022} \\
+FIPS~205 (SLH-DSA) & Signature, $\eta_q = 0$ & Haute s\'ecurit\'e
+  & Taille de signature \'elev\'ee~\cite{SPHINCS2022,Bernstein2015} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Pour les institutions \`a faible capacit\'e ($\Delta_q < 30$~bits), les
+standards post-quantiques n\'ecessitent des investissements significatifs
+en formation et outils d'interpr\'etation avant tout d\'eploiement
+effectif.
+
+\subsubsection{Opportunit\'es de standardisation}
+\label{subsubsec:opportunites_standardisation}
+
+Trois possibilit\'es de standardisation sont identifi\'ees.
+Pour \textbf{NIST~PQC}, l'int\'egration de l'opposabilit\'e comme crit\`ere
+additionnel permettrait une s\'election guid\'ee par les contraintes de
+d\'eploiement r\'eelles. Pour \textbf{ISO/IEC~27xxx}, une norme sur les
+m\'etriques CLO fournirait un protocole standardis\'e de calcul de
+$H(\mathcal{C})$ et $\Delta$. Pour la \textbf{CEMAC}, une directive sur la
+cryptographie institutionnelle pour la monnaie mobile permettrait \`a six
+pays d'harmoniser leurs exigences r\'eglementaires.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Positionnement vis-\`a-vis des travaux existants}
+\label{subsec:positionnement_travaux}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Cadres cryptographiques~: ZKP et flux d'information quantitatif}
+\label{subsubsec:cadres_crypto_zkp}
+
+Les syst\`emes zero-knowledge atteignent une efficacit\'e remarquable
+mais cr\'eent une vuln\'erabilit\'e pr\'ecise dans les contextes
+institutionnels, puisqu'une preuve zk-SNARK offre au r\'egulateur une
+v\'erification binaire sans explication de la logique
+sous-jacente~\cite{Groth16,BCTV14,PLONK20}. Le paradigme
+\og ne rien r\'ev\'eler \fg{} optimise pour la confidentialit\'e mais
+n\'eglige intrins\`equement l'opposabilit\'e~\cite{Bonneau16,Grimmelmann15}.
+CLO formalise cette tension via $\Opp$~\cite{MINKA2026CLO}.
+
+Le flux d'information quantitatif (QIF)~\cite{Smith09,Alvim12,Clarkson05}
+mesure la fuite d'information pour la minimiser, alors que CLO cherche \`a
+quantifier combien d'information est rendue interpr\'etable par
+l'institution pour l'optimiser~; les deux objectifs sont sym\'etriques mais
+oppos\'es. Les \'etudes cognitives calibrent $\Delta$ et
+$\alpha$~\cite{Miller56,Simon82,Kahneman11}~; les pr\'edictions CLO
+guident la conception des \'etudes.
+
+\subsubsection{S\'ecurit\'e utilisable}
+\label{subsubsec:securite_utilisable}
+
+La recherche en s\'ecurit\'e utilisable a \'etabli des r\'esultats
+empiriquement riches (folk models~\cite{Wash2010}, rationalit\'e de
+l'ins\'ecurit\'e~\cite{Herley09}). Elle ne formalise toutefois pas
+math\'ematiquement ces limites, n'en d\'erive pas de bornes d'impossibilit\'e
+et ne produit pas de constructions optimales
+garanties~\cite{Cranor05,Bonneau12}. La m\'etrique $\Opp$ exprime
+formellement ce que les \'etudes d'utilisateurs observent
+qualitativement~\cite{MINKA2026CLO}, de sorte que les deux approches se compl\`etent.
+
+\subsubsection{Recherche juridique et responsabilit\'e algorithmique}
+\label{subsubsec:recherche_juridique}
+
+Citron et Pasquale~\cite{Citron2008,Citron14} ont argument\'e que les
+syst\`emes automatis\'es doivent fournir une explicabilit\'e pour
+satisfaire les exigences de due process technologique. Ces travaux
+identifient pr\'ecis\'ement les probl\`emes que CLO cherche \`a
+formaliser, mais s'arr\^etent \`a l'analyse
+normative~\cite{Casey11,Kerr04}. CLO leur fournit un outil
+quantitatif, en compl\'ement de l'analyse normative. La valeur de cette
+instrumentation ne sera \'etablie qu'une fois que des \'etudes
+contr\^ol\'ees auront confirm\'e que les valeurs analytiques de $\Opp$
+pr\'edisent effectivement les jugements d'admissibilit\'e r\'eels.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Limitations et probl\`emes ouverts}
+\label{subsec:limitations_problemes_ouverts}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Limitations techniques}
+\label{subsubsec:limitations_techniques}
+
+\textbf{Les axiomes de Fano et Pinsker ne sont pas d\'eriv\'es ab initio.}
+Notre formalisation les int\`egre comme propri\'et\'es des instances de
+protocole sans les d\'eriver \`a partir de la th\'eorie des
+probabilit\'es. Une formalisation compl\`ete n\'ecessiterait l'int\'egration
+des biblioth\`eques de mesure-th\'eorie de Mathlib.
+
+\textbf{Les constructions SOTP ne sont pas encore couvertes par Lean4.}
+La formalisation couvre le noyau alg\'ebrique du Trilemme, mais pas les
+r\'eductions cryptographiques des constructions SOTP ni l'extension
+post-quantique. Ces extensions constituent une direction de recherche
+future.
+
+\subsubsection{Limitations m\'ethodologiques (L1--L6)}
+\label{subsubsec:limitations_methodologiques}
+
+Six limitations d\'elimitent pr\'ecis\'ement le p\'erim\`etre
+d'applicabilit\'e des r\'esultats.
+
+\paragraph{L1. Nature analytique des estimations CLO.}
+Les m\'etriques $\Conf$, $\Relver$, $\Opp$ des syst\`emes
+analys\'es ont \'et\'e calcul\'ees par analyse param\'etrique \`a partir
+de sp\'ecifications publi\'ees, sans mesure aupr\`es d'acteurs
+institutionnels r\'eels~\cite{MINKA2026CLO}. Des \'etudes contr\^ol\'ees
+avec juges, auditeurs et garants en situation r\'eelle sont n\'ecessaires
+pour \'etablir la correspondance entre m\'etriques analytiques et
+comportement observ\'e~\cite{Casey11,Goodman15,Campbell1976,Saltelli2008}. De
+plus, ces syst\`emes ne sont pas des instances du Trilemme
+(Remarque~\ref{rem:portee_cas_etude}), de sorte que leurs valeurs calibrent le cadre sans le
+tester.
+
+\paragraph{L2. Quantification non standardis\'ee de $H(\mathcal{C})$.}
+La m\'ethode de calcul de l'entropie contextuelle n'est pas
+standardis\'ee. Deux chercheurs analysant le m\^eme syst\`eme pourraient
+d\'eriver des valeurs diff\'erentes selon les hypoth\`eses retenues sur
+la granularit\'e du contexte. La voie de r\'esolution passe par un
+consensus communautaire.
+
+\paragraph{L3. Statut de publication des security games.}
+Les bornes CLO publi\'ees dans IEEE Access~\cite{MINKA2026CLO,MINKA2026CRO,MINKA2026PQCRO}
+sont \'etablies dans le formalisme information-th\'eorique. Les jeux
+cryptographiques (IND-CONF, BIND-REL, EXT-OPP) et les r\'eductions
+game-based des constructions SOTP sont d\'evelopp\'es dans les
+pr\'epublications~\cite{MINKA2025CRO,MINKA2025Q2CSI,MINKA2025ZKNR_UC}
+mais n'ont pas encore fait l'objet d'une publication dans une revue
+\`a comit\'e de lecture.
+
+\paragraph{L4. \'Equivalence formelle incompl\`ete.}
+Les ponts \'etablis entre les deux formalismes montrent que la
+r\'esistance aux jeux \emph{implique} des bornes inf\'erieures sur les
+m\'etriques CLO. La r\'eciproque, selon laquelle une forte opposabilit\'e
+information-th\'eorique impliquerait une r\'esistance aux jeux,
+n'est pas \'etablie. Cette asym\'etrie est une limitation
+structurelle, puisque les garanties information-th\'eoriques sont
+\emph{n\'ecessaires} mais pas \emph{suffisantes} pour la s\'ecurit\'e
+computationnelle.
+
+\paragraph{L5. Mod\`eles quantiques simplifi\'es.}
+L'extension quantique utilise principalement le canal d\'epolarisant
+comme mod\`ele de bruit. Des ph\'enom\`enes plus fins (amortissement
+d'amplitude~\cite{Devoret2013}, d\'ephasage~\cite{Breuer2002}, effets de
+m\'emoire quantique~\cite{Rivas2012}) peuvent ne pas y \^etre
+captur\'es. Des mod\`eles de canaux sp\'ecifiques pourraient donner des
+bornes plus fines.
+
+\paragraph{L6. Port\'ee limit\'ee aux preuves non interactives.}
+L'analyse couvre principalement les syst\`emes de preuves non
+interactives~\cite{Groth16,BCTV14}. Les protocoles \`a rounds
+multiples~\cite{Goldreich1987}, les architectures
+multi-prouveurs~\cite{CramerDamgardSchoenmakers} et les verdicts
+distribu\'es~\cite{Evans2018} peuvent pr\'esenter des caract\'eristiques
+de compromis substantiellement diff\'erentes.
+
+\subsubsection{Limitations conceptuelles}
+\label{subsubsec:limitations_conceptuelles}
+
+\textbf{Mod\`ele de contexte statique.} Nous traitons le contexte $C$
+comme fixe. Or les institutions apprennent et s'adaptent, de sorte que $H(C)$ et
+$\Delta$ \'evoluent par accumulation de pr\'ec\'edents, changement
+technologique et mises \`a jour r\'eglementaires~\cite{Simon82}.
+\textbf{Fonctions de verdict d\'eterministes.} Nous mod\'elisons
+$V(\Sigma, C)$ comme d\'eterministe dans les exemples (auquel cas $\Opp = 1$,
+Remarque~\ref{rem:verdict_deterministe}), alors que le th\'eor\`eme autorise un
+verdict qui d\'epend aussi de ressources institutionnelles. La prise de d\'ecision r\'eelle
+implique des processus stochastiques, des d\'esaccords multi-personnes et
+des biais cognitifs~\cite{Casey10,Kahneman11}. \textbf{Hypoth\`ese de
+$\beta$-r\'egularit\'e.} Le Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}
+requiert $\beta = O(1)$~; des constructions pathologiques pourraient la
+violer. \textbf{Port\'ee du t\'emoin.} Le t\'emoin de coh\'erence Lean4
+atteint la borne dans le mod\`ele abstrait (forme rel\^ach\'ee de Fano), mais il
+n'est pas r\'ealisable par un protocole, de sorte que la question d'un protocole concret
+qui approche la borne reste ouverte.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre dresse l'inventaire de ce qui manque. Certains axiomes sont admis sans
+\^etre d\'eriv\'es, tandis que la couverture Lean4 n'inclut encore ni SOTP ni
+l'extension post-quantique. Six limitations m\'ethodologiques sont
+nomm\'ees sans d\'etour, parmi lesquelles les estimations analytiques, l'entropie non
+standardis\'ee, le r\'ealisme computationnel, le bruit quantique simplifi\'e
+et la restriction aux preuves non interactives. Quatre limitations conceptuelles touchent
+aussi le mod\`ele lui-m\^eme, \`a savoir le contexte statique, les verdicts d\'eterministes,
+la r\'egularit\'e suppos\'ee et la port\'ee du t\'emoin.
+
+Il note que rien n'est dissimul\'e, puisque chaque limite est pos\'ee et que chaque
+cons\'equence en est tir\'ee. Il y voit un dossier en cours d'instruction,
+l'instruction exigeant de savoir exactement
+o\`u sont les trous.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{La port\'ee constructive~: de l'impossibilit\'e au guide}
+\label{subsec:portee_constructive}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+Les th\'eor\`emes d'impossibilit\'e f\'econds sont souvent accompagn\'es de
+constructions qui en montrent la port\'ee. CAP trouve son sens dans les
+syst\`emes distribu\'es r\'eels (Spanner, CockroachDB)~\cite{Brewer00,GilbertLynch02}.
+FLP trouve le sien dans les protocoles partiels (Paxos,
+Raft)~\cite{FLP85}. Le Trilemme CRO se prolonge dans la
+\textbf{famille SOTP}, qui r\'eunit trois constructions cryptographiques, une par r\'egime
+d'entropie contextuelle, dont les propri\'et\'es de confidentialit\'e et de
+fiabilit\'e de v\'erification sont prouv\'ees mais dont l'opposabilit\'e est
+guid\'ee par une heuristique de conception.
+
+\subsubsection{Ce que la construction apporte et ce qu'elle n'\'etablit pas}
+
+\textbf{La borne devient utilisable pour la conception.} Un ing\'enieur qui
+conna\^it la forme raffin\'ee de la borne sait quelles exigences sont
+incompatibles~; avec SOTP, il dispose aussi d'un point de d\'epart par
+r\'egime (contexte rare $\to$ SOTP-Low, transition $\to$ SOTP-Base, contexte
+riche $\to$ SOTP-High).
+
+\textbf{La finesse de la borne reste ouverte.} Les fractions de la borne
+atteintes ($0{,}45$--$0{,}75$) rel\`event d'heuristiques et le t\'emoin de
+coh\'erence Lean n'est pas r\'ealisable. Qu'un protocole concret approche la borne \`a facteur
+constant est une question ouverte (Conjecture~\ref{conj:optimalite_universelle}).
+
+\textbf{La borne devient un guide.} Elle dit
+quel compromis est exclu~; les constructions indiquent comment s'en
+approcher, sans garantie d'optimalit\'e.
+
+\subsubsection{Port\'ee de la contribution SOTP}
+
+\textbf{SOTP-Low} couvre le r\'egime des contextes rares
+($H(C) < \sqrt{\lambda}$). Elle utilise un encodage d\'eterministe du contexte,
+avec confidentialit\'e calculatoire sous PRG~\cite{BlumMicali84} et fiabilit\'e
+de v\'erification sous DLog~\cite{DiffieHellman76}.
+
+\textbf{SOTP-Base} couvre le r\'egime de transition. Elle utilise la projection
+Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03}, dimensionn\'ee
+pour pr\'eserver les distances entre contextes \`a $\varepsilon$ pr\`es.
+
+\textbf{SOTP-High} couvre le r\'egime des contextes riches
+($H(C) > \lambda/\log\lambda$). Elle utilise des zk-SNARKs
+Groth16~\cite{Groth16,BCTV14} et un hachage Poseidon~\cite{Poseidon2019} pour
+engager un contexte arbitrairement riche dans un condens\'e de 256 bits.
+
+L'optimalit\'e universelle de la famille, qui interdirait toute am\'elioration
+super-constante du produit par rapport \`a la meilleure variante, est une
+conjecture (Conjecture~\ref{conj:optimalite_universelle}).
+
+\begin{boiteArbitre}
+L'arbitre comprend que la borne seule ne suffit pas, puisqu'une limite
+d\'epourvue de construction ressemble \`a une porte ferm\'ee dont on ignorerait le plan. La famille SOTP
+esquisse ce plan en indiquant par o\`u commencer dans chaque r\'egime, sans
+pr\'etendre avoir atteint la limite. L'impossibilit\'e devient ainsi un guide.
+\end{boiteArbitre}
+
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Ce que la formalisation enseigne~: le\c{c}on m\'ethodologique}
+\label{subsec:verification_corrige_lecon}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+Les formulations alternatives issues de la formalisation Lean4, y compris le
+cas limite qui \'etablit la n\'ecessit\'e du r\'egime de confidentialit\'e, sont
+pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}. La pr\'esente
+sous-section se concentre sur la le\c{c}on m\'ethodologique qui en d\'ecoule.
+
+\paragraph{La rigueur se v\'erifie.}
+Les formulations pr\'ecis\'ees touchaient \`a la structure des preuves~: le sens
+d'une in\'egalit\'e, une borne inf\'erieure tir\'ee d'une borne sup\'erieure et la
+r\'esolution d'une optimisation. Ces points \'echappent facilement \`a la relecture
+parce qu'ils produisent des r\'esultats \emph{plausibles}. La v\'erification
+m\'ecanique a mis en \'evidence les questions de sens d'in\'egalit\'e et de
+quantification. Elle ne dispense pas de l'examen des d\'efinitions, qui a conduit
+\`a d'autres pr\'ecisions (distinction entre fiabilit\'e de reconstruction et
+fiabilit\'e de v\'erification, d\'efinition de $\eta_q$), hors de port\'ee d'une
+formalisation qui prend ces d\'efinitions pour donn\'ees.
+
+\paragraph{La formalisation est un instrument de d\'ecouverte.}
+Au-del\`a de la certification de r\'esultats d\'ej\`a prouv\'es, la formalisation
+r\'ev\`ele les hypoth\`eses implicites et les points structurels \`a pr\'eciser. Ce
+constat prolonge les observations de Scerri~\cite{Scerri14} et de
+Wiedijk~\cite{Wiedijk2008}, selon lesquelles revisiter les mod\`eles de preuve
+r\'ev\`ele des probl\`emes fondationnels que ni la th\'eorie pure ni
+l'exp\'erimentation n'identifient.
+
+\paragraph{La formalisation gagne \`a pr\'ec\'eder la publication.}
+Dans notre cas, la formalisation Lean4 a \'et\'e entreprise \emph{apr\`es} la
+publication. Elle a conduit \`a des formulations plus pr\'ecises qui auraient pu
+figurer d\`es la soumission. Pour les r\'esultats interdisciplinaires combinant
+th\'eorie de l'information, cryptographie et sciences cognitives, la
+formalisation m\'ecanique a sa place dans le processus de preuve lui-m\^eme, en
+amont de la publication.
+
+\paragraph{Cons\'equences pour la pratique.}
+Cette exp\'erience conduit \`a trois recommandations pour la communaut\'e.
+\textbf{Pour les auteurs}, il s'agit de formaliser le noyau alg\'ebrique avant
+soumission, m\^eme partiellement~; une formalisation partielle fait d\'ej\`a
+appara\^itre les points structurels \`a pr\'eciser. \textbf{Pour les revues}, il
+convient d'inclure syst\'ematiquement un relecteur \og v\'erification formelle \fg{}
+pour les articles dont le noyau math\'ematique est formalisable~; la charge est
+faible, le b\'en\'efice \'elev\'e. \textbf{Pour la formation}, il importe d'enseigner
+la formalisation comme partie int\'egrante du m\'etier de chercheur. Il s'agit
+d'une comp\'etence transf\'erable qui b\'en\'eficie \`a toutes les disciplines
+math\'ematis\'ees.
+
+\begin{boiteArbitre}
+L'arbitre referme le dossier. Des formulations plus pr\'ecises sont issues de la
+machine ou d'une relecture attentive des d\'efinitions, puis retenues par les
+auteurs. Il en retient que ni la relecture seule ni la machine seule ne
+suffisent, car l'une produit des preuves plausibles tandis que l'autre certifie
+ce qu'on lui donne. L'arbitre comprend que la formalisation est une n\'ecessit\'e
+\'epist\'emologique pour tout r\'esultat interdisciplinaire dont aucune des
+disciplines constituantes ne contr\^ole l'int\'egralit\'e.
+\end{boiteArbitre}
+
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Le statut des protocoles exp\'erimentaux~: un programme
+falsifiable}
+\label{subsec:statut_protocoles_experimentaux}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+Le chapitre~\ref{chap:experimentation} occupe une position
+inhabituelle dans l'\'economie de cette th\`ese, puisqu'il sp\'ecifie des
+protocoles exp\'erimentaux sans les avoir d\'eploy\'es. Cette position
+m\'erite d'\^etre clarifi\'ee, car elle d\'etermine la port\'ee
+\'epist\'emique de l'ensemble du travail.
+
+\subsubsection{Statut \'epist\'emique}
+
+Le chapitre~\ref{chap:experimentation} se situe entre r\'esultats
+empiriques (aucun protocole n'a \'et\'e d\'eploy\'e) et th\'eorie pure (les
+protocoles sont sp\'ecifi\'es jusqu'\`a l'op\'erationnel). Il rel\`eve de la
+conception m\'ethodologique, puisqu'il sp\'ecifie \emph{comment} valider empiriquement
+le cadre, sans encore l'avoir fait. Cette sp\'ecification constitue une
+contribution en soi, pour trois raisons.
+
+\textbf{Elle rend le cadre falsifiable.} Un cadre th\'eorique
+conditionnel \`a des param\`etres non mesurables est non falsifiable au
+sens de Popper~\cite{Popper1934}. En sp\'ecifiant les protocoles de
+mesure, les seuils de falsification et les pr\'edictions testables, le
+chapitre~\ref{chap:experimentation} transforme le Trilemme CRO en
+programme scientifique falsifiable. Cette transformation conditionne sa
+port\'ee empirique.
+
+\textbf{Elle guide la communaut\'e.} Les protocoles exp\'erimentaux sont
+sp\'ecifi\'es \`a un niveau op\'erationnel rare dans la litt\'erature
+th\'eorique, qu'il s'agisse de la stratification des \'echantillons, des estimateurs avec biais
+et variance, des crit\`eres de fiabilit\'e inter-\'evaluateurs ou du calendrier de
+d\'eploiement. Cette sp\'ecification permet \`a d'autres chercheurs de
+reproduire, de critiquer ou d'\'etendre le programme.
+
+\textbf{Elle documente les limitations.} Le volet~B du chapitre d\'erive
+les valeurs d'opposabilit\'e des trois syst\`emes de r\'ef\'erence et
+\'etablit la coh\'erence interne du cadre. Il fournit une premi\`ere
+\textbf{calibration analytique} en attente de validation
+exp\'erimentale tout en documentant explicitement ce qui reste \`a mesurer.
+
+\subsubsection{Parall\`eles avec d'autres disciplines}
+
+Ce statut se retrouve dans les disciplines o\`u la th\'eorie pr\'ec\`ede
+l'exp\'erience.
+
+\textbf{Physique th\'eorique.} Une th\'eorie qui pr\'edit des faits
+falsifiables et sp\'ecifie comment les tester est une contribution,
+m\^eme si les tests n'ont pas encore \'et\'e men\'es. La pr\'ediction du
+boson de Higgs a pr\'ec\'ed\'e sa d\'etection de plusieurs d\'ecennies.
+
+\textbf{Biologie th\'eorique.} Les mod\`eles de plissement
+prot\'eique~\cite{Anfinsen1973} ont pr\'ec\'ed\'e les m\'ethodes de
+validation exp\'erimentale (AlphaFold~\cite{Jumper2021}).
+
+\textbf{\'Economie comportementale.} La th\'eorie des
+perspectives~\cite{Kahneman1979} a sp\'ecifi\'e des protocoles
+exp\'erimentaux avant leur d\'eploiement.
+
+Dans tous ces cas, la \textbf{sp\'ecification du programme de
+validation} est reconnue comme une contribution scientifique. Il
+en va de m\^eme pour le chapitre~\ref{chap:experimentation}.
+
+\subsubsection{Cons\'equences pour la lecture de la th\`ese}
+
+Cette clarification engage trois mani\`eres de lire ce qui pr\'ec\`ede.
+
+\textbf{Les bornes sont conditionnelles et leurs conditions sont
+\'enonc\'ees.} Le Trilemme CRO, classique comme post-quantique, ne dit rien
+en dehors du r\'egime o\`u il est \'etabli, lequel suppose l'extraction born\'ee, un verdict
+efficace, la r\'egularit\'e du protocole et le r\'egime de fuite
+$I(M;\Sigma|C) \leq \kappa/\lambda$. Ces conditions d\'elimitent le domaine de validit\'e du
+r\'esultat, de sorte qu'un protocole plac\'e hors de ce domaine \'echappe \`a la
+borne. Lire le trilemme comme une interdiction absolue serait donc le
+mal lire. Sa validit\'e math\'ematique est \'etablie~; sa port\'ee
+empirique d\'epend de grandeurs qui restent \`a mesurer.
+
+\textbf{Le mod\`ele est r\'efutable et les seuils de r\'efutation sont
+publics} (tableau~\ref{tab:criteres_refutation}). Si les mesures de $\Delta$
+ou de $\Delta_q$ s'\'ecartent syst\'ematiquement des plages attendues, ou si le
+produit observ\'e d\'epasse la borne sur un syst\`eme qui satisfait les
+hypoth\`eses du th\'eor\`eme, le mod\`ele
+d'extraction born\'ee devra \^etre r\'evis\'e, sans r\'einterpr\'etation des
+mesures. Le chapitre~\ref{chap:experimentation} fixe ces seuils
+avant toute campagne de mesure, ce qui interdit de les ajuster apr\`es
+coup.
+
+\textbf{La coh\'erence \'etablie est interne.} Les ordres
+de grandeur retenus pour les syst\`emes de r\'ef\'erence sont mutuellement
+coh\'erents et compatibles avec la litt\'erature cognitive~; les deux voies
+d'estimation ne sont pas ind\'ependantes. Cela ne constitue pas une
+validation exp\'erimentale, que cette th\`ese ne revendique d'ailleurs pas.
+
+\textbf{La port\'ee du travail est donc quadruple.} Elle est
+th\'eorique par les m\'etriques et les bornes (C1--C3),
+constructive par les protocoles qui les illustrent (C4),
+certifi\'ee par la v\'erification m\'ecanique de leur noyau (C5) et
+exp\'erimentale par le programme falsifiable qui les rend
+testables (C6). Cette quadruple port\'ee structure la conclusion
+g\'en\'erale.
+
+\begin{boiteArbitre}
+L'arbitre comprend que sp\'ecifier comment tester une th\'eorie est
+aussi important que la th\'eorie elle-m\^eme. Une th\'eorie non testable
+est une sp\'eculation. Une th\'eorie testable, m\^eme non encore
+test\'ee, est une science. Le
+chapitre~\ref{chap:experimentation} est ce qui fait passer le
+Trilemme CRO de la premi\`ere cat\'egorie \`a la seconde.
+\end{boiteArbitre}
+
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Le\c{c}ons m\'ethodologiques}
+\label{subsec:lecons_methodologiques}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Les difficult\'es rencontr\'ees produisent des enseignements
+transf\'erables \`a la communaut\'e travaillant \`a l'intersection de
+la cryptographie, de la th\'eorie de l'information et des m\'ethodes
+formelles.
+
+\subsubsection{La formalisation renforce les th\'eor\`emes interdisciplinaires}
+\label{subsubsec:formalisation_renforce}
+
+La v\'erification formelle expose les hypoth\`eses cach\'ees et clarifie
+les d\'ependances logiques, l\`a o\`u le raisonnement informel les
+absorbe tacitement~\cite{Wiedijk2008,Avigad2014}. Ce r\'esultat est
+coh\'erent avec Scerri~\cite{Scerri14}, pour qui revisiter les mod\`eles de
+preuve r\'ev\`ele des probl\`emes fondationnels que ni la th\'eorie pure
+ni l'exp\'erimentation n'identifient.
+
+\subsubsection{L'axiomatisation est une n\'ecessit\'e pragmatique}
+\label{subsubsec:axiomatisation_pragmatique}
+
+Tant que les math\'ematiques sous-jacentes ne sont pas enti\`erement
+formalis\'ees dans une biblioth\`eque partag\'ee, int\'egrer les
+r\'esultats profonds comme propri\'et\'es d'instance est une approche
+valide et transparente. La cl\'e est de s\'eparer nettement le noyau
+certifi\'e des fondations accept\'ees comme
+vraies~\cite{BartheEA2013,Doussot23}.
+
+\subsubsection{Les constantes explicites sont n\'ecessaires}
+\label{subsubsec:constantes_explicites}
+
+Masquer les constantes dans $O(\cdot)$ est un raccourci acceptable en
+s\'ecurit\'e classique~; en cryptographie institutionnelle, o\`u
+$\Delta$, $\alpha$, $\beta$, $H(C)$ doivent \^etre mesur\'es pour
+permettre la d\'ecision juridique et administrative, cette abstraction
+devient un obstacle op\'erationnel. Notre borne explicite
+$\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 +
+\kappa^2/\lambda^3)$ rend calculable la borne sur le produit CRO pour
+tout ensemble de param\`etres institutionnels mesur\'es.
+
+\subsubsection{La transparence scientifique comme mod\`ele}
+\label{subsubsec:transparence_scientifique}
+
+Judson~\cite{Judson22} note un sch\'ema pr\'eoccupant, \`a savoir que les mises en garde
+et les d\'ecisions de conception difficiles sont souvent renvoy\'ees aux
+praticiens \`a travers des heuristiques mal comprises. Notre
+documentation explicite des bornes non prouv\'ees, des hypoth\`eses
+n\'ecessaires et des limitations empiriques r\'epond \`a cette
+pr\'eoccupation, car la rigueur consiste \`a d\'elimiter pr\'ecis\'ement les probl\`emes
+ouverts au lieu de les \'eviter.
+
+\subsubsection{La v\'erification formelle comme n\'ecessit\'e \'epist\'emologique}
+\label{subsubsec:verification_necessite}
+
+La formalisation Lean4 constitue une n\'ecessit\'e
+\'epist\'emologique pour les r\'esultats interdisciplinaires combinant
+th\'eorie de l'information, sciences cognitives et cryptographie, dont
+aucun des trois champs n'a la ma\^itrise compl\`ete. En for\c{c}ant chaque
+hypoth\`ese, quantification et approximation \`a \^etre explicite, la
+v\'erification m\'ecanique approfondit la compr\'ehension du
+th\'eor\`eme lui-m\^eme. Les formulations alternatives et le cas limite sont
+document\'es \`a la sous-section~\ref{subsec:lean4_erreurs}.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre retient quatre certitudes. La cryptographie institutionnelle
+constitue un domaine propre, car sa question centrale n'\'etait pos\'ee nulle part.
+Une impossibilit\'e prouv\'ee repr\'esente la forme la plus nette de
+connaissance. Ce qu'il ne peut pas obtenir simultan\'ement a
+d\'esormais un nom, une mesure et une borne. Enfin, la rigueur formelle a
+mis au jour des propri\'et\'es
+informationnelles transform\'ees en conditions v\'erifiables, une
+structure de preuve pr\'eservant la borne dominante et des constantes que
+la notation $O(\cdot)$ dissimulait. Il sait maintenant qu'il attend
+de la section suivante les perspectives qui transforment ces contraintes
+en programme.
+\end{boiteArbitre}
+
+\begin{table}[htbp]
+\centering
+\caption{Synth\`ese~: r\'ev\'elations, implications, limitations et
+le\c{c}ons par contribution}
+\label{tab:synthese_discussions}
+\begin{tabular}{@{}p{1.8cm}p{3cm}p{3cm}p{3.5cm}@{}}
+\toprule
+\textbf{Contrib.} & \textbf{R\'ev\'elation / R\'esultat}
+  & \textbf{Implication pratique} & \textbf{Travail futur} \\
+\midrule
+C1~: CLO & M\'etrique $\Opp$ in\'edite~\cite{MINKA2026CLO}
+  & Quantification des compromis
+  & \'Etudes contr\^ol\'ees \\
+C2~: Trilemme & Borne $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$~\cite{MINKA2026CRO}
+  & Guide conception classique
+  & Extension Lean4 \\
+C3~: PQ & Borne $\gamma_q^{-1}(\Delta_q/\lambda + \kappa(\Delta_q+1)/\lambda^2 + \kappa^2/\lambda^3)$~\cite{MINKA2026PQCRO};
+  d\'ecomp. $\delta_{\text{enh}},\delta_{\text{degr}}$
+  & Standards NIST~PQC
+  & Canaux quantiques r\'eels \\
+C4~: SOTP & $\Conf$, $\Relver$ prouv\'ees~; opposabilit\'e heuristique~(section~\ref{sec:sotp_construction})
+  & Protocoles de r\'ef\'erence
+  & Preuves interactives \\
+C5~: Lean4 & Propri\'et\'es d'instance explicites~;
+  forme raffin\'ee certifi\'ee~(section~\ref{sec:lean4})~;
+  t\'emoins (mod\`ele abstrait)
+  & Certification m\'ecanique
+  & Extension SOTP et PQ \\
+C6~: Protocoles exp\'erimentaux & Programme de validation falsifiable
+  & Feuille de route empirique
+  & D\'eploiement effectif \\
+\midrule
+\multicolumn{4}{l}{\textit{Limitations transversales~:}} \\
+L1--L6 & Estimations analytiques~; $H(\mathcal{C})$ non standardis\'e~;
+  r\'ealisme computationnel~; bruit quantique simplifi\'e~;
+  preuves non interactives
+  & \multicolumn{2}{l}{Programme exp\'erimental
+    futur} \\
+\bottomrule
+\end{tabular}
+\end{table}

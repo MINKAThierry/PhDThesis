@@ -1,0 +1,53 @@
+% ============================================================================
+% CHAPITRE 3 : CONCLUSION
+% ============================================================================
+
+\section{CONCLUSION DU CHAPITRE~\ref{chap:constructions}}
+\label{sec:conclusion_constructions}
+
+\begin{sloppypar}
+La famille SOTP (section~\ref{sec:sotp_construction}) propose trois
+constructions de r\'ef\'erence, SOTP-Low, SOTP-Base et SOTP-High, adapt\'ees
+chacune \`a un r\'egime de richesse contextuelle. Leurs propri\'et\'es
+cryptographiques, \`a savoir la confidentialit\'e (calculatoire pour les
+variantes \`a PRG, divulgation nulle de connaissance pour SOTP-High) et la
+fiabilit\'e de v\'erification, sont prouv\'ees sous PRG, DLog et q-SDH/q-PKE. Les facteurs
+$0{,}75$, $0{,}5$ et $0{,}45$ des formulations initiales sont conserv\'es comme
+heuristiques de conception, tandis que l'optimalit\'e universelle
+est formul\'ee comme conjecture (Conjecture~\ref{conj:optimalite_universelle}). Cette
+r\'eserve a une raison structurelle, car une couche Clay qui ne d\'epend que du contexte public
+n'apporte aucune information conditionnelle au sens de $\Opp$
+(Remarque~\ref{rem:statut_sotp}).
+
+La v\'erification Lean4 (section~\ref{sec:lean4}) a certifi\'e
+le noyau alg\'ebrique. Les in\'egalit\'es de Pinsker et de Fano y sont
+int\'egr\'ees comme propri\'et\'es des instances de protocole et les hypoth\`eses
+institutionnelles y sont explicit\'ees~; la borne
+$\Delta/(\gamma\lambda) + O(\lambda^{-2})$ et sa forme raffin\'ee sont v\'erifi\'ees
+sans \texttt{sorry}. Deux t\'emoins formalisent la coh\'erence (une instance du
+mod\`ele abstrait atteint la borne rel\^ach\'ee) et la port\'ee (une instance hors
+r\'egime atteint $1/4$). Cette d\'emarche illustre la valeur
+\'epist\'emique de la v\'erification formelle, qui certifie des \'enonc\'es et contraint aussi
+\`a expliciter ce qui \'etait rest\'e implicite. Elle a conduit \`a des formulations
+plus pr\'ecises de trois \'enonc\'es publi\'es (sous-section~\ref{subsec:lean4_erreurs}).
+
+Quatre limitations demeurent. Les param\`etres
+$\Delta$, $\alpha$, $\beta$ reposent sur des estimations analytiques. Leur mesure directe aupr\`es
+d'acteurs institutionnels r\'eels rel\`eve des protocoles du
+chapitre~\ref{chap:experimentation}. Les m\'etriques CLO
+des syst\`emes de r\'ef\'erence ont \'et\'e fix\'ees par calibration param\'etrique
+r\'etrospective, sans exp\'erimentation directe et ne valident pas les
+heuristiques SOTP. La formalisation Lean4 couvre le noyau
+alg\'ebrique. Les fondements probabilistes et les r\'eductions de s\'ecurit\'e
+des constructions SOTP restent hors de son p\'erim\`etre. Le mod\`ele quantique utilise
+principalement le canal d\'epolarisant, qui peut ne pas capturer toutes les
+nuances des syst\`emes quantiques r\'eels.
+
+La cryptographie institutionnelle dispose d\'esormais des m\'etriques, de la
+loi d'impossibilit\'e, des constructions de r\'ef\'erence et de la certification
+formelle que requiert tout sous-domaine th\'eorique. Ces r\'esultats doivent
+encore \^etre confront\'es aux syst\`emes r\'eels, ce qui conduit \`a se demander
+si les param\`etres institutionnels qui gouvernent ces bornes sont mesurables.
+Cette question correspond \`a l'\'etape \textbf{X} de la progression et fait
+l'objet du chapitre~\ref{chap:experimentation}.
+\end{sloppypar}

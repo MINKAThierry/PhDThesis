@@ -1,0 +1,74 @@
+% ============================================================================
+% CHAPITRE 2 : INTRODUCTION
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+\section{INTRODUCTION}
+\label{sec:introduction_cadre_formel}
+% ----------------------------------------------------------------------------
+
+\begin{sloppypar}
+La th\`ese progresse selon un cycle canonique en six actes,
+\textbf{F}$\to$\textbf{B}$\to$\textbf{E}$\to$\textbf{S}$\to$\textbf{C}$\to$\textbf{X}.
+Ce chapitre en r\'ealise les trois premiers. La section~\ref{sec:clo}
+formalise le cadre CLO et d\'efinit les trois m\'etriques
+($\Conf$, $\Rel$, $\Opp$) qui rendent le paradoxe tractable, en y
+int\'egrant les jeux cryptographiques (IND-CONF, BIND-REL, EXT-OPP) qui
+captent leur contenu op\'erationnel. La section~\ref{sec:cro_classique}
+borne les compromis r\'ealisables dans le r\'egime classique par
+le Trilemme CRO conditionnel. La section~\ref{sec:cro_pq} \'etend
+ces bornes aux adversaires quantiques et aux canaux post-quantiques. La
+section~\ref{sec:conclusion_cadre_formel} synth\'etise ces trois
+contributions. Les trois actes suivants, saturer, certifier et
+exp\'erimenter, font l'objet des chapitres~\ref{chap:constructions}
+et~\ref{chap:experimentation}.
+
+Ce chapitre \'etablit le socle th\'eorique de la th\`ese. Chaque section
+correspond \`a une contribution publi\'ee et apporte une r\'eponse pr\'ecise
+\`a l'un des objectifs de recherche formul\'es \`a la
+sous-section~\ref{subsec:objectifs_recherche}.
+
+% ----------------------------------------------------------------------------
+\subsection{D\'emarche m\'ethodologique~: les actes
+\textbf{F}, \textbf{B} et \textbf{E}}
+\label{subsec:demarche_methodologique}
+% ----------------------------------------------------------------------------
+
+Avant d'entrer dans les sections techniques, nous exposons la logique de
+chaque \'etape. Dans le cycle
+\textbf{F}$\to$\textbf{B}$\to$\textbf{E}$\to$\textbf{S}$\to$\textbf{C}$\to$\textbf{X},
+chaque \'etape r\'epond \`a une n\'ecessit\'e m\'ethodologique sp\'ecifique.
+
+\paragraph{Formaliser (\textbf{F}).}
+La cryptographie institutionnelle ne disposait d'aucun cadre m\'etrique
+pour l'interpr\'etabilit\'e. Avant de borner, il fallait d\'efinir ce
+qui doit \^etre born\'e. La m\'ethodologie adopt\'ee est
+axiomatique-constructive. Elle part de la th\'eorie de l'information
+(Shannon, Fano, Pinsker) pour d\'efinir des m\'etriques mesurables,
+comparables et formellement manipulables. La formalisation pr\'ec\`ede
+les bornes parce que sans d\'efinition pr\'ecise de l'opposabilit\'e,
+toute borne serait circulaire.
+
+\paragraph{Borner (\textbf{B}).}
+Une fois le cadre CLO \'etabli, il reste \`a d\'eterminer les limites
+fondamentales du r\'ealisable. La m\'ethodologie des
+th\'eor\`emes d'impossibilit\'e conditionnelle, inspir\'ee des trilemmes
+CAP et FLP, conditionne les bornes aux param\`etres cognitifs r\'eels des
+institutions ($\Delta$, $\alpha$, $\beta$). Cette approche produit une
+contrainte param\'etr\'ee par les acteurs institutionnels plut\^ot qu'un
+obstacle th\'eorique absolu. Lorsque la granularit\'e des
+verdicts d\'epasse la capacit\'e d'extraction institutionnelle $\Delta$, c'est
+$\Delta$ qui plafonne les compromis r\'ealisables~; sinon, c'est l'in\'egalit\'e
+de Fano.
+
+\paragraph{\'Etendre (\textbf{E}).}
+L'extension quantique introduit une perturbation qualitativement
+diff\'erente, qui tient au bruit de canal quantique et \`a la perte
+d'interpr\'etabilit\'e qu'il induit lorsque la preuve est port\'ee par un support quantique. Les outils de la th\'eorie
+de l'information quantique, entropie de von Neumann, borne de Holevo (sous-sous-section~\ref{subsubsec:holevo}),
+lemme de Gentle Measurement, permettent d'\'etendre les bornes \`a cet
+environnement sans repartir de z\'ero. La borne explicite conserve sa forme,
+avec une capacit\'e quantique $\Delta_q$~; le coefficient de perte
+d'interpr\'etabilit\'e $\eta_q$ n'appara\^it que dans une majoration
+affaiblie. Ce coefficient est nul pour les preuves qui sont des cha\^ines de bits.
+\end{sloppypar}

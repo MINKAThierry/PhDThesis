@@ -1,0 +1,967 @@
+% ============================================================================
+% SECTION 2.2 : LE CADRE CLO — FORMALISATION DES MESURES
+% Source : partie2/clo.tex (version condensée, niveau de détail maximal)
+% Preuves complètes intégrées dans le corps (pas de renvoi aux annexes)
+% ============================================================================
+
+\section{LE CADRE CLO : FORMALISATION DES MESURES}
+\label{sec:clo}
+\begin{sloppypar}
+Le chapitre~\ref{chap:contexte} a expos\'e le paradoxe de l'authenticit\'e
+invisible~\cite{Goodman15,Casey16,Grimmelmann15}, selon lequel les protocoles qui maximisent la protection cryptographique
+induisent une opacit\'e institutionnelle s\'ev\`ere, tandis que les protocoles
+transparents sacrifient la confidentialit\'e~\cite{Bonneau16,Citron14}. La section~\ref{sec:etat_art}
+a fourni les outils n\'ecessaires, th\'eorie de l'information de
+Shannon~\cite{Shannon48,Shannon49,Wyner75}, in\'egalit\'es de Pinsker et
+Fano~\cite{Fano61,Pinsker1964}, th\'eorie de l'information quantique
+(von Neumann, Holevo~\cite{Holevo1973,NielsenChuang2010}), primitives d'obscurcissement (commitments,
+zk-SNARKs~\cite{Groth16,BCTV14,Gennaro13}), trilemmes d'impossibilit\'e (CAP~\cite{Brewer00},
+FLP~\cite{FLP85}), standards post-quantiques NIST~\cite{NISTPQC,Kyber2022,Dilithium2022}, sans encore les articuler 
+en un cadre unifi\'e.
+
+Nous d\'efinissons ici ce cadre. Le \textbf{cadre CLO (Cryptographic
+Legal Opposability)}~\cite{MINKA2026CLO} constitue la premi\`ere formalisation
+math\'ematique rigoureuse de la cryptographie institutionnelle. L'
+Objectif~\ref{obj:obj1_unification}, comment \'etablir un cadre unifi\'e
+formalisant confidentialit\'e, fiabilit\'e et opposabilit\'e via des mesures
+issues de la th\'eorie de l'information permettant analyses quantitatives et comparaisons
+objectives~? re\c{c}oit une r\'eponse en cinq \'etapes, qui portent successivement sur le
+mod\`ele de protocole, les d\'efinitions des m\'etriques, les propri\'et\'es
+fondamentales, le paradigme de conception et une construction prototype.
+
+Notre apport conceptuel central est l'opposabilit\'e $\Opp$. La
+litt\'erature cryptographique classique traite
+l'interpr\'etabilit\'e institutionnelle comme contrainte externe~\cite{GMR85,Goldreich01,GoldwasserMicali84} ou lacune
+\'educative des utilisateurs~\cite{Whitten99,Adams1999,Herley09}. Le cadre CLO en fait une dimension \`a
+optimiser au m\^eme titre que $\Conf$ et $\Rel$.
+
+Cette section correspond \`a l'\'etape \textbf{F (Formaliser)} de la progression \textbf{F}$\to$B$\to$E$\to$S$\to$C$\to$X et apporte la contribution \textbf{C1} de cette th\`ese.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre dispose d\'esormais d'une m\'etrique pour ce qu'il
+ressentait. L'opposabilit\'e $\mathrm{Opp} = I(V;\Sigma|C)/H(V|C)$ mesure
+exactement la fraction d'incertitude institutionnelle que la preuve
+cryptographique r\'esout. Selon les estimations illustratives du
+cadre, Helios lui laisse $50\%$ d'incertitude r\'esiduelle~; ECDSA lui en
+laisse $10\%$. Il peut maintenant comparer et se demander ce qui, dans le
+protocole ou dans l'institution, limite les compromis accessibles.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Mod\`ele de protocole CLO}
+\label{subsec:modele_protocole_clo}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{D\'efinition formelle}
+\label{subsubsec:definition_protocole}
+
+Un protocole d'evidence cryptographique op\'erant en contexte institutionnel
+doit satisfaire deux niveaux de v\'erification fondamentalement distincts,
+\`a savoir la correction math\'ematique (v\'erification cryptographique) et l'extraction
+de signification s\'emantique (interpr\'etation institutionnelle)~\cite{ESIGN00,eIDAS14,Kerr04}. Cette
+dualit\'e, absente des d\'efinitions cryptographiques
+classiques~\cite{GMR85,Goldreich01,GoldwasserMicali84} motive le mod\`ele formel qui suit.
+
+\begin{definition}[Protocole CLO]\label{def:protocole_clo}
+Un \textbf{protocole CLO} $\mathcal{P}$ consiste en quatre espaces et
+quatre algorithmes param\'etr\'es par~$\lambda$.
+
+\medskip\noindent\textit{Espaces.}
+Le protocole manipule l'espace de messages $\mathcal{M}_\lambda$ (typiquement $\{0,1\}^\lambda$),
+l'espace de preuves cryptographiques $\Sigma_\lambda$,
+l'espace de contextes institutionnels $\mathcal{C}_\lambda$
+et l'espace de verdicts $\mathcal{V}_\lambda$ (d\'ecisions institutionnelles).
+
+\medskip\noindent\textit{Algorithmes.}
+\begin{itemize}
+\item $\mathsf{Setup}(1^\lambda) \to (pk, sk)$ : g\'en\'eration de cl\'es publique/secr\`ete
+\item $\mathsf{Prove}(sk, m, c) \to \sigma$ : g\'en\'eration de preuve pour message $m$ et contexte $c$
+\item $\mathsf{Verify}(pk, \sigma, c) \to \{0,1\}$ : v\'erification cryptographique de la preuve
+\item $\mathsf{Interpret}(\sigma, c) \to v$ : \textbf{interpr\'etation institutionnelle} produisant verdict $v \in \mathcal{V}$
+\end{itemize}
+
+\medskip\noindent o\`u $c$ repr\'esente la distribution du contexte
+institutionnel capturant l'environnement d\'ecisionnel (pr\'ec\'edents l\'egaux,
+expertise disponible, proc\'edures \'etablies).
+\end{definition}
+
+\begin{remark}[Double couche de v\'erification]\label{rem:double_couche}
+$\mathsf{Verify}$ r\'epond \`a la question \emph{\guillemotleft~La preuve est-elle math\'ematiquement
+valide~?\guillemotright} $\mathsf{Interpret}$ r\'epond \`a la question \emph{\guillemotleft~Que signifie cette
+preuve pour ma d\'ecision~?\guillemotright} La tension centrale de la cryptographie
+institutionnelle \'emerge pr\'ecis\'ement de cette dualit\'e, puisqu'une preuve peut
+\^etre cryptographiquement impeccable ($\mathsf{Verify}(\sigma) = 1$) mais
+institutionnellement opaque, l'interpr\`ete \'etant incapable d'en extraire
+$v$ de mani\`ere fiable.
+\end{remark}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    scale=0.85,
+    transform shape,
+    box/.style={rectangle, draw=enspblue, fill=blue!8, thick,
+                minimum width=2.8cm, minimum height=1cm,
+                align=center, font=\small},
+    cryptobox/.style={rectangle, draw=enspgreen, fill=enspgreen!8, thick,
+                minimum width=2.8cm, minimum height=1cm,
+                align=center, font=\small},
+    instbox/.style={rectangle, draw=navyblue, fill=navyblue!8, thick,
+                minimum width=2.8cm, minimum height=1cm,
+                align=center, font=\small},
+    dataarrow/.style={-{Stealth[length=3mm]}, thick, enspblue},
+    interpretarrow/.style={-{Stealth[length=3mm]}, thick, navyblue, dashed}
+]
+
+% ---------------------------------------------------------------
+% N\OE UDS
+% ---------------------------------------------------------------
+
+% Ligne 1 : entr\'ees
+\node[box] (message) at (0, 6)   {\textbf{Message} $M$};
+\node[box] (context) at (6, 6)   {\textbf{Contexte} $C$};
+
+% Ligne 2 : Prouveur
+\node[cryptobox, minimum width=4cm] (prover) at (3, 4)
+    {\textbf{Prouveur}\\[2pt]
+     $\mathsf{Prouver}(sk, m, c) \to \sigma$};
+
+% Ligne 3 : Preuve
+\node[cryptobox] (proof) at (3, 2)
+    {\textbf{Preuve} $\Sigma$};
+
+% Ligne 4 gauche : V\'erifier
+\node[cryptobox] (verify) at (0, 0)
+    {\textbf{V\'erifier}\\[2pt]
+     $\mathsf{V\'erifier}(pk, \sigma, c)$};
+
+% Ligne 5 gauche : r\'esultat binaire
+\node[box] (vresult) at (0, -1.8)
+    {$\{0,1\}$};
+
+% Ligne 4 droite : Interpr\'eter
+\node[instbox] (interpret) at (7, 0)
+    {\textbf{Interpr\'eter}\\[2pt]
+     $\mathsf{Interpr\'eter}(\sigma, c)$};
+
+% Ligne 5 droite : Verdict
+\node[instbox] (verdict) at (7, -1.8)
+    {\textbf{Verdict} $V$};
+
+% ---------------------------------------------------------------
+% FL\`ECHES COUCHE CRYPTOGRAPHIQUE
+% ---------------------------------------------------------------
+\draw[dataarrow] (message.south) -- (prover.north west);
+\draw[dataarrow] (context.south) -- (prover.north east);
+\draw[dataarrow] (prover.south)  -- (proof.north);
+\draw[dataarrow] (proof.south)   -- (verify.north);
+\draw[dataarrow] (context.west)  -| (verify.north);
+\draw[-{Stealth[length=3mm]}, thick]
+                 (verify.south)  -- (vresult.north);
+
+% ---------------------------------------------------------------
+% FL\`ECHES COUCHE INSTITUTIONNELLE
+% ---------------------------------------------------------------
+\draw[interpretarrow] (proof.east)    -| (interpret.north);
+\draw[interpretarrow] (context.east)  -| (interpret.north);
+\draw[interpretarrow] (interpret.south) -- (verdict.north);
+
+% ---------------------------------------------------------------
+% \'ETIQUETTES FLOTTANTES (sans fit, pour \'eviter les chevauchements)
+% ---------------------------------------------------------------
+\node[font=\footnotesize, text=enspblue]  at (-1.2, 5.4)
+    {Entr\'ee};
+\node[font=\footnotesize, text=enspgreen] at (-1.4, 3.0)
+    {Cryptographique};
+\node[font=\footnotesize, text=enspgreen] at (1.5,  2.5)
+    {Sortie};
+\node[font=\footnotesize, text=navyblue]  at (8.6,  1.0)
+    {Institutionnel};
+
+% ---------------------------------------------------------------
+% CADRES DE COUCHES --- dessin\'es MANUELLEMENT pour contr\^ole pr\'ecis
+% ---------------------------------------------------------------
+
+% Cadre couche cryptographique (englobe prover, proof, verify, vresult)
+\draw[enspgreen, dashed, thick, rounded corners=4pt]
+    (-1.6, -2.5) rectangle (5.0, 4.8);
+\node[font=\small\bfseries, text=enspgreen] at (1.7, 4.5)
+    {Couche cryptographique};
+
+% Cadre couche institutionnelle (englobe interpret, verdict)
+\draw[navyblue, dashed, thick, rounded corners=4pt]
+    (5.4, -2.5) rectangle (9.0, 0.8);
+\node[font=\small\bfseries, text=navyblue] at (7.2, 0.55)
+    {Couche institutionnelle};
+
+\end{tikzpicture}
+\caption[Mod\`ele de Protocole CLO : architecture de v\'erification \`a deux couches]{%
+  Mod\`ele de Protocole CLO : architecture de v\'erification \`a deux couches.%
+}\label{fig:clo_model}
+
+\smallskip
+\begin{minipage}{\linewidth}
+  \small\textit{Note :} La couche cryptographique (verte) assure la correction
+  math\'ematique via les algorithmes $\mathsf{Prouver}$ et $\mathsf{V\'erifier}$.
+  La couche institutionnelle (bleue marine) fournit l'interpr\'etation s\'emantique
+  via la fonction $\mathsf{Interpr\'eter}$, qui projette les preuves cryptographiques
+  sur des verdicts juridiquement significatifs en contexte institutionnel.
+\end{minipage}
+
+\end{figure}
+\begin{boiteArbitre}
+L'arbitre comprend que l'algorithme $\mathsf{Interpret}$ est le sien, car les trois
+autres prot\`egent le message alors que celui-ci le sert, lui.
+\end{boiteArbitre}
+
+\subsubsection{Exemples d'instanciation}
+\label{subsubsec:exemples_instanciation}
+
+Les exemples qui suivent ont valeur illustrative~; les m\'etriques CLO
+num\'eriques qui leur seront associ\'ees dans la suite sont des estimations
+param\'etriques analytiques d\'eriv\'ees depuis les sp\'ecifications publi\'ees,
+non des mesures empiriques contr\^ol\'ees.
+
+\paragraph{Vote \'electronique (Helios)~\cite{Adida08,Adida09UCL}.}
+Le message $m$ est le choix de vote $\{0,1\}$~; la preuve $\sigma$
+consiste en un bulletin chiffr\'e ElGamal accompagn\'e d'une preuve NIZK~(Non-Interactive Zero-Knowledge)
+de bien-formation~\cite{Chaum81,CramerDamgardSchoenmakers}. Le contexte $c$ recouvre le registre d'\'electeurs,
+la structure du bulletin et les r\`egles \'electorales, tandis que le
+verdict $v$ d\'esigne le d\'ecompte final ou la validation de l'\'election.
+$\mathsf{Verify}$ contr\^ole la preuve NIZK et la signature du bulletin~;
+$\mathsf{Interpret}$ consiste pour les garants \'electoraux \`a d\'echiffrer
+l'agr\'egat homomorphe et en extraire le d\'ecompte~\cite{Goodman15}. Les m\'etriques CLO
+estim\'ees (\'echelle op\'erationnelle CLO de~\cite{MINKA2026CLO}, fiabilit\'e
+$\Relver$) sont $\Conf = 0{,}92$, $\Relver = 0{,}95$, $\Opp = 0{,}50$, avec
+un produit $\Conf\cdot\Relver\cdot\Opp = 0{,}437$.
+
+\paragraph{Conformit\'e financi\`ere (zk-SNARKs)~\cite{Groth16,BCTV14,Gennaro13,Parno13}.}
+Ici $m$ encode transactions priv\'ees ou soldes~; $\sigma$ est une preuve
+Groth16 de 128 octets certifiant la conformit\'e r\'eglementaire~\cite{BenSasson2019,PLONK20}. Le contexte
+$c$ couvre les r\'egulations AML/B\^ale~III~\cite{BaselIII}, l'historique de
+transactions et les politiques internes. $\mathsf{Verify}$ contr\^ole les
+\'equations de \emph{pairing} de Groth16~\cite{Campanelli2019,Wahby18}~; $\mathsf{Interpret}$ demande au
+r\'egulateur de corr\'eler le hachage de contexte avec ses bases de donn\'ees
+pour rendre un verdict de conformit\'e~\cite{FATF15}. Les m\'etriques CLO estim\'ees sont
+$\Conf = 0{,}89$, $\Relver = 0{,}96$, $\Opp = 0{,}67$, avec un produit
+$\Conf\cdot\Relver\cdot\Opp = 0{,}572$.
+
+\paragraph{Signatures contractuelles (ECDSA)~\cite{Johnson01,NIST.FIPS.186-5}.}
+Le message $m$ est le document contractuel~; $\sigma = (r, s)$ est la
+signature ECDSA. Le contexte $c$ comprend les parties contractantes, la
+juridiction et les termes du contrat~; $v$ est la validit\'e du contrat et
+l'identification de la partie responsable~\cite{Mason07,Kerr04}. $\mathsf{Verify}$ contr\^ole
+l'\'equation $r = x_1 \bmod n$~; $\mathsf{Interpret}$ engage le juge dans
+la v\'erification des identit\'es, l'examen des termes et le rendu du jugement.
+Les m\'etriques CLO estim\'ees sont $\Conf = 0{,}31$, $\Relver = 0{,}98$, $\Opp = 0{,}90$,
+avec un produit $\Conf\cdot\Relver\cdot\Opp = 0{,}273$.
+
+Ces trois instanciations couvrent vote \'electronique, r\'egulation financi\`ere
+et litige contractuel~\cite{Nakamoto08,Buterin17}, registre suffisant pour tester la g\'en\'eralit\'e du
+mod\`ele. Le tableau~\ref{tab:clo_resume_ch1} r\'ecapitule ces m\'etriques. Ces
+syst\`emes ne sont pas des instances du Trilemme CRO
+(Remarque~\ref{rem:portee_cas_etude})~; ils servent \`a calibrer les ordres
+de grandeur des param\`etres institutionnels.
+
+% -----------------------------------------------------------------------
+%\begin{table}[htbp]
+%\centering
+%\caption{M\'etriques CLO des syst\`emes d\'eploy\'es}
+%\label{tab:clo_resume_ch2_clo}
+%\begin{tabular}{@{}lcccc@{}}
+%\toprule
+%\textbf{Syst\`eme} & $\boldsymbol{\Conf}$ & $\boldsymbol{\Rel}$ & $\boldsymbol{\Opp}$ & $\boldsymbol{\Conf\cdot\Rel\cdot\Opp}$ \\
+%\midrule
+%Helios (vote \'electronique)~\cite{Adida08,Adida09UCL} & 0{,}92 & 0{,}95 & 0{,}50 & \textbf{0{,}437} \\
+%zk-SNARKs (conformit\'e)~\cite{Groth16,BCTV14} & 0{,}89 & 0{,}96 & 0{,}67 & \textbf{0{,}572} \\
+%ECDSA (contrats)~\cite{Johnson01,NIST.FIPS.186-5} & 0{,}31 & 0{,}98 & 0{,}90 & \textbf{0{,}273} \\
+%\bottomrule
+%\end{tabular}
+%\begin{tablenotes}
+%\item \footnotesize Source~: analyses param\'etriques d\'eriv\'ees des sp\'ecifications publi\'ees~\cite{Tsybakov2009}.
+%\item \footnotesize Ces valeurs servent de validation th\'eorique, non de mesures empiriques.
+%\end{tablenotes}
+%\end{table}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Les trois dimensions : d\'efinitions formelles}
+\label{subsec:trois_dimensions}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous d\'efinissons les trois m\'etriques fondamentales via la th\'eorie
+de l'information (section~\ref{sec:etat_art},
+sous-section~\ref{subsec:fondements_info})~\cite{Shannon48,CoverThomas06,HanVerdu}.
+
+\subsubsection{Confidentialit\'e : indistinguabilit\'e au pire cas}
+\label{subsubsec:confidentialite_clo}
+
+La confidentialit\'e formalise l'impossibilit\'e de distinguer les preuves
+g\'en\'er\'ees pour des messages distincts, g\'en\'eralisant l'indistinguabilit\'e
+s\'emantique~\cite{GoldwasserMicali84}.
+
+\begin{definition}[Confidentialit\'e]\label{def:confidentialite_clo}
+Pour un protocole CLO $\mathcal{P}$ :
+\begin{equation}
+\Conf(\mathcal{P}) = 1 - \max_{\substack{m_0, m_1 \in \mathcal{M}_\lambda \\ c \in \mathcal{C}_\lambda}}
+\TV\!\left(P_{\Sigma|M=m_0,C=c},\; P_{\Sigma|M=m_1,C=c}\right)
+\label{eq:conf_clo}
+\end{equation}
+o\`u $\TV(P, Q) = \frac{1}{2} \sum_{\sigma \in \Sigma_\lambda} |P(\sigma) - Q(\sigma)|$
+est la distance en variation totale.
+\end{definition}
+
+$\Conf = 1$ (confidentialit\'e parfaite au sens de Shannon~\cite{Shannon49,Shannon48})
+signifie que les distributions de preuves sont identiques pour tous
+messages et tout contexte~; m\^eme un adversaire computationnellement
+illimit\'e ne peut distinguer~\cite{Wyner75,WynerZiv76}. \`a l'oppos\'e, $\Conf = 0$ trahit l'existence
+de messages $m_0, m_1$ et d'un contexte $c$ pour lesquels les supports
+sont disjoints, un observateur passif acquiert alors une certitude.
+Le r\'egime pratique est interm\'ediaire.
+
+Du point de vue des jeux de s\'ecurit\'e, notre d\'efinition majore l'avantage
+de tout distingueur dans IND-CPA~\cite{GoldwasserMicali84,Bellare97}~:
+\begin{equation}
+\mathsf{Adv}^{\text{IND-CPA}}_{\mathcal{D}}(\lambda)
+  \leq \max_{m_0,m_1,c} \TV\!\left(P_{\Sigma|m_0,c},\; P_{\Sigma|m_1,c}\right)
+\label{eq:adv_ind_cpa}
+\end{equation}
+$\Conf$ fournit donc une borne informationnelle sur la s\'ecurit\'e cryptographique.
+
+\subsubsection{Fiabilit\'e : reconstruction du message}
+\label{subsubsec:fiabilite_clo}
+
+\begin{definition}[Fiabilit\'e de reconstruction]\label{def:fiabilite_clo}
+Soit $\hat{M} = \mathsf{Dec}(\Sigma, C)$ un estimateur de $M$ calculable \`a
+partir de la preuve et du contexte. La fiabilit\'e est
+\begin{equation}
+\Rel(\mathcal{P}) \;:=\; \Relrec(\mathcal{P})
+  = 1 - \min_{\mathsf{Dec}} \Pr\bigl[\mathsf{Dec}(\Sigma, C) \neq M\bigr],
+\label{eq:rel_clo}
+\end{equation}
+la probabilit\'e \'etant prise sur $M$, $C$ et l'al\'ea du protocole
+(\'equation~\eqref{eq:rel_def}).
+\end{definition}
+
+La fiabilit\'e mesure la capacit\'e de la preuve \`a restituer le message
+original~\cite{Fano61,CoverThomas06}. C'est cette seule notion que
+contr\^ole l'in\'egalit\'e de Fano. Un \emph{one-time pad} pur atteint
+$\Conf = 1$ mais $\Rel = 2^{-\lambda}$ pour $M$ uniforme (pas de
+r\'ecup\'eration sans cl\'e)~\cite{Shannon49}~; un engagement de
+Pedersen~\cite{Pedersen91,ChaumPedersen92} est parfaitement masquant
+($\Conf = 1$, donc $\Relrec = 2^{-\lambda}$) et calculatoirement liant sous
+DLog~\cite{Damgard87}~; ECDSA~\cite{Johnson01,NIST.FIPS.186-5}, qui publie le message
+en clair, a $\Relrec = 1$ et une confidentialit\'e nulle au sens de la
+D\'efinition~\ref{def:confidentialite_clo}.
+
+\begin{remark}[Fiabilit\'e de v\'erification]\label{rem:rel_ver}
+La fiabilit\'e \emph{op\'erationnelle} de~\cite{MINKA2026CLO} est la
+compl\'etude, assortie de la solidit\'e, de la v\'erification~:
+\begin{equation}
+\Relver(\mathcal{P}) = \min_{m,c}\Pr\bigl[\mathsf{Verify}(pk,\mathsf{Prove}(sk,m,c),c)=1\bigr].
+\label{eq:rel_ver}
+\end{equation}
+Les deux notions ne co\"incident pas. Pour $M$ uniforme sur $\{0,1\}^\lambda$,
+$\Conf = 1$ entra\^ine $\Sigma \perp M \mid C$, donc $\Relrec = 2^{-\lambda}$,
+alors que $\Relver$ peut valoir~$1$ (engagement parfaitement masquant). Le
+Trilemme (Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}) porte sur
+$\Relrec$, seule notion \`a laquelle s'applique l'in\'egalit\'e de Fano. Les
+m\'etriques CLO des syst\`emes d\'eploy\'es et des constructions SOTP sont
+exprim\'ees avec $\Relver$~; elles ne sont donc pas des instances du Trilemme
+(Remarque~\ref{rem:portee_cas_etude}).
+\end{remark}
+
+\subsubsection{Opposabilit\'e : r\'esolution d'incertitude institutionnelle}
+\label{subsubsec:opposabilite_clo}
+
+\begin{definition}[Opposabilit\'e]\label{def:opposabilite_clo}
+\begin{equation}
+\Opp(\mathcal{P}) = \frac{I(V;\Sigma|C)}{H(V|C)}
+\label{eq:opp_clo}
+\end{equation}
+\end{definition}
+
+L'opposabilit\'e capture la fraction de l'incertitude du verdict
+institutionnel $V$ que la preuve $\Sigma$ r\'esout, conditionnellement
+au contexte $C$. Absente de la litt\'erature cryptographique
+classique, cette m\'etrique quantifie
+l'interpr\'etabilit\'e institutionnelle. Ainsi, $\Opp = 1$ signifie que la preuve
+l\`eve toute ambigu\"it\'e~; $\Opp = 0$ que la preuve est institutionnellement
+muette~\cite{Zohar15,Grimmelmann15}. L'information mutuelle conditionnelle $I(V;\Sigma|C)$ est born\'ee
+par la taille de l'espace de verdicts, point que le th\'eor\`eme~\ref{thm:goulot_contexte}
+exploitera. La d\'efinition n'est informative que si le verdict n'est pas une
+fonction d\'eterministe de $(\Sigma,C)$, car dans ce cas $H(V|\Sigma,C)=0$ et
+$\Opp=1$ pour tout protocole (Remarque~\ref{rem:verdict_deterministe}). Le
+cadre retient donc des interpr\'etations admissibles au sens de la
+D\'efinition~\ref{def:interp_admissible}, o\`u le verdict d\'epend aussi des
+ressources propres de l'institution.
+
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Propri\'et\'es fondamentales}
+\label{subsec:proprietes_fondamentales}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous \'etablissons quatre propri\'et\'es structurant les m\'etriques CLO.
+Les deux premi\`eres sont des bornes \'el\'ementaires~; les deux suivantes
+r\'ev\`elent des tensions intrins\`eques.
+
+\begin{theorem}[Bornes \'el\'ementaires des m\'etriques CLO]\label{thm:bornes_mesures}
+Pour tout protocole CLO $\mathcal{P}$~:
+\begin{equation}
+  0 \leq \Conf(\mathcal{P}),\; \Rel(\mathcal{P}),\; \Opp(\mathcal{P}) \leq 1
+  \label{eq:bornes_elementaires}
+\end{equation}
+\end{theorem}
+
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:bornes_mesures}~: Bornes \'el\'ementaires]\label{prv:bornes_mesures}
+
+\begin{cmtEtape}{\'Etape unique. Montrer que chaque m\'etrique est dans $[0,1]$.}
+Les trois m\'etriques sont d\'efinies comme des rapports ou des
+compl\'ements de distances. On v\'erifie s\'epar\'ement que chacune
+reste dans l'intervalle $[0,1]$.
+\end{cmtEtape}
+
+\textbf{Confidentialit\'e.}
+Par d\'efinition, $\Conf(\mathcal{P}) = 1 - \max_{m_0,m_1}
+\TV(P_{\Sigma|M=m_0}, P_{\Sigma|M=m_1})$.
+\cmt{La confidentialit\'e est l'oppos\'e de la meilleure distinguabilit\'e.}
+
+Puisque $\TV(P,Q) \in [0,1]$ pour toutes distributions $P$ et $Q$,
+\cmt{La distance en variation totale est comprise entre 0 et 1.}
+
+on a $0 \leq 1 - \max \TV(\cdot) \leq 1$,
+\cmt{Si le max vaut 0, $\Conf = 1$. Si le max vaut 1, $\Conf = 0$.}
+
+d'o\`u $\Conf \in [0,1]$.
+\cmt{Conclusion pour la confidentialit\'e.}
+
+\textbf{Fiabilit\'e.}
+Par d\'efinition, $\Rel(\mathcal{P}) = 1 - \min_{\mathsf{Dec}} \Pr[\mathsf{Dec}(\Sigma,C) \neq M]$.
+\cmt{La fiabilit\'e est la meilleure probabilit\'e de reconstruction du message.}
+
+Une probabilit\'e d'erreur est dans $[0,1]$, d'o\`u $\Rel \in [0,1]$~; il en va
+de m\^eme pour $\Relver$ (Remarque~\ref{rem:rel_ver}).
+\cmt{Une probabilit\'e est toujours dans $[0,1]$.}
+
+\textbf{Opposabilit\'e.}
+Par d\'efinition, $\Opp(\mathcal{P}) = I(V;\Sigma|C)/H(V|C)$.
+\cmt{Rapport de l'information extraite sur l'information disponible.}
+
+Par les propri\'et\'es fondamentales de l'information mutuelle
+conditionnelle~\cite{CoverThomas06},
+\begin{equation}
+0 \leq I(V;\Sigma|C) \leq H(V|C)
+\end{equation}
+\cmtFormule{L'information mutuelle est toujours born\'ee par les entropies marginales.}
+
+ce qui donne $\Opp \in [0,1]$ en divisant par $H(V|C) > 0$.
+\cmt{Le rapport de deux quantit\'es positives est dans $[0,1]$ si le num\'erateur est major\'e par le d\'enominateur.}
+\end{Preuve}
+\begin{lemma}[Tension confidentialit\'e--information mutuelle]\label{lem:compromis_conf_mi}
+Pour les protocoles $\beta$-r\'eguliers (Hypoth\`ese~\ref{ass:regularite})~:
+\begin{equation}
+\Conf \geq 1 - \sqrt{c_0\,\beta \cdot I(M;\Sigma|C)}
+\label{eq:compromis_conf_mi}
+\end{equation}
+o\`u $c_0 = 1/(2\ln 2) \approx 0{,}721$. Cette minoration est la forme
+utilis\'ee dans toute la th\`ese~; elle est reprise, sous sa forme
+d\'efinitive et avec ses hypoth\`eses compl\`etes, au
+Lemme~\ref{lem:confidentiality_guarantee}.
+\end{lemma}
+
+\begin{Preuve}[Lemme~\ref{lem:compromis_conf_mi}~: Trade-off Conf-MI]\label{prv:compromis_conf_mi}
+
+\begin{cmtEtape}{Objectif.}
+\'Etablir que $\Conf \geq 1 - \sqrt{c_0 \beta I}$. Autrement dit, tant
+que la preuve divulgue peu d'information sur le message, la
+confidentialit\'e reste garantie~; c'est lorsque $I$ cro\^it que cette
+garantie s'affaiblit. C'est la premi\`ere moiti\'e du m\'ecanisme du
+trilemme.
+\end{cmtEtape}
+
+Par l'Hypoth\`ese~\ref{ass:regularite} ($\beta$-r\'egularit\'e) et l'in\'egalit\'e de
+Pinsker (Lemme~\ref{lem:pinsker}), pour tout couple $(m_0, m_1)$ et
+contexte $c$~:
+\begin{align}
+\TV^2(P_{\Sigma|m_0,c}, P_{\Sigma|m_1,c})
+&\leq c_0 \KL(P_{\Sigma|m_0,c} \| P_{\Sigma|m_1,c})
+\\
+&\leq c_0 \beta \cdot I(M;\Sigma|C)
+\end{align}
+\cmtFormule{Application directe de Pinsker.}
+\cmtFormule{Application de l'hypoth\`ese de $\beta$-r\'egularit\'e.}
+\cmt{La distance TV est born\'ee par la divergence KL.}
+\cmt{La divergence KL est born\'ee par $\beta \cdot I(M;\Sigma|C)$.}
+
+En prenant le maximum sur tous les couples et contextes, on obtient
+\begin{equation}
+\max_{\substack{m_0, m_1 \in \mathcal{M}_\lambda \\ c \in \mathcal{C}_\lambda}}
+\TV(P_{\Sigma|m_0,c}, P_{\Sigma|m_1,c})
+\leq \sqrt{c_0\beta \cdot I(M;\Sigma|C)}
+\end{equation}
+\cmtFormule{Le pire cas de distinguabilit\'e est born\'e par $\sqrt{c_0 \beta I}$.}
+
+Puisque $\Conf(\mathcal{P}) = 1 - \max \TV(\cdots)$ par d\'efinition
+de $\Conf$, il vient
+\begin{equation}
+\Conf(\mathcal{P}) \geq 1 - \sqrt{c_0\,\beta \cdot I(M;\Sigma|C)}
+\end{equation}
+\cmtFormule{La garantie de confidentialit\'e d\'ecro\^it en racine de l'information mutuelle.}
+\cmt{Aucune normalisation par $\lambda$ n'intervient, car l'argument de Pinsker porte sur des lois conditionnelles, non sur la taille de l'espace de messages.}
+\end{Preuve}
+
+\begin{remark}[Interpr\'etation du lemme]\label{rem:interpretation_lemme}
+Ce lemme fournit une \emph{garantie} de confidentialit\'e. Plus
+$I(M;\Sigma|C)$ est petit, plus le minorant de $\Conf$ est proche de~$1$,
+selon une d\'ependance non lin\'eaire (en racine carr\'ee). La tension
+$\Conf$--$\Rel$ elle-m\^eme vient de l'in\'egalit\'e de Fano, puisqu'une fiabilit\'e
+de reconstruction \'elev\'ee exige que la preuve contienne de l'information
+sur le message. Un minorant de $\Conf$ ne suffit pas, \`a lui seul, \`a
+formaliser cette tension.
+\end{remark}
+
+\begin{lemma}[Lemme de Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84}]\label{lem:johnson_lindenstrauss}
+Pour tout $0 < \varepsilon < 1$, tout entier $n > 0$ et tout ensemble 
+ $S \subset \mathbb{R}^n$ avec $|S| = N$, il existe une application lin\'eaire 
+ $\Phi: \mathbb{R}^n \to \mathbb{R}^d$ avec $d = O(\varepsilon^{-2} \log N)$ 
+telle que pour tous $x, y \in S$ :
+\begin{equation}
+(1-\varepsilon)\|x-y\|^2 \leq \|\Phi x - \Phi y\|^2 \leq (1+\varepsilon)\|x-y\|^2
+\label{eq:jl_preservation}
+\end{equation}
+avec haute probabilit\'e lorsque $\Phi$ est une matrice al\'eatoire avec des 
+entr\'ees $\Phi_{ij} \sim \mathcal{N}(0, 1/d)$ ou sous-gaussiennes.
+\end{lemma}
+
+Ce lemme garantit la pr\'eservation des distances euclidiennes sous compression
+al\'eatoire, propri\'et\'e sur laquelle repose la construction SOTP-Base
+(section~\ref{sec:sotp_construction}, sous-section~\ref{subsec:sotp_base}),
+puisque les distances entre repr\'esentations de contextes sont pr\'eserv\'ees \`a un
+facteur $1 \pm \varepsilon$ pr\`es apr\`es compression. Que l'interpr\`ete
+institutionnel puisse en extraire autant d'information d\'ecisionnelle
+qu'avant compression est une hypoth\`ese de conception, non une cons\'equence
+du lemme.
+
+\begin{theorem}[Goulot d'\'etranglement contextuel]\label{thm:goulot_contexte}
+Pour tout protocole CLO~:
+\begin{equation}
+I(V;\Sigma|C) \leq \min\bigl\{H(\Sigma|C),\; H(V|C)\bigr\}
+  \leq \log_2|\mathcal{V}_\lambda| \leq \alpha\, H(\mathcal{C})
+\label{eq:goulot_contextuel}
+\end{equation}
+\end{theorem}
+
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:goulot_contexte}~: Goulot d'\'etranglement]\label{prv:goulot_contexte}
+
+\begin{cmtEtape}{Objectif.}
+Montrer que $I(V;\Sigma|C) \leq \min\{H(\Sigma|C),\, H(V|C)\} \leq \alpha H(C)$.
+Autrement dit, la preuve $\Sigma$ ne peut transmettre plus d'information
+sur le verdict que ce qu'elle contient, ni plus que l'incertitude
+initiale sur le verdict, laquelle est plafonn\'ee par la granularit\'e des
+verdicts rapport\'ee \`a la richesse du contexte.
+\end{cmtEtape}
+
+\textbf{Borne 1 (contrainte par la capacit\'e de preuve).}
+Par d\'efinition de l'information mutuelle conditionnelle, on a
+\begin{equation}
+I(V;\Sigma|C) = H(\Sigma|C) - H(\Sigma|V,\mathcal{C})
+\end{equation}
+\cmtFormule{L'information sur $V$ contenue dans $\Sigma$ est l'entropie de $\Sigma$ moins ce qui reste une fois $V$ connu.}
+
+Puisque l'entropie conditionnelle est non-n\'egative~\cite{CoverThomas06},
+$H(\Sigma|V,\mathcal{C}) \geq 0$, on obtient
+\begin{equation}
+I(V;\Sigma|C) \leq H(\Sigma|C)
+\end{equation}
+\cmtFormule{Enlever un terme positif donne une in\'egalit\'e.}
+\cmt{On ne peut pas extraire plus d'information que la preuve n'en contient.}
+
+\textbf{Borne 2 (contrainte par l'incertitude sur les verdicts).}
+Par la propri\'et\'e sym\'etrique de l'information mutuelle, on a
+\begin{equation}
+I(V;\Sigma|C) = H(V|C) - H(V|\Sigma,\mathcal{C})
+\end{equation}
+\cmtFormule{Formulation sym\'etrique, o\`u l'information \'egale l'incertitude initiale moins l'incertitude r\'esiduelle.}
+
+Puisque $H(V|\Sigma,\mathcal{C}) \geq 0$, il vient
+\begin{equation}
+I(V;\Sigma|C) \leq H(V|C)
+\end{equation}
+\cmtFormule{Le verdict ne peut \^etre r\'esolu au-del\`a de son incertitude initiale.}
+\cmt{On ne peut pas r\'esoudre plus d'incertitude qu'il n'y en a.}
+
+\textbf{Borne sur $H(V|C)$.}
+L'entropie d'une variable est major\'ee par le logarithme de la taille de
+son support~\cite{CoverThomas06}. Or la granularit\'e des verdicts
+(D\'efinition~\ref{def:alpha_granularite},
+\'equation~\eqref{eq:alpha_definition}) borne ce support, d'o\`u
+\begin{equation}
+H(V|C) \leq \log_2 |\mathcal{V}_\lambda| \leq \alpha\, H(\mathcal{C})
+\end{equation}
+\cmtFormule{L'incertitude sur le verdict ne peut d\'epasser le nombre de verdicts distincts.}
+\cmt{C'est la granularit\'e $\alpha$, param\`etre institutionnel, qui relie le plafond au contexte.}
+
+\textbf{Conclusion.}
+La combinaison des trois bornes donne
+\begin{equation}
+I(V;\Sigma|C) \leq \min\{H(\Sigma|C),\; H(V|C)\} \leq \alpha\, H(C)
+\end{equation}
+\cmtFormule{Le plafond de l'extraction est fix\'e par la granularit\'e institutionnelle des verdicts.}
+\end{Preuve}
+
+\begin{remark}[Verdict d\'eterministe]\label{rem:verdict_deterministe}
+Si $V$ est une fonction d\'eterministe de $(\Sigma,C)$, alors
+$H(V|\Sigma,C)=0$ et $I(V;\Sigma|C)=H(V|C)$, de sorte que l'opposabilit\'e vaut $1$
+d\`es que $H(V|C)>0$, quel que soit le protocole. La m\'etrique $\Opp$ ne
+discrimine les protocoles que pour des interpr\'etations admissibles au sens
+de la D\'efinition~\ref{def:interp_admissible}, o\`u le verdict d\'epend
+aussi de ressources institutionnelles $K$ non r\'eductibles \`a $(\Sigma,C)$.
+Ce fait est certifi\'e en Lean (\texttt{opp\_eq\_one\_of\_deterministic},
+section~\ref{sec:lean4}).
+\end{remark}
+
+Ce th\'eor\`eme \'etablit qu'aucune sophistication cryptographique ne saurait
+d\'epasser $\alpha H(\mathcal{C})$ bits d'information extractible par un interpr\`ete
+institutionnel~\cite{Smith09,Alvim12}. La granularit\'e des verdicts rapport\'ee \`a
+l'entropie contextuelle constitue un plafond sur
+l'opposabilit\'e, plafond qui pr\'efigure le Trilemme~CRO classique de la section~\ref{sec:cro_classique} et son extension quantique de la section~\ref{sec:cro_pq}. Les protocoles dans des contextes
+simples ($H(\mathcal{C}) \approx 20$ bits, comme ECDSA pour contrat
+standardis\'e) peuvent atteindre haute opposabilit\'e sans effort~; les
+contextes complexes ($H(\mathcal{C}) \approx 70$ bits, comme zk-SNARKs
+pour conformit\'e AML) imposent un plafond sauf si la capacit\'e
+institutionnelle $\Delta$ est exceptionnellement \'elev\'ee.
+
+\begin{boiteArbitre}
+L'arbitre comprend que le plafond tient moins \`a la cryptographie qu'\`a
+la finesse de ses propres verdicts, rapport\'ee au contexte. Plus le contexte est simple, plus il peut
+d\'ecider, sans que la preuve y puisse quoi que ce soit.
+\end{boiteArbitre}
+
+\begin{theorem}[R\`egles de composition]\label{thm:composition_sequentielle}
+Soit $\mathcal{P}_1 \circ \mathcal{P}_2$ le protocole qui publie
+$\Sigma_2 = \mathcal{P}_2(\Sigma_1)$, o\`u $\Sigma_1$ est produite par
+$\mathcal{P}_1$ (post-traitement, \'eventuellement randomis\'e,
+ind\'ependant de $M$ sachant $(\Sigma_1, C)$). Alors
+\begin{align}
+\Conf(\mathcal{P}_1 \circ \mathcal{P}_2) &\geq \Conf(\mathcal{P}_1),
+  \label{eq:comp_seq_conf}\\
+\Relrec(\mathcal{P}_1 \circ \mathcal{P}_2) &\leq \Relrec(\mathcal{P}_1).
+  \label{eq:comp_seq_rel}
+\end{align}
+Soit $\mathcal{P}_1 \| \mathcal{P}_2$ le protocole qui publie
+$(\Sigma_1,\Sigma_2)$ produits ind\'ependamment sachant $(M,C)$. Alors
+\begin{align}
+\Conf(\mathcal{P}_1 \| \mathcal{P}_2) &\leq \min\bigl\{\Conf(\mathcal{P}_1),\, \Conf(\mathcal{P}_2)\bigr\},
+  \label{eq:comp_par_conf}\\
+\Relrec(\mathcal{P}_1 \| \mathcal{P}_2) &\geq \max\bigl\{\Relrec(\mathcal{P}_1),\, \Relrec(\mathcal{P}_2)\bigr\}.
+  \label{eq:comp_par_rel}
+\end{align}
+\end{theorem}
+
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:composition_sequentielle}~: R\`egles de composition]\label{prv:composition}
+
+\begin{cmtEtape}{Objectif.}
+\'Etablir le comportement de la confidentialit\'e et de la fiabilit\'e sous
+post-traitement (composition s\'equentielle) et sous publication conjointe
+(composition parall\`ele).
+\end{cmtEtape}
+
+\textbf{Composition s\'equentielle.}
+$M \to (\Sigma_1,C) \to (\Sigma_2,C)$ est une cha\^ine de Markov.
+L'in\'egalit\'e de traitement des donn\'ees pour la distance en variation
+totale~\cite{CoverThomas06} donne, pour tous $m_0, m_1, c$~:
+\begin{equation}
+\TV(P_{\Sigma_2|m_0,c}, P_{\Sigma_2|m_1,c}) \leq \TV(P_{\Sigma_1|m_0,c}, P_{\Sigma_1|m_1,c}),
+\end{equation}
+\cmtFormule{Un traitement ne cr\'ee pas de distinguabilit\'e.}
+d'o\`u~\eqref{eq:comp_seq_conf}. Tout d\'ecodeur de $M$ \`a partir de
+$(\Sigma_2,C)$ en induit un \`a partir de $(\Sigma_1,C)$, obtenu en appliquant d'abord
+$\mathcal{P}_2$ \`a $\Sigma_1$, puis ce d\'ecodeur. D'o\`u~\eqref{eq:comp_seq_rel}.
+\cmt{Post-traiter une preuve ne peut que la rendre plus confidentielle et moins reconstructible.}
+
+\textbf{Composition parall\`ele.}
+La marginale de $(\Sigma_1,\Sigma_2)$ sur $\Sigma_i$ est un post-traitement
+de la paire. Par la m\^eme in\'egalit\'e, la distance en variation totale
+entre lois conjointes majore celle entre marginales, pour chaque $i$~;
+d'o\`u~\eqref{eq:comp_par_conf}. Un d\'ecodeur qui ignore l'une des
+composantes est admissible pour la paire, d'o\`u~\eqref{eq:comp_par_rel}.
+\cmt{Publier deux preuves r\'ev\`ele au moins autant que chacune d'elles.}
+\end{Preuve}
+
+\begin{remark}[Opposabilit\'e compos\'ee]\label{rem:composition_opp}
+Pour l'opposabilit\'e, la cha\^ine $V$--$(\Sigma_1,C)$--$(\Sigma_2,C)$ donne
+$I(V;\Sigma_2|C) \leq I(V;\Sigma_1|C)$, donc
+$\Opp(\mathcal{P}_1\circ\mathcal{P}_2) \leq \Opp(\mathcal{P}_1)$ \`a verdict
+fix\'e. Aucune r\`egle g\'en\'erale ne vaut pour la composition parall\`ele,
+car l'information mutuelle n'est ni sous- ni sur-additive en g\'en\'eral. Les
+r\`egles de~\cite{MINKA2026CLO} ($\Opp \geq \min$ en s\'equentiel,
+$\Opp \approx$ produit en parall\`ele) sont des heuristiques qui ne sont pas
+reprises ici. La formulation initiale de ce th\'eor\`eme dans~\cite{MINKA2026CLO}
+(minoration par le produit via l'in\'egalit\'e de Fr\'echet, $\Conf \geq \max$
+en parall\`ele) est remplac\'ee ici par une formulation plus pr\'ecise,
+l'in\'egalit\'e de Fr\'echet donnant $ab \geq a+b-1$.
+\end{remark}
+
+Ces r\`egles permettent d'analyser des protocoles composites. Ainsi, un syst\`eme
+bancaire publiant conjointement une signature ECDSA (authentification) et une preuve zk-SNARK
+(conformit\'e) h\'erite des bornes ci-dessus, puisque publier les deux preuves ne peut
+qu'abaisser la confidentialit\'e par rapport \`a chacune d'elles.
+
+\subsubsection{Jeux cryptographiques et m\'etriques CLO}
+\label{subsubsec:jeux_crypto}
+
+Les d\'efinitions informationnelles de $\Conf$, $\Rel$ et $\Opp$ sont
+compl\'et\'ees par des jeux cryptographiques qui captent leur contenu
+op\'erationnel en termes d'avantages d'adversaires PPT. Cette section
+\'etablit le pont formel entre les deux formalismes.
+
+\paragraph{Jeu IND-CONF : confidentialit\'e game-based.}
+\label{subsubsubsec:jeu_ind_conf}
+
+\begin{definition}[Jeu IND-CONF]\label{def:jeu_ind_conf}
+Pour un protocole $\mathcal{P} = (\mathsf{Setup},\mathsf{Prove},
+\mathsf{Verify})$ et adversaire $\mathcal{A}$~:
+\begin{enumerate}
+\item $\mathcal{A}$ re\c{c}oit $pp \leftarrow \mathsf{Setup}(1^\lambda)$
+\item $\mathcal{A}$ choisit $m_0,m_1 \in \mathcal{M}_\lambda$
+      ($|m_0|=|m_1|$) et $c \in \mathcal{C}_\lambda$
+      \hfill\textit{(phase de d\'efi)}
+      \cmt{L'adversaire choisit les deux messages \`a distinguer.}
+\item Le challenger tire $b \xleftarrow{\$} \{0,1\}$ et calcule
+      $\sigma \leftarrow \mathsf{Prove}(pp, m_b, c)$
+      \cmt{Le challenger chiffre l'un des deux messages au hasard.}
+\item $\mathcal{A}$ re\c{c}oit $\sigma$ et \'emet $b' \in \{0,1\}$
+      \hfill\textit{(phase de r\'eponse)}
+      \cmt{L'adversaire devine lequel des deux messages a \'et\'e chiffr\'e.}
+\item L'exp\'erience produit 1 si $b' = b$, sinon 0
+\end{enumerate}
+\begin{equation}
+\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathcal{P}}(\lambda)
+= \left|\Pr\!\left[
+\mathsf{Exp}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathcal{P}}(\lambda)
+= 1\right] - \frac{1}{2}\right|
+\end{equation}
+\cmtFormule{L'avantage est l'\'ecart \`a la devinette al\'eatoire (probabilit\'e 1/2).}
+\cmt{Un avantage n\'egligeable signifie confidentialit\'e.}
+\end{definition}
+
+\begin{remark}[Pont IND-CONF $\leftrightarrow$ $\Conf$]
+\label{rem:jeu_ind_conf_link}
+Pour tout distingueur $\mathcal{A}$, non born\'e en calcul, qui choisit
+$(m_0,m_1,c)$~:
+\begin{equation}
+\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathcal{P}}(\lambda)
+\;\leq\; \frac{1}{2}\max_{m_0,m_1,c}\TV(P_{\Sigma|m_0,c},P_{\Sigma|m_1,c})
+\;=\; \frac{1 - \Conf(\mathcal{P})}{2},
+\end{equation}
+\cmtFormule{L'avantage IND-CONF est born\'e par la distinguabilit\'e statistique.}
+avec \'egalit\'e pour le test de Neyman--Pearson (Helstrom) sur la paire la
+plus distinguable. $\Conf$ est donc la version \emph{statistique} de
+IND-CONF, au sens o\`u $\Conf \geq 1 - \negl(\lambda)$ implique un avantage n\'egligeable
+pour tout adversaire. La r\'eciproque est fausse, car pour des adversaires PPT
+l'avantage peut \^etre n\'egligeable (s\'ecurit\'e calculatoire) alors que
+$\Conf$ est petit (chiffrement \`a cl\'e publique, par exemple).
+\cmt{La confidentialit\'e statistique implique la confidentialit\'e calculatoire, pas l'inverse.}
+\end{remark}
+
+\paragraph{Jeu BIND-REL : fiabilit\'e game-based.}
+\label{subsubsubsec:jeu_bind_rel}
+
+\begin{definition}[Jeu BIND-REL]\label{def:jeu_bind_rel}
+Pour un protocole $\mathcal{P}$ avec $\mathsf{Open}$ et adversaire
+$\mathcal{A}$~:
+\begin{enumerate}
+\item $\mathcal{A}$ re\c{c}oit $pp \leftarrow \mathsf{Setup}(1^\lambda)$
+\item $\mathcal{A}$ produit $(c, \sigma, s_0, s_1)$
+      \cmt{L'adversaire forge une preuve et deux t\'emoins.}
+\item Calculer $m_i = \mathsf{Open}(pp, \sigma, s_i)$ pour $i \in \{0,1\}$
+\item $\mathcal{A}$ \emph{gagne} si et seulement si
+  $\mathsf{Verify}(pp,\sigma,c)=1$,
+  $m_0 \neq m_1$,
+  $m_0 \neq \bot$ et $m_1 \neq \bot$
+  \cmt{Il gagne si la preuve passe ET les deux messages sont distincts et valides.}
+\end{enumerate}
+\begin{equation}
+\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathcal{P}}(\lambda)
+= \Pr\!\left[\mathcal{A} \text{ gagne dans }
+\mathsf{Exp}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathcal{P}}(\lambda)
+\right]
+\end{equation}
+\cmtFormule{Probabilit\'e que l'adversaire produise une collision d'engagement.}
+\end{definition}
+
+\begin{remark}[Pont BIND-REL $\leftrightarrow$ $\Relver$]
+\label{rem:jeu_bind_rel_link}
+BIND-REL contr\^ole la \emph{solidit\'e} de l'ouverture, donc la fiabilit\'e
+de v\'erification (Remarque~\ref{rem:rel_ver}). Pour un protocole complet
+dont la probabilit\'e de gain BIND-REL est au plus $\varepsilon_{\mathsf{bind}}$,
+une preuve accept\'ee s'ouvre sur un unique message sauf avec probabilit\'e
+$\varepsilon_{\mathsf{bind}}$, de sorte que
+\begin{equation}
+\Relver \geq 1 - \varepsilon_{\mathsf{bind}} - \negl(\lambda).
+\end{equation}
+\cmtFormule{Fiabilit\'e de v\'erification born\'ee inf\'erieurement par $1 - \varepsilon_{\mathsf{bind}}$.}
+BIND-REL ne dit rien de $\Relrec$, puisqu'un engagement parfaitement masquant et
+calculatoirement liant a $\Relrec = 2^{-\lambda}$.
+\cmt{Lier une preuve \`a un message ne revient pas \`a le r\'ev\'eler.}
+\end{remark}
+
+\paragraph{Jeu EXT-OPP : opposabilit\'e game-based.}
+\label{subsubsubsec:jeu_ext_opp}
+
+\begin{definition}[Jeu EXT-OPP]\label{def:jeu_ext_opp}
+Pour un protocole $\mathcal{P}$, un interpr\`ete $\mathsf{Interpret}$
+de capacit\'e $\Delta$ et une distribution $\mathcal{D}_C$ fix\'ee \`a l'avance~:
+\begin{enumerate}
+\item Le challenger tire $c \leftarrow \mathcal{D}_C$,
+      $m \leftarrow \mathcal{M}_\lambda$
+      \cmt{Le contexte est tir\'e selon la distribution du domaine.}
+\item Le challenger calcule $\sigma \leftarrow \mathsf{Prove}(pp,m,c)$
+\item L'interpr\`ete re\c{c}oit $(\sigma,c)$ et produit
+      $v \leftarrow \mathsf{Interpret}(pp,\sigma,c,\Delta)$
+      \cmt{L'interpr\`ete rend un verdict \`a partir de la preuve et du contexte.}
+\item Soit $v^*$ le verdict de r\'ef\'erence, r\'ealisation de la variable $V$
+      (qui peut d\'ependre du message, du contexte et des ressources
+      institutionnelles, D\'efinition~\ref{def:interp_admissible})
+      \cmt{Le verdict de r\'ef\'erence est celui que l'institution rendrait en pleine connaissance de cause.}
+\item L'interpr\`ete \emph{gagne} si $v = v^*$
+\end{enumerate}
+\begin{equation}
+\mathsf{Err}^{\mathsf{EXT\text{-}OPP}}_{\mathsf{Interpret},\mathcal{P},\mathcal{D}_C}(\lambda)
+= \Pr\!\left[
+\mathsf{Interpret} \text{ perd dans }
+\mathsf{Exp}^{\mathsf{EXT\text{-}OPP}}\right]
+\end{equation}
+\cmtFormule{Probabilit\'e que l'interpr\`ete rende un verdict incorrect.}
+\end{definition}
+
+\begin{remark}[Pont EXT-OPP $\leftrightarrow$ $\Opp$]
+\label{rem:jeu_ext_opp_link}
+Par l'in\'egalit\'e de Fano appliqu\'ee \`a l'estimation de $V$ \`a partir de
+$(\Sigma,C)$, $H(V|\Sigma,C) \leq h(\varepsilon_{\mathsf{ext}}) +
+\varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)$, d'o\`u
+\begin{equation}
+\Opp = 1 - \frac{H(V|\Sigma,C)}{H(V|C)}
+\geq 1 - \frac{h(\varepsilon_{\mathsf{ext}})
+  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)}
+  {H(V|C)}
+\label{eq:jeu_fano_opp}
+\end{equation}
+\cmtFormule{L'opposabilit\'e est born\'ee inf\'erieurement par $1 - \varepsilon_{\mathsf{ext}}$.}
+o\`u $\varepsilon_{\mathsf{ext}} = \mathsf{Err}^{\mathsf{EXT\text{-}OPP}}$
+et $h(\cdot)$ est l'entropie binaire.
+Un interpr\`ete avec faible erreur d'extraction implique une forte
+opposabilit\'e.
+\cmt{Moins l'interpr\`ete se trompe, plus l'opposabilit\'e est grande.}
+\end{remark}
+
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Extension aux m\'etriques quantiques}
+\label{subsec:extension_postquantique}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+La migration vers les standards post-quantiques NIST (FIPS~203, 204, 205)~\cite{NISTPQC,NISTPostQuantum2022}
+requiert une extension du cadre CLO. Cette section esquisse les modifications
+n\'ecessaires, d\'evelopp\'ees en d\'etail dans la section~\ref{sec:cro_pq}.
+
+\subsubsection{Confidentialit\'e quantique}
+\label{subsubsec:conf_quantique}
+
+En pr\'esence d'adversaires quantiques, la d\'efinition de confidentialit\'e
+doit consid\'erer les mesures POVM sur les \'etats quantiques de
+preuve~\cite{Watrous2009,Boneh2011,Zhandry}. Comme dans le cas classique, la
+m\'etrique retenue est \emph{statistique}, puisqu'elle quantifie la meilleure
+distinction possible, sans restriction de calcul.
+
+\begin{definition}[Confidentialit\'e quantique]\label{def:conf_quantique_clo}
+Pour le protocole $\mathcal{P}$ avec param\`etre de s\'ecurit\'e $\lambda$, soit
+$\rho_\Sigma^{m,c}$ l'\'etat quantique de preuve pour le message $m$ dans le
+contexte $c$. La \emph{confidentialit\'e quantique} est
+\begin{equation}
+\Conf^q(\mathcal{P}) := 1 - \max_{m_0,m_1 \in \mathcal{M}_\lambda,\; c \in \mathcal{C}_\lambda}
+\tfrac{1}{2}\bigl\|\rho_\Sigma^{m_0,c} - \rho_\Sigma^{m_1,c}\bigr\|_1 .
+\label{eq:conf_q}
+\end{equation}
+Par le th\'eor\`eme de Helstrom, $\tfrac12\|\rho_0-\rho_1\|_1$ est l'avantage
+maximal de toute mesure POVM pour distinguer $\rho_0$ de $\rho_1$.
+\end{definition}
+
+\begin{remark}[Compatibilit\'e avec la confidentialit\'e classique]
+\label{rem:compatibilite_conf}
+Pour les protocoles classiques o\`u $\Sigma$ prend des valeurs dans un alphabet
+fini $\mathcal{S}$ (i.e., $\rho_\Sigma^{m,c} = \sum_{s} P_{\Sigma|M,C}(s|m,c)\,|s\rangle\langle s|$
+est diagonal), la distance de trace se r\'eduit \`a la distance de variation totale~\cite{Levin,Pinsker1964}~:
+\begin{equation}
+\tfrac{1}{2}\|\rho_\Sigma^{m_0,c} - \rho_\Sigma^{m_1,c}\|_1
+= \mathrm{TV}\!\bigl(P_{\Sigma|m_0,c},\, P_{\Sigma|m_1,c}\bigr)
+\end{equation}
+Donc $\Conf^q$ se r\'eduit \`a $\Conf$ du cadre classique~\cite{MINKA2026CLO}, ce qui fait de la
+d\'efinition une g\'en\'eralisation stricte. Les notions calculatoires
+(adversaires QPT) rel\`event des jeux de s\'ecurit\'e, comme IND-CONF dans le
+cas classique (Remarque~\ref{rem:jeu_ind_conf_link}).
+\end{remark}
+
+\subsubsection{Perte d'interpr\'etabilit\'e quantique}
+\label{subsubsec:perte_interpretabilite}
+
+\begin{definition}[Perte d'interpr\'etabilit\'e quantique]\label{def:perte_interp_quantique}
+Soit $\Lambda$ une application CPTP repr\'esentant les effets d'un canal
+quantique sur le support de la preuve (stockage, transmission,
+v\'erification). La perte d'interpr\'etabilit\'e quantique $\eta_q \in [0,1]$
+est le plus petit r\'eel tel que
+\begin{equation}
+I(V;\Lambda(\Sigma)|C) \;\geq\; I(V;\Sigma|C) - \eta_q\, H(C).
+\label{eq:def_eta_q}
+\end{equation}
+\end{definition}
+
+L'opposabilit\'e apr\`es passage dans le canal est alors
+\begin{equation}
+\Opp^q(\mathcal{P}) = \frac{I(V;\Lambda(\Sigma)|C)}{H(V|C)} \;\geq\; \Opp(\mathcal{P}) - \eta_q\,\frac{H(C)}{H(V|C)},
+\label{eq:opp_q}
+\end{equation}
+une minoration qui quantifie la d\'egradation s\'emantique dans les canaux
+quantiques~\cite{Holevo1973,Wilde2017}. Par l'in\'egalit\'e de traitement des
+donn\'ees, $I(V;\Lambda(\Sigma)|C) \leq I(V;\Sigma|C)$. Un canal ne peut donc que
+r\'eduire l'opposabilit\'e, tandis que $\eta_q$ mesure l'ampleur maximale de cette
+r\'eduction, rapport\'ee \`a la richesse du contexte.
+
+\begin{remark}[Interpr\'etation physique]
+\label{rem:interpretation_physique}
+$\eta_q$ quantifie la quantit\'e de contenu s\'emantique perdue lorsque la
+preuve cryptographique passe par des canaux quantiques~\cite{Zurek2003,Schumacher1997}. Pour les syst\`emes
+dont la preuve est une cha\^ine de bits classique, y compris les signatures
+post-quantiques standardis\'ees, $\Lambda$ est l'identit\'e et $\eta_q = 0$. Pour
+un support ou un v\'erificateur quantique, $\eta_q > 0$ en raison du bruit
+(d\'ecoh\'erence, erreurs de portes)~\cite{Holevo1973,Preskill2018}.
+\end{remark}
+
+Ces extensions seront formalis\'ees et exploit\'ees \`a la section~\ref{sec:cro_pq} pour \'etablir le Trilemme CRO conditionnel quantique.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+% Synth\`ese
+% -----------------------------------------------------------------------
+\begin{boiteArbitre}
+L'arbitre referme le dossier CLO et ach\`eve ainsi l'\'etape \textbf{F}. Cette section lui a donn\'e un
+langage pour mesurer ce qu'il vit, qu'aucun corpus pr\'ec\'edent ne lui avait fourni.
+
+Il retient trois contributions, dans l'ordre o\`u elles se sont
+construites. Le mod\`ele de protocole d'abord (deux couches et deux questions
+distinctes, portant sur la validit\'e de la preuve puis sur ce qu'elle signifie pour lui).
+Les trois m\'etriques ensuite ($\Conf$, $\Rel$, $\Opp$), dont la derni\`ere
+le concerne directement~; il sait d\'esormais qu'elle
+n'a de sens que si son propre jugement ne se r\'eduit pas \`a un calcul
+m\'ecanique sur la preuve. Le goulot d'\'etranglement contextuel enfin,
+qui lui a appris que le plafond est fix\'e par la finesse de ses verdicts.
+
+La section~\ref{sec:cro_classique} l'attend. Il va falloir maintenant
+savoir ce qui, sous des hypoth\`eses explicites sur l'institution, borne
+le produit des trois m\'etriques.
+\end{boiteArbitre}

@@ -1,0 +1,668 @@
+% ============================================================================
+% CHAPITRE 4 — SECTION 4.4 : PERSPECTIVES DE RECHERCHE
+% Fichier : partie4/perspectives.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 révisée
+% ============================================================================
+
+\section{PERSPECTIVES DE RECHERCHE}
+\label{sec:perspectives}
+% ============================================================================
+\begin{sloppypar}
+Le corpus th\'eorique de la cryptographie institutionnelle est maintenant
+constitu\'e. Il r\'eunit des m\'etriques formalis\'ees (C1)~\cite{MINKA2026CLO}, une borne
+d'impossibilit\'e \'etablie (C2)~\cite{MINKA2026CRO}, une extension quantique
+d\'emontr\'ee (C3)~\cite{MINKA2026PQCRO}, des constructions de r\'ef\'erence aux propri\'et\'es
+cryptographiques prouv\'ees (C4) (section~\ref{sec:sotp_construction}), un noyau Lean4 certifi\'e (C5)
+(section~\ref{sec:lean4}) et un programme de validation sp\'ecifi\'e (C6)
+(chapitre~\ref{chap:experimentation}). Que faire de ces fondations~?
+Cette section y r\'epond en
+tra\c{c}ant la feuille de route th\'eorique d'un sous-domaine dont les
+premiers th\'eor\`emes viennent d'\^etre pos\'es, sans projeter de d\'eploiements.
+
+La progression F$\to$B$\to$E$\to$S$\to$C$\to$X
+(formaliser, borner, \'etendre, saturer, certifier, eXp\'erimenter)
+qui a guid\'e cette th\`ese se prolonge au-del\`a de ces r\'esultats, comme le montrent les quatre axes qui structurent cette
+prospective.
+
+Chacun de ces quatre axes prolonge un aspect
+distinct du cadre CLO-CRO-PQ-SOTP. Il s'agit des fondations computationnelles
+post-quantiques port\'ees par le probl\`eme AIIP~\cite{MINKA2025AIIP} et le
+CASH Toolkit (section~\ref{subsec:axe1_aiip_cash})~; la voie protocolaire
+ouverte par Q2CSI et la s\'erie
+ZK-NR~\cite{MINKA2025Q2CSI,MINKA2025ZKNR_Exploration,MINKA2025ZKNR_Design,MINKA2025ZKNR_UC}
+(section~\ref{subsec:axe2_q2csi_zknr})~; les extensions th\'eoriques du
+Trilemme CRO vers le calcul homomorphe, le multi-parties et le
+post-quantique quantitatif (section~\ref{subsec:axe3_extensions})~; et
+l'interaction encore largement inexploit\'ee entre cryptographie
+institutionnelle et apprentissage automatique (section~\ref{subsec:axe4_ia}).
+Un programme \`a horizons structur\'es conclut la section
+(section~\ref{subsec:programme_recherche}).
+\end{sloppypar}
+
+\begin{boiteArbitre}
+Le voyage de l'arbitre ne s'arr\^ete pas avec cette th\`ese. Les fondations
+sont pos\'ees (m\'etriques, bornes, constructions, certification,
+protocoles) mais le programme ouvert est plus vaste que ce qui vient
+d'\^etre r\'esolu. Il reste \`a obtenir une borne dont le terme dominant serait en $O(\lambda^{-2})$,
+\`a \'etablir l'optimalit\'e des constructions SOTP, \`a calibrer empiriquement les param\`etres
+quantiques~$\Delta_q$ et~$\eta_q$ ainsi qu'\`a \'etendre les constructions
+au calcul homomorphe et multi-parties. L'arbitre de demain
+aura besoin de protocoles que la cryptographie institutionnelle ne sait pas
+encore concevoir. Ce chapitre en trace la feuille de route.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Maturit\'e du sous-domaine}
+\label{subsec:maturite_sous_domaine}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Un sous-domaine scientifique est constitu\'e lorsqu'il dispose d'un formalisme
+propre, d'une impossibilit\'e fondamentale, de constructions et d'une
+certification m\'ecanique~\cite{Wiedijk2007,Gonthier08}. Le cadre
+CLO-CRO-CRO$^q$-SOTP-Lean4 r\'eunit ces \'el\'ements, sous deux r\'eserves. D'une part,
+l'optimalit\'e des constructions est conjecturale~; d'autre part, les param\`etres
+institutionnels restent \`a mesurer. Il s'agit d'un programme de recherche au sens
+de Lakatos~\cite{Lakatos1978}, dont le noyau est fix\'e et la ceinture
+protectrice explicite.
+
+La question devient \guillemotleft~quelles directions ouvertes en
+d\'efiniront la croissance et quelles mesures en confirmeront ou en
+infirmeront les hypoth\`eses~?~\guillemotright.
+
+L'\'etat des contributions \`a la date de soutenance figure au
+tableau~\ref{tab:contributions_these}.
+
+Trois classes de probl\`emes ouverts structurent la fronti\`ere du
+sous-domaine. La premi\`ere concerne les fondations computationnelles, c'est-\`a-dire la n\'ecessit\'e
+d'asseoir les instanciations pratiques sur des hypoth\`eses de duret\'e
+nouvelles, r\'esistantes aux adversaires quantiques~\cite{Bernstein2009,Chen2016}
+et analys\'ees par la communaut\'e IACR. La deuxi\`eme concerne la
+g\'en\'eralisation des bornes. Dans ses formes classique et
+quantique, le Trilemme CRO couvre les preuves non interactives~\cite{Groth16}~; le passage
+aux protocoles \`a rounds multiples, au calcul multi-parties~\cite{Evans2018}
+et aux primitives homomorphes~\cite{Gentry09} reste entier. La troisi\`eme
+est l'ouverture d'un territoire in\'edit, car l'interaction entre interpr\`etes
+institutionnels artificiels et protocoles SOTP modifie structurellement les
+hypoth\`eses du mod\`ele.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Axe I. Fondations computationnelles~: AIIP et le CASH Toolkit}
+\label{subsec:axe1_aiip_cash}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Le probl\`eme AIIP~: hypoth\`ese de duret\'e post-quantique}
+\label{subsubsec:probleme_aiip}
+
+Toute discipline cryptographique repose sur des hypoth\`eses de duret\'e dont
+le statut est \'etabli par cryptanalyse
+communautaire~\cite{Goldreich01,KatzLindell14}. La cryptographie
+institutionnelle ne fait pas exception. En effet, si les Trilemmes CRO classiques et
+quantiques sont prouv\'es au sens de la th\'eorie de l'information, leurs
+instanciations pratiques requi\`erent des primitives r\'esistant aux
+adversaires quantiques \`a temps polynomial~(QPT)~\cite{Boneh2011,Watrous2009}.
+
+Le \textbf{probl\`eme AIIP} (\textit{Affine Iterated Inversion
+Problem})~\cite{MINKA2025AIIP} propose une telle hypoth\`ese. \'Etant
+donn\'e $f \in \mathbb{F}_q[x]$ de degr\'e $d \geq 2$, un param\`etre
+d'it\'eration $n$ et une cible $y \in \mathbb{F}_q$, AIIP requiert de trouver
+$x$ tel que $f^{(n)}(x) = y$, o\`u $f^{(n)}$ d\'esigne la $n$-i\`eme
+composition it\'er\'ee. Sa duret\'e s'\'etablit par deux r\'eductions
+ind\'ependantes~\cite{MINKA2025AIIP}, \`a savoir une r\'eduction au logarithme discret dans
+le Jacobien d'une courbe hyperelliptique de genre exponentiellement
+grand~(HCDLP)~\cite{Menezes2001,Enge2002} et une r\'eduction polynomiale \`a la
+r\'esolution de syst\`emes MQ structur\'es~(MQ-NP)~\cite{Courtois2000,Ding2004}.
+Ces r\'eductions et leur port\'ee restent \`a \'etablir de fa\c{c}on
+ind\'ependante. En particulier, une objection doit \^etre lev\'ee avant de
+consid\'erer AIIP comme une hypoth\`ese candidate. En effet, sauf argument contraire,
+r\'esoudre $f^{(n)}(x) = y$ se ram\`ene \`a $n$ extractions successives de racines
+d'un polyn\^ome de degr\'e $d$ sur $\mathbb{F}_q$, ce qui se fait en temps
+polynomial en $n$, $d$ et $\log q$ (algorithme de Cantor--Zassenhaus), en
+suivant les ant\'ec\'edents successifs. Un argument qui exclut cette attaque
+(par exemple un contr\^ole de la ramification de l'arbre des ant\'ec\'edents)
+est donc un pr\'ealable. La cryptanalyse (attaques de
+Gr\"obner~\cite{Faugere02,Faugere99}, algorithmes de
+point-count~\cite{Schoof85,Kedlaya2001}, variantes
+quantiques~(Grover~\cite{Grover96}, MNFS quantique~\cite{Jeppesen2022}))
+reste \`a conduire.
+
+\subsubsection{Le CASH Toolkit~: primitives align\'ees sur les propri\'et\'es CLO}
+\label{subsubsec:cash_toolkit}
+
+Le \textbf{CASH Toolkit} (\textit{Chaotic Affine Secure Hash}) regroupe trois
+primitives post-quantiques construites en correspondance directe avec les
+dimensions du tripl\'e~$(\Conf, \Rel, \Opp)$. Leur conception est guid\'ee par
+un principe inhabituel dans la cryptographie classique, selon lequel l'opposabilit\'e
+future de la preuve conditionne d\`es la conception les choix de transparence
+alg\'ebrique~\cite{MINKA2026CLO,Casey11}.
+
+\paragraph{CEE. Couche confidentialit\'e ($\Conf$).}
+La primitive \textbf{CEE} (\textit{Chaotic Entropic
+Expansion})~\cite{MINKA2025CEE} construit une fonction \`a sens unique sur des
+applications polynomiales chaotiques it\'er\'ees sur
+$\mathbb{F}_q$~\cite{Menezes1996,Stinson2005}. Pour $N$ it\'erations d'un
+polyn\^ome $f \in \mathcal{F}_d$, la min-entropie r\'esiduelle est au moins
+$\log_2 q - N\log_2 d$ bits. La borne de distance statistique \`a l'uniforme
+annonc\'ee dans~\cite{MINKA2025CEE}, $(q-1)(d^N-1)/(2\sqrt{q})$, d\'epasse $1$ d\`es
+que $d^N > 2\sqrt{q}/(q-1) + 1$, c'est-\`a-dire pour tout $N$ utile. Elle est
+alors vide, si bien qu'une borne non triviale reste \`a \'etablir. La s\'ecurit\'e
+quantique est de l'ordre $O(2^{\lambda/2})$ pour un niveau classique
+$\lambda$~\cite{NielsenChuang2010}. La construction a pour trait caract\'eristique que sa transparence
+alg\'ebrique est d\'elib\'er\'ement pr\'eserv\'ee, permettant
+\`a $\Conf$ de coexister avec $\Opp$ sans conflit structurel~\cite{MINKA2026CLO}.
+
+\paragraph{AOW. Couche fiabilit\'e ($\Rel$).}
+La primitive \textbf{AOW} (\textit{Affine One-Wayness})~\cite{MINKA2025AOW}
+fournit une v\'erification temporelle par \'evaluation polynomiale it\'erative
+sur corps finis. Sa s\'ecurit\'e est r\'eduite, dans~\cite{MINKA2025AOW}, \`a HCDLP
+et \`a AIIP, dont le statut est discut\'e ci-dessus~; elle s'accompagne d'une int\'egration
+STARK~\cite{STARKs18,BenSasson2018} \`a mise \`a l'\'echelle logarithmique
+pour la v\'erification zero-knowledge. La tra\c{c}abilit\'e temporelle qu'AOW
+produit, ancrage de s\'equences v\'erifiables sans autorit\'e de
+confiance~\cite{Haber1991,Bayer1993}, alimente directement $\Opp$, puisque
+l'institution peut \'etablir \emph{quand} une preuve a \'et\'e g\'en\'er\'ee.
+
+\paragraph{SH. Couche opposabilit\'e ($\Opp$).}
+La primitive \textbf{SH} (\textit{Semantic Holder})~\cite{MINKA2025SH}
+op\'erationnalise l'extraction alg\'ebrique depuis les traces de polyn\^omes
+it\'er\'es pour produire des interpr\'etations l\'egalement
+opposables~\cite{Kerr04,Casey11}. Elle vise trois propri\'et\'es, \`a savoir la
+pr\'eservation entropique, l'explicabilit\'e institutionnelle et la contestabilit\'e
+l\'egale v\'erifiable par STARK. Le score agr\'eg\'e $\Omega$ et la valeur
+$\Omega \geq 0{,}60$ avanc\'es dans~\cite{MINKA2025SH} ne sont pas d\'efinis dans le
+cadre de cette th\`ese~; ils ne sont pas repris ici comme r\'esultats.
+
+Plusieurs directions restent ouvertes. Peut-on prouver que l'assemblage
+$(CEE \;\|\; AOW \;\|\; SH)$ en architecture Gold-Iron-Clay \emph{pr\'eserve}
+les bornes CRO \`a un facteur constant pr\`es~? Peut-on d\'efinir un score
+d'opposabilit\'e pour SH qui soit reli\'e \`a $\Opp$~? Enfin, les preuves actuelles
+op\'erant dans le mod\`ele de l'oracle al\'eatoire~\cite{Bellare1993,Canetti2004},
+des preuves en mod\`ele standard renforceraient substantiellement la fondation
+th\'eorique du toolkit.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Axe II. Voie protocolaire~: Q2CSI, ZK-NR et l'instanciation de l'esprit SOTP}
+\label{subsec:axe2_q2csi_zknr}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Q2CSI comme traduction architecturale de l'esprit SOTP}
+\label{subsubsec:q2csi}
+
+La famille SOTP propose des constructions de r\'ef\'erence par r\'egime,
+param\'etr\'ees par $H(\mathcal{C})$ (section~\ref{sec:sotp_construction}), dont
+l'optimalit\'e reste conjecturale. La question qui
+s'ouvre naturellement est celle de l'\emph{instanciation concr\`ete}. Comment
+traduire cette philosophie en architectures d\'eployables dans des
+environnements cryptographiques composables~\cite{Canetti01,Canetti2000}~?
+
+Le m\'eta-protocole \textbf{Q2CSI} (\textit{Quantum Composable and Contextual
+Security Infrastructure})~\cite{MINKA2025Q2CSI} apporte une r\'eponse
+pr\'ecise. En d\'ecomposant les garanties de s\'ecurit\'e en trois couches
+fonctionnellement isol\'ees (Iron~($\Rel$), Gold~($\Conf$),
+Clay~($\Opp$)) Q2CSI traduit architecturalement le paradigme
+Gold-Iron-Clay dans le mod\`ele de Canetti~\cite{Canetti01,Canetti2000}.
+L'article~\cite{MINKA2025Q2CSI} r\'esume ses performances par un indice
+$\Gamma_\text{CRO}$ qui n'est pas d\'efini dans le cadre de cette th\`ese~; les
+valeurs chiffr\'ees qu'il en donne ne sont donc pas reprises ici. Relier
+cet indice au produit $\Conf\cdot\Relrec\cdot\Opp$ est une question ouverte. Q2CSI incarne
+l'esprit SOTP sous la forme d'un sch\'ema d'architecture, distinct d'une
+construction abstraite. Ce sch\'ema repose sur la s\'eparation dialectique des couches, l'isolation stricte des
+fuites contextuelles et la compatibilit\'e avec les adversaires
+quantiques~\cite{Unruh2010,Unruh2015}.
+
+\subsubsection{La s\'erie ZK-NR~: instanciation composable par zero-knowledge}
+\label{subsubsec:zk_nr}
+
+La s\'erie \textbf{ZK-NR} (\textit{Zero-Knowledge Non-Repudiation}) protocol
+mat\'erialise la maturation progressive d'un protocole institutionnel depuis
+l'exploration architecturale jusqu'\`a la s\'ecurit\'e UC
+compl\`ete~\cite{Canetti01}. Elle constitue en elle-m\^eme un paradigme
+m\'ethodologique, qui consiste \`a s\'eparer l'exploration, la formalisation du design et la
+certification de s\'ecurit\'e en trois stades distincts, chacun s'appuyant
+rigoureusement sur le pr\'ec\'edent.
+
+ZK-NR~v1~\cite{MINKA2025ZKNR_Exploration} compose commitments
+Merkle~\cite{Merkle1987}, preuves STARKs~\cite{STARKs18}, signatures BLS \`a
+seuil~\cite{Boldyreva2003,Boneh2003} et authentification
+Dilithium~\cite{Dilithium2022} en un protocole de non-r\'epudiation sans
+divulgation~; il \'etablit la faisabilit\'e conceptuelle, les preuves formelles
+\'etant r\'eserv\'ees aux versions ult\'erieures. ZK-NR~v2~\cite{MINKA2025ZKNR_Design}
+construit l'architecture compl\`ete satisfaisant les propri\'et\'es Q2CSI et le
+mod\`ele NIZK-E~\cite{Groth16}, avec s\'eparation structurelle entre preuves
+contextuelles et explications born\'ees~; la compatibilit\'e UC est prouv\'ee
+symboliquement. ZK-NR~v3~\cite{MINKA2025ZKNR_UC} \'etablit la preuve
+compl\`ete de s\'ecurit\'e UC pour les trois couches, mod\'elis\'ees comme
+fonctionnalit\'es id\'eales avec s\'emantique d'effacement~\cite{Canetti2016}.
+Il prouve aussi l'indistinguabilit\'e r\'eel/id\'eal sous hypoth\`eses
+post-quantiques~\cite{Unruh2015}.
+
+Trois questions ouvertes d\'elimitent la suite. Le sch\'ema Q2CSI est-il
+\emph{complet}, c'est-\`a-dire, tout protocole institutionnel qui s\'epare
+les trois couches est-il UC-\'equivalent \`a une instanciation Q2CSI~? \`a l'image du th\'eor\`eme de compl\'etude de
+Canetti-Cohen-Lindell~\cite{CCL15}. La r\'eduction formelle
+SOTP-High~$\to$~ZK-NR~v3 est-elle exhibable, comblant l'\'ecart entre la
+th\'eorie abstraite de SOTP~(section~\ref{sec:sotp_construction}) et les
+protocoles composables d\'eployables~? La structure \`a couches de ZK-NR
+s'\'etend-elle aux r\'eseaux de preuves institutionnelles multi-parties
+impliquant $n > 2$ institutions, via des sch\'emas de partage de
+secret~\cite{Shamir1979,Blakley1979} et des preuves zero-knowledge
+agr\'eg\'ees~\cite{Bunz2018}~?
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Axe III. Extensions th\'eoriques du Trilemme CRO}
+\label{subsec:axe3_extensions}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Borne forte sur le produit CRO~: vers la caract\'erisation compl\`ete}
+\label{subsubsec:borne_forte}
+
+Le Trilemme CRO classique~(Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel})
+\'etablit la borne explicite
+\begin{equation}
+\Conf \cdot \Relrec \cdot \Opp \leq \frac{1}{\gamma}\left(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\label{eq:borne_forte_classique}
+\end{equation}
+dont le terme dominant $\Delta/(\gamma\lambda)$ est en $O(\lambda^{-1})$ et les
+termes correctifs en $O(\lambda^{-2})$, sous l'Hypoth\`ese~\ref{ass:regime}
+($I(M;\Sigma|C) \leq \kappa/\lambda$). Le Trilemme CRO post-quantique
+(Contribution C3, section~\ref{sec:cro_pq}) \'etablit la borne correspondante
+\begin{equation}
+\Conf^q \cdot \Relrec^q \cdot \Opp^q \leq \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa(\Delta_q+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\label{eq:borne_forte_quantique}
+\end{equation}
+o\`u $\Delta_q$ repr\'esente la capacit\'e d'extraction institutionnelle
+adapt\'ee au quantum et $\eta_q$ le coefficient de perte d'interpr\'etabilit\'e
+quantique.
+
+\begin{remark}[Statut d'une borne forte en $O(\lambda^{-2})$]
+\label{rem:borne_forte_statut}
+La borne~\eqref{eq:borne_forte_classique}, v\'erifi\'ee dans
+l'annexe~\ref{chap:annexe_lean4}, a un terme dominant $\Delta/(\gamma\lambda)$ en
+$O(\lambda^{-1})$~; seuls ses termes correctifs, $\kappa(\Delta+1)/\lambda^2$ et
+$\kappa^2/\lambda^3$, sont d'ordre $\lambda^{-2}$ et $\lambda^{-3}$. Une borne dont
+le terme dominant serait en $O(\lambda^{-2})$ reste une question ouverte.
+La forme raffin\'ee~\eqref{eq:trilemme_cro_raffine} montre d'ailleurs qu'en
+r\'egime \og rare\fg{} la borne est gouvern\'ee par Fano, en $1/\lambda$, ind\'ependamment
+de $\Delta$. Les autres probl\`emes ouverts concernent l'extension de la
+formalisation \`a SOTP et au cadre post-quantique ainsi que la d\'erivation dans
+Mathlib des in\'egalit\'es de Fano et Pinsker, aujourd'hui pos\'ees comme
+propri\'et\'es des instances.
+\end{remark}
+
+La formalisation de l'optimisation analytique sur l'intervalle complet
+$[0, \lambda]$ reste un probl\`eme ouvert, car elle n\'ecessite des outils
+d'analyse r\'eelle (d\'eriv\'ees de fonctions avec racine carr\'ee) non encore
+disponibles dans Mathlib. Elle permettrait d'\'etudier le comportement de la
+borne hors du r\'egime de l'Hypoth\`ese~\ref{ass:regime}.
+
+\subsubsection{G\'en\'eralisation \`a la r\'egion r\'ealisable compl\`ete}
+\label{subsubsec:region_realisable}
+
+La borne sur le produit scalaire ne r\'epond pas \`a la question
+de savoir quelle est la r\'egion r\'ealisable compl\`ete
+$\mathcal{R} \subset [0,1]^3$ des triplets $(\Conf, \Rel, \Opp)$
+atteignables~\cite{MINKA2026CLO}. Deux syst\`emes de produit CRO
+identique~($= 0{,}4$) peuvent pr\'esenter des profils radicalement
+diff\'erents~; seule la caract\'erisation de $\mathcal{R}$ permet de
+d\'eterminer quels profils sont r\'ealisables et quels sont les arbitrages
+Pareto-optimaux~\cite{Boyd2004}.
+
+Deux conjectures guident l'exploration. La premi\`ere, dite de \emph{convexit\'e}, pose que $\mathcal{R}$
+est convexe dans $[0,1]^3$, car la composition probabiliste de deux protocoles
+g\'en\`ere un troisi\`eme avec m\'etriques interpol\'ees~\cite{MINKA2026CLO}.
+La seconde, dite de \emph{fronti\`ere poly\'edrale}, pose que la fronti\`ere de Pareto de $\mathcal{R}$
+est d\'efinie par un syst\`eme fini d'in\'egalit\'es lin\'eaires issues de
+Fano~\cite{Fano61}, Pinsker~\cite{Pinsker1964} et du principe de traitement
+des donn\'ees~\cite{CoverThomas06}. Des techniques issues de la programmation
+convexe~\cite{Boyd2004,Nesterov2018} et de la th\'eorie taux-distortion
+\'etendue~\cite{Berger71,Gray2011} semblent prometteuses pour attaquer ces
+questions.
+
+\subsubsection{G\'en\'eralisation au chiffrement homomorphe (FHE)}
+\label{subsubsec:generalisation_fhe}
+
+Le chiffrement totalement homomorphe~\cite{Gentry09,Vaikuntanathan2012,Brakerski2014}
+maximise $\Conf$, les donn\'ees restent chiffr\'ees tout au long du calcul,
+mais d\'egrade conjecturalement $\Opp$, car l'interpr\`ete institutionnel ne peut
+extraire d'information verdictuelle d'un chiffr\'e homomorphe sans cl\'e de
+d\'echiffrement~\cite{Gentry2010,Halevi2012}. Cette tension n'est pas encore
+formalis\'ee dans le cadre CLO. La r\'esolution pourrait passer par des
+constructions autorisant un d\'ecryptage partiel
+contr\^ol\'e~\cite{Brakerski2013,Boneh2013} vers la couche Clay sans
+compromettre la couche Gold~; il s'agit d'une conjecture.
+
+\subsubsection{G\'en\'eralisation au calcul multi-parties s\'ecuris\'e (MPC)}
+\label{subsubsec:generalisation_mpc}
+
+Dans un protocole MPC \`a $n$
+parties~\cite{Yao82,GMW87,Goldreich1987,Evans2018,Garay15}, l'opposabilit\'e
+agr\'eg\'ee
+\begin{equation}
+  \Opp_\text{MPC} = \frac{I(V_1,\ldots,V_n;\,\Sigma \mid C)}{H(V_1,\ldots,V_n \mid C)}
+\end{equation}
+peut exhiber des comportements radicalement diff\'erents de l'opposabilit\'e
+centralis\'ee~\cite{MINKA2026CLO}. Des effets d'amplification~(chaque partie
+apportant une vue partielle enrichissant l'information de verdict) ou de
+cancellation~(vues partielles contradictoires r\'eduisant
+$I(V_1,\ldots,V_n;\,\Sigma \mid C)$) sont th\'eoriquement envisageables, sous
+r\'eserve de formalisation. La structure du Trilemme CRO se pr\'eserve-t-elle
+dans ce cadre~? Des techniques issues du mod\`ele
+UC~\cite{Canetti01,Canetti2000} et de la th\'eorie des jeux
+coop\'eratifs~\cite{Peleg2007,Owen2013} semblent indiqu\'ees.
+
+\subsubsection{Cadre quantique quantitatif}
+\label{subsubsec:cadre_quantique_quantitatif}
+
+La migration vers des constructions quantiques, commitments bas\'es sur les
+r\'eseaux~\cite{Ajtai96,Regev05,Peikert2016},
+STARKs~\cite{STARKs18,BenSasson2018}, pr\'eserve-t-elle les propri\'et\'es
+de confidentialit\'e et de fiabilit\'e de v\'erification \'etablies \`a la
+section~\ref{sec:sotp_construction}, sachant que les engagements de Pedersen
+reposent sur le logarithme discret et ne sont pas post-quantiques~? Quelles bornes CLO quantitatives
+s'obtiennent pour des adversaires Grover~\cite{Grover96,Zhandry2012}~?
+L'opposabilit\'e naturelle pour des protocoles \`a $r$ rounds
+\begin{equation}
+  \Opp_r = \frac{I(V;\,\Sigma_1,\ldots,\Sigma_r \mid C)}{H(V \mid C)}
+\end{equation}
+satisfait-elle une variante du Trilemme CRO~? Ces questions prolongent l'\'etape B
+de la progression, par l'\'etablissement de bornes g\'en\'eralis\'ees.
+
+L'extension quantique (Contribution C3, section~\ref{sec:cro_pq}) a ouvert
+cette voie en introduisant les param\`etres $\Delta_q$ et $\eta_q$. Le
+programme de recherche vise maintenant \`a calibrer ces param\`etres pour les
+signatures NIST PQC (ML-DSA~\cite{Dilithium2022}, SLH-DSA~\cite{SPHINCS2022}),
+pour lesquelles $\eta_q = 0$, puis \`a d\'evelopper une th\'eorie quantitative des
+pertes d'interpr\'etabilit\'e pour le sc\'enario d'un support quantique~\cite{NielsenChuang2010,Preskill1998}.
+
+Trois pistes th\'eoriques prolongent cette extension. \textbf{(D) Contraction.}
+Pour un canal $\Lambda$ de coefficient de contraction $\eta_\Lambda$
+(in\'egalit\'e de traitement des donn\'ees forte), on aurait
+$\Opp^q \leq \eta_\Lambda\,\Opp$, ce qui remplacerait le terme additif
+$\eta_q H(C)$ par un facteur multiplicatif. \textbf{(E) Granularit\'e et
+capacit\'e.} Lier $\alpha$ et $\Delta$ (un interpr\`ete plus capable distingue
+des verdicts plus fins) ferait d\'ependre $\gamma$ de $\Delta$ et modifierait le
+r\'egime de la forme raffin\'ee. \textbf{(B2) Contexte priv\'e.} Pour SOTP, un
+mod\`ele o\`u une partie $\tilde C$ du contexte est transmise \`a l'institution
+seule (et non publique) permettrait de donner un statut prouv\'e aux
+minorations d'opposabilit\'e, aujourd'hui heuristiques.
+
+\subsubsection{Enseignements m\'ethodologiques de la formalisation Lean4}
+\label{subsubsec:enseignements_lean4}
+
+La formalisation Lean4 du noyau alg\'ebrique du Trilemme CRO
+(section~\ref{sec:lean4}) a r\'ev\'el\'e trois le\c{c}ons structurelles pour
+le d\'eveloppement du sous-domaine.
+
+\paragraph{Propri\'et\'es informationnelles comme conditions v\'erifiables.}
+La formalisation int\`egre Fano et Pinsker comme champs explicites de la
+structure \texttt{ProtocolInstance} tandis qu'elle traite l'extraction born\'ee et le r\'egime de
+confidentialit\'e comme hypoth\`eses du th\'eor\`eme. Ce choix transforme des
+propri\'et\'es profondes en conditions v\'erifiables \`a chaque instance,
+clarifiant le statut \'epist\'emique du th\'eor\`eme.
+
+\paragraph{Coh\'erence et port\'ee du th\'eor\`eme.}
+La formalisation produit deux t\'emoins qui d\'emontrent la non-vacuit\'e et
+la n\'ecessit\'e des hypoth\`eses. Le \emph{t\'emoin de coh\'erence} atteint
+exactement la borne th\'eorique pour une instance du mod\`ele abstrait,
+confirmant que les hypoth\`eses formelles sont compatibles (ce point n'est
+pas r\'ealisable par un protocole, Remarque~\ref{rem:portee_temoin}). Le \emph{t\'emoin de port\'ee} v\'erifie
+les Hypoth\`eses 1, 2$'$ et 3 mais s'\'ecarte du r\'egime de confidentialit\'e,
+atteignant $1/4$ constant, ce qui \'etablit que ce r\'egime est n\'ecessaire
+\`a la borne. Le cas limite complet est document\'e \`a la
+sous-section~\ref{subsec:lean4_erreurs}.
+
+\paragraph{Couverture du corpus et scalabilit\'e.}
+La formalisation couvre le noyau alg\'ebrique du th\'eor\`eme.
+L'extension aux constructions SOTP compl\`etes et aux r\'esultats
+post-quantiques constitue une direction de recherche future, estim\'ee \`a
+un investissement substantiel mais r\'ealiste pour une \'equipe d\'edi\'ee.
+
+\subsubsection{Extension de la formalisation Lean4~: SOTP et PQ}
+\label{subsubsec:extension_lean4_sotp_pq}
+
+La formalisation Lean4 actuelle (annexe~\ref{chap:annexe_lean4}) couvre
+int\'egralement le noyau alg\'ebrique du Trilemme CRO
+classique, y compris les t\'emoins de coh\'erence et de port\'ee. Deux
+extensions restent \`a d\'evelopper.
+
+\begin{itemize}
+    \item \textbf{Extension SOTP.} La formalisation des constructions
+          SOTP-Low, SOTP-Base et SOTP-High n\'ecessiterait la
+          formalisation des r\'eductions cryptographiques (PRG, DLog,
+          q-SDH) et des algorithmes de compression
+          Johnson-Lindenstrauss. L'effort est estim\'e \`a 1000--1500 lignes
+          additionnelles.
+    \item \textbf{Extension post-quantique.} La formalisation du
+          Trilemme CRO PQ n\'ecessiterait l'int\'egration des
+          in\'egalit\'es quantiques (Pinsker quantique, Gentle
+          Measurement, Fano quantique) dans une biblioth\`eque de
+          th\'eorie de l'information quantique. L'effort est estim\'e \`a
+          1000--1500 lignes additionnelles.
+\end{itemize}
+
+Cette extension, estim\'ee \`a 2000--3000 lignes additionnelles au total,
+constituerait la premi\`ere certification m\'ecanique compl\`ete d'un
+cadre cryptographique institutionnel.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Axe IV. Cryptographie institutionnelle et intelligence artificielle}
+\label{subsec:axe4_ia}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Interpr\`etes institutionnels artificiels}
+\label{subsubsec:interpretes_artificiels}
+
+Le cadre CLO mod\'elise l'interpr\`ete institutionnel par sa capacit\'e
+cognitive $\Delta$ et un espace de verdicts $\mathcal{V}$~\cite{MINKA2026CLO,Simon82}.
+Un mod\`ele de langage de grande taille~(LLM) utilis\'e comme interpr\`ete
+pr\'esente des propri\'et\'es qualitativement diff\'erentes, puisque $\Delta_\text{LLM}$
+peut d\'epasser $H(\mathcal{C})$ gr\^ace \`a des connaissances
+hors-contexte~\cite{Brown2020,OpenAI2023}, mais est \'egalement stochastique
+et potentiellement adversarial~\cite{Carlini2021,Zou2023}. Si $\Delta \gtrsim
+H(\mathcal{C})$, la borne CRO (forme raffin\'ee~\eqref{eq:trilemme_cro_raffine}) peut-elle
+\^etre approch\'ee arbitrairement~? Autrement dit, des interpr\`etes IA
+rel\`event-ils fondamentalement la fronti\`ere de Pareto dans l'espace
+CLO~? Cette question est ouverte~\cite{Bommasani2021}. Un adversaire IA, LLM
+finement ajust\'e pour l'extraction d'information institutionnelle,
+constitue-t-il une menace qualitativement nouvelle pour la couche Clay, ou
+reste-t-il born\'e par les limites issues de la th\'eorie de
+l'information~\cite{CoverThomas06}~? Les deux questions rel\`event de l'\'etape F
+du programme, car elles requi\`erent d'abord une d\'efinition formelle de
+$\Delta_\text{LLM}$ avant toute borne~\cite{Weidinger2023}.
+
+\subsubsection{Apprentissage automatique comme outil d'estimation CLO}
+\label{subsubsec:apprentissage_estimation}
+
+Les m\'etriques CLO sont d\'efinies au sens de la th\'eorie de
+l'information~\cite{Shannon48,CoverThomas06}; leur estimation sur donn\'ees
+r\'eelles est computationnellement difficile~\cite{Paninski2003}. Les
+techniques d'estimation d'information mutuelle par apprentissage~(MINE~\cite{Belghazi18},
+m\'ethodes par diff\'erence de log-vraisemblance~\cite{Poole2019,Oord2018})
+ouvrent une voie vers des \'evaluations empiriques automatis\'ees des
+propri\'et\'es CLO. L'estimation de $H(\mathcal{C})$ pour des contextes
+institutionnels r\'eels via des mod\`eles de compression
+neuronaux~\cite{Hinton2007,Kingma2013}, l'estimation de $\Delta$ par des tests
+de compr\'ehension automatis\'es sur corpus de d\'ecisions institutionnelles,
+ces directions permettraient de remplacer les estimations analytiques
+actuelles~(ECDSA, Helios, zk-SNARKs) par des mesures directes. Leurs
+r\'esultats resteraient soumis \`a calibration
+exp\'erimentale~\cite{Campbell1976,Saltelli2008}; ils constitueraient
+n\'eanmoins la premi\`ere validation empirique directe du cadre.
+
+\subsubsection{Audit cryptographique de l'intelligence artificielle}
+\label{subsubsec:audit_ia}
+
+La direction inverse est \'egalement possible. Des protocoles SOTP permettant
+de prouver des propri\'et\'es de mod\`eles IA,
+robustesse~\cite{Goodfellow2015,Madry2018},
+\'equit\'e~\cite{Barocas2019,Mitchell2021}, conformit\'e
+r\'eglementaire~\cite{EU2024AI,EU2021AI}, \`a des r\'egulateurs
+institutionnels sans r\'ev\'eler les poids du mod\`ele constituent une
+application naturelle du paradigme CLO. L'audit cryptographique d'un mod\`ele
+de d\'ecision consisterait ainsi \`a prouver sa conformit\'e via un sch\'ema SOTP-High sans exposer
+son architecture. Ce programme croise la v\'erification du
+calcul~(\textit{verifiable computation})~\cite{Gennaro2010,Walfish2015} et la
+gouvernance de l'IA~\cite{Floridi2018,Jobin2019}, territoire d'application
+neuf pour lequel le cadre CLO-CRO-SOTP est th\'eoriquement arm\'e.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Programme de recherche \`a horizon structur\'e}
+\label{subsec:programme_recherche}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre quitte l'exploration. Quatre axes ont \'et\'e ouverts, qui portent sur les fondations
+computationnelles, la voie protocolaire, les extensions th\'eoriques et l'intelligence
+artificielle. Chacun ouvre des territoires prometteurs, mais en partie encore sp\'eculatifs.
+Il faut d\'esormais planifier, en distinguant ce qui peut \^etre
+fait en un an, en trois ans ou en dix ans selon que cela d\'epend d'une preuve, d'un
+financement ou d'une communaut\'e. L'arbitre note que le propos rel\`eve d\'esormais moins d'un
+chercheur isol\'e que d'un programme qui se donne des
+\'ech\'eances.
+\end{boiteArbitre}
+
+\subsubsection{Horizon court terme (1--3 ans)~: consolidation des fondations}
+\label{subsubsec:horizon_court_terme}
+
+Cinq t\^aches conditionnent les horizons ult\'erieurs. D'abord,
+\'ecrire l'argument qui exclut l'inversion successive par extraction de
+racines, puis soumettre AIIP \`a la cryptanalyse~; la robustesse de cette
+hypoth\`ese est pr\'ealable \`a tout usage applicatif du CASH
+Toolkit~\cite{MINKA2025AIIP}. Ensuite,
+\'etendre la formalisation Lean4 \`a SOTP et au cadre post-quantique
+(cf.~sous-section~\ref{subsubsec:extension_lean4_sotp_pq}), avec pour objectif
+d'\'elargir la couverture de l'annexe~\ref{chap:annexe_lean4} sans modifier la
+borne. Parall\`element,
+exhiber la r\'eduction UC entre SOTP-High et ZK-NR~v3, ce qui fermerait
+formellement la boucle entre la th\'eorie abstraite de
+SOTP~(section~\ref{sec:sotp_construction}) et son instanciation
+composable~\cite{MINKA2025ZKNR_UC,Canetti01}. Puis, prouver un
+th\'eor\`eme de composition garantissant que l'assemblage
+$(CEE \;\|\; AOW \;\|\; SH)$ en Gold-Iron-Clay pr\'eserve les bornes CRO
+\`a un facteur constant. Enfin, ex\'ecuter le
+programme exp\'erimental sp\'ecifi\'e au
+chapitre~\ref{chap:experimentation}.
+
+Les six protocoles y sont d\'ecrits jusqu'au niveau op\'erationnel (stratification des \'echantillons, estimateurs, crit\`eres de fiabilit\'e
+inter-\'evaluateurs, seuils de falsification) mais aucun n'a \'et\'e
+d\'eploy\'e (sous-section~\ref{subsubsec:statut_deploiement}). Tant que
+$\Delta$, $H(\mathcal{C})$, $\Delta_q$ et $\eta_q$ demeurent estim\'es
+par triangulation documentaire, sans mesure aupr\`es d'acteurs
+institutionnels r\'eels, les bornes CRO conservent le statut de
+r\'esultats conditionnels, puisqu'elles sont math\'ematiquement \'etablies sous
+hypoth\`eses, sans calibration empirique. Le d\'eploiement suppose trois pr\'ealables non
+techniques, \`a savoir l'accord institutionnel des juridictions et r\'egulateurs
+approch\'es, l'approbation d'un comit\'e d'\'ethique de la recherche et un
+financement sur un horizon de vingt-six mois. L'audit post-\'electoral
+Helios de la section~\ref{subsec:protocole_opp}, le plus l\'eger en
+ressources et le seul enti\`erement internalisable \`a l'ENSP, constitue
+le point d'entr\'ee naturel, puisqu'il valide $\Opp$ sur un syst\`eme
+r\'eellement d\'eploy\'e et fournit le premier point de calibration du
+cadre.
+
+\subsubsection{Horizon moyen terme (3--5 ans)~: \'elargissement du domaine}
+\label{subsubsec:horizon_moyen_terme}
+
+La th\'eorie CLO computationnelle, d\'efinitions de
+$(\Conf_\text{comp}, \Rel_\text{comp}, \Opp_\text{comp})$ via adversaires
+PPT~\cite{Goldreich01,Bellare97} et \'etablissement du trilemme dans ce cadre
+renforc\'e, est la priorit\'e th\'eorique centrale de cet horizon. En
+parall\`ele, les variantes du Trilemme CRO pour FHE et
+MPC~\cite{Gentry09,Evans2018} doivent \^etre d\'emontr\'ees ou r\'efut\'ees~;
+les bornes d'opposabilit\'e atteignables dans ces extensions restent
+inconnues. Des outils d'estimation de $H(\mathcal{C})$ et $\Delta$ par
+apprentissage automatique peuvent \^etre d\'evelopp\'es et calibr\'es sur des
+preuves existantes dont les m\'etriques CLO ont \'et\'e estim\'ees
+analytiquement ($0{,}437$ pour Helios, $0{,}572$ pour zk-SNARKs et $0{,}273$ pour ECDSA), sous
+r\'eserve que les estimations analytiques constituent une r\'ef\'erence
+raisonnablement proche des mesures directes. La contribution \`a la
+standardisation, int\'egration de l'opposabilit\'e dans les standards NIST
+post-quantiques, cadrage d'un futur standard ISO/IEC, peut d\'ebuter sur cet
+horizon.
+
+\subsubsection{Horizon long terme (5--10 ans)~: sous-domaine \'etabli}
+\label{subsubsec:horizon_long_terme}
+
+La vision d\'ecennale est celle d'un sous-domaine reconnu dans les
+conf\'erences de cryptologie~(CRYPTO, EUROCRYPT, ASIACRYPT), avec sa propre
+journ\'ee de travail sp\'ecialis\'ee, des programmes doctoraux d\'edi\'es dans
+les universit\'es de recherche ainsi que des venues
+propres~(\textit{International Symposium on Institutional Cryptography},
+\textit{Journal of Institutional Cryptography}). Scientifiquement, l'horizon
+d\'ecennal vise la caract\'erisation compl\`ete de $\mathcal{R} \subset [0,1]^3$,
+fronti\`ere de Pareto exacte comprise, une th\'eorie unifi\'ee couvrant
+protocoles non interactifs, interactifs et multi-parties sous un cadre
+CLO-CRO \'etendu. Si AIIP r\'esiste \`a la cryptanalyse, cet horizon inclut aussi des primitives
+CASH soumises \`a standardisation.
+
+\begin{table}[htbp]
+\centering
+\caption{Synth\`ese des perspectives par contribution et horizon}
+\label{tab:perspectives_horizons}
+\small
+\begin{tabular}{@{}p{2.5cm}p{3cm}p{3cm}p{3cm}@{}}
+\toprule
+\textbf{Contribution} & \textbf{Court terme} & \textbf{Moyen terme} & \textbf{Long terme} \\
+\midrule
+C1 (CLO) & D\'eploiement du protocole (chap.~\ref{chap:experimentation}, non ex\'ecut\'e) & Outils ML d'estimation & Standards ISO/IEC \\
+C2 (CRO classique) & Extension Lean4 \`a SOTP et PQ & Extensions FHE/MPC & Caract\'erisation $\mathcal{R}$ \\
+C3 (CRO post-quantique) & Mesure de $\Delta_q$ (ML-DSA, SLH-DSA) & Th\'eorie $\eta_q$ (options D, E) & PQC certifi\'e CLO \\
+C4 (SOTP) & Mod\`ele \`a contexte priv\'e (B2), R\'eduction SOTP$\to$ZK-NR & Preuve ou r\'efutation de la conjecture d'optimalit\'e & Th\'eorie unifi\'ee, impl\'ementations de r\'ef\'erence \\
+C5 (Lean4) & Extension couverture SOTP et PQ & Certification UC & V\'erificateur automatique, int\'egration Mathlib et Coq/Isabelle \\
+C6 (Protocoles) & D\'eploiement Helios audit post-\'electoral & Validation multi-institutionnelle & Standards empiriques \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Financements envisag\'es}
+\label{subsubsec:financements_envisages}
+
+\noindent\textbf{Agences nationales.} MINRESI (Cameroun), ANR (France).
+
+\noindent\textbf{Agences internationales.} NSF SaTC (\'Etats-Unis), IDRC
+(Canada), Horizon Europe (EU).
+
+\noindent\textbf{Partenariats institutionnels.} LIMSI (Cameroun), NIST (PQC
+validation), IBM Quantum (acc\`es simulateur).
+
+\subsubsection{Suivi longitudinal}
+\label{subsubsec:suivi_longitudinal}
+
+Les travaux ant\'erieurs~\cite{MINKA2026CRO} et la
+section~\ref{sec:cro_pq} invitent \`a
+mesurer l'\'evolution des param\`etres \`a mesure que les institutions
+acqui\`erent de l'exp\'erience, selon les lois
+\begin{align}
+\Delta(t) &= \Delta_\infty(1 - e^{-t/\tau})
+\label{eq:suivi_delta} \\
+\Delta_q(t) &= \Delta_{q,\infty}(1 - e^{-t/\tau_q})
+\label{eq:suivi_delta_q} \\
+\eta_q(t) &= \eta_{q,0} \cdot e^{-t/\tau_{\mathrm{hw}}}
+\label{eq:suivi_eta_q}
+\end{align}
+o\`u $\tau$ est la constante de temps d'apprentissage institutionnel et
+$\tau_{\mathrm{hw}}$ refl\`ete l'am\'elioration du mat\'eriel quantique. Ce
+programme longitudinal repr\'esente une direction de recherche \`a 3--5 ans.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre retient que le voyage ne s'arr\^ete pas ici. Les bornes existent
+sous hypoth\`eses, tandis que les constructions ont des propri\'et\'es prouv\'ees et une
+opposabilit\'e encore heuristique. Une borne de terme dominant
+$O(\lambda^{-2})$ reste ouverte, de m\^eme que les extensions au calcul homomorphe
+et multi-parties~; les param\`etres quantiques
+$\Delta_q$ et $\eta_q$ restent quant \`a eux \`a calibrer sur des acteurs r\'eels. Ce qui a
+\'et\'e construit est prouv\'e l\`a o\`u il est dit prouv\'e et conjectur\'e l\`a o\`u il est dit conjectur\'e.
+Ce qui reste \`a construire est plus vaste encore, mais une carte existe d\'esormais pour s'y orienter.
+Un sous-domaine est en marche avec ses questions ouvertes, ses hypoth\`eses
+\`a valider et sa communaut\'e qui commence \`a se constituer autour d'elles.
+\end{boiteArbitre}

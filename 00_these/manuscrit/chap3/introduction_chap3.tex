@@ -1,0 +1,74 @@
+% ============================================================================
+% CHAPITRE 3 : INTRODUCTION
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+\section{INTRODUCTION}
+\label{sec:introduction_constructions}
+% ----------------------------------------------------------------------------
+
+\begin{sloppypar}
+Une borne d'impossibilit\'e ne dit rien, \`a elle seule, de ce qu'il est
+possible de construire. Le chapitre pr\'ec\'edent a \'etabli que le produit
+$\Conf\cdot\Rel\cdot\Opp$ ne peut d\'epasser une quantit\'e gouvern\'ee par
+la capacit\'e d'extraction institutionnelle. Deux questions restent
+ouvertes. La premi\`ere porte sur le caract\`ere atteignable de cette borne~; la
+seconde demande si la preuve qui l'\'etablit r\'esiste \`a
+une v\'erification m\'ecanique.
+
+Ce chapitre r\'ealise les actes \textbf{S} et \textbf{C} du cycle
+canonique. La section~\ref{sec:sotp_base} construit le Semantic One-Time
+Pad, prototype qui montre que le paradigme Gold-Iron-Clay est
+instanciable. La section~\ref{sec:sotp_construction} g\'en\'eralise ce
+prototype en une famille de trois protocoles, chacun taill\'e pour un
+r\'egime d'entropie contextuelle, puis formule la conjecture de leur
+optimalit\'e universelle. La section~\ref{sec:lean4} soumet le noyau alg\'ebrique du
+trilemme \`a l'assistant de preuve Lean4. La
+section~\ref{sec:conclusion_constructions} dresse le bilan de ces deux
+actes. L'acte \textbf{X}, exp\'erimenter, fait l'objet du
+chapitre~\ref{chap:experimentation}.
+
+% ----------------------------------------------------------------------------
+\subsection{D\'emarche m\'ethodologique~: les actes \textbf{S} et \textbf{C}}
+\label{subsec:demarche_saturer_certifier}
+% ----------------------------------------------------------------------------
+
+\paragraph{Saturer (\textbf{S}).}
+Une borne d'impossibilit\'e prend toute sa valeur op\'erationnelle
+lorsqu'on sait l'approcher. La m\'ethodologie vis\'ee est celle de la
+construction explicite, qui associe \`a chaque r\'egime d'entropie
+contextuelle un protocole de la famille SOTP (SOTP-Low, SOTP-Base, SOTP-High)
+propos\'e comme construction de r\'ef\'erence. Leurs propri\'et\'es
+cryptographiques sont prouv\'ees~; la saturation de la borne, qui porte sur
+la fiabilit\'e de reconstruction, reste une conjecture
+(Remarque~\ref{rem:statut_sotp}).
+
+\paragraph{Certifier (\textbf{C}).}
+Un th\'eor\`eme qui croise trois disciplines peut receler des hypoth\`eses
+implicites que l'intuition math\'ematique ne d\'etecte pas. La
+m\'ethodologie Lean4 impose une explicitation compl\`ete, puisque chaque
+hypoth\`ese non prouv\'ee dans le syst\`eme doit \^etre \'enonc\'ee
+comme propri\'et\'e ou comme pr\'emisse. Cette exigence a conduit \`a
+expliciter l'hypoth\`ese de r\'egime et \`a pr\'eciser trois \'enonc\'es
+publi\'es.
+
+\begin{remark}[Statut des r\'esultats de ce chapitre]\label{rem:statut_sotp}
+Les constructions S-OTP et SOTP sont \'evalu\'ees sur l'\'echelle
+op\'erationnelle CLO, qui combine confidentialit\'e statistique, fiabilit\'e de
+v\'erification $\Relver$ (Remarque~\ref{rem:rel_ver}) et opposabilit\'e
+sous des conventions d'interpr\'etation explicites. Ces m\'etriques ne sont
+pas compar\'ees \`a la borne du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel},
+qui porte sur $\Relrec$ et \'enonce que, pour tout protocole \`a confidentialit\'e
+statistique $1-\negl(\lambda)$, $\Relrec \leq (1+\kappa/\lambda)/\lambda$.
+L'existence de protocoles qui approchent la borne raffin\'ee~\eqref{eq:trilemme_cro_raffine}
+est formul\'ee comme conjecture (Conjecture~\ref{conj:optimalite_universelle}).
+Les composantes de preuve qui ne d\'ependent que du contexte public $C$
+n'apportent aucune information conditionnelle, puisque
+$I(V; g(C) \mid C) = 0$ pour toute fonction $g$. La couche Clay est
+donc analys\'ee comme un \emph{format de pr\'esentation} qui facilite
+l'interpr\'etation (baisse du co\^ut cognitif) sans ajouter
+d'information au sens de $\Opp$. Les expressions num\'eriques de
+saturation (facteurs $0{,}75$, $0{,}5$, $0{,}45$) sont des heuristiques de
+conception, sans statut de minoration prouv\'ee.
+\end{remark}
+\end{sloppypar}

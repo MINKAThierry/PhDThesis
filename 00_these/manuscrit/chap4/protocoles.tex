@@ -1,0 +1,1114 @@
+% ============================================================================
+% CHAPITRE 3 — SECTION 3.2 : PROTOCOLES EXPÉRIMENTAUX
+% Fichier : partie3/protocole_experimental.tex
+% ============================================================================
+
+\section{PROTOCOLES EXP\'ERIMENTAUX}
+\label{sec:protocoles_experimentaux}
+% ============================================================================
+\begin{sloppypar}
+Cette section sp\'ecifie les six protocoles de mesure destin\'es \`a estimer
+empiriquement les param\`etres du cadre CRO, \`a savoir la capacit\'e
+d'extraction institutionnelle, l'entropie contextuelle, l'opposabilit\'e,
+ainsi que leurs extensions quantiques, en d\'etaillant pour chacun le design,
+la proc\'edure, les m\'etriques et les pr\'edictions falsifiables, avant de
+consolider le calendrier, les ressources et les crit\`eres de validation de
+l'ensemble du programme.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre ouvre un dossier qui ne ressemble pas aux pr\'ec\'edents, puisqu'il
+y trouve des protocoles sans r\'esultats, puisque rien n'a encore \'et\'e mesur\'e.
+Il lit la mani\`ere dont on compte mesurer, qui est pr\'ecis\'ement ce qu'il
+doit juger.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Protocole de mesure de $\Delta$~:
+          capacit\'e d'extraction institutionnelle}
+\label{subsec:protocole_delta}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Objectif et d\'efinition op\'erationnelle}
+\label{subsubsec:objectif_delta}
+
+\noindent\textbf{Objectif.} Mesurer empiriquement la capacit\'e d'extraction
+institutionnelle $\Delta$ (en bits), d\'efinie par l'hypoth\`ese d'extraction
+born\'ee~\cite{MINKA2026CRO}~:
+\begin{equation}
+I(V;\Sigma|C) \leq I(M;\Sigma|C) + \Delta
+\label{eq:extraction_bornee_op}
+\end{equation}
+
+\begin{definition}[Capacit\'e d'extraction institutionnelle $\Delta$]\label{def:capacite_extraction_op}
+$\Delta$ est la quantit\'e d'information sur les verdicts qu'un acteur
+institutionnel peut extraire \emph{au-del\`a} de l'information mutuelle brute
+contenue dans la preuve cryptographique. En pratique, $\Delta$ capture la
+connaissance pr\'ealable (pr\'ec\'edents l\'egaux, formation sp\'ecialis\'ee,
+proc\'edures institutionnelles, capacit\'e de d\'elib\'eration collective) non
+formalis\'ee dans le contexte $C$.
+\end{definition}
+
+\noindent\textbf{Estimateur.} Par la
+Proposition~\ref{prop:fondement_extraction}, la quantit\'e contr\^ol\'ee par
+l'Hypoth\`ese~\ref{ass:extraction_bornee} est l'information conditionnelle
+$I(V;\Sigma|M,C)$. L'estimateur retenu est donc
+\begin{equation}
+\hat{\Delta} = \hat{I}(V;\Sigma \mid M, C)
+\label{eq:estimateur_delta}
+\end{equation}
+o\`u $\hat{I}$ est un estimateur de l'information mutuelle conditionnelle
+(plug-in avec correction de Miller--Madow, ou estimateur de type NSB pour
+les petits \'echantillons), calcul\'e sur les triplets $(v_i, \sigma_i, m_i)$
+recueillis \`a contexte $c$ fix\'e. Le message $m_i$ est connu de
+l'exp\'erimentateur (v\'erit\'e terrain) mais non des participants. $\hat{\Delta}$ estime
+la plus petite capacit\'e compatible avec l'Hypoth\`ese~\ref{ass:extraction_bornee}
+sous la condition~\eqref{eq:extraction_bornee_forte}. L'estimateur est biais\'e
+positivement en petit \'echantillon~; l'intervalle de confiance est obtenu par
+bootstrap non param\'etrique \emph{sur les participants}.
+
+\begin{remark}[Formulation initiale de l'estimateur]
+La formulation initiale de ce protocole proposait
+$\hat{\Delta} = I_{\mathrm{emp}}(V;\Sigma|C) - I_{\mathrm{vrai}}(M;\Sigma|C)$.
+Cet estimateur prend des valeurs n\'egatives pour un protocole fiable
+($I(M;\Sigma|C) \geq \Relrec\cdot\lambda - 1$ par Fano, alors que
+$I(V;\Sigma|C) \leq \log_2|\mathcal{V}_\lambda|$) et ne fournit qu'une borne
+inf\'erieure sur $\Delta$. La formulation retenue
+est~\eqref{eq:estimateur_delta}.
+\end{remark}
+
+\subsubsection{Design exp\'erimental}
+\label{subsubsec:design_delta}
+
+\noindent\textbf{Participants.} $N \geq 100$ professionnels des institutions
+cibles, stratifi\'es par niveau d'expertise et par type
+d'institution~\cite{MINKA2026CRO} selon la r\'epartition du
+tableau~\ref{tab:stratification_delta}.
+
+\begin{table}[htbp]
+\centering
+\caption{Stratification de l'\'echantillon pour la mesure de $\Delta$}
+\label{tab:stratification_delta}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+\textbf{Cat\'egorie} & \textbf{Sous-groupe} & \textbf{$n$} & \textbf{$\Delta$ pr\'edit} \\
+\midrule
+Juges & G\'en\'eralistes (juridictions civiles) & 20 & $\approx 25$ bits \\
+      & Sp\'ecialis\'es (contrats, PKI, num\'erique) & 20 & $\approx 40$ bits \\
+\midrule
+R\'egulateurs & Juniors (< 5 ans d'exp\'erience) & 20 & $\approx 35$ bits \\
+financiers  & Seniors ($\geq 5$ ans, superviseurs) & 20 & $\approx 65$ bits \\
+\midrule
+Auditeurs & Cour des comptes (secteur public) & 20 & $\approx 45$ bits \\
+          & Cabinets priv\'es (Big 4 et \'equivalents) & 20 & $\approx 55$ bits \\
+\midrule
+\textbf{Total} & & \textbf{120} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Mat\'eriel exp\'erimental.}
+\begin{itemize}
+\item 5 types de preuves cryptographiques (ECDSA, Helios avec ElGamal et ZK,
+      Groth16 zk-SNARK, RSA-PSS et ElGamal classique)
+\item 10 contextes standardis\'es par type de preuve (contractuels,
+      \'electoraux, financiers), soit 50 paires contexte--preuve
+\item Questionnaires valid\'es de 30 items par contexte
+\end{itemize}
+
+\subsubsection{Proc\'edure}
+\label{subsubsec:procedure_delta}
+
+La session exp\'erimentale pour chaque participant se d\'eroule en cinq
+phases.
+
+\noindent\textbf{Phase 0. Formation initiale (2 h).}
+Introduction aux concepts cryptographiques de base sans r\'ev\'eler les
+m\'ecanismes internes, afin d'homog\'en\'eiser le vocabulaire minimum.
+
+\noindent\textbf{Phase 1. Session exp\'erimentale principale (4 h).}
+Pour chacun des 10 contextes assign\'es (rotation \'equilibr\'ee)~:
+\begin{enumerate}
+\item[(a)] Pr\'esentation du contexte $c \in \mathcal{C}$
+\item[(b)] Pr\'esentation de la preuve cryptographique $\sigma$
+\item[(c)] Compl\'etion du questionnaire d'extraction de verdict
+\item[(d)] Mesure du temps de r\'eponse et notation de confiance subjective
+\end{enumerate}
+
+\noindent\textbf{Phase 2. V\'erification test-retest (1 h).}
+Re-pr\'esentation de 3 contextes d\'ej\`a vus apr\`es un d\'elai de 2 semaines.
+
+\noindent\textbf{Phase 3. Calcul du gold standard.}
+Deux cryptographes experts ind\'ependants rendent les verdicts \og corrects\fg{}
+(accord inter-juge requis $\geq 90\%$).
+
+\noindent\textbf{Phase 4. D\'ebriefing et restitution (30 min).}
+
+\subsubsection{M\'etriques et estimateurs}
+\label{subsubsec:metriques_delta}
+
+Le protocole standardis\'e de~\cite{MINKA2026CRO} calcule $\hat\Delta$ selon
+l'Algorithme~\ref{alg:estimation_delta}.
+
+\begin{algorithm}[H]
+\caption{Estimation empirique de $\Delta$}
+\label{alg:estimation_delta}
+\begin{algorithmic}[1]
+\State \textbf{Entr\'ees~:} Institution $I$, types de preuves
+       $\{\sigma_1, \ldots, \sigma_k\}$, contexte $C$
+\State \textbf{Sortie~:} $\hat\Delta$, $\hat\alpha$
+\State Pr\'esenter $\sigma_i$ avec $C$ aux acteurs institutionnels
+\State Enregistrer verdicts $V$, scores de confiance, temps de d\'ecision
+\State Associer \`a chaque r\'eponse le message $m$ connu de l'exp\'erimentateur
+\State Tester l'admissibilit\'e $V \perp M \mid (\Sigma, C)$ (test de permutation)
+\State Estimer $\hat\Delta = \hat I(V;\Sigma \mid M, C)$ (\'equation~\eqref{eq:estimateur_delta})
+\State Estimer $\hat\alpha = \log_2|\mathcal{V}| / H(C)$
+\State Valider par fiabilit\'e test-retest et coh\'erence inter-\'evaluateurs
+\end{algorithmic}
+\end{algorithm}
+
+L'algorithme transpose sur le terrain la d\'efinition th\'eorique de la
+capacit\'e d'extraction institutionnelle en encha\^inant quatre phases.
+
+La phase d'\textbf{entr\'ees} (lignes~1--2) fixe le cadre de la mesure.
+Elle re\c{c}oit une institution cible $I$, un ensemble de types de preuves
+cryptographiques $\{\sigma_1, \ldots, \sigma_k\}$ et un contexte $C$, puis
+d\'eclare comme sorties l'estimateur $\hat\Delta$ de la capacit\'e
+d'extraction et l'estimateur $\hat\alpha$ de la granularit\'e des verdicts.
+Aucun calcul n'intervient \`a ce stade, qui se borne \`a nommer les grandeurs
+mesur\'ees. S\'eparer entr\'ees et sorties importe n\'eanmoins, car $\Delta$
+n'est jamais observ\'e directement et se d\'eduit d'un contraste entre
+deux quantit\'es informationnelles.
+
+La phase de \textbf{collecte} (lignes~3--4) produit les donn\'ees brutes.
+Elle pr\'esente chaque preuve $\sigma_i$ accompagn\'ee de son contexte $C$
+aux acteurs institutionnels, puis enregistre les verdicts $V$ rendus, les
+scores de confiance subjectifs et les temps de d\'ecision, trois s\'eries qui
+doivent \^etre recueillies ensemble. Les verdicts seuls
+suffiraient \`a calculer une distribution marginale, mais les scores de
+confiance et les temps de d\'ecision permettent de d\'etecter les r\'eponses
+prises au hasard, qui contamineraient l'estimation de l'information
+mutuelle si elles \'etaient trait\'ees comme des jugements inform\'es.
+
+La phase d'\textbf{appariement et de contr\^ole} (lignes~5--6) associe
+chaque verdict au message effectivement engag\'e, que l'exp\'erimentateur
+conna\^it et que les participants ignorent. Elle teste ensuite la condition
+d'admissibilit\'e de la D\'efinition~\ref{def:interp_admissible}. Si $V$
+d\'epend encore de $M$ une fois $(\Sigma,C)$ connus, les participants ont
+acc\`es \`a une information hors preuve de sorte que l'\'etude sort du cadre.
+
+La phase d'\textbf{estimation} (lignes~7--8) produit les deux param\`etres.
+L'estimateur $\hat\Delta = \hat I(V;\Sigma|M,C)$ mesure ce que les acteurs
+tirent de la preuve \emph{au-del\`a} de ce qu'elle dit du message, qu'il s'agisse
+de la mise en forme, des m\'etadonn\'ees ou des indices que l'expertise institutionnelle
+(pr\'ec\'edents l\'egaux, expertise de domaine, proc\'edures internes) rend
+lisibles. Ce terme co\"{\i}ncide avec celui que la
+Proposition~\ref{prop:fondement_extraction} isole dans la d\'ecomposition de
+$I(V;\Sigma|C)$. L'estimateur $\hat\alpha$ est
+calcul\'e ind\'ependamment comme le rapport
+$\log_2|\mathcal{V}| / H(C)$ et mesure la finesse de l'espace de verdicts
+relativement \`a la richesse contextuelle, conform\'ement \`a la
+d\'efinition~\ref{def:alpha_granularite}. Les deux estimateurs sont donc
+acquis par des voies distinctes, ce qui permet de les valider
+s\'epar\'ement.
+
+La phase de \textbf{validation} (ligne~9) contr\^ole la fiabilit\'e de la
+mesure. Elle combine la stabilit\'e test-retest, qui
+v\'erifie que les m\^emes acteurs produisent des r\'eponses coh\'erentes
+lorsqu'ils sont r\'einterrog\'es apr\`es un d\'elai, avec la coh\'erence
+inter-\'evaluateurs, qui v\'erifie que des acteurs du m\^eme profil
+produisent des estimations convergentes. Sans cette \'etape, une valeur
+\'elev\'ee de $\hat\Delta$ pourrait refl\'eter une simple variabilit\'e
+al\'eatoire au lieu d'une capacit\'e d'extraction r\'eelle.
+
+L'algorithme fournit ainsi une estimation de $\Delta$ dont la stabilit\'e est
+contr\^ol\'ee, sans pr\'etendre \`a une valeur exacte. Le cadre CRO n'en demande
+pas davantage, puisque $\Delta$ y intervient
+comme constante du th\'eor\`eme et doit \^etre mesur\'e avec une incertitude
+born\'ee pour que les pr\'edictions aient un sens op\'erationnel.
+
+\subsubsection{Pr\'edictions v\'erifiables}
+\label{subsubsec:predictions_delta}
+
+Les pr\'edictions suivantes sont directement
+falsifiables~\cite{MINKA2026CRO,MINKA2026SOTP}~:
+
+\begin{enumerate}
+\item $\hat\Delta_{\text{juge g\'en\'eral}} \approx 25$ bits
+\item $\hat\Delta_{\text{juge PKI}} \approx 40$ bits
+\item $\hat\Delta_{\text{r\'egulateur senior}} \approx 65$ bits
+\item $\hat\Delta_{\text{ECDSA}} > \hat\Delta_{\text{Helios}}$ pour tout sous-groupe
+\item Facteur d'amplification institutionnelle $1{,}8$ \`a $3{,}7$ fois par
+      rapport \`a la capacit\'e individuelle Miller ($\approx 20$ bits)
+\end{enumerate}
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre note un \'el\'ement nouveau, \`a savoir des chiffres qui fixent des cibles,
+avec vingt-cinq bits pour un juge g\'en\'eraliste et soixante-cinq pour un
+r\'egulateur senior. Il y voit des paris, qui peuvent donc \^etre perdus.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Protocole de mesure de $H(\mathcal{C})$~:
+          entropie contextuelle}
+\label{subsec:protocole_HC}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Objectif et enjeu}
+\label{subsubsec:objectif_HC}
+
+\noindent\textbf{Objectif.} Quantifier empiriquement l'entropie contextuelle
+$H(\mathcal{C})$, c'est-\`a-dire la richesse informationnelle du contexte
+institutionnel dans lequel s'op\`ere l'interpr\'etation des preuves
+cryptographiques.
+
+\noindent\textbf{Enjeu.} $H(\mathcal{C})$ est le param\`etre le plus difficile
+\`a mesurer directement, car il caract\'erise la \emph{distribution}
+des contextes possibles et non un contexte particulier. Cette distinction
+d'\'echelle est explicit\'ee \`a la
+section~\ref{sec:methodologie_calcul}. Les protocoles ci-dessous mesurent
+l'entropie de la distribution des contextes d'un domaine institutionnel,
+tandis que les d\'erivations de la section~\ref{sec:derivation_opposabilite}
+mobilisent l'entropie du contexte d'esp\`ece. Les deux grandeurs portent le
+m\^eme symbole et ne prennent pas les m\^emes valeurs.
+
+\subsubsection{Approche 1~: d\'ecomposition structurelle}
+\label{subsubsec:approche_structurelle}
+
+\noindent\textbf{Principe.} Identifier les dimensions ind\'ependantes du
+contexte institutionnel et sommer leurs entropies en supposant
+l'ind\'ependance approximative~\cite{MINKA2026CLO}.
+
+\noindent\textbf{Application au contexte contractuel.}
+\begin{equation}
+H(C) = H(C_{\text{parties}}) + H(C_{\text{clauses}}) + H(C_{\text{juridiction}}) + H(C_{\text{historique}})
+\label{eq:decomposition_HC}
+\end{equation}
+
+\begin{table}[htbp]
+\centering
+\caption{Estimations structurelles de $H(\mathcal{C})$ par domaine institutionnel}
+\label{tab:estimations_structurelles_HC}
+\begin{tabular}{@{}llc@{}}
+\toprule
+\textbf{Domaine} & \textbf{Composantes dominantes} & $H(\mathcal{C})$ estim\'e \\
+\midrule
+Contentieux \'electoral & Registre, r\`egles, historique & 30--50 bits \\
+Conformit\'e financi\`ere & Transactions, r\'eglementations, audit & 40--70 bits \\
+Signature contractuelle & Parties, clauses, juridiction & 20--40 bits \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Approche 2~: mod\'elisation probabiliste par MDS}
+\label{subsubsec:approche_MDS}
+
+\noindent\textbf{Design.} Pr\'esenter un ensemble de $n_{\text{ctx}} = 100$
+contextes vari\'es \`a un panel de 5--10 experts en leur demandant une
+\'evaluation de similarit\'e par paires.
+
+\noindent\textbf{Proc\'edure d'analyse.}
+\begin{enumerate}
+\item Construction de la matrice de dissimilarit\'e $D \in \mathbb{R}^{100 \times 100}$
+\item R\'eduction par MDS (multi-dimensional scaling)
+\item Calcul du volume effectif $V_{\mathrm{eff}} = \det(\hat\Sigma)^{1/2}$
+\item Estimation $H(\mathcal{C}) \approx \log_2 V_{\mathrm{eff}}$
+\end{enumerate}
+
+\subsubsection{Approche 3~: consensus d'experts par m\'ethode Delphi}
+\label{subsubsec:approche_delphi}
+
+\noindent\textbf{Principe.} La m\'ethode Delphi est une technique
+d'\'elicitation it\'erative permettant d'obtenir un consensus
+quantitatif~\cite{MINKA2026CRO}.
+
+\noindent\textbf{Proc\'edure en quatre tours.} 20 experts estiment
+$H(\mathcal{C})$ ind\'ependamment, puis r\'evisent apr\`es retour
+anonymis\'e. Le processus s'arr\^ete lorsque l'IQR devient inf\'erieur \`a $5$ bits.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Protocole de mesure de $\Opp$~:
+          opposabilit\'e sur syst\`emes d\'eploy\'es}
+\label{subsec:protocole_opp}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Objectif et syst\`eme cible}
+\label{subsubsec:objectif_opp}
+
+\noindent\textbf{Objectif.} Mesurer l'opposabilit\'e $\Opp$ empiriquement sur
+un syst\`eme cryptographique r\'eellement d\'eploy\'e puis comparer la valeur
+mesur\'ee \`a la pr\'ediction du mod\`ele SOTP~\cite{MINKA2026SOTP}.
+
+\noindent\textbf{Syst\`eme cible.} Syst\`eme de vote Helios d\'eploy\'e pour
+une \'election de d\'el\'egu\'es \'etudiants \`a l'ENSP (\'Ecole Nationale
+Sup\'erieure Polytechnique, Universit\'e de Yaound\'e I).
+
+\subsubsection{Design et participants}
+\label{subsubsec:design_opp}
+
+\noindent\textbf{Participants.} Commission \'electorale de $n = 10$ trustees
+(\'etudiants doctorants et enseignants-chercheurs).
+
+\noindent\textbf{Taille de l'\'election.} $\approx 500$ \'etudiants votants,
+g\'en\'erant $\approx 500$ preuves cryptographiques.
+
+\subsubsection{Proc\'edure}
+\label{subsubsec:procedure_opp}
+
+\noindent\textbf{Phase 1. Formation trustees (4 h).}
+Formation structur\'ee sur Helios et les preuves z\'ero-connaissance.
+
+\noindent\textbf{Phase 2. \'Election r\'eelle.}
+D\'eploiement standard de Helios.
+
+\noindent\textbf{Phase 3. Session d'audit post-\'election (3 h).}
+Pour un \'echantillon al\'eatoire de 50 preuves (10\%)~:
+\begin{enumerate}
+\item Chaque trustee examine ind\'ependamment la preuve
+\item Rend un verdict $v \in \mathcal{V}$
+\item Note sa confiance sur 10
+\end{enumerate}
+
+\subsubsection{Calcul de l'opposabilit\'e empirique}
+\label{subsubsec:calcul_opp_empirique}
+
+L'opposabilit\'e est calcul\'ee selon~\cite{MINKA2026CLO}~:
+\begin{equation}
+\Opp_{\mathrm{emp}} = \frac{I_{\mathrm{emp}}(V;\Sigma|C)}{H_{\mathrm{emp}}(V|C)}
+\label{eq:opp_empirique}
+\end{equation}
+
+\subsubsection{Validation crois\'ee avec la pr\'ediction SOTP}
+\label{subsubsec:validation_croisee_sotp}
+
+\noindent\textbf{Valeur de r\'ef\'erence.} Pour Helios, la calibration
+illustrative de l'article CLO~\cite{MINKA2026CLO} donne, \`a l'\'echelle
+op\'erationnelle (fiabilit\'e de v\'erification)~:
+\begin{equation}
+\Conf \cdot \Relver \cdot \Opp \approx 0{,}437
+\label{eq:prediction_sotp_opp}
+\end{equation}
+La valeur cible pour l'opposabilit\'e seule est
+$\Opp_{\mathrm{pr\'edit}} = 0{,}50$~; sa d\'erivation compl\`ete (espace de
+verdicts \`a quatre d\'ecisions, signal expert binaire d'un bit) est
+\'etablie \`a la section~\ref{sec:derivation_helios}. Le
+pr\'esent protocole met \`a l'\'epreuve l'hypoth\`ese d'uniformit\'e des verdicts qui
+sous-tend cette valeur. Il mesure la distribution empirique $H_{\mathrm{emp}}(V|C)$
+au lieu de la postuler.
+
+\noindent\textbf{Crit\`ere de validation.}
+\begin{itemize}
+\item Accord si $|\Opp_{\mathrm{emp}} - \Opp_{\mathrm{pr\'edit}}| \leq 0{,}05$
+\item D\'esaccord (la valeur $0{,}50$ et l'hypoth\`ese d'uniformit\'e qui la fonde
+      sont r\'efut\'ees) si $\Opp_{\mathrm{pr\'edit}}$ tombe hors de l'IC~95\,\% bootstrap
+      de $\Opp_{\mathrm{emp}}$
+\end{itemize}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Protocole standardis\'e d'estimation conjointe de $\Delta$ et $\alpha$}
+\label{subsec:protocole_conjoint}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Pour une validation prospective compl\`ete du cadre CRO, les
+param\`etres $(\Delta, \alpha, \beta)$ doivent \^etre mesur\'es
+\emph{ind\'ependamment} et \emph{conjointement} avant que les pr\'edictions
+CRO ne soient calcul\'ees.
+
+\begin{algorithm}[H]
+\caption{Protocole standardis\'e d'estimation conjointe de
+         $(\hat\Delta, \hat\alpha)$~\cite{MINKA2026CRO}}
+\label{alg:estimation_conjointe}
+\begin{algorithmic}[1]
+\State \textbf{Entr\'ees~:} Institution $I$, types de preuves, contexte $C$
+\State \textbf{Sorties~:} $\hat\Delta$ (bits), $\hat\alpha$ (sans unit\'e)
+\Require Accord institutionnel, \'ethique IRB, $n \geq 30$ participants
+\State \textbf{\'Etape 1~:} Collecte de donn\'ees (verdicts, confiance, temps)
+\State \textbf{\'Etape 2~:} Appariement des verdicts au message $m$ (v\'erit\'e terrain)
+\State \textbf{\'Etape 3~:} Test d'admissibilit\'e $V \perp M \mid (\Sigma,C)$
+\State \textbf{\'Etape 4~:} $\hat\Delta \leftarrow \hat I(V;\Sigma \mid M,C)$
+\State \textbf{\'Etape 5~:} $\hat\alpha \leftarrow \log_2|\mathcal{V}| / H(C)$
+\State \textbf{\'Etape 6~:} Validation (ICC $\geq 0{,}8$, $\kappa \geq 0{,}7$)
+\end{algorithmic}
+\end{algorithm}
+
+L'algorithme formalise en six \'etapes le protocole de r\'ef\'erence pour
+l'estimation conjointe des param\`etres institutionnels $(\Delta, \alpha)$,
+en int\'egrant explicitement les pr\'ealables \'ethiques et
+m\'ethodologiques que la version op\'erationnelle de la
+section~\ref{subsec:protocole_delta} suppose implicites.
+
+La phase de \textbf{param\'etrage} (lignes~1--3) fixe le cadre de
+l'exp\'erience. Elle d\'eclare l'institution cible $I$, les types de
+preuves \`a pr\'esenter et le contexte $C$, puis nomme les deux sorties,
+$\hat\Delta$ en bits et $\hat\alpha$ sans unit\'e. Elle pose surtout trois
+\emph{pr\'erequis} obligatoires, \`a savoir l'accord institutionnel pr\'ealable,
+l'approbation d'un comit\'e d'\'ethique de la recherche et un effectif
+minimal de $n \geq 30$ participants. Leur port\'ee d\'epasse la simple formalit\'e
+proc\'edurale, puisqu'ils conditionnent la validit\'e statistique de
+l'estimation. En de\c{c}\`a de trente participants, les estimateurs
+d'information mutuelle deviennent instables~; l'approbation \'ethique
+autorise quant \`a elle la collecte de donn\'ees sur des acteurs humains
+identifiables. La ligne~3, marqu\'ee \texttt{Require}, signale que ces
+conditions doivent \^etre satisfaites \emph{avant} toute ex\'ecution, car elles
+sont des conditions d'entr\'ee de l'algorithme, distinctes de ses \'etapes.
+
+L'\textbf{\'etape~1} (ligne~4) collecte les donn\'ees brutes. Elle
+enregistre, pour chaque participant et chaque paire contexte-preuve, les
+verdicts rendus, les scores de confiance subjectifs et les
+temps de d\'ecision. Ces trois s\'eries sont reprises \`a l'identique de
+l'algorithme~\ref{alg:estimation_delta}, dont le protocole standardis\'e
+conserve la nature en se bornant \`a en fixer la s\'equence et les crit\`eres
+de validit\'e. Les scores de confiance et les temps servent de variables
+de contr\^ole pour d\'etecter les r\'eponses non inform\'ees.
+
+Les \textbf{\'etapes~2 et 3} (lignes~5--6) apparient chaque verdict au
+message engag\'e, connu du seul exp\'erimentateur, puis v\'erifient que les
+participants n'ont pas acc\`es \`a $M$ hors de la preuve (condition
+d'admissibilit\'e). Cette v\'erification conditionne l'interpr\'etation de
+l'\'etape suivante.
+
+Les \textbf{\'etapes~4 et 5} (lignes~7--8) produisent les deux
+estimateurs. L'\'etape~4 applique l'estimateur~\eqref{eq:estimateur_delta}
+$\hat\Delta \leftarrow \hat I(V;\Sigma|M,C)$.
+L'\'etape~5 calcule $\hat\alpha$ par la formule
+$\log_2|\mathcal{V}| / H(C)$, ind\'ependamment de $\hat\Delta$. Les deux calculs sont d\'elib\'er\'ement s\'epar\'es afin de valider
+chaque estimateur selon ses propres crit\`eres, sans que l'erreur sur
+l'un ne contamine l'autre~; un $\hat\Delta$ biais\'e n'entra\^ine donc pas
+m\'ecaniquement un $\hat\alpha$ biais\'e.
+
+L'\textbf{\'etape~6} (ligne~9) valide les estimations par deux
+statistiques. Le coefficient de corr\'elation intra-classe
+$\mathrm{ICC} \geq 0{,}8$ mesure la coh\'erence test-retest tandis que le
+coefficient $\kappa$ de Cohen $\geq 0{,}7$ mesure l'accord
+inter-\'evaluateurs au-del\`a du hasard. Ces deux seuils sont plus
+exigeants que ceux de l'algorithme~\ref{alg:estimation_delta}, qui se
+contentait d'une validation qualitative. Le protocole standardis\'e fixe
+donc des crit\`eres num\'eriques pr\'ecis qui le rendent reproductible
+par des \'equipes ind\'ependantes. Cette reproductibilit\'e justifie le qualificatif
+de \emph{standardis\'e}, puisque deux
+laboratoires appliquant les m\^emes \'etapes aux m\^emes entr\'ees doivent
+obtenir des estimations compatibles.
+
+Par rapport \`a l'algorithme~\ref{alg:estimation_delta}, cette version
+explicite les pr\'erequis \'ethiques et statistiques, num\'erote les \'etapes
+pour permettre de les citer individuellement et fixe des seuils quantitatifs
+de validation. Ces ajouts font de la proc\'edure de mesure un protocole
+standardis\'e, r\'eutilisable au-del\`a du cas d'esp\`ece.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Protocole de mesure de $\Delta_q$~:
+          capacit\'e d'extraction quantique}
+\label{subsec:protocole_delta_q}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Objectif et d\'efinition op\'erationnelle}
+\label{subsubsec:objectif_delta_q}
+
+\noindent\textbf{Objectif.} Mesurer empiriquement la capacit\'e d'extraction
+institutionnelle quantique $\Delta_q$ (en bits), d\'efinie
+par~\cite{MINKA2026PQCRO}~:
+\begin{equation}
+I(V^q; \Sigma|C)_\rho \leq I(M;\Sigma|C)_\rho + \Delta_q
+\label{eq:extraction_quantique_op}
+\end{equation}
+
+\begin{definition}[Capacit\'e d'extraction quantique $\Delta_q$]\label{def:capacite_extraction_quantique_op}
+$\Delta_q$ est la quantit\'e d'information sur les verdicts qu'un acteur
+institutionnel peut extraire dans un environnement post-quantique,
+au-del\`a de l'information accessible de Holevo. Elle se d\'ecompose
+comme $\Delta_q = \Delta + \delta_{\mathrm{enh}} - \delta_{\mathrm{degr}}$,
+o\`u $\delta_{\mathrm{enh}}$ repr\'esente l'am\'elioration due aux
+ressources quantiques et $\delta_{\mathrm{degr}}$ la d\'egradation due au
+bruit quantique.
+\end{definition}
+
+\noindent\textbf{Estimateur.}
+\begin{equation}
+\hat{\Delta}_q = \hat I(V^q;\Sigma \mid M, C)
+\label{eq:estimateur_delta_q}
+\end{equation}
+calcul\'e comme~\eqref{eq:estimateur_delta} \`a partir des r\'eponses des
+participants, le message $m$ \'etant connu de l'exp\'erimentateur. Pour des
+signatures post-quantiques qui sont des cha\^{\i}nes de bits classiques, cet
+estimateur est identique \`a l'estimateur classique~; il ne diff\`ere que dans le
+sc\'enario hypoth\'etique d'un support ou d'un v\'erificateur quantique.
+
+\subsubsection{Design exp\'erimental}
+\label{subsubsec:design_delta_q}
+
+\noindent\textbf{Participants.} $N \geq 80$ professionnels form\'es aux
+syst\`emes post-quantiques, stratifi\'es par type d'institution selon la
+r\'epartition du tableau~\ref{tab:stratification_delta_q}.
+
+\begin{table}[htbp]
+\centering
+\caption{Stratification de l'\'echantillon pour la mesure de $\Delta_q$}
+\label{tab:stratification_delta_q}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+\textbf{Cat\'egorie} & \textbf{Sous-groupe} & \textbf{$n$} & \textbf{$\Delta_q$ pr\'edit} \\
+\midrule
+R\'egulateurs PQC & Juniors (formation initiale) & 20 & $\approx 28$ bits \\
+                  & Seniors (formation avanc\'ee) & 20 & $\approx 45$ bits \\
+\midrule
+Auditeurs crypto & Classiques (transition PQC) & 20 & $\approx 35$ bits \\
+                 & Experts PQC certifi\'es & 20 & $\approx 67$ bits \\
+\midrule
+\textbf{Total} & & \textbf{80} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Mat\'eriel exp\'erimental.}
+\begin{itemize}
+\item 2 sch\'emas de signature post-quantiques, ML-DSA-65 (FIPS~204,
+      ex-Dilithium-3) et SLH-DSA (FIPS~205, ex-SPHINCS+)~; ML-KEM (FIPS~203,
+      ex-Kyber) est un m\'ecanisme d'encapsulation de cl\'e et ne produit pas de
+      preuve, il est donc exclu
+\item Simulateur d'environnement quantique avec bruit de d\'epolarisation
+      param\'etrable ($p \in [0{,}001;\,0{,}1]$)
+\item Interface de v\'erification post-quantique avec m\'etriques de performance
+\item Questionnaires adapt\'es au contexte NIST PQC (FIPS 203/204/205)
+\end{itemize}
+
+\subsubsection{Proc\'edure}
+\label{subsubsec:procedure_delta_q}
+
+La session exp\'erimentale se d\'eroule en six phases.
+
+\noindent\textbf{Phase 0. Formation PQC (3 h).}
+Introduction aux standards NIST PQC portant sur la structure des cl\'es, le processus de
+signature et les diff\'erences avec RSA/ECDSA. Formation sur les implications
+institutionnelles de la transition post-quantique.
+
+\noindent\textbf{Phase 1. Session exp\'erimentale principale (4 h).}
+Pour chaque type de preuve post-quantique~:
+\begin{enumerate}
+\item[(a)] Pr\'esentation du contexte (transaction, document, conformit\'e)
+\item[(b)] Pr\'esentation de la signature ML-DSA ou SLH-DSA
+\item[(c)] Extraction de verdict avec et sans aide \`a l'interpr\'etation
+\item[(d)] Mesure des temps de d\'ecision et scores de confiance
+\end{enumerate}
+
+\noindent\textbf{Phase 2. Simulation quantique (2 h).}
+Exposition \`a des sc\'enarios simul\'es avec bruit quantique variable~:
+\begin{itemize}
+\item Condition A, sans bruit (r\'ef\'erence classique)
+\item Condition B, bruit faible ($p = 0{,}001$, typique des syst\`emes corrig\'es)
+\item Condition C, bruit mod\'er\'e ($p = 0{,}01$, typique NISQ)
+\item Condition D, bruit \'elev\'e ($p = 0{,}1$, test de robustesse)
+\end{itemize}
+
+\noindent\textbf{Phase 3. Test-retest (1 h).}
+Re-pr\'esentation de sc\'enarios apr\`es 2 semaines.
+
+\noindent\textbf{Phase 4. Gold standard PQC.}
+Experts en cryptographie post-quantique \'etablissent les verdicts corrects.
+
+\noindent\textbf{Phase 5. D\'ebriefing (30 min).}
+
+\subsubsection{M\'etriques et estimateurs}
+\label{subsubsec:metriques_delta_q}
+
+Le protocole calcule $\hat\Delta_q$ et $\hat\eta_q$ selon
+l'Algorithme~\ref{alg:estimation_delta_q}.
+
+\begin{algorithm}[H]
+\caption{Estimation empirique de $\Delta_q$}
+\label{alg:estimation_delta_q}
+\begin{algorithmic}[1]
+\State \textbf{Entr\'ees~:} Institution $I$, preuves PQC $\{\sigma_1, \sigma_2\}$,
+       param\`etre de bruit $p$
+\State \textbf{Sortie~:} $\hat\Delta_q$, $\hat\eta_q$
+\State Pr\'esenter $\sigma_i$ avec contexte $C$ dans environnement simul\'e
+\State Enregistrer verdicts $V^q$, confiance, temps, erreurs d'interpr\'etation
+\State Apparier chaque verdict au message $m$ (v\'erit\'e terrain)
+\State Tester l'admissibilit\'e $V^q \perp M \mid (\Sigma, C)$
+\State Estimer $\hat\Delta_q = \hat I(V^q;\Sigma \mid M, C)$
+\State Estimer $\hat\eta_q$ par r\'egression sur les niveaux de bruit
+\State Valider par test-retest et accord inter-\'evaluateurs
+\end{algorithmic}
+\end{algorithm}
+
+L'algorithme transpose au r\'egime post-quantique la proc\'edure
+d'estimation de la capacit\'e d'extraction institutionnelle, en y
+int\'egrant deux diff\'erences structurelles. L'environnement de
+pr\'esentation y est simul\'e avec un param\`etre de bruit quantique
+contr\^ol\'e~; la sortie comprend aussi, en plus de $\hat\Delta_q$,
+l'estimateur $\hat\eta_q$ du coefficient de perte
+d'interpr\'etabilit\'e.
+
+La phase d'\textbf{entr\'ees} (lignes~1--2) fixe le cadre. Elle re\c{c}oit
+l'institution cible $I$, un ensemble de deux preuves post-quantiques
+$\{\sigma_1, \sigma_2\}$ correspondant aux deux standards de signature NIST
+PQC retenus ainsi qu'un param\`etre de bruit $p$ qui contr\^ole l'intensit\'e
+de la d\'egradation quantique simul\'ee. Elle d\'eclare comme sorties
+l'estimateur $\hat\Delta_q$ de la capacit\'e d'extraction quantique et
+l'estimateur $\hat\eta_q$ du coefficient de perte s\'emantique. Cette double
+sortie distingue l'algorithme de son homologue classique, puisque
+l'algorithme~\ref{alg:estimation_delta} ne mesurait qu'une capacit\'e alors que la
+version quantique mesure \'egalement la d\'egradation introduite par le
+canal.
+
+La phase de \textbf{collecte} (lignes~3--4) produit les donn\'ees brutes
+dans un environnement simul\'e. Chaque preuve $\sigma_i$ est pr\'esent\'ee
+avec son contexte $C$, mais contrairement \`a la version classique,
+l'environnement de pr\'esentation est param\'etr\'e par $p$, de sorte que les
+acteurs institutionnels voient les preuves \`a travers un canal quantique
+dont le bruit est contr\^ol\'e. Aux verdicts $V^q$, aux scores de confiance et
+aux temps de d\'ecision s'ajoute une quatri\`eme s\'erie, celle des erreurs
+d'interpr\'etation. Elle permet de saisir ce que les acteurs extraient
+\emph{incorrectement} sous l'effet du bruit, faute de quoi la d\'egradation
+s\'emantique resterait invisible dans les donn\'ees.
+
+La phase d'\textbf{appariement et de contr\^ole} (lignes~5--6) reprend la
+structure classique, puisque chaque verdict est associ\'e au message engag\'e
+avant que l'admissibilit\'e de l'interpr\`ete soit test\'ee. Dans le sc\'enario d'un
+support quantique, les quantit\'es sont index\'ees par l'\'etat $\rho$~;
+pour des signatures qui sont des cha\^{\i}nes de bits, elles co\"{\i}ncident
+avec leurs analogues classiques.
+
+La phase d'\textbf{estimation} (lignes~7--8) produit les deux param\`etres
+par des voies distinctes. L'estimateur $\hat\Delta_q = \hat I(V^q;\Sigma|M,C)$ est le
+m\^eme que dans le r\'egime classique et quantifie ce que les acteurs
+institutionnels tirent de la preuve au-del\`a de ce qu'elle dit du message. L'estimateur $\hat\eta_q$ provient en revanche
+d'une r\'egression sur les niveaux de bruit. En r\'ep\'etant
+la mesure pour plusieurs valeurs de $p$, on observe comment
+l'information extraite d\'ecro\^it avec le bruit~; la pente de cette
+d\'ecroissance fournit $\hat\eta_q$. Cette s\'eparation des deux
+estimations s'impose, car $\Delta_q$ et $\eta_q$ ont des
+interpr\'etations distinctes (l'une mesure une capacit\'e, l'autre une
+perte) et doivent \^etre estim\'es ind\'ependamment pour que chacun reste
+interpr\'etable dans la borne post-quantique.
+
+La phase de \textbf{validation} (ligne~9) reprend les crit\`eres de
+stabilit\'e test-retest et de coh\'erence inter-\'evaluateurs de la
+version classique. Ces crit\`eres sont n\'eanmoins plus difficiles \`a
+satisfaire en r\'egime quantique, car le bruit introduit une variabilit\'e
+suppl\'ementaire dans les r\'eponses. Une faible stabilit\'e test-retest
+peut alors refl\'eter soit une incoh\'erence des acteurs, soit une
+instabilit\'e intrins\`eque du canal quantique~; distinguer les deux
+n\'ecessite de r\'ep\'eter la mesure \`a bruit constant avant de faire
+varier $p$.
+
+Par rapport \`a son homologue classique, l'algorithme op\`ere dans un
+environnement simul\'e param\'etr\'e, enregistre les erreurs d'interpr\'etation,
+calcule des informations mutuelles index\'ees par $\rho$ et produit par
+r\'egression un second estimateur $\hat\eta_q$. Ces diff\'erences pr\'eservent
+la logique du contraste informationnel, qu'elles \'etendent au r\'egime
+quantique en y ajoutant la mesure explicite de la d\'egradation
+s\'emantique.
+
+\subsubsection{Pr\'edictions v\'erifiables pour $\Delta_q$}
+\label{subsubsec:predictions_delta_q}
+
+\begin{enumerate}
+\item $\hat\Delta_q < \hat\Delta$ pour les acteurs non form\'es (p\'enalit\'e d'adaptation)
+\item $\hat\Delta_q \to \hat\Delta$ pour les experts PQC (adaptation r\'eussie)
+\item $\hat\Delta_q \in [28, 67]$ bits pour les institutions bien pr\'epar\'ees
+\item D\'ecroissance de $\Delta_q$ avec le niveau de bruit quantique
+\item Corr\'elation positive entre formation PQC et $\Delta_q$
+\end{enumerate}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Protocole de mesure de $\eta_q$~:
+          coefficient de perte d'interpr\'etabilit\'e quantique}
+\label{subsec:protocole_eta_q}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Objectif et d\'efinition op\'erationnelle}
+\label{subsubsec:objectif_eta_q}
+
+\noindent\textbf{Objectif.} Mesurer empiriquement le coefficient de perte
+d'interpr\'etabilit\'e quantique $\eta_q$, d\'efini
+par~\cite{MINKA2026PQCRO}~:
+\begin{equation}
+I(V^q; \Lambda(\rho_\Sigma)|C)_\rho \;\geq\; I(V^q; \rho_\Sigma|C)_\rho - \eta_q \cdot H(C)
+\label{eq:perte_interpretabilite_op}
+\end{equation}
+($\eta_q$ est le plus petit coefficient pour lequel cette minoration est
+vraie~; dans l'autre sens, l'in\'egalit\'e serait satisfaite pour $\eta_q = 0$
+par l'in\'egalit\'e de traitement des donn\'ees, ce qui viderait la d\'efinition de son contenu).
+
+\noindent\textbf{Port\'ee.} Les signatures ML-DSA, SLH-DSA et Falcon produisent
+des cha\^{\i}nes de bits classiques, pour lesquelles $\eta_q = 0$. Le protocole
+ne s'applique qu'\`a un sc\'enario de stockage ou de v\'erification quantique,
+qui reste hypoth\'etique \`a ce jour.
+
+\noindent\textbf{D\'efinition op\'erationnelle.} $\eta_q$ quantifie la perte
+d'information s\'emantique lorsqu'une preuve cryptographique traverse un canal
+quantique (stockage, transmission, v\'erification avec ressources quantiques).
+
+\noindent\textbf{Estimateur.}
+\begin{equation}
+\hat\eta_q = \frac{I(V^q; \rho_\Sigma|C)_\rho - I(V^q; \Lambda(\rho_\Sigma)|C)_\rho}{H(C)}
+\label{eq:estimateur_eta_q}
+\end{equation}
+
+\subsubsection{Design exp\'erimental}
+\label{subsubsec:design_eta_q}
+
+\noindent\textbf{Principe.} Comparer l'extraction d'information depuis des
+preuves avec et sans d\'egradation quantique simul\'ee.
+
+\noindent\textbf{Mat\'eriel.}
+\begin{itemize}
+\item Simulateur de canaux quantiques (d\'epolarisation, d\'ephasage,
+      amortissement d'amplitude)
+\item Param\`etres de bruit calibr\'es sur les sp\'ecifications de mat\'eriel
+      quantique actuel (IBM Quantum, IonQ, etc.)
+\item Protocoles PQC avec et sans assistance quantique
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Param\`etres de canaux quantiques pour la mesure de $\eta_q$}
+\label{tab:val_canaux_quantiques}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Canal} & \textbf{Param\`etre} & \textbf{Plage test\'ee} & \textbf{$\eta_q$ attendu} \\
+\midrule
+D\'epolarisation & $p_{\mathrm{dep}}$ & $[0{,}001;\,0{,}1]$ & $0{,}02$--$0{,}20$ \\
+D\'ephasage & $p_{\mathrm{deph}}$ & $[0{,}001;\,0{,}05]$ & $0{,}01$--$0{,}10$ \\
+Amortissement & $\gamma_{\mathrm{AD}}$ & $[0{,}001;\,0{,}02]$ & $0{,}005$--$0{,}05$ \\
+Combin\'e (NISQ typique) & --- & --- & $0{,}05$--$0{,}15$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Proc\'edure}
+\label{subsubsec:procedure_eta_q}
+
+\noindent\textbf{Phase 1. Calibration.}
+\'Etablir la ligne de base sans bruit quantique en mesurant
+$I(V^q; \rho_\Sigma|C)_\rho$ pour chaque type de preuve.
+
+\noindent\textbf{Phase 2. D\'egradation contr\^ol\'ee.}
+Appliquer des canaux quantiques avec param\`etres croissants~:
+\begin{equation}
+\Lambda_{\mathrm{dep}}(\rho) = (1-p)\rho + \frac{p}{d}I_d
+\label{eq:canal_depolarisant_op}
+\end{equation}
+Mesurer $I(V^q; \Lambda(\rho_\Sigma)|C)_\rho$ pour chaque niveau.
+
+\noindent\textbf{Phase 3. Analyse de r\'egression.}
+Ajuster le mod\`ele~:
+\begin{equation}
+\Delta I = I(V^q; \rho_\Sigma|C) - I(V^q; \Lambda(\rho_\Sigma)|C) = \eta_q \cdot H(C)
+\end{equation}
+pour extraire $\hat\eta_q$.
+
+\subsubsection{M\'etriques compl\'ementaires}
+\label{subsubsec:metriques_eta_q}
+
+\begin{itemize}
+\item \textbf{Fid\'elit\'e moyenne~:} $F_{\mathrm{avg}}(\Lambda) = \mathbb{E}[F(\Lambda(\rho), \rho)]$
+\item \textbf{Distance de trace~:} $\|\Lambda(\rho_\Sigma) - \rho_\Sigma\|_1$
+\item \textbf{Perte d'information par bit contextuel~:} $\Delta I / H(C)$
+\end{itemize}
+
+\subsubsection{Pr\'edictions v\'erifiables pour $\eta_q$}
+\label{subsubsec:predictions_eta_q}
+
+\begin{enumerate}
+\item $\hat\eta_q \in [0{,}05;\,0{,}15]$ pour un support simul\'e aux taux d'erreur
+      du mat\'eriel actuel (valeurs a priori, \`a pr\'e-enregistrer)
+\item Ordre de grandeur de $\hat\eta_q\,H(C)$ compatible avec la borne de
+      continuit\'e de l'information mutuelle conditionnelle (Alicki--Fannes--Winter),
+      exprim\'ee en fonction de la distance de trace
+      $\tfrac12\|\Lambda(\rho_\Sigma)-\rho_\Sigma\|_1 \leq \sqrt{1-F}$ (heuristique)
+\item Relation croissante, approximativement lin\'eaire pour bruit faible, entre
+      $p_{\mathrm{dep}}$ et $\hat\eta_q$
+\item $\hat\eta_q = 0$, aux fluctuations d'\'echantillonnage pr\`es, lorsque la
+      preuve est lue comme cha\^{\i}ne de bits (contr\^ole n\'egatif)
+\end{enumerate}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Protocole combin\'e de validation quantique}
+\label{subsec:protocole_combine}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Objectif}
+\label{subsubsec:objectif_combine}
+
+Valider conjointement les param\`etres post-quantiques $(\Delta_q, \eta_q)$ et
+comparer les pr\'edictions du Trilemme CRO post-quantique avec les mesures
+empiriques sur les standards NIST PQC.
+
+\subsubsection{Design int\'egr\'e}
+\label{subsubsec:design_combine}
+
+\begin{algorithm}[H]
+\caption{Protocole combin\'e post-quantique}
+\label{alg:protocole_combine}
+\begin{algorithmic}[1]
+\State \textbf{Entr\'ees~:} Institution $I$, standards PQC, canaux quantiques
+\State \textbf{Sorties~:} $\hat\Delta_q$, $\hat\eta_q$, $\hat\beta_q$
+\State \textbf{Partie A. Mesure de $\Delta_q$}
+\State Mesurer extraction sur ML-DSA et SLH-DSA sans bruit
+\State Calculer $\hat\Delta_q$ par comparaison avec gold standard PQC
+\State \textbf{Partie B. Mesure de $\eta_q$}
+\State Appliquer canaux quantiques \`a intensit\'e croissante
+\State Mesurer d\'ecroissance de l'information mutuelle
+\State Calculer $\hat\eta_q$ par r\'egression
+\State \textbf{Partie C. Validation de la borne CRO$^q$}
+\State V\'erifier les hypoth\`eses du th\'eor\`eme (dont $H(V|C) \geq \gamma$)
+\State Si elles tiennent, confronter $\Conf^q \cdot \Relrec^q \cdot \Opp^q$ \`a la borne~\eqref{eq:trilemme_pq_raffine}
+\State \textbf{Partie D. Validation crois\'ee}
+\State Comparer pr\'ediction vs mesure pour les deux standards PQC
+\State Calculer erreur relative et intervalles de confiance
+\end{algorithmic}
+\end{algorithm}
+
+L'algorithme structure la validation post-quantique en quatre parties
+ind\'ependantes, chacune mesurant ou v\'erifiant une composante distincte
+de la borne CRO$^q$. L\`a o\`u les algorithmes pr\'ec\'edents isolaient
+un param\`etre, celui-ci les articule puisqu'il produit les trois estimateurs
+$(\hat\Delta_q, \hat\eta_q, \hat\beta_q)$, puis les confronte \`a la
+borne th\'eorique et aux pr\'edictions sur les standards NIST PQC.
+
+La phase d'\textbf{entr\'ees et sorties} (lignes~1--2) fixe le cadre.
+Elle re\c{c}oit l'institution cible $I$, les standards PQC \`a tester et
+les canaux quantiques disponibles. Elle d\'eclare trois sorties, \`a savoir
+$\hat\Delta_q$ (capacit\'e d'extraction quantique), $\hat\eta_q$ (perte
+d'interpr\'etabilit\'e) et $\hat\beta_q$ (r\'egularit\'e du protocole en
+r\'egime quantique). Cette troisi\`eme sortie est nouvelle par rapport
+aux algorithmes pr\'ec\'edents, car elle correspond au param\`etre $\beta$
+de l'hypoth\`ese de r\'egularit\'e, transpos\'e au r\'egime quantique. Sa
+mesure est n\'ecessaire pour v\'erifier que la borne post-quantique
+s'applique bien aux protocoles test\'es.
+
+La \textbf{partie~A} (lignes~3--5) mesure $\Delta_q$ en l'absence de
+bruit. Elle \'evalue l'extraction institutionnelle sur les deux
+sch\'emas de signature PQC (ML-DSA, SLH-DSA) dans leur
+environnement nominal, sans d\'egradation quantique ajout\'ee. Le terme
+$\hat\Delta_q$ est ensuite obtenu par comparaison avec un
+\emph{gold standard} PQC, constitu\'e des verdicts de r\'ef\'erence \'etablis par
+des experts en cryptographie post-quantique. Cette comparaison isole la
+capacit\'e d'extraction proprement institutionnelle de toute
+d\'egradation li\'ee au canal. La partie~A produit donc la valeur de
+$\Delta_q$ qui serait observ\'ee sur un syst\`eme PQC id\'eal, sans
+bruit.
+
+La \textbf{partie~B} (lignes~6--9) mesure $\eta_q$ par d\'egradation
+contr\^ol\'ee. Elle applique des canaux quantiques \`a intensit\'e
+croissante, typiquement un canal d\'epolarisant dont le param\`etre
+$p$ varie, puis observe la d\'ecroissance de l'information mutuelle
+extraite. Cette d\'ecroissance, non lin\'eaire en $p$,
+d\'epend de la structure du protocole et de la nature du canal. La
+r\'egression sur les niveaux de bruit fournit $\hat\eta_q$ comme pente
+de la relation entre perte d'information et bruit. La partie~B isole
+donc l'effet du canal, ind\'ependamment de la capacit\'e
+institutionnelle mesur\'ee en partie~A.
+
+La \textbf{partie~C} (lignes~10--12) confronte les mesures \`a la borne
+CRO$^q$. Elle v\'erifie d'abord que le cas \'etudi\'e satisfait les hypoth\`eses
+du th\'eor\`eme, faute de quoi aucune comparaison n'est probante
+(Remarque~\ref{rem:portee_cas_etude}). Si elles tiennent, le produit
+$\Conf^q \cdot \Relrec^q \cdot \Opp^q$ est compar\'e \`a la forme raffin\'ee de la
+borne (\'equation~\eqref{eq:trilemme_pq_raffine}). Un d\'epassement, hypoth\`eses
+v\'erifi\'ees, r\'efute l'une d'elles selon les crit\`eres du
+tableau~\ref{tab:criteres_refutation}~; il ne peut pas \^etre absorb\'e par un
+r\'eajustement a posteriori de $\hat\Delta_q$.
+
+La \textbf{partie~D} (lignes~13--15) proc\`ede \`a la validation
+crois\'ee. Elle compare les pr\'edictions th\'eoriques aux mesures
+empiriques pour chacun des deux standards PQC, puis calcule l'erreur
+relative et les intervalles de confiance. Au-del\`a d'un contr\^ole de
+coh\'erence, cette comparaison permet d'identifier les
+standards pour lesquels le mod\`ele pr\'edit correctement les
+compromis ainsi que ceux pour lesquels des ph\'enom\`enes non captur\'es par
+le mod\`ele interviennent. Les intervalles de confiance quantifient
+l'incertitude r\'esiduelle, qui est plus \'elev\'ee en r\'egime
+post-quantique en raison de la variabilit\'e suppl\'ementaire introduite
+par $\eta_q$.
+
+L'algorithme se distingue des pr\'ec\'edents sur trois points. Il
+articule quatre parties ind\'ependantes au lieu de mesurer un seul
+param\`etre. Il produit un troisi\`eme estimateur $\hat\beta_q$. Enfin, il valide explicitement la borne
+CRO$^q$ au lieu de se contenter de mesurer ses composantes. Cette articulation
+fait du protocole combin\'e l'outil de validation complet du r\'egime
+post-quantique.
+
+\subsubsection{Crit\`eres de validation quantique}
+\label{subsubsec:criteres_validation_quantique}
+
+Les crit\`eres de r\'efutation de l'ensemble du programme, classique et
+post-quantique, sont fix\'es avant toute collecte dans le
+tableau~\ref{tab:criteres_refutation}. Les valeurs seuils sont indicatives et
+seront arr\^et\'ees lors du pr\'e-enregistrement~; leur forme est
+l'engagement m\'ethodologique.
+
+\begin{table}[htbp]
+\centering
+\caption{Crit\`eres de r\'efutation pr\'e-enregistr\'es}
+\label{tab:criteres_refutation}
+\small
+\begin{tabular}{@{}p{3.4cm}p{9.8cm}@{}}
+\toprule
+\textbf{Param\`etre} & \textbf{L'hypoth\`ese est r\'efut\'ee si\ldots} \\
+\midrule
+$\Delta$ (Hyp.~\ref{ass:extraction_bornee}) & la borne inf\'erieure de l'IC~95\,\% de $\hat{I}(V;\Sigma|M,C)$ d\'epasse la capacit\'e fix\'ee \emph{avant} l'exp\'erience pour la population \'etudi\'ee. \\
+Admissibilit\'e (D\'ef.~\ref{def:interp_admissible}) & un test de permutation rejette $V \perp M \mid (\Sigma,C)$ au seuil $0{,}01$. \\
+$\gamma$ (Hyp.~\ref{ass:verdicts_efficace}) & la borne sup\'erieure de l'IC~95\,\% de $\hat{H}(V|C)$ est inf\'erieure \`a $\alpha H(\mathcal{C}) - 1$. \\
+$\eta_q$ (sc\'enario quantique) & l'IC~95\,\% de $\hat{\eta}_q$ exclut l'intervalle pr\'edit avant l'exp\'erience. \\
+Borne (hypoth\`eses v\'erifi\'ees) & le produit mesur\'e d\'epasse la forme raffin\'ee de la borne avec une confiance de 95\,\%. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre fait le point. Trois param\`etres classiques, trois param\`etres
+quantiques, soit six protocoles qui visent tous \`a transformer des hypoth\`eses
+en mesures. Il retient surtout leur sym\'etrie, puisque chaque quantit\'e
+admise plus haut dispose d\'esormais d'une proc\'edure pour \^etre test\'ee. La
+th\'eorie, d\'ej\`a coh\'erente, devient ainsi v\'erifiable.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Calendrier, ressources et statut de d\'eploiement}
+\label{subsec:calendrier_ressources}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Tableau de synth\`ese}
+\label{subsubsec:tableau_synthese}
+
+\begin{table}[htbp]
+\centering
+\caption{Programme exp\'erimental complet~: calendrier et ressources}
+\label{tab:programme_experimental}
+\begin{threeparttable}
+\begin{tabular}{@{}lllcc@{}}
+\toprule
+\textbf{Protocole} & \textbf{Section} & \textbf{Dur\'ee} &
+\textbf{Participants} & \textbf{Co\^ut estim\'e\tnote{$\star$}} \\
+\midrule
+\multicolumn{5}{c}{\textit{Param\`etres classiques (Contribution C2)}} \\
+\midrule
+Mesure de $\Delta$ & \S\ref{subsec:protocole_delta} & 6 mois & 120 institutionnels & 15\,000\,000 FCFA \\
+Mesure de $H(\mathcal{C})$ & \S\ref{subsec:protocole_HC} & 3 mois & 20 experts & 5\,000\,000 FCFA \\
+Mesure de $\Opp$ sur Helios & \S\ref{subsec:protocole_opp} & 4 mois & 10 trustees & 8\,000\,000 FCFA \\
+\midrule
+\multicolumn{5}{c}{\textit{Param\`etres quantiques (Contribution C3)}} \\
+\midrule
+Mesure de $\Delta_q$ & \S\ref{subsec:protocole_delta_q} & 6 mois & 80 professionnels PQC & 12\,000\,000 FCFA \\
+Mesure de $\eta_q$ & \S\ref{subsec:protocole_eta_q} & 4 mois & 40 experts + simulation & 8\,000\,000 FCFA \\
+Validation combin\'ee PQC & \S\ref{subsec:protocole_combine} & 3 mois & 40 validateurs & 6\,000\,000 FCFA \\
+\midrule
+\textbf{Total} & & \textbf{26 mois} & \textbf{310} &
+\textbf{54\,000\,000 FCFA} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\footnotesize
+\item[$\star$] Les co\^uts indiqu\'es constituent des ordres de grandeur
+indicatifs destin\'es \`a fournir une vision globale du programme~;
+ils feront l'objet d'une \'evaluation budg\'etaire affin\'ee lors de la
+mise en \oe uvre effective de chaque protocole.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\subsubsection{Calendrier d\'etaill\'e}
+\label{subsubsec:calendrier_detaille}
+
+\begin{table}[htbp]
+\centering
+\caption{Calendrier du programme exp\'erimental}
+\label{tab:calendrier_experimental}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\textbf{Activit\'e} & \textbf{M1--M6} & \textbf{M7--M12} & \textbf{M13--M18} &
+\textbf{M19--M24} & \textbf{M25--M30} & \textbf{M31--M36} \\
+\midrule
+Mesure $\Delta$ (\S\ref{subsec:protocole_delta}) & $\times\times$ & $\times\times$ & & & & \\
+Mesure $H(\mathcal{C})$ (\S\ref{subsec:protocole_HC}) & $\times$ & $\times$ & & & & \\
+Mesure $\Opp$ Helios (\S\ref{subsec:protocole_opp}) & & $\times\times$ & $\times$ & & & \\
+Mesure $\Delta_q$ (\S\ref{subsec:protocole_delta_q}) & & & $\times\times$ & $\times\times$ & & \\
+Mesure $\eta_q$ (\S\ref{subsec:protocole_eta_q}) & & & & $\times\times$ & $\times$ & \\
+Validation PQC (\S\ref{subsec:protocole_combine}) & & & & & $\times\times$ & $\times$ \\
+Analyse longitudinale & & & & & & $\times\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Statut de d\'eploiement du programme}
+\label{subsubsec:statut_deploiement}
+
+Le programme d\'ecrit aux sections~\ref{subsec:protocole_delta}
+\`a~\ref{subsec:calendrier_ressources} constitue une sp\'ecification
+m\'ethodologique. Aucun de ses six
+protocoles n'a \'et\'e d\'eploy\'e dans le cadre de cette th\`ese, qu'il s'agisse de la
+campagne de mesure de $\Delta$ aupr\`es des 120 acteurs institutionnels
+(section~\ref{subsec:protocole_delta}), de l'audit post-\'electoral
+Helios \`a l'ENSP (section~\ref{subsec:protocole_opp}) ou des sessions
+post-quantiques sur ML-DSA et SLH-DSA
+(sections~\ref{subsec:protocole_delta_q}
+et~\ref{subsec:protocole_eta_q}).
+
+Ce choix d\'ecoule du positionnement \'epist\'emologique retenu au
+chapitre~\ref{chap:cadre_formel}, selon lequel ce travail est d'abord th\'eorique. La
+certification m\'ecanique en Lean4 garantit la correction de la d\'erivation \`a
+partir des hypoth\`eses. La v\'erit\'e des hypoth\`eses elles-m\^emes rel\`eve de la
+validation comportementale, que seules des mesures peuvent \'etablir. Trois pr\'ealables
+non techniques conditionnent aussi le d\'eploiement, \`a savoir l'accord des
+juridictions et r\'egulateurs approch\'es, l'approbation d'un comit\'e
+d'\'ethique de la recherche ainsi que le financement de l'ordre de grandeur
+report\'e au tableau~\ref{tab:programme_experimental}, pour vingt-six mois de
+travail cumul\'es r\'epartis sur un calendrier de trente-six mois
+(tableau~\ref{tab:calendrier_experimental}).
+
+Il en r\'esulte, pour la lecture des sections suivantes, que les
+d\'erivations et les estimations qui y figurent sont de
+nature r\'etrospective et analytique. Cela vaut pour les valeurs
+d'opposabilit\'e d\'eriv\'ees \`a la
+section~\ref{sec:derivation_opposabilite} comme pour les param\`etres
+institutionnels estim\'es \`a la
+section~\ref{sec:validation_retrospective}, puisque les unes et les autres
+reposent sur les sp\'ecifications publi\'ees des protocoles et sur des
+contextes institutionnels mod\'elis\'es, sans mesure aupr\`es de juges ou
+de r\'egulateurs r\'eels. Elles \'etablissent que les param\`etres
+institutionnels admettent des valeurs plausibles et mutuellement
+coh\'erentes. Seule une mesure ind\'ependante dira si ces valeurs sont les
+bonnes. L'audit
+post-\'electoral Helios, le plus l\'eger en ressources et le seul
+enti\`erement internalisable \`a l'ENSP, constitue le point d'entr\'ee
+naturel du programme~; il est repris \`a ce titre dans les perspectives
+du chapitre~\ref{chap:resultats_discussions}.
+
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre referme le dossier des protocoles. Il n'a rien ex\'ecut\'e, rien
+mesur\'e, rien valid\'e. Il tient une promesse de mesure rigoureuse, chiffr\'ee et falsifiable, qui reste une promesse.
+
+Il a compris que ces protocoles \'etablissent le caract\`ere \emph{testable}
+du cadre, ce qui est moins que sa v\'erit\'e sans \^etre peu. Une th\'eorie qu'on
+ne peut pas tester reste sans prise sur le r\'eel, m\^eme si elle est belle.
+
+Il rel\`eve la transparence du dispositif, dont les pr\'edictions
+sont num\'eriques, les crit\`eres d'invalidation explicites et les
+limites nomm\'ees. L'audit Helios lui-m\^eme est pr\'esent\'e comme le
+point d'entr\'ee le plus modeste, qui est aussi le seul internalisable \`a l'ENSP.
+
+Il ne sait pas encore si les chiffres tiennent, mais il sait d\'esormais
+\emph{comment} il le saura, ce qui correspond exactement \`a ce qu'il attendait d'un
+protocole exp\'erimental.
+
+Les d\'erivations peuvent commencer.
+\end{boiteArbitre}

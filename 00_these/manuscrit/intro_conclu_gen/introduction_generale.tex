@@ -1,0 +1,406 @@
+% ============================================================================
+% INTRODUCTION G\'eN\'eRALE
+% source: intro_conclu_gen/introduction_generale.tex
+% Version : 2.1 — alignée sur la formalisation Lean4 révisée
+% ============================================================================
+
+%\chapter*{INTRODUCTION G\'EN\'ERALE}
+%\addcontentsline{toc}{chapter}{Introduction g\'en\'erale}
+\label{chap:introduction_generale}
+
+% ----------------------------------------------------------------------------
+\section{CONTEXTE}
+\label{sec:ig_contexte}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsection{La cryptographie classique}
+
+La mission de la cryptographie s'est profond\'ement transform\'ee. Depuis les
+travaux fondateurs de Diffie et Hellman~\cite{DiffieHellman76}, elle consistait
+\`a prot\'eger des donn\'ees contre des adversaires computationnellement born\'es.
+Les protocoles \'etaient alors jug\'es selon un crit\`ere unique, la
+s\'ecurit\'e computationnelle~\cite{GoldwasserMicali84,Goldreich01}, que le
+l\'egislateur a fini par prendre en compte. L'Electronic Signatures in Global and National Commerce (ESIGN) Act
+am\'ericain (2000)~\cite{ESIGN00} puis le r\`eglement electronic IDentification, Authentication and trust Services (eIDAS) europ\'een
+(2014)~\cite{eIDAS14} ont ainsi consacr\'e l'\'equivalence juridique des signatures
+num\'eriques, en pariant que la rigueur math\'ematique suffisait \`a fonder la
+confiance institutionnelle~\cite{Kerr04,Mason07}.
+
+Ce pari se v\'erifie pour les signatures. Il ne r\'esiste plus en revanche d\`es
+que le protocole prot\`ege activement l'information qu'un juge, un auditeur ou un
+r\'egulateur doit interpr\'eter. Les preuves \`a divulgation nulle de connaissance~\cite{GMR85},
+le chiffrement homomorphe~\cite{Gentry09,BrakerskiVaikuntanathan11} et les engagements avanc\'es~\cite{Pedersen91}
+garantissent math\'ematiquement ce qu'ils cachent, sans garantir pour autant que
+ce qu'ils r\'ev\`elent soit lisible par un non-expert~\cite{Bonneau12,Herley09}. De ce
+d\'ecalage na\^it la tension centrale de cette th\`ese.
+
+Nous avons nomm\'e cette tension \textbf{paradoxe de l'authenticit\'e invisible}~\cite{MINKA2026CLO}. Selon ce paradoxe, plus une preuve cryptographique est math\'ematiquement
+impeccable, plus elle devient institutionnellement opaque, c'est-\`a-dire qu'elle perd son sens pour l'interpr\`ete humain non expert. Une meilleure documentation ne suffit pas \`a corriger cette opacit\'e~\cite{Whitten99,Adams1999}, qui est de nature structurelle~\cite{Barredo2020,Adadi2018} comme le montre la section~\ref{subsec:paradoxe_authenticite}.
+
+\subsection{L'urgence post-quantique}
+
+En ao\^ut 2024, le National Institute of Standards and Technology (NIST) a publi\'e les trois premi\`eres normes de cryptographie post-quantique~\cite{NISTPQC,Alagic2020,NISTPostQuantum2022}, \`a savoir FIPS~203 (ML-KEM, bas\'e sur Kyber~\cite{Kyber2022}), FIPS~204 (ML-DSA, bas\'e sur Dilithium~\cite{Dilithium2022}) et FIPS~205 (SLH-DSA, bas\'e sur SPHINCS+~\cite{SPHINCS2022}). Avec cette standardisation, la migration vers la cryptographie post-quantique a quitt\'e le terrain de la sp\'eculation th\'eorique pour devenir une r\'ealit\'e op\'erationnelle.
+
+Cette transition d\'epasse le simple remplacement d'algorithmes, car elle rompt avec plusieurs paradigmes \'etablis. Les adversaires classiques sont limit\'es par la puissance de calcul, alors que les adversaires quantiques exploitent des requ\^etes en superposition~\cite{Boneh2011,Watrous2009} qui invalident les preuves de s\'ecurit\'e conventionnelles. La migration aggrave donc le paradoxe de l'authenticit\'e invisible, puisque la complexit\'e structurelle des sch\'emas post-quantiques (fond\'es sur les r\'eseaux ou sur les fonctions de hachage) entre en tension avec les besoins institutionnels. La mani\`ere dont ces effets quantiques modifient la valeur probante des preuves et leur compr\'ehension par les interpr\`etes institutionnels (juge, auditeur, r\'egulateur) demeure \`a ce jour largement inexplor\'ee.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{PROBL\'EMATIQUE CENTRALE}
+\label{sec:ig_problematique}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+Le foss\'e entre s\'ecurit\'e cryptographique et utilit\'e institutionnelle ne
+manque pas de t\'emoins. En 2009, la commission \'electorale de l'Universit\'e Catholique
+de Louvain s'est trouv\'ee dans l'incapacit\'e d'exploiter le syst\`eme Helios sans recourir
+\`a une expertise externe~\cite{Adida09UCL}. En novembre 2025, l'International Association
+for Cryptologic Research (IACR) a annul\'e son \'election apr\`es la perte irr\'em\'ediable
+d'une cl\'e partielle~\cite{IACR2025incident}.
+De leur c\^ot\'e, les r\'egulateurs financiers destinataires de preuves zk-SNARK~\cite{Groth16,BenSasson2019,PLONK20} ne peuvent
+pas cibler une transaction suspecte pr\'ecise, car l'opacit\'e qui prot\`ege les clients
+fait aussi obstacle \`a l'investigation~\cite{Casey16,Garratt19}. Ces incidents, qui ne rel\`event pas de d\'efauts de mise en
+\oe uvre, traduisent une incompatibilit\'e structurelle entre deux paradigmes
+de v\'erification.
+
+La cryptographie classique mesure l'\emph{avantage de l'adversaire}~\cite{GMR88,Shoup01},
+d\'efini \`a partir d'un distingueur polynomial confront\'e \`a un d\'efi.
+La v\'erification institutionnelle repose sur d'autres exigences, \`a savoir l'intelligibilit\'e
+pour un juge, l'auditabilit\'e r\'etrospective par un contr\^oleur et la tra\c{c}abilit\'e par un r\'egulateur~\cite{Citron14,Casey11}.
+Aucune m\'etrique ne rend compte de ces propri\'et\'es dans la litt\'erature cryptographique
+classique~\cite{GMR85,Goldreich01}.
+
+Ces constats conduisent \`a la probl\'ematique centrale de cette th\`ese, formul\'ee dans l'encadr\'e ci-dessous.
+
+\begin{boiteProblematique}{Probl\'ematique centrale}
+\textit{Comment concilier la s\'ecurit\'e cryptographique, qui requiert l'opacit\'e computationnelle, avec l'interpr\'etabilit\'e institutionnelle, qui requiert la transparence s\'emantique~? Existe-t-il des limites fondamentales aux compromis r\'ealisables entre confidentialit\'e, fiabilit\'e et opposabilit\'e~?}
+\end{boiteProblematique}
+
+Cette th\`ese formalise ces propri\'et\'es ($\Conf$~\ref{def:confidentialite_clo}, $\Rel$~\ref{def:fiabilite_clo}, $\Opp$~\ref{def:opposabilite_clo}) et traite cette probl\'ematique au moyen de \textbf{six questions/objectifs de recherche}, qui structurent nos contributions.
+
+\medskip
+\begin{boiteQuestion}{Obj1. Formalisation}
+\textit{\'Etablir un cadre unifi\'e mesurant simultan\'ement la confidentialit\'e, la fiabilit\'e et l'opposabilit\'e d'un protocole cryptographique, en s'appuyant sur la th\'eorie de l'information.}
+\end{boiteQuestion}
+
+\medskip
+\begin{boiteQuestion}{Obj2. Bornes d'impossibilit\'e classiques}
+\textit{\'Etablir les limites fondamentales des compromis r\'ealisables, conditionnellement \`a la capacit\'e cognitive des institutions.}
+\end{boiteQuestion}
+
+\medskip
+\begin{boiteQuestion}{Obj3. Extension post-quantique}
+\textit{D\'eterminer comment les adversaires quantiques et les effets de canal quantique modifient ces bornes puis caract\'eriser les termes qui leur sont propres.}
+\end{boiteQuestion}
+
+\medskip
+\begin{boiteQuestion}{Obj4. Constructions optimales}
+\textit{Construire des protocoles qui atteignent asymptotiquement ces bornes afin de transformer une barri\`ere th\'eorique en objectif d'ing\'enierie.}
+\end{boiteQuestion}
+
+\medskip
+\begin{boiteQuestion}{Obj5. Certification formelle}
+\textit{Certifier m\'ecaniquement le noyau du th\'eor\`eme d'impossibilit\'e dans un assistant de preuve en explicitant les hypoth\`eses dont il d\'epend.}
+\end{boiteQuestion}
+
+
+\medskip
+\begin{boiteQuestion}{Obj6. Exp\'erimentation}
+\textit{Sp\'ecifier un dispositif exp\'erimental falsifiable permettant de mesurer les param\`etres institutionnels qui conditionnent ces bornes, puis confronter le cadre aux syst\`emes d\'eploy\'es.}
+\end{boiteQuestion}
+
+\medskip
+La progression Obj1~$\to$~Obj6 organise la th\`ese en six \'etapes, qui
+consistent \`a \textbf{formaliser, borner, \'etendre, saturer, certifier et
+exp\'erimenter}. La probl\'ematique \'enonc\'ee plus haut demeure la question
+unique de ce travail, \`a laquelle la r\'ealisation successive de ces six
+objectifs apporte une r\'eponse.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{POSITIONNEMENT \'EPIST\'EMOLOGIQUE}
+\label{sec:ig_positionnement}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+La \textbf{Cryptographie Institutionnelle} se situe \`a l'intersection de la th\'eorie
+de l'information, de la cryptographie classique et post-quantique, du droit et des sciences cognitives~\cite{Simon82,Cowan2001,Ericsson95}.
+Ce croisement est impos\'e par la nature du probl\`eme, car aucune de ces disciplines prise isol\'ement ne permet
+de formaliser le compromis entre opacit\'e cryptographique et intelligibilit\'e
+institutionnelle~\cite{Citron14,Casey10,Casey11}.
+
+\begin{table}[htbp]
+\centering
+\caption{Disciplines fondatrices et leurs contributions \`a la Cryptographie Institutionnelle.}
+\label{tab:disciplines_fondatrices}
+{\footnotesize
+\begin{tabular}{p{3.8cm}p{5.2cm}p{3.2cm}}
+\toprule
+\textbf{Discipline} & \textbf{Apport} & \textbf{Usage dans la th\`ese} \\
+\midrule
+Th\'eorie de l'information & Entropie, information mutuelle~\cite{CoverThomas06,Wyner75,WynerZiv76} & M\'etriques CLO \\
+Th\'eorie de l'information quantique & von Neumann, Holevo~\cite{NielsenChuang2010,Wilde2017,Hiai1991} & Extension PQ \\
+Cryptographie classique & Primitives, r\'eductions~\cite{Goldreich01,GoldwasserMicali84} & Cadre CRO \\
+Cryptographie post-quantique & Lattices, NIST PQC~\cite{NISTPQC,Kyber2022,Dilithium2022,Falcon2022} & Trilemme PQ-CRO \\
+Sciences cognitives & Rationalit\'e born\'ee~\cite{Simon82,Miller56,Kahneman11} & Param\`etre $\Delta$ \\
+Droit & eIDAS, preuve juridique~\cite{eIDAS14,GDPR2016,ESIGN00,Daubert1993} & Contexte institutionnel \\
+V\'erification formelle & Lean4, Mathlib~\cite{moura2015lean,Lean4,Mathlib,Wiedijk2007} & Certification \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+Cette th\`ese r\'eunit la rigueur math\'ematique, la pertinence
+institutionnelle et la certification formelle~\cite{Gonthier08,Leroy09,BhargavanEA2017}
+dans une m\^eme d\'emarche, qui fournit les bases sur lesquelles
+les parties suivantes construisent puis valident la th\'eorie.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{LECTEUR CIBLE ET PR\'EREQUIS}
+\label{sec:ig_lecteur}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+Cette th\`ese s'adresse \`a plusieurs publics, dont les points d'entr\'ee diff\`erent.
+
+\begin{itemize}
+\item \textbf{Cryptographes.} Les sections~\ref{sec:cro_classique} et~\ref{sec:sotp_construction} contiennent des preuves originales utilisant des techniques standard (Fano~\cite{Fano61}, Pinsker~\cite{Pinsker1964}, r\'eductions cryptographiques~\cite{Shoup01,Damgard87}).
+
+\item \textbf{Chercheurs en s\'ecurit\'e formelle.} La section~\ref{sec:lean4} fournit une formalisation compl\`ete avec axiomatisation explicite~\cite{BartheEA2013,Lochbihler2016,Affeldt2015}.
+
+\item \textbf{Juristes et r\'egulateurs.} La section~\ref{sec:clo} montre l'applicabilit\'e aux syst\`emes de vote~\cite{Adida08,Benaloh94}, de conformit\'e~\cite{FATF12,AMLD4} et de preuve num\'erique~\cite{Mason07,Casey16}.
+
+\item \textbf{Sp\'ecialistes post-quantique.} La section~\ref{sec:cro_pq} \'etend le cadre aux adversaires quantiques~\cite{Watrous2009,Unruh2016,Boneh2011} et aux standards NIST~\cite{NISTPQC,NISTPostQuantum2022}.
+\end{itemize}
+
+La lecture suppose une familiarit\'e avec les preuves \`a divulgation nulle~\cite{GMR85,BenSasson2019,Campanelli2019}, des notions de base de th\'eorie de l'information (entropie, information mutuelle)~\cite{CoverThomas06,Smith09} ainsi qu'une connaissance \'el\'ementaire de la th\'eorie de la complexit\'e. Le glossaire~\ref{chap:glossaire} plac\'e en d\'ebut de th\`ese d\'efinit l'ensemble des acronymes et notations utilis\'es.
+
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre ne sait pas encore qu'il est pris dans un paradoxe~;
+il sait seulement que quelque chose ne fonctionne pas entre la preuve qu'on
+lui soumet et la d\'ecision qu'on lui demande de rendre. Ce chapitre lui donne
+le nom du probl\`eme et la carte du voyage, avec six questions, six
+contributions et un cycle. Il lui pr\'esente aussi les \'equipiers dont il aura
+besoin, \`a savoir la th\'eorie de l'information, la cryptographie, les
+sciences cognitives, le droit et la v\'erification formelle. Le voyage commence
+\`a la section~\ref{sec:contexte}.
+\end{boiteArbitre}
+
+% ----------------------------------------------------------------------------
+\section{CONTRIBUTIONS}
+\label{sec:ig_contributions}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+\paragraph{C1. Nous d\'efinissons le cadre Cryptographic Legal Opposability (CLO)~\cite{MINKA2026CLO}~(section~\ref{sec:clo}).}
+Publi\'e dans \emph{IEEE Access} (DOI: 10.1109/ACCESS.2026.3660105), cet article
+introduit trois m\'etriques issues de la th\'eorie de l'information~\cite{Shannon48,CoverThomas06,Wyner75}, \`a savoir la confidentialit\'e
+$\Conf$, la fiabilit\'e $\Rel$ et l'opposabilit\'e
+\begin{equation}
+  \Opp(\mathcal{P}) = \frac{I(V;\Sigma \mid C)}{H(V \mid C)},
+\end{equation}
+qui quantifie la fraction d'incertitude institutionnelle r\'esolue par la preuve
+cryptographique. L'opposabilit\'e n'a pas d'\'equivalent dans la litt\'erature
+ant\'erieure~\cite{Smith09,Alvim12}. Par le th\'eor\`eme du goulot d'\'etranglement contextuel,
+$I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$, l'opposabilit\'e accessible se trouve reli\'ee
+\`a la granularit\'e des verdicts~\cite{ClarksonSchneider10}. La th\`ese s\'epare aussi
+la fiabilit\'e de reconstruction, que contr\^ole l'in\'egalit\'e de Fano, de la fiabilit\'e
+de v\'erification.
+
+\paragraph{C2. Nous \'etablissons le Trilemme Confidentiality Reliability Opposability (CRO) conditionnel~\cite{MINKA2026CRO}~(section~\ref{sec:cro_classique}).}
+Publi\'e dans \emph{IEEE Access} (DOI: 10.1109/ACCESS.2026.3669065), ce r\'esultat prouve une borne d'impossibilit\'e
+\begin{equation}
+  \Conf(\mathcal{P})\cdot\Rel(\mathcal{P})\cdot\Opp(\mathcal{P})
+  \;\leq\;
+  \frac{\Delta}{\gamma\lambda} + O(\lambda^{-2}),
+  \qquad \gamma = \alpha H(\mathcal{C}) - 1,
+\end{equation}
+conditionnelle \`a la capacit\'e d'extraction institutionnelle $\Delta$, \`a la granularit\'e des verdicts $\alpha$, \`a la r\'egularit\'e du protocole $\beta$ ainsi qu'au r\'egime de confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La forme publi\'ee dans~\cite{MINKA2026CRO}, $\Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$, en est un corollaire. Une forme raffin\'ee identifie exactement le r\'egime o\`u la capacit\'e institutionnelle est la contrainte liante. L'hypoth\`ese d'extraction born\'ee re\c{c}oit aussi un fondement informationnel exact. Une calibration illustrative situe $\Delta$ dans quelques dizaines de bits, ordre de grandeur plausible au regard de la rationalit\'e born\'ee de Simon~\cite{Simon82,Simon1955} et des limites de m\'emoire de travail~\cite{Miller56,Cowan2001}. Cette impossibilit\'e reste
+conditionnelle, \`a la mani\`ere de CAP, qui d\'epend des partitions r\'eseau~\cite{Brewer00,GilbertLynch02}, de FLP,
+qui d\'epend de l'asynchronie~\cite{FLP85}, ou du th\'eor\`eme d'Arrow, qui suppose des pr\'ef\'erences rationnelles~\cite{Arrow50}.
+
+\paragraph{C3. Nous \'etendons le Trilemme au contexte quantique~\cite{MINKA2026PQCRO}~(section~\ref{sec:cro_pq}).}
+Publi\'e dans \emph{IEEE Access} (DOI: 10.1109/ACCESS.2026.3722742), ce r\'esultat \'etablit l'extension quantique du trilemme CRO
+\begin{equation}
+  \Conf^q(\mathcal{P})\cdot\Rel^q(\mathcal{P})\cdot\Opp^q(\mathcal{P})
+  \;\leq\;
+  \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda} + O(\lambda^{-2}) + \negl(\lambda),
+\end{equation}
+o\`u $\Delta_q$ quantifie la capacit\'e d'extraction institutionnelle adapt\'ee au quantum et $\eta_q$ le coefficient de perte d'interpr\'etabilit\'e quantique. La preuve mobilise des outils de th\'eorie de l'information quantique~\cite{NielsenChuang2010,Wilde2017}, en particulier l'in\'egalit\'e de Pinsker quantique, le lemme de Gentle Measurement~\cite{Schumacher1997} et les bornes de Fano quantiques~\cite{Hiai1991}. La borne explicite conserve la forme classique, avec $\Delta_q$~; le terme $\eta_q H(C)$ n'appara\^it que dans la majoration affaiblie ci-dessus et s'annule pour les preuves qui sont des cha\^ines de bits. Une calibration illustrative sur les signatures standardis\'ees ML-DSA et SLH-DSA~\cite{Dilithium2022,SPHINCS2022} situe $\Delta_q$ dans quelques dizaines de bits~\cite{Mayers1997,Lo1997,Unruh2016}.
+
+\paragraph{C4. Nous proposons la famille de constructions Semantic One-Time Pad (SOTP)~(section~\ref{sec:sotp_construction}).}
+Soumis \`a \emph{IEEE TIT}, cet article pr\'esente trois constructions de r\'ef\'erence couvrant le spectre
+d'entropie contextuelle $H(\mathcal{C})$~:
+\begin{itemize}
+    \item \textbf{SOTP-Low} pour les contextes rares, fond\'e sur un encodage d\'eterministe du contexte et un engagement de Pedersen~;
+    \item \textbf{SOTP-Base} pour les contextes interm\'ediaires, fond\'e sur une compression Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03,Vempala05}~;
+    \item \textbf{SOTP-High} pour les contextes riches, fond\'e sur les zk-SNARKs Groth16~\cite{Groth16}.
+\end{itemize}
+Leurs propri\'et\'es cryptographiques (confidentialit\'e, fiabilit\'e de v\'erification) sont prouv\'ees sous des hypoth\`eses standard~; l'existence de constructions approchant la borne du Trilemme est formul\'ee comme conjecture. Ces constructions transforment l'impossibilit\'e en guide de conception~\cite{Gennaro13,Parno13,BCTV14}.
+
+\paragraph{C5. Nous certifions m\'ecaniquement le noyau alg\'ebrique du
+Trilemme en Lean4 (section~\ref{sec:lean4}).}
+Soumis \`a \emph{Journal of Automated Reasoning}, cet article pr\'esente
+la premi\`ere formalisation Lean4 compl\`ete d'un th\'eor\`eme
+d'impossibilit\'e en cryptographie institutionnelle~\cite{moura2015lean,Lean4,Mathlib}.
+Enti\`erement v\'erifi\'ee sans \texttt{sorry}, la formalisation int\`egre
+les quatre ingr\'edients informationnels (Fano, Pinsker, extraction
+born\'ee, r\'egularit\'e) comme propri\'et\'es des instances de protocole
+tout en explicitant les hypoth\`eses institutionnelles. Elle \'etablit
+formellement la borne $\Delta/(\gamma\lambda) + O(\lambda^{-2})$ et sa forme
+raffin\'ee puis fournit deux t\'emoins de coh\'erence et de port\'ee. Le d\'eveloppement
+constitue \'egalement une biblioth\`eque Lean4 r\'eutilisable, publi\'ee avec une version fig\'ee de Lean et
+de Mathlib~\cite{CROTrilemmaDepot}.
+
+\medskip
+\noindent\textbf{Apport m\'ethodologique.} La formalisation en Lean4 a
+conduit \`a expliciter, dans les preuves du Trilemme CRO classique~\cite{MINKA2026CRO}
+et de son extension post-quantique~\cite{MINKA2026PQCRO}, des hypoth\`eses qui y
+restaient implicites, en l'occurrence la condition d'efficacit\'e du verdict et le r\'egime de
+fuite sous lequel la borne s'applique. Les \'enonc\'es retenus dans cette th\`ese
+sont donc conditionnels et explicites, assortis de leurs constantes et de leur
+domaine de validit\'e~; ce que la certification a ainsi rendu visible est
+d\'etaill\'e \`a la sous-section~\ref{subsec:lean4_erreurs}. Cette exp\'erience
+conduit \`a une le\c{c}on m\'ethodologique sur le r\^ole de la v\'erification
+formelle dans la production des r\'esultats interdisciplinaires, discut\'ee \`a la
+sous-section~\ref{subsec:verification_corrige_lecon}.
+
+\paragraph{C6. Nous sp\'ecifions un programme de validation falsifiable
+pour les param\`etres institutionnels et quantiques
+(chapitre~\ref{chap:experimentation}).}
+Ce chapitre sp\'ecifie, jusqu'au niveau op\'erationnel, les protocoles
+exp\'erimentaux permettant de mesurer les param\`etres $\Delta$,
+$\alpha$, $\beta$, $\Delta_q$ et $\eta_q$ sur des acteurs
+institutionnels r\'eels. La stratification des
+\'echantillons, les estimateurs, les crit\`eres de fiabilit\'e
+inter-\'evaluateurs, les seuils de falsification et le calendrier de
+d\'eploiement y sont pr\'ecis\'es. Comme le Trilemme CRO est conditionnel \`a ces
+param\`etres, leur mesure en fait un programme
+scientifique falsifiable au sens de Popper~\cite{Popper1934}, ce qui conditionne
+la port\'ee empirique du Trilemme.
+Le volet~B du chapitre d\'erive aussi les valeurs d'opposabilit\'e
+des trois syst\`emes de r\'ef\'erence (ECDSA, Helios, zk-SNARKs), lesquels ne sont
+pas des instances du Trilemme. Il en tire une calibration illustrative des
+param\`etres institutionnels, en attente de validation exp\'erimentale. Le
+programme n'ayant pas encore \'et\'e d\'eploy\'e dans le cadre de cette
+th\`ese, son statut est explicit\'e \`a la
+sous-section~\ref{subsubsec:statut_deploiement}.
+\medskip
+Ces six contributions forment le cycle repr\'esent\'e ci-dessous.
+\begin{equation}
+\label{eq:progression_FBESCX}
+  \underbrace{\text{CLO}}_{\text{Formalisation}}
+  \;\xrightarrow{\quad}\;
+  \underbrace{\text{CRO}}_{\text{Bornes classiques}}
+  \;\xrightarrow{\quad}\;
+  \underbrace{\text{PQ-CRO}}_{\text{Extension quantique}}
+  \;\xrightarrow{\quad}\;
+  \underbrace{\text{SOTP}}_{\text{Constructions de r\'ef\'erence}}
+  \;\xrightarrow{\quad}\;
+  \underbrace{\text{Lean4}}_{\text{Certification}}
+  \;\xrightarrow{\quad}\;
+  \underbrace{\text{Exp\'erimentation}}_{\text{Protocoles et validation}}
+\end{equation}
+
+\paragraph{Progression canonique.}
+\label{par:progression_FBESCX}
+La th\`ese suit un fil conducteur en six actes, \textbf{F}ormaliser, \textbf{B}orner, \textbf{E}tendre, \textbf{S}aturer, \textbf{C}ertifier et e\textbf{X}p\'erimenter.
+Le chapitre~\ref{chap:contexte} pose les fondements en amont de~F. Le
+chapitre~\ref{chap:cadre_formel} r\'ealise F$\to$B$\to$E, puis le
+chapitre~\ref{chap:constructions} r\'ealise S$\to$C. Le
+chapitre~\ref{chap:experimentation} r\'ealise~X, tandis que le
+chapitre~\ref{chap:resultats_discussions} analyse les r\'esultats et ouvre les perspectives.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{PUBLICATIONS ET STATUT}
+\label{sec:ig_publications}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+La th\`ese s'appuie sur cinq manuscrits, trois publi\'es et deux soumis, auxquels s'ajoute un programme exp\'erimental sp\'ecifi\'e. Le tableau~\ref{tab:contributions_these} indique, pour chacune des six contributions, l'\'etape du cycle canonique qu'elle r\'ealise, la section qui la d\'eveloppe et son statut \`a la date de soutenance. Les autres parties de la th\`ese y renvoient.
+
+\begin{table}[htbp]
+\centering
+\caption{\'Etat des contributions de la th\`ese \`a la date de soutenance}
+\label{tab:contributions_these}
+{\footnotesize
+\begin{tabular}{p{0.6cm}p{3.6cm}p{0.7cm}p{1.2cm}p{1.4cm}p{5.2cm}}
+\toprule
+\textbf{R\'ef.} & \textbf{Contribution} & \textbf{\'Etape} & \textbf{Section} & \textbf{Statut} & \textbf{Revue et r\'ef\'erence} \\
+\midrule
+{[P1]} & C1~: cadre CLO & \textbf{F} & \ref{sec:clo} & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3660105~\cite{MINKA2026CLO} \\
+{[P2]} & C2~: Trilemme CRO conditionnel & \textbf{B} & \ref{sec:cro_classique} & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3669065~\cite{MINKA2026CRO} \\
+{[P3]} & C3~: Trilemme CRO post-quantique & \textbf{E} & \ref{sec:cro_pq} & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3722742~\cite{MINKA2026PQCRO} \\
+-- & C4~: famille SOTP & \textbf{S} & \ref{sec:sotp_construction} & Soumis & \textit{IEEE Transactions on Information Theory}~\cite{MINKA2026SOTP} \\
+-- & C5~: formalisation Lean4 & \textbf{C} & \ref{sec:lean4} & Soumis & \textit{Journal of Automated Reasoning}~\cite{MINKA2026LEAN4} \\
+-- & C6~: programme de validation & \textbf{X} & \ref{sec:protocoles_experimentaux} & Sp\'ecifi\'e & D\'ep\^ot de recherche~\cite{CROTrilemmaDepot} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{ORGANISATION DE LA TH\`ESE}
+\label{sec:ig_organisation}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+Outre la pr\'esente introduction et la conclusion g\'en\'erale, qui ne sont
+pas num\'erot\'ees, le manuscrit comprend cinq chapitres.
+
+\textbf{Chapitre~\ref{chap:contexte} -- Contexte, \'etat de l'art et probl\'ematique.}
+Trois cas illustratifs (Helios, ECDSA, zk-SNARK) servent d'ancrage \`a la recherche
+dans la section~\ref{sec:contexte}, qui en calcule analytiquement les profils CLO.
+La section~\ref{sec:etat_art} rassemble ensuite les fondements tir\'es de la th\'eorie
+de l'information classique et quantique, des primitives d'obscurcissement, de la
+rationalit\'e born\'ee, des trilemmes d'impossibilit\'e et de la v\'erification formelle.
+Le chapitre se termine par la section~\ref{sec:problematique}, o\`u sont formul\'es le
+paradoxe de l'authenticit\'e invisible, la probl\'ematique centrale et les
+six objectifs de recherche.
+
+\textbf{Chapitre~\ref{chap:cadre_formel} -- Cadre formel et bornes d'impossibilit\'e.}
+Les actes \textbf{F}, \textbf{B} et \textbf{E} y sont men\'es successivement.
+Apr\`es la formalisation du cadre CLO \`a la section~\ref{sec:clo}
+(Obj~\ref{obj:obj1_unification}), la section~\ref{sec:cro_classique}
+\'etablit le Trilemme CRO conditionnel classique
+(Obj~\ref{obj:obj2_impossibilite}), que la section~\ref{sec:cro_pq} \'etend ensuite au
+r\'egime post-quantique (Obj~\ref{obj:obj3_postquantique}).
+
+\textbf{Chapitre~\ref{chap:constructions} -- Constructions et certification formelle.}
+Il couvre les actes \textbf{S} et \textbf{C}. Le Semantic One-Time Pad, prototype de
+la famille, est construit \`a la section~\ref{sec:sotp_base}. La section~\ref{sec:sotp_construction}
+g\'en\'eralise ce prototype en trois constructions de r\'ef\'erence dont elle conjecture
+l'optimalit\'e universelle (Obj~\ref{obj:obj4_saturation}), avant que la section~\ref{sec:lean4}
+ne soumette le noyau alg\'ebrique du trilemme \`a l'assistant de preuve Lean4
+(Obj~\ref{obj:obj5_verification}).
+
+\textbf{Chapitre~\ref{chap:experimentation} -- Protocoles de mesure et validation r\'etrospective.}
+L'acte \textbf{X} (Obj~\ref{obj:obj6_experimentation}) fait l'objet de ce chapitre.
+Six protocoles de mesure des param\`etres institutionnels sont sp\'ecifi\'es \`a la
+section~\ref{sec:protocoles_experimentaux}. La
+section~\ref{sec:derivation_opposabilite} d\'erive ensuite les valeurs d'opposabilit\'e
+des syst\`emes de r\'ef\'erence, dont la
+section~\ref{sec:validation_retrospective} tire une calibration
+illustrative des param\`etres institutionnels en pr\'ecisant sa port\'ee et
+ses limites.
+
+\textbf{Chapitre~\ref{chap:resultats_discussions} -- R\'esultats, discussions et perspectives.}
+La section~\ref{sec:resultats_theoriques} pr\'esente les validations
+r\'etrospectives et le bilan formel du corpus. La
+section~\ref{sec:discussions} interpr\`ete ces r\'esultats, les positionne
+parmi les impossibilit\'es fondamentales et documente les limitations
+reconnues. La section~\ref{sec:perspectives} ouvre le programme de recherche
+en quatre axes.
+
+\end{sloppypar}

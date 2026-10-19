@@ -1,0 +1,732 @@
+% Section du chapitre 4 (ex-annexe D)
+% Annexe issue de l'ancien chapitre 3 (restructuration en 3 chapitres)
+% ============================================================================
+% CHAPITRE 3 — SECTION 3.4 : VALIDATION RÉTROSPECTIVE
+% Fichier : partie3/donnees_validation.tex
+% ============================================================================
+
+\section{VALIDATION R\'ETROSPECTIVE}
+\label{sec:validation_retrospective}
+% ============================================================================
+\begin{sloppypar}
+
+La section pr\'ec\'edente a sp\'ecifi\'e \emph{comment} mesurer les
+param\`etres institutionnels. La pr\'esente section \'etablit \emph{quelles
+valeurs} ces param\`etres prennent, par estimation r\'etrospective sur les
+trois syst\`emes de r\'ef\'erence classiques et les standards
+post-quantiques. Aucune mesure nouvelle n'est introduite, de sorte que les chiffres qui
+suivent sont des calibrations illustratives, d\'eriv\'ees des sp\'ecifications
+publi\'ees et mises en regard des produits CLO de la
+section~\ref{sec:derivation_opposabilite}.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre change de posture, car apr\`es un plan, il assiste \`a une
+confrontation. Ce qui avait \'et\'e admis plus haut ($\Delta \in [35, 73]$
+bits, $\alpha \in [0{,}8, 1{,}5]$, $\beta = O(1)$) revient maintenant sous
+forme de valeurs calibr\'ees, syst\`eme par syst\`eme. Il s'agit de savoir
+si les ordres de grandeur retenus se tiennent entre eux, sans v\'erifier le
+th\'eor\`eme, dont ces syst\`emes ne sont pas des instances.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Estimation d\'etaill\'ee des param\`etres institutionnels classiques}
+\label{sec:estimation_params_classiques}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+La section~\ref{sec:derivation_opposabilite} a d\'eriv\'e les produits CLO des
+trois syst\`emes de r\'ef\'erence par la voie descendante, en partant des
+espaces de verdicts. La pr\'esente section emprunte la voie oppos\'ee et
+d\'ecompose les param\`etres institutionnels $(\Delta, \alpha, \beta)$ qui
+param\`etrent les bornes du chapitre~\ref{chap:cadre_formel}. Les deux voies ne
+sont pas ind\'ependantes (section~\ref{sec:synthese_derivations})~; leur mise en
+regard est une calibration.
+
+\subsubsection{Composantes g\'en\'eriques de la capacit\'e d'extraction}
+\label{subsec:composantes_generiques}
+
+La capacit\'e d'extraction institutionnelle $\Delta$ agr\`ege six familles de
+ressources, dont le tableau~\ref{tab:composantes_delta} donne les plages
+observ\'ees dans la litt\'erature cognitive et organisationnelle.
+
+\begin{table}[htbp]
+\centering
+\caption{Familles de composantes de la capacit\'e d'extraction institutionnelle
+         $\Delta$ et plages associ\'ees}
+\label{tab:composantes_delta}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Composante} & \textbf{Plage} & \textbf{Base} \\
+\midrule
+Pr\'ec\'edents l\'egaux et jurisprudence & 10--15 bits & Cat\'egories de cas document\'es \\
+Formation d'expert et connaissances & 10--20 bits & Domaine de sp\'ecialisation \\
+R\`egles proc\'edurales et m\'emoire institutionnelle & 5--10 bits & Protocoles \'ecrits \\
+D\'elib\'eration collaborative & 0--15 bits & Amplification collective \\
+Capacit\'e temporelle de d\'elib\'eration & 5--10 bits & Temps allou\'e \\
+Ressources externes et consultation & 5--15 bits & Experts, r\'ef\'erences \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Lecture du tableau.} Ces plages ne sont pas cumulatives, car une
+institution donn\'ee ne mobilise qu'un sous-ensemble de ces familles. Certaines se
+recouvrent d'ailleurs partiellement, puisque la consultation d'experts externes
+et la formation interne alimentent la m\^eme ressource cognitive. La
+sommation na\"{\i}ve des bornes sup\'erieures produirait $85$ bits, valeur
+sup\'erieure \`a toutes les estimations retenues dans cette th\`ese. Le
+tableau~\ref{tab:decomposition_delta} proc\`ede donc syst\`eme par syst\`eme,
+en ne retenant que les composantes effectivement mobilis\'ees dans chaque
+contexte institutionnel.
+
+\subsubsection{D\'ecomposition de $\Delta$ par syst\`eme}
+\label{subsec:decomposition_delta}
+
+La capacit\'e d'extraction institutionnelle $\Delta$ est d\'ecompos\'ee, \`a titre
+illustratif, en composantes cognitives et organisationnelles. Les totaux
+($15+10+10+0 = 35$, $15+20+15+6 = 56$, $25+20+15+13 = 73$) sont ceux de la table
+de r\'ef\'erence (tableau~\ref{tab:parametres_reference})~; la d\'ecomposition du
+tableau~\ref{tab:validation_cro_classique} du chapitre~\ref{chap:cadre_formel} y renvoie.
+
+\begin{table}[htbp]
+\centering
+\caption{D\'ecomposition d\'etaill\'ee de $\Delta$ (bits) par syst\`eme classique}
+\label{tab:decomposition_delta}
+\begin{tabular}{@{}lcccl@{}}
+\toprule
+\textbf{Composante de $\Delta$} & \textbf{ECDSA} & \textbf{Helios} &
+\textbf{zk-SNARK} & \textbf{Justification} \\
+\midrule
+Pr\'ec\'edent l\'egal / jurisprudence
+  & 15 & 15 & 25
+  & Doctrine \'etablie \\
+Expertise technique / formation
+  & 10 & 20 & 20
+  & Formation sp\'ecialis\'ee \\
+Proc\'edures / cadres institutionnels
+  & 10 & 15 & 15
+  & Standards, protocoles \\
+D\'elib\'eration collaborative
+  & 0 & 6 & 13
+  & Comit\'es multi-parties \\
+\midrule
+\textbf{Total $\Delta$} & \textbf{35} & \textbf{56} & \textbf{73} & \\
+\midrule
+\textbf{R\'egime (Rem.~\ref{rem:activite_delta})} & rare & rare & riche & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Coh\'erence avec la rationalit\'e born\'ee}
+\label{subsec:coherence_rationalite}
+
+Les valeurs $\Delta \in [35, 73]$ bits correspondent \`a des facteurs
+d'amplification de $1{,}8$ \`a $3{,}7$ par rapport \`a une capacit\'e
+individuelle de r\'ef\'erence fix\'ee \`a $\approx 20$ bits. Ce rep\`ere est une
+analogie inspir\'ee des travaux sur les limites de la m\'emoire de
+travail~\cite{Miller56}. Miller ne l'a pas mesur\'e~; la d\'ecomposition
+ci-dessous est donc heuristique.
+
+\begin{equation}
+\text{Amplification} = 1{,}5_{\text{doc}} \times 1{,}5_{\text{collab}} \times 1{,}3_{\text{sp\'ec}} \approx 2{,}9\times
+\end{equation}
+
+\subsubsection{Param\`etres $\alpha$ et $\beta$}
+\label{subsec:parametres_alpha_beta}
+
+\begin{table}[htbp]
+\centering
+\caption{Param\`etres $\alpha$ et $\beta$ par syst\`eme classique}
+\label{tab:parametres_alpha_beta}
+\begin{tabular}{@{}lcccl@{}}
+\toprule
+\textbf{Syst\`eme} & $\alpha$ & $\beta$ & \textbf{Variante SOTP} &
+\textbf{Justification} \\
+\midrule
+ECDSA & 1{,}0 & 1{,}0 & SOTP-Low
+  & Validit\'e binaire, nonce uniforme \\
+Helios & 1{,}2 & 1{,}4 & SOTP-Base
+  & Audit d\'etaill\'e, irr\'egularit\'e ZK \\
+zk-SNARKs & 1{,}5 & 1{,}5 & SOTP-High
+  & Conformit\'e gradu\'ee, circuit optimis\'e \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Estimation des param\`etres quantiques}
+\label{sec:estimation_params_quantiques}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{D\'ecomposition de $\Delta_q$ par syst\`eme PQC}
+\label{subsec:decomposition_delta_q}
+
+La capacit\'e d'extraction quantique $\Delta_q$ int\`egre les modifications
+induites par la transition quantique (section~\ref{sec:cro_pq}).
+
+\begin{table}[htbp]
+\centering
+\caption{D\'ecomposition d\'etaill\'ee de $\Delta_q$ (bits) par syst\`eme PQC}
+\label{tab:decomposition_delta_q}
+\footnotesize
+\begin{tabular}{@{}lcccl@{}}
+\toprule
+\textbf{Composante} & \textbf{ML-DSA-65} & \textbf{ML-KEM-1024}$^\dagger$ &
+\textbf{SLH-DSA} & \textbf{Justification} \\
+\midrule
+Capacit\'e classique $\Delta$ & 35 & 45 & 30 & Contexte institutionnel \\
+P\'enalit\'e d'adaptation $(-\delta_{\text{degr}})$ & $-7$ & $-6$ & $-5$ & Nouveau paradigme \\
+Am\'elioration quantique $(+\delta_{\text{enh}})$ & $+0$ & $+0$ & $+0$ & Pas encore exploitable \\
+\midrule
+\textbf{Total $\Delta_q$} & \textbf{28} & \textbf{39} & \textbf{25} & \\
+\midrule
+\textbf{Plage NIST PQC} & \multicolumn{3}{c}{$\Delta_q \in [25, 67]$ bits} & Hypoth\`ese \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+{\footnotesize $^\dagger$ML-KEM est un m\'ecanisme d'encapsulation de cl\'e, qui ne produit
+pas de preuve. Il est donc hors du champ du Trilemme et n'est conserv\'e que pour la
+tra\c{c}abilit\'e avec les valeurs publi\'ees (fichier \texttt{06\_calcul/data/calibration\_pq.csv}).\par}
+\end{table}
+
+\noindent\textbf{Justification de la p\'enalit\'e d'adaptation.} La transition
+vers les standards NIST PQC impose une courbe d'apprentissage aux institutions.
+La p\'enalit\'e $\delta_{\text{degr}}$ refl\`ete~:
+\begin{itemize}
+\item Nouveau format de cl\'es (structur\'e diff\'eremment de RSA/ECDSA)
+\item Nouveaux algorithmes de v\'erification (lattice-based vs discrete log)
+\item Manque de pr\'ec\'edents l\'egaux pour les signatures post-quantiques
+\item Documentation technique encore en maturation
+\end{itemize}
+
+\subsubsection{Estimation de $\eta_q$ par niveau de bruit quantique}
+\label{subsec:estimation_eta_q}
+
+Pour les signatures post-quantiques, qui sont des cha\^{\i}nes de bits
+classiques, $\eta_q = 0$. Le tableau~\ref{tab:estimation_eta_q} d\'ecrit le
+\emph{sc\'enario hypoth\'etique} d'un support ou d'un v\'erificateur quantique~;
+les valeurs sont des ordres de grandeur a priori.
+
+\begin{table}[htbp]
+\centering
+\caption{Estimation de $\eta_q$ par type de canal quantique}
+\label{tab:estimation_eta_q}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Canal / Environnement} & \textbf{Param\`etre} & \textbf{Fid\'elit\'e $F$} &
+$\eta_q$ \textbf{estim\'e} & \textbf{Source} \\
+\midrule
+Syst\`eme corrig\'e (id\'eal) & $p \leq 10^{-4}$ & $\geq 0{,}9999$ & $0{,}005$--$0{,}01$ & Th\'eorique \\
+NISQ actuel (IBM, IonQ) & $p \approx 10^{-3}$ & $\approx 0{,}99$ & $0{,}05$--$0{,}10$ & Mesures 2024--2025 \\
+NISQ bruit\'e & $p \approx 10^{-2}$ & $\approx 0{,}95$ & $0{,}10$--$0{,}20$ & Sc\'enario pessimiste \\
+Simulation hybride & Variable & Variable & $0{,}02$--$0{,}15$ & Param\'etrable \\
+\midrule
+\textbf{Valeur de sc\'enario} & \multicolumn{3}{c}{$\eta_q \approx 0{,}08$ (m\'ediane NISQ)} & \cite{MINKA2026PQCRO} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Relation heuristique.}
+\begin{equation}
+\eta_q \lesssim 2\sqrt{1 - F_{\mathrm{avg}}}
+\label{eq:relation_eta_q_fidelite}
+\end{equation}
+Cette relation n'a pas valeur de th\'eor\`eme. L'in\'egalit\'e de Fuchs--van de Graaf
+borne la distance de trace par $\sqrt{1-F}$ tandis que la continuit\'e de l'information
+mutuelle conditionnelle (Alicki--Fannes--Winter) convertit cette distance en perte
+d'information avec un facteur qui d\'epend de la dimension du syst\`eme au lieu de
+$H(C)$. Elle fixe un ordre de grandeur pour le sc\'enario.
+
+\subsubsection{Param\`etres $\alpha_q$ et $\beta_q$ pour PQC}
+\label{subsec:parametres_alpha_q_beta_q}
+
+\begin{table}[htbp]
+\centering
+\caption{Param\`etres post-quantiques par syst\`eme NIST PQC ($H(\mathcal{C})$ \`a l'\'echelle de l'esp\`ece)}
+\label{tab:parametres_alpha_q_beta_q}
+\begin{tabular}{@{}lcccl@{}}
+\toprule
+\textbf{Syst\`eme} & $\alpha_q$ & $\beta_q$ & $H(\mathcal{C})$ &
+\textbf{Justification} \\
+\midrule
+ML-DSA-65 & 1{,}0 & 1{,}2 & 10{,}5 bits & Signature (FIPS~204) \\
+ML-KEM-1024$^\dagger$ & 1{,}1 & 1{,}3 & 12{,}0 bits & KEM, hors champ \\
+SLH-DSA & 0{,}9 & 1{,}1 & 9{,}0 bits & Signature (FIPS~205) \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Comparaison des produits CLO classiques et quantiques}
+\label{sec:comparaison_produits_cro}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+Le tableau~\ref{tab:comparaison_produits_cro} rassemble les produits CLO
+illustratifs des syst\`emes \'etudi\'es. Pour les trois syst\`emes classiques,
+la colonne \guillemotleft~Produit CLO~\guillemotright{} reprend les valeurs
+d\'eriv\'ees \`a la section~\ref{sec:derivation_opposabilite} (avec $\Relver$).
+Pour les standards post-quantiques, o\`u aucune d\'erivation descendante n'est
+disponible faute de contexte institutionnel document\'e, les produits sont
+obtenus par transposition du rapport $\Delta_q/\lambda$ major\'e d'une correction
+d'adaptation, si bien qu'ils constituent des hypoth\`eses de travail.
+
+% -----------------------------------------------------------------------
+\subsection{Tableau comparatif principal}
+\label{sec:tableau_comparatif_principal}
+% -----------------------------------------------------------------------
+
+\begin{table}[htbp]
+\centering
+\caption{Produits CLO illustratifs, classiques et post-quantiques ($\lambda = 128$)}
+\label{tab:comparaison_produits_cro}
+\begin{tabular}{@{}llcccc@{}}
+\toprule
+\textbf{Type} & \textbf{Syst\`eme} & $\Delta/\Delta_q$ & $\eta_q$ (sc\'enario) &
+\textbf{Produit CLO} & \textbf{\'Ecart vs classique} \\
+\midrule
+\multicolumn{6}{c}{\textit{Syst\`emes classiques (calibration)}} \\
+\midrule
+Classique & ECDSA & 35 & --- & 0{,}273 & --- \\
+Classique & Helios & 56 & --- & 0{,}437 & --- \\
+Classique & zk-SNARKs & 73 & --- & 0{,}572 & --- \\
+\midrule
+\multicolumn{6}{c}{\textit{Syst\`emes post-quantiques (hypoth\`ese de travail)}} \\
+\midrule
+PQC & ML-DSA-65 & 28 & 0{,}08 & 0{,}35 & --- \\
+PQC & ML-KEM-1024$^\dagger$ & 39 & 0{,}08 & 0{,}42 & --- \\
+PQC & SLH-DSA & 25 & 0{,}08 & 0{,}30 & --- \\
+\midrule
+\multicolumn{6}{c}{\textit{Comparaison dans des usages voisins}} \\
+\midrule
+Classique $\to$ PQC & ECDSA $\to$ ML-DSA & 35 $\to$ 28 & 0 $\to$ 0{,}08 &
+  $0{,}273 \to 0{,}35$ & $+28\%$ \\
+Classique $\to$ PQC & RSA $\to$ SLH-DSA & 40 $\to$ 25 & 0 $\to$ 0{,}08 &
+  $0{,}35 \to 0{,}30$ & $-14\%$ \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+{\footnotesize $^\dagger$Hors champ (m\'ecanisme d'encapsulation de cl\'e).\par}
+\end{table}
+
+\noindent\textbf{Observation.} La p\'enalit\'e d'adaptation ($\Delta_q < \Delta$)
+abaisse la borne. Le terme $\eta_q H(C)$, qui n'intervient que dans le sc\'enario
+d'un support quantique, la rel\`eve l\'eg\`erement. Le produit
+ML-DSA augmente pourtant par rapport \`a ECDSA alors que $\Delta_q$ diminue, ce qui tient
+au fait que la transposition utilis\'ee pour ces produits n'est pas d\'eriv\'ee de la borne.
+
+\subsubsection{Analyse de la contribution du terme $\eta_q \cdot H(C)$}
+
+La majoration affaiblie $(\Delta_q + \eta_q \cdot H(C))/\lambda$ agr\`ege deux
+termes d'ordres de grandeur tr\`es diff\'erents. Le
+tableau~\ref{tab:decomposition_borne_pq} en donne la d\'ecomposition et la
+confronte au produit illustratif du tableau~\ref{tab:comparaison_produits_cro}.
+
+\begin{table}[htbp]
+\centering
+\caption{D\'ecomposition de la majoration CRO$^q$ et confrontation au produit
+         illustratif ($\lambda = 128$, sc\'enario $\eta_q > 0$)}
+\label{tab:decomposition_borne_pq}
+\small
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+\textbf{Syst\`eme} & $\Delta_q/\lambda$ & $\eta_q \cdot H(C)/\lambda$ &
+\textbf{Borne} & \textbf{Part $\eta_q$} & \textbf{Produit} & \textbf{D\'epass\'ee~?} \\
+\midrule
+ML-DSA-65 & $0{,}219$ & $0{,}006$ & $0{,}225$ & $2{,}7\%$ & $0{,}35$ & oui \\
+ML-KEM-1024$^\dagger$ & $0{,}305$ & $0{,}007$ & $0{,}312$ & $2{,}2\%$ & $0{,}42$ & oui \\
+SLH-DSA & $0{,}195$ & $0{,}006$ & $0{,}201$ & $3{,}0\%$ & $0{,}30$ & oui \\
+\midrule
+\multicolumn{7}{l}{\textbf{Sc\'enario bruit\'e} ($\eta_q = 0{,}15$)} \\
+\midrule
+ML-DSA-65 & $0{,}219$ & $0{,}012$ & $0{,}231$ & $5{,}2\%$ & $0{,}35$ & oui \\
+ML-KEM-1024$^\dagger$ & $0{,}305$ & $0{,}014$ & $0{,}319$ & $4{,}4\%$ & $0{,}42$ & oui \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Interpr\'etation du poids quantique.} Dans le sc\'enario
+d'un support quantique ($\eta_q \approx 0{,}08$), la contribution du terme
+quantique reste modeste, avec $2$ \`a $3\,\%$ de la majoration pour cette valeur contre $5\,\%$ pour
+$\eta_q = 0{,}15$. Pour les signatures r\'eelles, $\eta_q = 0$ et la contribution
+est nulle. La capacit\'e d'extraction reste le terme dominant.
+
+\noindent\textbf{D\'epassement de la borne.} Les trois produits illustratifs
+d\'epassent la majoration ($0{,}35 > 0{,}225$~; $0{,}42 > 0{,}312$~;
+$0{,}30 > 0{,}201$). Ces syst\`emes ne sont
+pas des instances du th\'eor\`eme (message public, $\Relver$ au lieu de $\Relrec$,
+Remarque~\ref{rem:portee_cas_etude}) et les produits eux-m\^emes restent des
+hypoth\`eses de travail. Le d\'epassement ne r\'efute donc pas le Trilemme. Il
+emp\^eche d'affirmer que la borne est respect\'ee et d\'esigne $\Delta_q$ comme
+premi\`ere cible du protocole de la section~\ref{subsec:protocole_delta_q}.
+
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre s'arr\^ete sur un chiffre qui ne colle pas. Les produits sont
+au-dessus de la borne, de dix \`a treize centi\`emes. Loin de le cacher, le texte
+le nomme en donnant sa raison, puisque ces syst\`emes ne sont pas des instances
+du th\'eor\`eme. L'arbitre note que la borne n'est ni confirm\'ee ni r\'efut\'ee
+ici et qu'il reviendra \`a la mesure de $\Delta_q$ de trancher.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Propagation d'incertitude}
+\label{sec:intervalles_bootstrap}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{M\'ethodologie}
+\label{subsec:methodologie_bootstrap}
+
+L'incertitude portant sur les param\`etres institutionnels est propag\'ee
+jusqu'au rapport $\Delta/\lambda$ en affectant $\Delta$ d'un coefficient de
+variation de $20\,\%$ pour les syst\`emes classiques et de $25\,\%$ pour les
+syst\`emes post-quantiques, o\`u la p\'enalit\'e d'adaptation ajoute une source
+d'incertitude. Ces coefficients sont des hypoth\`eses de travail~; ils ne sont
+pas tir\'es d'une mesure.
+
+\subsubsection{R\'esultats classiques}
+\label{subsec:resultats_classiques_bootstrap}
+
+Un coefficient de variation de $20\,\%$ sur $\Delta$ se propage int\'egralement
+\`a $\Delta/\lambda$, dont l'intervalle \`a $95\,\%$ vaut environ $[0{,}17;\,0{,}38]$
+(ECDSA), $[0{,}27;\,0{,}61]$ (Helios) et $[0{,}35;\,0{,}79]$ (zk-SNARKs). Cette
+largeur traduit l'incertitude sur les param\`etres institutionnels~; elle
+rappelle qu'en l'absence de donn\'ees, les valeurs de ce chapitre sont des
+ordres de grandeur.
+
+\begin{remark}[Intervalles de la formulation initiale]
+\label{rem:ic_anterieurs}
+La formulation initiale de cette section donnait des intervalles de demi-largeur
+d'environ $1{,}8\,\%$ ($[0{,}268;\,0{,}278]$ pour ECDSA, par exemple), centr\'es sur
+les valeurs calibr\'ees. Elle concluait que les \og mesures CLO\fg{} y tombaient.
+Ces intervalles ne sont pas compatibles avec le coefficient de variation annonc\'e
+(un tirage de $200\,000$ \'echantillons le montre, voir le script
+\texttt{06\_calcul/python/verifications.py} du d\'ep\^ot)~; la comparaison portait
+sur des valeurs identiques. La pr\'esente formulation ne les reprend pas.
+\end{remark}
+
+\subsubsection{R\'esultats quantiques}
+\label{subsec:resultats_quantiques_bootstrap}
+
+Avec un coefficient de variation de $25\,\%$ sur $\Delta_q$, le rapport
+$\Delta_q/\lambda$ ($\lambda = 128$) a pour intervalle \`a $95\,\%$ environ
+$[0{,}11;\,0{,}33]$ pour ML-DSA ($\Delta_q = 28$) et $[0{,}10;\,0{,}29]$ pour SLH-DSA
+($\Delta_q = 25$). Le terme $\eta_q H(C)/\lambda$ est nul pour ces signatures,
+qui sont des cha\^{\i}nes de bits classiques~; dans le sc\'enario hypoth\'etique
+d'un support quantique ($\eta_q \approx 0{,}08$), il vaut moins d'un centi\`eme
+et ne modifie pas ces intervalles. Les intervalles post-quantiques de
+la formulation initiale ne sont pas repris, pour les m\^emes raisons.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Coh\'erence avec nos travaux ant\'erieurs}
+\label{sec:validation_croisee_benchmarks}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Rep\`eres classiques}
+\label{subsec:benchmarks_classiques}
+
+Le tableau~\ref{tab:benchmarks_classiques} situe les trois valeurs de $\Delta$
+retenues par rapport aux rep\`eres propos\'es dans nos travaux ant\'erieurs et
+dans la litt\'erature sur la rationalit\'e born\'ee. Hormis la r\'ef\'erence basse,
+ces rep\`eres sont des auto-citations qui \'etablissent la coh\'erence avec nos
+publications sans apporter de confirmation ind\'ependante.
+
+\begin{table}[htbp]
+\centering
+\caption{Rep\`eres pour $\Delta$~: coh\'erence avec nos travaux ant\'erieurs}
+\label{tab:benchmarks_classiques}
+\begin{tabular}{@{}lcll@{}}
+\toprule
+\textbf{Institution} & $\Delta$ \textbf{estim\'e} &
+\textbf{Source} & \textbf{Statut} \\
+\midrule
+Tribunaux petites cr\'eances & $\approx 25$ bits & \cite{Simon82} & Ordre de grandeur (analogie) \\
+Autorit\'es fiscales & $\approx 65$ bits & \cite{MINKA2026CRO} & Travaux ant\'erieurs \\
+R\'egulateurs financiers & $\approx 75$ bits & \cite{MINKA2026CRO} & Travaux ant\'erieurs \\
+\midrule
+ECDSA (tribunaux contrats) & 35 bits & \cite{MINKA2026SOTP} & Calibration \\
+Helios (commissions \'elect.) & 56 bits & \cite{MINKA2026SOTP} & Calibration \\
+zk-SNARKs (r\'egulateurs) & 73 bits & \cite{MINKA2026SOTP} & Calibration \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Rep\`eres quantiques projet\'es}
+\label{subsec:benchmarks_quantiques}
+
+Aucun rep\`ere historique n'existe pour $\Delta_q$, car la transition PQC est en
+cours et les institutions n'ont pas encore accumul\'e de pratique. Le
+tableau~\ref{tab:benchmarks_quantiques} propose une grille de projection
+index\'ee sur le niveau de pr\'eparation institutionnelle, qui rel\`eve de
+l'hypoth\`ese.
+
+\begin{table}[htbp]
+\centering
+\caption{Grille projet\'ee pour $\Delta_q$ selon le niveau de pr\'eparation PQC (hypoth\`ese)}
+\label{tab:benchmarks_quantiques}
+\begin{tabular}{@{}lcll@{}}
+\toprule
+\textbf{Niveau de pr\'eparation} & $\Delta_q$ \textbf{projet\'e} &
+\textbf{Contexte} & \textbf{Horizon} \\
+\midrule
+Non pr\'epar\'e & $15$--$25$ bits & Transition d\'ebutante & 2025--2026 \\
+Partiellement pr\'epar\'e & $25$--$45$ bits & Formation en cours & 2026--2027 \\
+Bien pr\'epar\'e & $45$--$67$ bits & Standards int\'egr\'es & 2027--2028 \\
+Expert PQC & $60$--$80$ bits & Anticipation avanc\'ee & 2028+ \\
+\midrule
+\multicolumn{4}{l}{\textit{Valeurs de calibration retenues}} \\
+\midrule
+ML-DSA-65 (non pr\'epar\'e) & 28 bits & Signature & 2025 \\
+SLH-DSA (non pr\'epar\'e) & 25 bits & Signature (hachage) & 2025 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{\'Elicitation de plausibilit\'e}
+\label{sec:evaluation_experts}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+Les estimations ont fait l'objet d'\'echanges informels avec des interlocuteurs
+de profils juridique, technique et r\'eglementaire. Faute d'un protocole
+document\'e (fonctions des personnes consult\'ees, date, grille d'\'evaluation,
+consentement), ces \'echanges ne sont pas pr\'esent\'es comme un r\'esultat de
+cette th\`ese. Les scores de la formulation initiale ne sont pas repris. Une
+\'elicitation structur\'ee, de type Delphi, pourrait \^etre int\'egr\'ee au
+programme de la section~\ref{sec:protocoles_experimentaux}.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{D\'ependance en $\lambda$}
+\label{sec:stabilite_lambda}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+\label{subsec:stabilite_classiques}\label{subsec:stabilite_quantiques}
+
+\`A $\Delta$ fix\'e, la borne d\'ecro\^it en $1/\lambda$. Le rapport $\Delta/\lambda$
+vaut ainsi $0{,}273$ pour ECDSA \`a $\lambda = 128$ et $0{,}137$ \`a $\lambda = 256$. Il s'agit
+d'une pr\'ediction du mod\`ele, qui reste \`a tester. La formulation initiale
+pr\'esentait des produits \og stables\fg{} en $\lambda$ ($0{,}273 \to 0{,}270$). La
+forme de la borne conduit \`a ne pas reprendre ces tableaux. Que le produit CLO d'un
+syst\`eme d\'eploy\'e varie peu avec $\lambda$ est plausible, mais cela illustre
+justement que ces syst\`emes ne sont pas des instances du th\'eor\`eme
+(Remarque~\ref{rem:portee_cas_etude}).
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Test de significativit\'e}
+\label{sec:test_significativite}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+\label{subsec:test_classiques}\label{subsec:test_quantiques}
+
+La formulation initiale rapportait une corr\'elation $r = 0{,}9997$ entre les deux
+voies d'estimation, avec $p < 10^{-6}$ par permutation. Ce test n'est pas repris,
+pour deux raisons. Avec trois points, un test de permutation ne compte que $3! = 6$
+permutations, de sorte que la plus petite $p$-valeur atteignable est $1/6$. Surtout, la
+corr\'elation mesurait une identit\'e, puisque $\Delta$ avait \'et\'e fix\'e par
+$\Delta := \lambda \cdot (\Conf \cdot \Relver \cdot \Opp)$.
+
+Pour les syst\`emes post-quantiques, la confrontation des produits CLO$^q$
+illustratifs \`a la borne figure au tableau~\ref{tab:decomposition_borne_pq}, qui montre que
+les trois produits la d\'epassent. Ce d\'epassement ne r\'efute pas le
+th\'eor\`eme, dont ces syst\`emes ne sont pas des instances. Il emp\^eche en
+revanche d'affirmer que la borne est \og respect\'ee\fg.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Donn\'ees brutes et format CSV}
+\label{sec:donnees_brutes}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{Structure du jeu de donn\'ees}
+\label{subsec:structure_csv}
+
+Les valeurs de ce chapitre sont consign\'ees dans deux fichiers du d\'ep\^ot
+compagnon. Le premier, \texttt{06\_calcul/data/parametres\_reference.csv}, reproduit le
+tableau~\ref{tab:parametres_reference} et les triplets CLO des syst\`emes
+classiques~; le second, \texttt{06\_calcul/data/calibration\_pq.csv}, reproduit le
+tableau~\ref{tab:decomposition_borne_pq}. Leur sch\'ema complet figure dans
+\texttt{06\_calcul/data/SCHEMA\_fr.md}~; le tableau~\ref{tab:structure_csv} en donne les
+colonnes principales. Toutes les valeurs sont des param\`etres de calibration
+illustratifs, sans mesure.
+
+\begin{table}[htbp]
+\centering
+\caption{Colonnes principales des fichiers de donn\'ees}
+\label{tab:structure_csv}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Colonne} & \textbf{Type} & \textbf{Description} \\
+\midrule
+\texttt{system} & cha\^{\i}ne & Identifiant syst\`eme \\
+\texttt{H\_C\_domaine}, \texttt{H\_C\_espece} & r\'eel & Entropie contextuelle (deux \'echelles) \\
+\texttt{Delta}, \texttt{Delta\_q} & r\'eel & Capacit\'e d'extraction (calibration) \\
+\texttt{alpha}, \texttt{beta} & r\'eel & Granularit\'e, r\'egularit\'e \\
+\texttt{eta\_q} & r\'eel & Perte d'interpr\'etabilit\'e (sc\'enario~; $0$ pour une cha\^{\i}ne de bits) \\
+\texttt{lambda} & entier & Param\`etre de s\'ecurit\'e \\
+\texttt{product\_clo} & r\'eel & Produit CLO (calibration illustrative, $\Relver$) \\
+\texttt{borne\_these} & r\'eel & Majoration affaiblie $(\Delta_q + \eta_q H(C))/\lambda$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\label{subsec:echantillon_classiques}\label{subsec:echantillon_quantiques}
+Les colonnes \texttt{product\_pred}, \texttt{product\_meas} et \texttt{borne} de la
+formulation initiale deviennent \texttt{product\_clo} et \texttt{borne\_these}, car
+le jeu de donn\'ees ne contient aucune mesure et la \og pr\'ediction\fg{} co\"{\i}ncidait
+avec le produit CLO.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Synth\`ese}
+\label{sec:synthese_validation}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+Le tableau~\ref{tab:synthese_validation} r\'ecapitule ce que cette section
+\'etablit ainsi que ce qu'elle n'\'etablit pas.
+
+\begin{table}[htbp]
+\centering
+\caption{Synth\`ese de la calibration r\'etrospective}
+\label{tab:synthese_validation}
+\small
+\begin{tabular}{@{}llccl@{}}
+\toprule
+\textbf{Crit\`ere} & \textbf{M\'etrique} & \textbf{Classique} & \textbf{PQC} &
+\textbf{Statut} \\
+\midrule
+Plausibilit\'e des $\Delta$ & Intervalle cognitif $[20,80]$ & 3/3 & 2/2 & Ordre de grandeur \\
+Hypoth\`ese~2$'$ & $H(V|C) \geq \gamma$ & 1/3 (ECDSA) & --- & Hors champ sinon \\
+Produit $\leq$ borne & --- & non applicable & d\'epass\'ee & Syst\`emes hors champ \\
+Incertitude & IC~95\,\% de $\Delta/\lambda$ & $\pm 39\,\%$ & $\pm 49\,\%$ & CV suppos\'e \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Conclusion.}
+\begin{itemize}
+\item \textbf{Classique (C2/C4).} Les ordres de grandeur retenus sont
+  mutuellement coh\'erents~; aucune validation empirique n'est revendiqu\'ee.
+\item \textbf{Post-quantique (C3).} Les produits illustratifs d\'epassent la
+  borne~; les param\`etres $\Delta_q$ sont des postulats \`a mesurer en priorit\'e.
+\item \textbf{R\'eserve.} La validation prospective demeure n\'ecessaire. Les
+  protocoles de la section~\ref{sec:protocoles_experimentaux} fournissent les
+  mesures de $\Delta$, $\Delta_q$ et $\eta_q$ qui restent \`a produire, avec les
+  crit\`eres de r\'efutation du tableau~\ref{tab:criteres_refutation}~; leur
+  statut de d\'eploiement est \'etabli \`a la
+  section~\ref{subsubsec:statut_deploiement}.
+\end{itemize}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Reproductibilit\'e}
+\label{sec:reproductibilite}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+
+\subsubsection{D\'ep\^ot}
+\label{subsec:depot}
+
+\begin{center}
+\url{https://github.com/MINKAThierry/PhDThesis}\\
+(version 1.0.0, archiv\'ee sous le DOI \texttt{10.5281/zenodo.XXXXXXX})
+\end{center}
+
+Le d\'ep\^ot~\cite{CROTrilemmaDepot} s'organise en huit r\'epertoires, d\'ecrits au
+tableau~\ref{tab:depot_structure}. Chacun contient un fichier \texttt{README} bilingue
+(fran\c{c}ais et anglais) qui indique le statut de son contenu, publi\'e, pr\'eprint ou
+proposition de th\`ese.
+
+\begin{table}[htbp]
+\centering
+\caption{Organisation du d\'ep\^ot}
+\label{tab:depot_structure}
+\small
+\begin{tabularx}{\textwidth}{@{}l X l@{}}
+\toprule
+\textbf{R\'epertoire} & \textbf{Contenu} & \textbf{Partie de la th\`ese} \\
+\midrule
+00\_these & Sources \LaTeX{} et PDF du manuscrit & Ensemble \\
+01\_publie & Les trois articles publi\'es dans IEEE Access (P1, P2, P3) & Chap.~1 \`a 3, annexe~\ref{chap:annexe_publications} \\
+02\_preprints & Fiches des neuf pr\'eprints IACR ePrint cit\'es & Chap.~1, annexe~\ref{chap:annexe_publications} \\
+03\_resultats\_these & \'Enonc\'es propres \`a la th\`ese et formulations pr\'ecis\'ees par rapport aux articles & Chap.~2 \`a 4 \\
+04\_sotp & Sp\'ecification de la famille SOTP, impl\'ementations de r\'ef\'erence et preuves game-based & Chap.~\ref{chap:constructions}, annexe~\ref{chap:annexe_gamebased} \\
+05\_formalisation\_lean & Fichier ConditionalCRO.lean (version 2.2) et configuration Lean/Mathlib & Section~\ref{sec:lean4}, annexe~\ref{chap:annexe_lean4} \\
+06\_calcul & Scripts, donn\'ees de calibration, sorties de r\'ef\'erence et tests & Section~\ref{sec:validation_retrospective} \\
+07\_protocoles\_terrain & Instruments des protocoles P1 \`a P7, non d\'eploy\'es & Section~\ref{sec:protocoles_experimentaux} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Le r\'epertoire \texttt{06\_calcul/} r\'eunit les
+scripts ci-dessous (\texttt{python/}), les donn\'ees de calibration (\texttt{data/}),
+les sorties de r\'ef\'erence avec leurs empreintes SHA-256 (\texttt{results/}) et une
+batterie de tests qui recalcule chaque valeur num\'erique cit\'ee dans ce chapitre
+(\texttt{tests/}). La commande \texttt{./reproduire.sh}, lanc\'ee dans
+\texttt{06\_calcul/}, r\'eg\'en\`ere l'ensemble.
+
+\subsubsection{Environnement}
+\label{subsec:environnement}
+
+\begin{table}[htbp]
+\centering
+\caption{Environnement de calcul pour reproductibilit\'e}
+\label{tab:environnement_calcul}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Composante} & \textbf{Version} \\
+\midrule
+Python & 3.10 \`a 3.12 (r\'ef\'erence~: 3.11) \\
+NumPy & $\geq 1.24$ \\
+mpmath & $\geq 1.3$ \\
+Lean~4 / Mathlib & v4.34.0 / v4.34.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Scripts}
+\label{subsec:scripts_validation}
+
+Les commandes suivantes s'ex\'ecutent depuis \texttt{06\_calcul/python/}.
+
+\noindent\textbf{Calibration classique~:}
+\begin{verbatim}
+$ python validate_sotp.py --system all --type classical --lambda 128
+\end{verbatim}
+
+\noindent\textbf{Calibration post-quantique~:}
+\begin{verbatim}
+$ python validate_sotp.py --system all --type postquantum --lambda 128
+\end{verbatim}
+
+\noindent\textbf{Analyse de sensibilit\'e $\eta_q$ (sc\'enario hypoth\'etique)~:}
+\begin{verbatim}
+$ python sensitivity_eta_q.py --range 0.01:0.20 --steps 20
+\end{verbatim}
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre pose la plume. Il a vu des ordres de grandeur coh\'erents entre eux,
+des intervalles dont la largeur est assum\'ee sans fard ainsi que des d\'epassements de borne
+nomm\'es comme tels. Il a vu aussi des tests \'ecart\'es parce qu'ils
+n'apportaient aucune information.
+
+Il retient surtout la derni\`ere ligne, selon laquelle la validation prospective reste
+\`a faire. Elle est nomm\'ee comme telle, avec des crit\`eres de r\'efutation
+fix\'es \`a l'avance. L'arbitre ne confond pas calibration et preuve~; le dossier non
+plus.
+\end{boiteArbitre}

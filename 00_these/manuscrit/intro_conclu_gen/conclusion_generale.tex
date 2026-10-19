@@ -1,0 +1,402 @@
+% ============================================================================
+% CONCLUSION G\'eN\'eRALE
+% source : intro_conclu_gen/conclusion_generale.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 révisée
+% ============================================================================
+
+%\chapter*{CONCLUSION G\'eN\'eRALE}
+%\addcontentsline{toc}{chapter}{Conclusion g\'en\'erale}
+\label{chap:conclusion_generale}
+
+% ----------------------------------------------------------------------------
+\section{RETOUR SUR LES OBJECTIFS DE RECHERCHE}
+\label{sec:cg_questions}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+Le \textbf{paradoxe de l'authenticit\'e invisible}~\cite{MINKA2026CLO}, selon lequel une preuve
+cryptographique math\'ematiquement irr\'eprochable peut demeurer institutionnellement
+opaque, formalise une tension latente entre les exigences cryptographiques et
+l'utilit\'e institutionnelle qui passe par l'interpr\'etabilit\'e des preuves par
+les arbitres (juge, r\'egulateur, auditeur) non-experts. Nous nous sommes servi
+d'exemples illustratifs~\cite{IACR2025incident,Adida09UCL} d\'ecrits \`a la
+section~\ref{subsec:cas_etude} pour mat\'erialiser la r\'ealit\'e de cette
+situation et en faciliter la compr\'ehension. Ce paradoxe g\'en\`ere la
+probl\'ematique centrale formul\'ee ci-dessous.
+
+\begin{boiteProblematique}{Probl\'ematique centrale}
+\textit{Comment, d'une part, concilier la s\'ecurit\'e cryptographique qui
+requiert l'opacit\'e computationnelle avec l'interpr\'etabilit\'e
+institutionnelle qui requiert la transparence s\'emantique~? D'autre part,
+existe-t-il des limites fondamentales aux compromis r\'ealisables entre
+confidentialit\'e, fiabilit\'e et opposabilit\'e~?}
+\end{boiteProblematique}
+
+Cette th\`ese y r\'epond en traitant les six objectifs qui en
+d\'ecoulent, avec le statut propre \`a chacun.
+
+\medskip
+
+\textbf{Obj~\ref{obj:obj1_unification}. Formalisation.} Peut-on formaliser
+l'utilit\'e institutionnelle d'un protocole cryptographique~? Nous avons
+d\'efini trois mesures issues de la th\'eorie de
+l'information~\cite{Shannon48,CoverThomas06}, \`a savoir $\Conf$ (statistique), la
+fiabilit\'e distingu\'ee en $\Relrec$ (reconstruction) et $\Relver$
+(v\'erification), enfin $\Opp = I(V;\Sigma|C)/H(V|C)$, dont l'in\'egalit\'e
+$I(V;\Sigma|C) \leq \min\{H(\Sigma|C),H(V|C)\} \leq \alpha H(\mathcal{C})$ formalise
+le goulot contextuel.
+L'opposabilit\'e $\Opp$ \'etait absente de tout cadre cryptographique
+ant\'erieur.
+
+\textbf{Obj~\ref{obj:obj2_impossibilite}. Bornes.} Existent-ils des limites
+fondamentales sur les compromis r\'ealisables~? Sous quatre hypoth\`eses
+institutionnelles explicites, nous avons \'etabli la borne
+\begin{equation}
+  \Conf \cdot \Relrec \cdot \Opp \;\leq\;
+  \frac{1}{\gamma}\left(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\end{equation}
+o\`u $\gamma = \alpha H(C) - 1 \geq 1$ et $\kappa$ est la constante du
+r\'egime de pr\'eservation de la confidentialit\'e
+(Hypoth\`ese~\ref{ass:regime}). Le terme dominant de cette borne est
+$\Delta/(\gamma\lambda)$~; les autres sont en $O(\lambda^{-2})$. La forme raffin\'ee
+\eqref{eq:trilemme_cro_raffine} identifie le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la
+capacit\'e d'extraction institutionnelle est la contrainte liante, la puissance
+de calcul de l'adversaire passant au second plan. La formulation
+publi\'ee~\cite{MINKA2026CRO} s'obtient comme cas particulier.
+
+\textbf{Obj~\ref{obj:obj3_postquantique}. Extension quantique.} Les bornes CRO
+se pr\'eservent-elles face aux adversaires quantiques~? Nous avons \'etabli
+le Trilemme CRO post-quantique
+\begin{equation}
+  \Conf^q \cdot \Relrec^q \cdot \Opp^q \;\leq\;
+  \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa(\Delta_q+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\end{equation}
+o\`u $\Delta_q$ est la capacit\'e d'extraction quantique et $\eta_q$ quantifie
+la perte d'interpr\'etabilit\'e, nulle pour les preuves qui sont des cha\^{\i}nes
+de bits classiques, dont les signatures ML-DSA et SLH-DSA.
+
+\textbf{Obj~\ref{obj:obj4_saturation}. Optimalit\'e.} Peut-on approcher ces
+bornes~? La famille SOTP propose une construction par r\'egime, SOTP-Low,
+SOTP-Base (projection Johnson-Lindenstrauss) et SOTP-High (Groth16). Leur
+confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees sous
+des hypoth\`eses standard~; leur opposabilit\'e est guid\'ee par une heuristique
+de conception, tandis que leur optimalit\'e demeure conjecturale
+(Conjecture~\ref{conj:optimalite_universelle}). Cet objectif est donc
+partiellement atteint.
+
+\textbf{Obj~\ref{obj:obj5_verification}. V\'erification.} Comment certifier la
+correction d'un th\'eor\`eme complexe~? La formalisation Lean4 a
+certifi\'e m\'ecaniquement le noyau alg\'ebrique du th\'eor\`eme
+(section~\ref{sec:lean4}), ainsi que la forme raffin\'ee de la borne. Fano et
+Pinsker y sont pos\'es comme propri\'et\'es des instances de protocole~; les
+hypoth\`eses institutionnelles y sont aussi explicit\'ees. La formalisation a produit
+deux t\'emoins, l'un de coh\'erence (un point du mod\`ele abstrait o\`u la
+borne est atteinte, non r\'ealisable par un protocole), l'autre de port\'ee
+(une instance hors r\'egime atteint $1/4$). Le d\'etail de ce que la certification a rendu explicite, hypoth\`eses,
+constantes et r\'egime de validit\'e, est pr\'esent\'e \`a la
+sous-section~\ref{subsec:lean4_erreurs}.
+
+\textbf{Obj~\ref{obj:obj6_experimentation}. Exp\'erimentation.} Comment rendre
+ces bornes testables~? Six protocoles op\'erationnels dotent chacun des
+param\`etres institutionnels d'une d\'efinition mesurable, d'un estimateur et
+d'un plan d'\'echantillonnage. Ils fixent aussi les seuils \`a partir desquels le
+mod\`ele serait r\'efut\'e (tableau~\ref{tab:criteres_refutation}). Une
+calibration illustrative sur des syst\`emes d\'eploy\'es v\'erifie que les ordres de
+grandeur retenus sont mutuellement coh\'erents~; ces syst\`emes ne sont pas des
+instances du th\'eor\`eme. Le programme exp\'erimental lui-m\^eme n'a d'ailleurs pas \'et\'e
+d\'eploy\'e dans le cadre de cette th\`ese.
+
+\medskip
+\`A la question de savoir si confidentialit\'e, fiabilit\'e et opposabilit\'e
+peuvent \^etre simultan\'ement maximis\'ees, la th\`ese r\'epond par la n\'egative
+sous quatre hypoth\`eses institutionnelles explicites. Le produit y est born\'e
+par une quantit\'e dont le terme dominant est $\Delta/(\gamma\lambda)$, tandis que la
+forme raffin\'ee identifie exactement le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la
+capacit\'e d'extraction institutionnelle est la contrainte liante. Le noyau
+alg\'ebrique de ce r\'esultat est certifi\'e en Lean4 et sa port\'ee est
+d\'elimit\'ee, puisque les syst\`emes d\'eploy\'es \`a haute fiabilit\'e de
+v\'erification n'en sont pas des instances et servent \`a calibrer les
+ordres de grandeur. L'existence de constructions atteignant la borne est
+formul\'ee comme conjecture et constitue, avec la mesure exp\'erimentale de
+$\Delta$ par l'estimateur $\hat{I}(V;\Sigma|M,C)$, le programme ouvert par ce travail.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{PRINCIPALES CONTRIBUTIONS}
+\label{sec:cg_contributions}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+Le cycle Obj~\ref{obj:obj1_unification}~$\to$~Obj~\ref{obj:obj2_impossibilite}~$\to$~Obj~\ref{obj:obj3_postquantique}~$\to$~Obj~\ref{obj:obj4_saturation}~$\to$~Obj~\ref{obj:obj5_verification}~$\to$~Obj~\ref{obj:obj6_experimentation} suivant la progression
+F$\to$B$\to$E$\to$S$\to$C$\to$X
+constitue le squelette logique de la th\`ese. Six contributions
+techniques (C1--C6) et trois apports transversaux en \'emergent.
+
+\subsection*{Contributions techniques (C1--C6)}
+
+\begin{table}[htbp]
+\centering
+\caption{Synth\`ese des six contributions}
+\label{tab:synthese_contributions}
+\small
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{\'Etape} & \textbf{Contribution} & \textbf{R\'esultat cl\'e} \\
+\midrule
+F (Formaliser) & C1~: Cadre CLO & M\'etriques $\Conf$, $\Relrec$/$\Relver$, $\Opp$~; goulot contextuel \\
+B (Borner) & C2~: Trilemme CRO classique & Borne $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$ et forme raffin\'ee \\
+E (\'Etendre) & C3~: Trilemme CRO post-quantique & Borne avec $\Delta_q$, $\eta_q$~; calibration NIST PQC \\
+S (Saturer) & C4~: Famille SOTP & Trois constructions ($\Conf$, $\Relver$ prouv\'ees)~; optimalit\'e conjectur\'ee \\
+C (Certifier) & C5~: Certification Lean4 & Noyau v\'erifi\'e, t\'emoins de coh\'erence et port\'ee \\
+X (eXp\'erimenter) & C6~: Programme de validation & Protocoles exp\'erimentaux sp\'ecifi\'es, falsifiables \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{C1. Cadre CLO}~\cite{MINKA2026CLO}. Premier cadre unifi\'e
+formalisant $\Conf$, $\Rel$ et $\Opp$ via la th\'eorie de l'information, avec
+la distinction entre fiabilit\'e de reconstruction et de v\'erification.
+Le th\'eor\`eme du goulot d'\'etranglement contextuel \'etablit que
+$I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$~; un verdict d\'eterministe donne $\Opp = 1$.
+
+\textbf{C2. Trilemme CRO conditionnel}~\cite{MINKA2026CRO}. Premi\`ere
+borne prouv\'ee sur les compromis $(\Conf, \Rel, \Opp)$, conditionnelle
+aux param\`etres $(\Delta, \alpha, \beta)$ et au r\'egime de
+confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La forme explicite
+est $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$~;
+la forme raffin\'ee, fond\'ee sur l'identit\'e
+$I(V;\Sigma|C) = I(V;M|C) + I(V;\Sigma|M,C)$ pour un interpr\`ete admissible, distingue
+un r\'egime o\`u Fano limite l'opposabilit\'e et un r\'egime o\`u $\Delta$ la limite.
+La finesse de la borne reste une question ouverte.
+
+\textbf{C3. Trilemme CRO post-quantique}~\cite{MINKA2026PQCRO}. Extension
+aux adversaires quantiques avec param\`etres $\Delta_q$ et $\eta_q$.
+Calibration illustrative sur ML-DSA et SLH-DSA, pour lesquelles $\eta_q = 0$.
+
+\textbf{C4. Famille SOTP}. Trois constructions, une par r\'egime~;
+confidentialit\'e et fiabilit\'e de v\'erification prouv\'ees sous PRG, DLog et
+q-PKE~; opposabilit\'e guid\'ee par une heuristique de conception~; optimalit\'e
+conjectur\'ee. Introduction du paradigme Gold-Iron-Clay.
+
+\textbf{C5. Formalisation Lean4}. Certification m\'ecanis\'ee
+du noyau alg\'ebrique et de la forme raffin\'ee. Fano et Pinsker pos\'es comme
+propri\'et\'es d'instance, explicitation des hypoth\`eses institutionnelles
+et production de deux t\'emoins, l'un de coh\'erence (mod\`ele abstrait), l'autre de
+port\'ee. Les formulations alternatives issues de
+la certification sont pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
+
+\textbf{C6. Programme de validation falsifiable}. Les protocoles
+exp\'erimentaux permettant de mesurer $\Delta$, $\alpha$, $\beta$,
+$\Delta_q$ et $\eta_q$ sont sp\'ecifi\'es jusqu'au niveau
+op\'erationnel~(chapitre~\ref{chap:experimentation}).
+
+\subsection*{Apports transversaux}
+
+\textbf{Apport constructif (de la borne au guide).} La famille SOTP
+transforme le Trilemme CRO en guide de conception, sans \'etablir que la
+borne est atteinte, question qui fait l'objet de la
+Conjecture~\ref{conj:optimalite_universelle}. Comme CAP trouve son sens dans
+les syst\`emes distribu\'es r\'eels et FLP dans les protocoles partiels, le
+Trilemme CRO trouve un prolongement dans les trois variantes
+SOTP~(section~\ref{subsec:portee_constructive}).
+
+\textbf{Apport m\'ethodologique (la le\c{c}on de la formalisation).}
+La formalisation Lean4 a conduit \`a des formulations plus pr\'ecises de trois
+\'etapes des preuves publi\'ees (sens d'une in\'egalit\'e, statut de
+l'Hypoth\`ese~2, r\'esolution d'une optimisation). Elle a \'etabli par un cas
+limite la n\'ecessit\'e du r\'egime de confidentialit\'e. La le\c{c}on, selon
+laquelle la formalisation gagne \`a pr\'ec\'eder la publication, est d\'evelopp\'ee
+\`a la sous-section~\ref{subsec:verification_corrige_lecon}. Les formulations
+alternatives sont pr\'esent\'ees \`a la
+sous-section~\ref{subsec:lean4_erreurs}.
+
+\textbf{Apport \'epist\'emique (un programme falsifiable).} Le
+chapitre~\ref{chap:experimentation} sp\'ecifie comment tester le
+cadre, transformant un r\'esultat conditionnel en programme scientifique
+falsifiable au sens de Popper~\cite{Popper1934}. Sans cette
+sp\'ecification, le Trilemme CRO serait non testable~; avec elle, il est
+testable et critiquable~(section~\ref{subsec:statut_protocoles_experimentaux}).
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{POSITIONNEMENT DANS LA LITT\'ERATURE}
+\label{sec:cg_positionnement}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+Quatre corpus ont abord\'e des aspects partiels du probl\`eme, \`a savoir la
+QIF~\cite{Smith09}, la s\'ecurit\'e utilisable~\cite{Bonneau12}, les \'etudes
+juridiques~\cite{Kerr04} et les trilemmes d'impossibilit\'e
+(CAP~\cite{Brewer00,GilbertLynch02}, FLP~\cite{FLP85},
+Blockchain~\cite{Nakamoto08,Buterin17}). Le cadre CLO-CRO s'en distingue
+en ce qu'il formalise simultan\'ement les trois dimensions
+$(\Conf, \Rel, \Opp)$, prouve une borne quantitative conditionnelle
+classique et quantique, propose des constructions dont l'optimalit\'e est
+conjectur\'ee et certifie m\'ecaniquement une partie du r\'esultat.
+
+\begin{table}[htbp]
+\centering
+\caption{Positionnement par rapport aux travaux existants.}
+\label{tab:positionnement_travaux}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllllll@{}}
+\toprule
+\textbf{Cadre} & \textbf{Conf} & \textbf{Rel} & \textbf{Opp} & \textbf{Borne} & \textbf{Optimalit\'e} & \textbf{Validation} \\
+\midrule
+QIF                    & Total     & Total     & Absent      & Partielle & --- & --- \\
+S\'ecurit\'e utilisable    & Partielle & Absent    & Qualitative & Absent    & --- & Empirique \\
+\'Etudes juridiques      & Absent    & Absent    & Qualitative & Absent    & --- & --- \\
+CAP/FLP/Blockchain     & Partielle & Partielle & Absent      & Total     & Oui & --- \\
+\textbf{CLO-CRO (ce travail)} & \textbf{Total} & \textbf{Total} & \textbf{Total} & \textbf{Oui (conditionnel)} & \textbf{Partiel (conjecture)} & \textbf{Sp\'ecifi\'e, non d\'eploy\'e} \\
+\bottomrule
+\end{tabular}}
+
+\vspace{0.4em}
+\footnotesize
+\textit{\'Echelle de couverture.} Total (traitement formel complet)~;
+Partielle (traitement formel restreint \`a certains cas)~; Qualitative
+(traitement non formalis\'e)~; Absent (dimension non trait\'ee).
+\end{table}
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{PORT\'EE DE LA TH\`ESE}
+\label{sec:cg_portee}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+La port\'ee de cette th\`ese est quadruple.
+
+\textbf{Th\'eorique.} Les bornes C1--C3 \'etablissent des limites
+fondamentales conditionnelles \`a des param\`etres institutionnels
+mesurables.
+
+\textbf{Constructive.} La famille SOTP (C4) propose, pour chaque r\'egime, une
+construction aux propri\'et\'es cryptographiques prouv\'ees~; qu'elle approche
+les bornes \`a facteur constant est conjectur\'e.
+
+\textbf{Certifi\'ee.} La formalisation Lean4 (C5) certifie
+m\'ecaniquement le noyau alg\'ebrique du Trilemme CRO classique.
+
+\textbf{M\'ethodologique.} Le programme de validation (C6) et la
+le\c{c}on de la formalisation
+(section~\ref{subsec:verification_corrige_lecon}) fournissent \`a la
+communaut\'e des outils et des m\'ethodes transf\'erables.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{LIMITATIONS ET TRAVAUX FUTURS}
+\label{sec:cg_limitations}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+Quatre limitations d\'elimitent le p\'erim\`etre des contributions. Les
+hypoth\`eses institutionnelles $(\Delta, \alpha, \beta)$ ne sont pas
+encore valid\'ees par des \'etudes exp\'erimentales~; les valeurs retenues,
+de quelques dizaines de bits, sont une calibration illustrative rendue
+plausible par la litt\'erature sur la rationalit\'e born\'ee. L'opposabilit\'e
+des constructions SOTP est heuristique et leur optimalit\'e conjectur\'ee. La formalisation Lean4 couvre le noyau
+alg\'ebrique~; les constructions SOTP et l'extension post-quantique restent
+hors de son p\'erim\`etre. Les constructions SOTP disposent d'impl\'ementations
+de r\'ef\'erence dans le d\'ep\^ot compagnon, sans d\'eploiement en conditions
+r\'eelles. Une
+analyse compl\`ete des limitations est pr\'esent\'ee \`a la
+section~\ref{subsec:limitations_problemes_ouverts}.
+
+Les travaux futurs par contribution et par horizon sont d\'etaill\'es au
+tableau~\ref{tab:perspectives_horizons}.
+
+Le programme futur s'organise selon trois directions structurantes.
+
+\textbf{Validation empirique.} Les param\`etres $\Delta$, $\alpha$,
+$\beta$, $\Delta_q$, $\eta_q$ doivent \^etre mesur\'es sur des acteurs
+institutionnels r\'eels. Le programme du
+chapitre~\ref{chap:experimentation} fournit la feuille de route.
+
+\textbf{Extension de la formalisation.} La formalisation Lean4 doit
+\^etre \'etendue \`a SOTP et au cadre post-quantique, une fois les
+biblioth\`eques de th\'eorie de l'information quantique disponibles dans
+Mathlib~(section~\ref{subsubsec:extension_lean4_sotp_pq}).
+
+\textbf{Extension th\'eorique.} Les variantes du Trilemme CRO pour le
+chiffrement homomorphe, le calcul multi-parties et les contextes
+dynamiques restent \`a d\'evelopper~(section~\ref{subsec:axe3_extensions}).
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section{SIGNIFICATION}
+\label{sec:cg_signification}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+La cryptographie classique s'attache \`a la probabilit\'e qu'un
+adversaire casse un protocole, alors que la cryptographie institutionnelle
+s'interroge sur la probabilit\'e qu'un juge comprenne une
+preuve. Loin d'\^etre une m\'etrique de confort
+utilisateur, l'opposabilit\'e $\Opp$ traduit une contrainte propre \`a la nature de l'information,
+de m\^eme rang que la confidentialit\'e. Le Trilemme CRO dit que,
+sous ses hypoth\`eses, certains compromis sont impossibles, ind\'ependamment
+du talent des ing\'enieurs.
+
+La certification Lean4 illustre un pari \'epist\'emologique selon lequel les
+th\'eor\`emes importants m\'eritent une v\'erification m\'ecanique.
+
+La cryptographie institutionnelle dispose d\'esormais d'un cadre
+compos\'e de m\'etriques (CLO), d'une borne d'impossibilit\'e conditionnelle classique et
+quantique (CRO), de constructions (SOTP), d'une v\'erification formelle (Lean4)
+et d'un programme de validation (C6). Le travail restant (finesse de la borne,
+optimalit\'e des constructions, calibration des param\`etres,
+extensions FHE/MPC, validation empirique, standardisation) constitue un
+programme de recherche ouvert.
+
+La cryptographie n'existe pas dans le vide. Elle sert
+des institutions humaines soumises \`a des contraintes cognitives,
+organisationnelles et proc\'edurales. L'ignorance de ces
+contraintes engendre le paradoxe de l'authenticit\'e invisible.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+\section*{MOT DE LA FIN}
+\label{sec:cg_mot_fin}
+% ----------------------------------------------------------------------------
+\begin{sloppypar}
+
+Cette th\`ese a transform\'e en cadre quantitatif l'intuition qualitative
+selon laquelle les preuves cryptographiques sont opaques pour les interpr\`etes
+institutionnels. Ce cadre r\'eunit des m\'etriques d\'efinies, des bornes
+prouv\'ees sous hypoth\`eses, des constructions, une certification m\'ecanique
+et un programme de validation falsifiable. Dans le r\'egime que la forme
+raffin\'ee identifie, la contrainte dominante devient la capacit\'e d'extraction de l'interpr\`ete, la
+puissance de calcul de l'adversaire passant au second plan.
+Cette inversion de perspective est l'id\'ee centrale de cette th\`ese~; sa
+confirmation empirique reste \`a apporter.
+
+L'arbitre le rappelait, \emph{«~La rigueur ne se suppose pas. Elle se
+v\'erifie.~»} Cette th\`ese a v\'erifi\'e et pr\'ecis\'e ses r\'esultats, document\'e
+ces pr\'ecisions et sp\'ecifi\'e comment tester ce qui reste \`a
+\'etablir. En cela, la science se distingue de la sp\'eculation.
+
+\end{sloppypar}
+
+% ----------------------------------------------------------------------------
+% Bo\^ite finale
+% ----------------------------------------------------------------------------
+\begin{boiteArbitre}
+L'arbitre referme le dossier sans avoir r\'esolu le paradoxe, puisque le Trilemme
+CRO \'etablit qu'aucun protocole ne peut le r\'esoudre enti\`erement, que
+ce soit en environnement classique~\cite{MINKA2026CRO} ou
+quantique~\cite{MINKA2026PQCRO}. Il dispose toutefois d\'esormais de ce
+que la cryptographie classique ne lui avait jamais offert, \`a savoir une
+m\'etrique pour mesurer \`a quel point un protocole s'approche de ce qu'il
+peut interpr\'eter~\cite{MINKA2026CLO} ainsi qu'une famille de constructions pour
+commencer. Le paradoxe de l'authenticit\'e invisible n'est plus invisible
+puisqu'il est formalis\'e et born\'e, sous des hypoth\`eses qu'il reste \`a mesurer. Ce que l'arbitre ne comprend pas
+encore enti\`erement, la th\'eorie lui dit maintenant combien cela lui
+co\^ute en bits.
+\end{boiteArbitre}

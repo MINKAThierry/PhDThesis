@@ -1,0 +1,905 @@
+% ============================================================================
+% CHAPITRE: TRILEMME CRO CONDITIONNEL CLASSIQUE
+% source  : partie2/cro_classique.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
+% ============================================================================
+
+\section{LE TRILEMME CRO CONDITIONNEL CLASSIQUE}
+\label{sec:cro_classique}
+\begin{sloppypar}
+La section~\ref{sec:clo} a fix\'e le langage, avec trois m\'etriques
+d\'efinies via la th\'eorie de l'information~\cite{Shannon48,CoverThomas06} et un Th\'eor\`eme du Goulot d'\'etranglement
+Contextuel montrant que $I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$. Aucun r\'esultat n'interdit
+pourtant encore d'atteindre simultan\'ement $\Conf = \Rel = \Opp = 0{,}9$. Il
+reste donc \`a d\'eterminer o\`u s'arr\^ete le r\'ealisable.
+
+Nous bornons ici la r\'eponse, sous forme du \textbf{Trilemme CRO
+conditionnel classique}~\cite{MINKA2025CRO,MINKA2026CRO}. Ce r\'esultat, premi\`ere caract\'erisation quantitative
+des limites fondamentales de la cryptographie institutionnelle dans le r\'egime
+classique, borne sup\'erieurement le produit $\Conf \cdot \Rel \cdot \Opp$ en fonction de la capacit\'e
+d'extraction institutionnelle~$\Delta$, de la granularit\'e des verdicts~$\alpha$ et
+du param\`etre de s\'ecurit\'e~$\lambda$. Une forme raffin\'ee de la borne identifie
+exactement le r\'egime, d\'etermin\'e par la granularit\'e des verdicts et la richesse
+du contexte, dans lequel la contrainte liante tient \`a la capacit\'e d'extraction des interpr\`etes institutionnels, au-del\`a de la seule in\'egalit\'e de Fano.
+
+Deux contributions additionnelles compl\`etent cette section. La classification en
+r\'egimes op\'erationnels (sous-section~\ref{subsec:regimes_operationnels}) transforme la
+borne abstraite en guide de conception concret selon le niveau d'entropie
+contextuelle. Une calibration illustrative (sous-section~\ref{subsec:analyse_comparative})
+situe les ordres de grandeur des param\`etres institutionnels \`a partir des trois syst\`emes d\'eploy\'es \'etudi\'es
+dans le CLO~\cite{Adida08,Groth16,Johnson01}, qui ne sont pas des instances du th\'eor\`eme
+(Remarque~\ref{rem:portee_cas_etude}), conform\'ement \`a la note de m\'ethodologie pr\'esent\'ee dans la sous-section~\ref{subsec:note_methodo}.
+
+Cette section correspond \`a l'\'etape \textbf{B (Borner)} de la progression
+F$\to$\textbf{B}$\to$E$\to$S$\to$C$\to$X et apporte la contribution \textbf{C2} de cette th\`ese.
+
+La r\'eponse \`a l'Objectif~\ref{obj:obj2_impossibilite} est donc affirmative, puisque des
+limites fondamentales existent dans le r\'egime classique. Leur extension
+au contexte quantique sera \'etablie \`a la section suivante.
+\end{sloppypar}
+\begin{boiteArbitre}
+L'arbitre apprend qu'il existe une borne, qui rel\`eve d'une limite fondamentale, ind\'ependante de la technique et repose sur des hypoth\`eses qu'il peut lire et discuter.
+Quand ses verdicts sont plus fins que ce qu'il sait extraire, sa propre capacit\'e d'extraction~$\Delta$ le limite davantage que la puissance
+de l'adversaire. Les protocoles qu'il examine ne sont donc pas mal con\c{c}us,
+car ils se heurtent \`a une incompatibilit\'e structurelle d\'esormais \'enonc\'ee
+et prouv\'ee.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Mod\`ele formel \'etendu avec param\`etres institutionnels}
+\label{subsec:modele_formel_etendu}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous d\'efinissons trois param\`etres compl\'etant le mod\`ele CLO de la section~\ref{sec:clo}. Ces quantit\'es convertissent des contraintes
+qualitatives, \guillemotleft~capacit\'e cognitive limit\'ee~\guillemotright, \guillemotleft~d\'ecisions nuanc\'ees possibles~\guillemotright,
+\guillemotleft~protocoles bien con\c{c}us~\guillemotright, en grandeurs mesurables permettant des bornes
+rigoureuses~\cite{ClarksonSchneider10,Smith09}.
+
+\subsubsection{Param\`etres institutionnels}
+\label{subsubsec:parametres_institutionnels}
+
+\begin{definition}[Capacit\'e d'extraction institutionnelle]\label{def:delta_extraction}
+
+$\Delta \geq 0$ (en bits) quantifie la connaissance pr\'ealable des interpr\`etes
+institutionnels et leurs ressources cognitives au-del\`a du contexte formel~$C$~\cite{Simon82,Miller56}.
+Ce param\`etre agr\`ege les pr\'ec\'edents l\'egaux et la jurisprudence applicable~\cite{Mason07,Kerr04},
+l'expertise de domaine des d\'ecideurs~\cite{Ericsson95,Chi2006}, la documentation et les proc\'edures
+\'etablies, les capacit\'es de d\'elib\'eration collaborative entre experts~\cite{Sunstein2005,Hong2016}, ainsi
+que la m\'emoire institutionnelle et les bases de donn\'ees historiques~\cite{Argyris1978,Walsh1995}.
+
+\end{definition}
+
+\begin{definition}[Granularit\'e des verdicts]\label{def:alpha_granularite}
+
+$\alpha > 0$ (sans dimension) mesure la finesse de distinction des verdicts
+institutionnels relativement \`a la richesse contextuelle~:
+\begin{equation}
+\log_2 |\mathcal{V}_\lambda| \leq \alpha \cdot H(C)
+\label{eq:alpha_definition}
+\end{equation}
+Un tribunal rendu apte \`a distinguer douze niveaux de fraude dans un contexte \`a
+entropie $H(C) = 4$ bits correspond \`a $\alpha = \log_2 12/4 \approx 0{,}9$~\cite{Shannon48,CoverThomas06}.
+
+\end{definition}
+
+\begin{definition}[R\'egularit\'e du protocole]\label{def:beta_regularite}
+
+$\beta \geq 1$ borne la divergence Kullback-Leibler entre distributions de
+preuves pour messages distincts~\cite{Kullback1951,CoverThomas06}~:
+\begin{equation}
+\KL\!\left(P_{\Sigma|m_0,c} \,\|\, P_{\Sigma|m_1,c}\right) \leq \beta \cdot I(M;\Sigma|C)
+\label{eq:beta_definition}
+\end{equation}
+Ce param\`etre \'ecarte les protocoles pathologiques dont la divergence KL exploserait
+pour certaines paires de messages~\cite{Tsybakov2009}. Au sens statistique, un protocole
+qui publie le message en clair (signature) a des lois de preuve \`a supports disjoints
+et $\KL = \infty$, de sorte qu'il n'est pas $\beta$-r\'egulier. La $\beta$-r\'egularit\'e est une
+hypoth\`ese sur la classe de protocoles vis\'ee (protocoles \`a fuite contr\^ol\'ee), non
+une propri\'et\'e observ\'ee des protocoles d\'eploy\'es~\cite{Pedersen91,Groth16}.
+
+\end{definition}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsubsection{Hypoth\`eses sur les capacit\'es institutionnelles}
+\label{subsubsec:hypotheses_capacite}
+% -----------------------------------------------------------------------
+
+\begin{sloppypar}
+Nous posons quatre hypoth\`eses sur les capacit\'es
+institutionnelles~\cite{Simon1955,Miller56,Ericsson95}. Chacune repose
+sur des justifications multidisciplinaires ; aucune n'a \'et\'e valid\'ee
+\`a ce stade par protocoles exp\'erimentaux contr\^ol\'es mesurant
+directement $\Delta$, $\alpha$, $\beta$ aupr\`es d'acteurs
+institutionnels r\'eels, cette limitation est reconnue explicitement
+(sous-section~\ref{subsec:note_methodo}).
+
+\begin{definition}[Interpr\'etation institutionnelle admissible]\label{def:interp_admissible}
+Une interpr\'etation est admissible si le verdict s'\'ecrit
+$V = \mathsf{Interpret}(\Sigma, C, K)$, o\`u $K$ repr\'esente les ressources
+propres de l'institution (jurisprudence, expertise, d\'elib\'eration,
+al\'eas de d\'ecision) et satisfait
+\begin{equation}
+K \perp M \mid (\Sigma, C).
+\label{eq:interp_admissible}
+\end{equation}
+L'institution n'acc\`ede au message que par la preuve, de sorte que $M \to (\Sigma,C) \to V$
+est une cha\^ine de Markov. Le verdict peut \^etre stochastique.
+\end{definition}
+
+\begin{assumption}[Extraction born\'ee]
+\label{ass:extraction_bornee}
+Pour tout protocole CLO :
+\begin{equation}
+I(V;\Sigma|C) \leq I(M;\Sigma|C) + \Delta
+\label{eq:extraction_bornee}
+\end{equation}
+\end{assumption}
+
+\begin{proposition}[Fondement informationnel de l'Hypoth\`ese~\ref{ass:extraction_bornee}]
+\label{prop:fondement_extraction}
+Pour toute interpr\'etation admissible,
+\begin{equation}
+I(V;\Sigma|C) = I(V;M|C) + I(V;\Sigma|M,C) \;\leq\; I(M;\Sigma|C) + I(V;\Sigma|M,C).
+\label{eq:fondement_extraction}
+\end{equation}
+En cons\'equence, l'Hypoth\`ese~\ref{ass:extraction_bornee} est satisfaite
+d\`es que
+\begin{equation}
+I(V;\Sigma|M,C) \leq \Delta,
+\label{eq:extraction_bornee_forte}
+\end{equation}
+et $\Delta$ s'interpr\`ete exactement comme l'information que
+l'institution tire de la preuve \emph{au-del\`a du message}.
+\end{proposition}
+
+\begin{Preuve}[Proposition~\ref{prop:fondement_extraction}]\label{prv:fondement_extraction}
+\begin{cmtEtape}{Objectif.}
+Justifier l'Hypoth\`ese~\ref{ass:extraction_bornee} \`a partir d'une
+propri\'et\'e structurelle du processus d'interpr\'etation.
+\end{cmtEtape}
+Par la r\`egle de cha\^ine appliqu\'ee \`a $I(V;M,\Sigma|C)$ de deux
+mani\`eres, on obtient
+\begin{equation}
+I(V;M|C) + I(V;\Sigma|M,C) = I(V;\Sigma|C) + I(V;M|\Sigma,C).
+\end{equation}
+\cmtFormule{Deux d\'ecompositions de la m\^eme information mutuelle.}
+Sous~\eqref{eq:interp_admissible}, $V$ ne d\'epend de $M$ qu'\`a travers
+$(\Sigma,C)$, donc $I(V;M|\Sigma,C)=0$, ce qui donne l'\'egalit\'e
+de~\eqref{eq:fondement_extraction}. L'in\'egalit\'e de traitement des
+donn\'ees sur $M \to (\Sigma,C) \to V$ donne
+$I(V;M|C) \leq I(M;\Sigma|C)$.
+\cmt{L'institution ne peut pas apprendre sur le message plus que la preuve n'en contient~; elle peut en revanche lire dans la preuve des traits qui ne sont pas le message.}
+\end{Preuve}
+
+\begin{assumption}[Verdict efficace]
+\label{ass:verdicts_efficace}
+La taille de l'espace de verdict satisfait $|\mathcal{V}_\lambda| \leq
+2^{\alpha H(C)}$ pour une constante $\alpha > 0$, \emph{et} la fonction
+de verdict utilise efficacement le contexte disponible :
+\begin{equation}
+H(V|C) \geq \alpha H(C) - 1 =: \gamma, \qquad \gamma \geq 1
+\label{eq:verdicts_efficace}
+\end{equation}
+\end{assumption}
+
+\begin{remark}[Statut de l'Hypoth\`ese~\ref{ass:verdicts_efficace}]
+\label{rem:statut_verdict_efficace}
+L'in\'egalit\'e $|\mathcal{V}_\lambda| \leq 2^{\alpha H(C)}$ est une
+borne \emph{sup\'erieure} sur la taille de l'espace de verdict. Elle ne
+permet pas, \`a elle seule, de d\'eduire la borne \emph{inf\'erieure}
+$H(V|C) \geq \alpha H(C) - 1$. Cette borne inf\'erieure est la
+propri\'et\'e d'\textbf{efficacit\'e} du verdict, qui doit \^etre
+postul\'ee explicitement. Elle formalise l'id\'ee qu'une institution
+exploitant effectivement le contexte disponible distingue au moins
+$\gamma$ bits de verdicts. Pour les param\`etres institutionnels typiques
+($H(C) \geq 10$ bits, $\alpha \approx 1$), on a $\gamma \geq 9$.
+\end{remark}
+
+\begin{assumption}[R\'egularit\'e]
+\label{ass:regularite}
+La divergence KL satisfait $\KL(P_{\Sigma|m_0,c} \| P_{\Sigma|m_1,c})
+\leq \beta \cdot I(M;\Sigma|C)$.
+\end{assumption}
+
+\begin{assumption}[R\'egime de pr\'eservation de la confidentialit\'e]
+\label{ass:regime}
+Il existe une constante $\kappa \geq 0$, ind\'ependante de $\lambda$,
+telle que :
+\begin{equation}
+I(M;\Sigma|C) \leq \frac{\kappa}{\lambda}
+\label{eq:regime}
+\end{equation}
+\end{assumption}
+
+\begin{remark}[Statut et r\^ole de l'Hypoth\`ese~\ref{ass:regime}]
+\label{rem:statut_regime}
+Dans la version initiale de la preuve, ce r\'egime \'etait pr\'esent\'e
+comme une \emph{cons\'equence} de l'optimisation de $f(I)$ sur
+$[0, \lambda]$. La formalisation a conduit \`a une r\'esolution alternative de cette
+optimisation. La d\'eriv\'ee $f'(x) = 2x - \frac{5}{2}ax^{3/2}$ s'annule en
+$\sqrt{x^*} = \frac{4}{5a}$ et ce point est un \emph{maximiseur} de $f$. Le r\'egime
+$I = O(1/\lambda)$ ne peut donc pas \^etre d\'eduit de cette
+optimisation.
+
+L'Hypoth\`ese~\ref{ass:regime} est donc pos\'ee explicitement
+comme condition du th\'eor\`eme. Elle est pr\'ecis\'ement le r\'egime
+dans lequel les protocoles $\beta$-r\'eguliers garantissent la
+confidentialit\'e, comme l'\'etablit le
+Lemme~\ref{lem:confidentiality_guarantee}. Si
+$I \leq \kappa/\lambda$, alors
+$\Conf \geq 1 - \sqrt{c_0 \beta \kappa/\lambda} \to 1$ quand
+$\lambda \to \infty$.
+\end{remark}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.0, transform shape]
+% --- Borne de Fano (1+kappa/lambda)/lambda ---
+\draw[enspred, thick, dashed]
+    plot[smooth] coordinates {
+        (1.60, 6.348)
+        (2.00, 5.062)
+        (2.40, 4.210)
+        (2.80, 3.603)
+        (3.20, 3.149)
+        (4.00, 2.516)
+        (4.80, 2.094)
+        (5.60, 1.794)
+        (6.40, 1.569)
+        (8.00, 1.254)
+        (9.60, 1.044)
+    }
+    node[right, font=\small, text=enspred] {Fano seul};
+% --- Borne raffin\'ee, Delta < gamma ---
+\draw[enspblue, thick]
+    plot[smooth] coordinates {
+        (1.60, 1.676)
+        (2.00, 1.336)
+        (2.40, 1.110)
+        (2.80, 0.950)
+        (3.20, 0.830)
+        (4.00, 0.663)
+        (4.80, 0.552)
+        (5.60, 0.472)
+        (6.40, 0.413)
+        (8.00, 0.330)
+        (9.60, 0.275)
+    }
+    node[right, font=\small, text=enspblue, align=left] {Borne raffin\'ee\\$\Delta=5$, $\gamma=19$};
+% --- Axes ---
+\draw[-{Stealth[length=3mm]}, thick] (0,0) -- (10.5, 0)
+    node[right, font=\small] {$\lambda$};
+\draw[-{Stealth[length=3mm]}, thick] (0,0) -- (0, 7.0)
+    node[above, font=\small] {Majorant de $\Conf \cdot \Rel \cdot \Opp$};
+\foreach \y/\lab in {2.0/0{,}005, 4.0/0{,}010, 6.0/0{,}015} {
+    \draw[thin, chaptercolor] (-0.1, \y) -- (0.1, \y);
+    \node[left, font=\footnotesize] at (-0.1, \y) {$\lab$};
+}
+\node[left, font=\footnotesize] at (-0.1, 0) {$0$};
+\foreach \x/\lab in {1.6/64, 3.2/128, 6.4/256, 9.6/384} {
+    \draw[thin, chaptercolor] (\x, -0.1) -- (\x, 0.1);
+    \node[below, font=\footnotesize] at (\x, -0.1) {$\lab$};
+}
+\end{tikzpicture}
+\caption[Borne raffin\'ee du Trilemme CRO et borne de Fano]{%
+  Majorants de $\Conf \cdot \Rel \cdot \Opp$ en fonction de $\lambda$
+  ($\kappa = 1$)~: borne raffin\'ee~\eqref{eq:trilemme_cro_raffine} pour
+  $\Delta = 5$, $\alpha = 1$, $H(\mathcal{C}) = 20$ bits ($\gamma = 19$, trait
+  plein) et borne de Fano $(1+\kappa/\lambda)/\lambda$ (tirets). L'\'ecart entre
+  les deux mesure l'effet de la capacit\'e institutionnelle lorsque
+  $\Delta < \gamma$~; pour $\Delta \geq \gamma$, les deux courbes co\"incident.%
+}\label{fig:cro_bound}
+\end{figure}
+
+% -----------------------------------------------------------------------
+\subsection{\'Enonc\'e et preuve du Trilemme CRO classique}
+\label{subsec:enonce_trilemme}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous \'etablissons le r\'esultat principal du r\'egime classique.
+
+\begin{remark}[Version de la preuve]
+\label{rem:version_preuve_classique}
+La version de la preuve pr\'esent\'ee ici diff\`ere de celle de l'article
+publi\'e~\cite{MINKA2026CRO}. Les formulations alternatives retenues, issues
+de la certification Lean4, sont d\'etaill\'ees \`a la
+section~\ref{subsec:lean4_erreurs}.
+\end{remark}
+
+\begin{lemma}[Garantie de confidentialit\'e pour les protocoles r\'eguliers]
+\label{lem:confidentiality_guarantee}
+Pour tout protocole $\beta$-r\'egulier (Hypoth\`ese~\ref{ass:regularite}) :
+\begin{equation}
+\Conf(\mathcal{P}) \geq 1 - \sqrt{c_0 \beta \cdot I(M;\Sigma|C)}
+\label{eq:lemma4}
+\end{equation}
+o\`u $c_0 = 1/(2\ln 2) \approx 0{,}721$ est la constante de Pinsker.
+\end{lemma}
+
+\begin{proof}
+Par le Lemme~\ref{lem:compromis_conf_mi} (Pinsker) et
+l'Hypoth\`ese~\ref{ass:regularite}, pour tous $m_0, m_1 \in
+\mathcal{M}_\lambda$ et $c \in \mathcal{C}_\lambda$, on a
+\begin{equation}
+\TV(P_{\Sigma|m_0,c}, P_{\Sigma|m_1,c}) \leq \sqrt{c_0 \KL(P_{\Sigma|m_0,c} \| P_{\Sigma|m_1,c})} \leq \sqrt{c_0 \beta \cdot I(M;\Sigma|C)}
+\end{equation}
+En prenant le maximum sur $(m_0, m_1, c)$ et en appliquant la
+D\'efinition~\ref{def:confidentialite_clo}, on obtient~\eqref{eq:lemma4}.
+\end{proof}
+
+\begin{remark}[Interpr\'etation du Lemme~\ref{lem:confidentiality_guarantee}]
+\label{rem:interp_lemme4}
+Le Lemme~\ref{lem:confidentiality_guarantee} \'enonce que la faible
+information mutuelle conditionnelle, combin\'ee \`a la
+$\beta$-r\'egularit\'e, \emph{garantit} la confidentialit\'e. Si
+$I(M;\Sigma|C) \leq \kappa/\lambda$, alors
+$\Conf(\mathcal{P}) \geq 1 - \sqrt{c_0 \beta \kappa/\lambda} \to 1$
+quand $\lambda \to \infty$.
+\end{remark}
+
+\begin{remark}[Constante $c_0$]
+\label{rem:constante_c0}
+Avec des divergences en bits, la constante de Pinsker serr\'ee est
+$(\ln 2)/2 \approx 0{,}347$. La constante $c_0 = 1/(2\ln 2) \approx
+0{,}721$ utilis\'ee dans ce chapitre, reprise de~\cite{MINKA2026CRO}, est plus
+grande. Toute in\'egalit\'e \'enonc\'ee avec $c_0$ reste donc valide sans \^etre
+serr\'ee. Le qualificatif \og serr\'ee\fg{} employ\'e dans l'article publi\'e
+s'entend en ce sens.
+\end{remark}
+
+\begin{theorem}[Trilemme CRO conditionnel classique]
+\label{thm:trilemme_cro_conditionnel}
+Sous les Hypoth\`eses~\ref{ass:extraction_bornee},~\ref{ass:verdicts_efficace},
+\ref{ass:regularite} et~\ref{ass:regime}, pour tout protocole CLO avec
+$\lambda \geq 64$, $H(M) = \lambda$, $M \perp C$~:
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \leq \frac{\Delta}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
+\label{eq:trilemme_cro_conditionnel}
+\end{equation}
+Plus pr\'ecis\'ement, avec $\gamma = \alpha H(\mathcal{C}) - 1$~:
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \leq \frac{1}{\gamma}\left(\frac{\Delta}{\lambda}
++ \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\label{eq:trilemme_cro_explicite}
+\end{equation}
+et, sous la forme la plus pr\'ecise,
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \leq \frac{1+\kappa/\lambda}{\lambda}\,
+  \min\left\{1,\; \frac{\kappa/\lambda + \Delta}{\gamma}\right\}.
+\label{eq:trilemme_cro_raffine}
+\end{equation}
+De plus, $\Conf(\mathcal{P}) \geq 1 - \sqrt{c_0 \beta \kappa/\lambda}$
+par le Lemme~\ref{lem:confidentiality_guarantee}.
+\end{theorem}
+
+La preuve proc\`ede en cinq \'etapes. Les deux premi\`eres construisent les bornes
+individuelles sur $\Rel$ et $\Conf$ via les in\'egalit\'es classiques de Fano et de
+Pinsker~\cite{Fano61,CoverThomas06,Pinsker1964,Tsybakov2009}~; les \'etapes trois et quatre bornent $\Opp$ par les hypoth\`eses
+institutionnelles~\cite{Simon82,Miller56}~; la derni\`ere combine le produit et applique
+le r\'egime institutionnel.
+
+\begin{Preuve}[Preuve d\'etaill\'ee]\label{prv:cro_classique}
+
+\begin{cmtEtape}{Vue d'ensemble de la preuve.}
+Posons $x = I(M;\Sigma|C)$, l'information que la preuve r\'ev\`ele sur le
+message une fois le contexte connu. Toute la d\'emonstration consiste \`a
+exprimer les trois m\'etriques en fonction de cette \emph{unique} quantit\'e,
+puis \`a constater qu'elles ne peuvent cro\^itre ensemble. La fiabilit\'e
+exige $x$ grand~; la confidentialit\'e exige $x$ petit~; l'opposabilit\'e,
+elle, est plafonn\'ee par ce que l'institution parvient \`a extraire. Elle se
+d\'eroule en cinq \'etapes, o\`u (1)~Fano borne $\Rel$ par $x$~; (2)~Pinsker et la r\'egularit\'e
+garantissent $\Conf$ \`a partir de $x$~; (3)~l'extraction born\'ee borne
+$\Opp$~; (4)~la borne sur les verdicts ach\`eve cette contrainte~;
+(5)~on forme le produit et on applique le r\'egime.
+\end{cmtEtape}
+
+    \paragraph{\'Etape 1. Fano contraint la fiabilit\'e.}
+    L'outil mobilis\'e ici est l'in\'egalit\'e de Fano, introduite \`a la
+    sous-sous-section~\ref{subsubsec:fano_classique}. Elle \'enonce que, si l'on
+    cherche \`a deviner une variable al\'eatoire \`a partir d'une observation,
+    l'incertitude qui subsiste sur cette variable est born\'ee par la
+    probabilit\'e de se tromper. Appliquons-la au message.
+
+    Soit $\hat{M}$ l'estimateur optimal de $M$ construit \`a partir du couple
+    $(\Sigma, C)$, c'est-\`a-dire la meilleure reconstruction possible du
+    message \`a partir de la preuve et du contexte. Notons
+    $p_e = 1 - \Rel$ sa probabilit\'e d'erreur. Fano donne alors
+    \begin{equation}
+    H(M|\Sigma,C) \leq h(p_e) + p_e\log_2(2^\lambda - 1)
+    \label{eq:fano_applique}
+    \end{equation}
+    \cmtFormule{L'incertitude r\'esiduelle sur $M$ est born\'ee par la probabilit\'e d'erreur.}
+    \cmt{$h(\cdot)$ d\'esigne l'entropie binaire, $h(p) = -p\log_2 p - (1-p)\log_2(1-p)$.}
+    \cmt{Le second terme compte le nombre de messages restants \`a d\'epartager en cas d'erreur, soit $2^\lambda - 1$ messages.}
+
+    L'entropie binaire ne d\'epasse jamais un bit, $h(p_e) \leq 1$, tandis que
+    $\log_2(2^\lambda - 1) \leq \lambda$. En rempla\c{c}ant dans
+    \eqref{eq:fano_applique}, on obtient
+    \begin{equation}
+    H(M|\Sigma,C) \leq 1 + (1 - \Rel)\,\lambda
+    \end{equation}
+    \cmt{Aucune restriction du type $\Rel \geq 1/2$ n'est n\'ecessaire ici, car la majoration $h(p_e) \leq 1$ vaut pour toute valeur de $p_e$.}
+
+    Les messages \'etant uniformes sur $\mathcal{M}_\lambda$, leur entropie
+    vaut $H(M) = \lambda$ (sous-sous-section~\ref{subsubsec:entropie_info_mutuelle}).
+    L'information mutuelle \'etant la diff\'erence entre l'entropie et
+    l'entropie conditionnelle, il vient
+    \begin{equation}
+    I(M;\Sigma,C) = H(M) - H(M|\Sigma,C) \geq \lambda - 1 - (1-\Rel)\lambda = \Rel \cdot \lambda - 1
+    \label{eq:fano_mi}
+    \end{equation}
+    \cmtFormule{L'information extraite sur $M$ vaut au moins $\Rel\lambda - 1$.}
+
+    Le protocole est con\c{c}u de sorte que le message soit ind\'ependant du
+    contexte institutionnel, $M \perp C$~; autrement dit, savoir dans quelle juridiction on
+    se trouve n'apprend rien sur le message transmis. Par cons\'equent
+    $I(M;\Sigma,C) = I(M;\Sigma|C) = x$, d'o\`u
+    \begin{equation}
+    \boxed{\;\Rel \leq \frac{x + 1}{\lambda}\;}
+    \label{eq:etape1_rel}
+    \end{equation}
+    \cmt{Lecture. Une preuve qui ne r\'ev\`ele presque rien sur le message ($x$ petit) ne permet pas de le reconstituer, donc la fiabilit\'e chute.}
+
+    \paragraph{\'Etape 2. Pinsker et r\'egularit\'e garantissent la confidentialit\'e.}
+    On mobilise cette fois l'in\'egalit\'e de Pinsker
+    (sous-sous-section~\ref{subsubsec:pinsker_classique}), qui relie deux
+    fa\c{c}ons de mesurer l'\'ecart entre deux lois. La premi\`ere est la distance
+    en variation totale, qui gouverne la capacit\'e d'un adversaire \`a les
+    distinguer~; la seconde est la divergence de Kullback-Leibler
+    (sous-sous-section~\ref{subsubsec:distances_divergences}).
+
+    Pour tout couple de messages $(m_0, m_1)$ et tout contexte $c$, Pinsker
+    donne $\TV^2 \leq c_0 \KL$ avec $c_0 = 1/(2\ln 2) \approx 0{,}721$, tandis que
+    l'Hypoth\`ese~\ref{ass:regularite} de $\beta$-r\'egularit\'e majore cette
+    divergence par $\beta\,x$. En composant les deux, puis en passant au
+    maximum sur les couples et les contextes, on obtient le
+    Lemme~\ref{lem:confidentiality_guarantee}, soit
+    \begin{equation}
+    \boxed{\;\Conf \geq 1 - \sqrt{c_0 \beta x}\;}
+    \label{eq:etape2_conf}
+    \end{equation}
+    \cmtFormule{Confidentialit\'e minor\'ee par une fonction d\'ecroissante de $x$.}
+    \cmt{Il s'agit d'une \emph{garantie}, puisque tant que la preuve divulgue peu ($x \leq \kappa/\lambda$), la confidentialit\'e tend vers $1$.}
+    \cmt{Cette \'etape ne sert pas \`a majorer le produit, mais \`a montrer que le r\'egime consid\'er\'e est bien celui o\`u la confidentialit\'e est pr\'eserv\'ee.}
+
+    \paragraph{\'Etape 3. L'extraction born\'ee contraint l'opposabilit\'e.}
+    Par d\'efinition, l'opposabilit\'e est la fraction de l'incertitude
+    institutionnelle que la preuve r\'esout,
+    $\Opp = I(V;\Sigma|C)/H(V|C)$. Son num\'erateur mesure ce que la preuve
+    apporte au verdict, son d\'enominateur l'ampleur de la d\'ecision \`a
+    prendre.
+
+    L'Hypoth\`ese~\ref{ass:extraction_bornee} borne ce num\'erateur,
+    puisque l'institution ne tire de la preuve que ce que celle-ci contient sur le
+    message, $x$, augment\'e d'au plus $\Delta$ bits qu'elle extrait par ses
+    propres moyens (pr\'ec\'edents, expertise, proc\'edures). Il vient
+    \begin{equation}
+    \Opp = \frac{I(V;\Sigma|C)}{H(V|C)} \leq \frac{x + \Delta}{H(V|C)}
+    \label{eq:etape3_opp}
+    \end{equation}
+    \cmtFormule{Le num\'erateur est major\'e par $x + \Delta$.}
+    \cmt{$\Delta$ est une capacit\'e cognitive, born\'ee par la rationalit\'e de l'interpr\`ete~; elle ne cro\^it pas avec le param\`etre de s\'ecurit\'e.}
+
+    \paragraph{\'Etape 4. La borne sur les verdicts compl\`ete la contrainte sur $\Opp$.}
+    Il reste \`a minorer le d\'enominateur. L'Hypoth\`ese~\ref{ass:verdicts_efficace}
+    \'enonce qu'un verdict institutionnel exploite effectivement le contexte
+    dont il dispose, ce qui s'\'ecrit
+    \begin{equation}
+    H(V|C) \geq \gamma := \alpha H(\mathcal{C}) - 1 \geq 1
+    \label{eq:etape4_hvc}
+    \end{equation}
+    \cmtFormule{L'incertitude sur les verdicts est minor\'ee par $\gamma$.}
+    \cmt{Un verdict d\'eg\'en\'er\'e, toujours identique, aurait $H(V|C) = 0$ et rendrait $\Opp$ ind\'efini, cas que l'hypoth\`ese \'ecarte.}
+
+    En injectant \eqref{eq:etape4_hvc} dans \eqref{eq:etape3_opp}, on obtient
+    \begin{equation}
+    \boxed{\;\Opp \leq \frac{x + \Delta}{\gamma}\;}
+    \label{eq:etape4_opp}
+    \end{equation}
+
+    \paragraph{\'Etape 5. Formation du produit et application du r\'egime.}
+    Les trois m\'etriques sont d\'esormais exprim\'ees en fonction de $x$. En
+    multipliant \eqref{eq:etape1_rel} et \eqref{eq:etape4_opp} puis en majorant
+    trivialement $\Conf \leq 1$, on obtient
+    \begin{equation}
+    \Conf \cdot \Rel \cdot \Opp \leq \frac{x+1}{\lambda} \cdot \frac{x+\Delta}{\gamma}
+    \label{eq:produit_brut}
+    \end{equation}
+    \cmt{On majore ici $\Conf$ par $1$ sans recourir \`a \eqref{eq:etape2_conf}, car dans le r\'egime consid\'er\'e la confidentialit\'e est proche de $1$ et la contrainte vient des deux autres facteurs.}
+
+    Le membre de droite, produit de deux fonctions croissantes et
+    positives de $x$, est donc croissant en $x$. Il suffit ainsi de
+    l'\'evaluer \`a la borne sup\'erieure du r\'egime. Par
+    l'Hypoth\`ese~\ref{ass:regime}, $x \leq \kappa/\lambda$, d'o\`u
+    \begin{equation}
+    \Conf \cdot \Rel \cdot \Opp \leq \frac{1}{\gamma}\left(\frac{\kappa/\lambda + 1}{\lambda}\right)\left(\frac{\kappa}{\lambda} + \Delta\right)
+    \end{equation}
+    \cmt{Substitution directe de $x = \kappa/\lambda$ dans \eqref{eq:produit_brut}.}
+
+    Le d\'eveloppement du produit donne quatre termes, que l'on ordonne par
+    puissance d\'ecroissante de $\lambda$~:
+    \begin{align}
+    \left(\frac{\kappa/\lambda + 1}{\lambda}\right)\left(\frac{\kappa}{\lambda} + \Delta\right)
+    &= \frac{\kappa^2}{\lambda^3} + \frac{\kappa\Delta}{\lambda^2}
+     + \frac{\kappa}{\lambda^2} + \frac{\Delta}{\lambda} \nonumber \\
+    &= \frac{\Delta}{\lambda} + \frac{\kappa(\Delta + 1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}
+    \end{align}
+    \cmtFormule{Les deux termes crois\'es en $\kappa$ se regroupent en $\kappa(\Delta+1)/\lambda^2$.}
+
+    On obtient ainsi la forme explicite annonc\'ee
+    \begin{equation}
+    \Conf \cdot \Rel \cdot \Opp \leq \frac{1}{\gamma}\left(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+    \end{equation}
+
+    Comme $\gamma \geq 1$, diviser par $\gamma$ ne fait que renforcer la
+    majoration. Les deux derniers termes \'etant en $O(\lambda^{-2})$, il vient
+    \begin{equation}
+    \Conf \cdot \Rel \cdot \Opp \leq \frac{\Delta}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
+    \end{equation}
+    \cmtFormule{Le terme dominant est $\Delta/\lambda$.}
+    \cmt{Lecture finale. Tant que $\Delta < \gamma$, la contrainte qui plafonne le produit est la capacit\'e institutionnelle~; au-del\`a, c'est la borne de Fano (Remarque~\ref{rem:activite_delta}).}
+
+    \textbf{Forme raffin\'ee.} Comme $\Opp \leq 1$
+    (Th\'eor\`eme~\ref{thm:bornes_mesures}), l'\'Etape~2 et l'Hypoth\`ese~\ref{ass:regime}
+    donnent aussi $\Opp \leq \min\{1, (\kappa/\lambda+\Delta)/\gamma\}$~;
+    combin\'ee \`a l'\'Etape~1 sous l'Hypoth\`ese~\ref{ass:regime},
+    ($\Rel \leq (1+\kappa/\lambda)/\lambda$) ainsi qu'\`a $\Conf \leq 1$, elle
+    donne~\eqref{eq:trilemme_cro_raffine}. Comme le minimum est major\'e par
+    son second argument, la forme raffin\'ee implique la forme explicite.
+
+\end{Preuve}
+
+\begin{remark}[Quand la capacit\'e institutionnelle est-elle contraignante~?]
+\label{rem:activite_delta}
+Le facteur $\min\{1,(\kappa/\lambda+\Delta)/\gamma\}$ est strictement
+inf\'erieur \`a~$1$ si et seulement si
+\begin{equation}
+\Delta < \gamma - \frac{\kappa}{\lambda}
+\;\Longleftrightarrow\;
+H(\mathcal{C}) > H^\sharp := \frac{\Delta + 1 + \kappa/\lambda}{\alpha}.
+\label{eq:seuil_activite}
+\end{equation}
+Dans ce r\'egime (\emph{contexte riche relativement \`a la capacit\'e}), la
+borne est port\'ee par le rapport $\Delta/\gamma$ et la capacit\'e
+institutionnelle est la contrainte liante. Dans le r\'egime compl\'ementaire
+($H(\mathcal{C}) \leq H^\sharp$), le produit est born\'e par la seule
+in\'egalit\'e de Fano, $\Relrec \leq (1+\kappa/\lambda)/\lambda$~; la
+forme~\eqref{eq:trilemme_cro_explicite} n'apporte alors pas d'information
+suppl\'ementaire. Si le verdict \'etait une fonction d\'eterministe de
+$(\Sigma,C)$, les Hypoth\`eses~\ref{ass:extraction_bornee}
+et~\ref{ass:verdicts_efficace} imposeraient $\Delta \geq \gamma - I(M;\Sigma|C)$,
+de sorte qu'on serait toujours dans le second r\'egime
+(Remarque~\ref{rem:verdict_deterministe}). Ces faits sont certifi\'es
+en Lean (\texttt{trilemma\_refined}, \texttt{refined\_bound\_is\_fano\_when\_delta\_ge\_gamma},
+\texttt{deterministic\_forces\_capacity}, section~\ref{sec:lean4}).
+\end{remark}
+
+\begin{remark}[Port\'ee du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}]
+\label{rem:scope_trilemme_classique}
+L'Hypoth\`ese~\ref{ass:regime} est n\'ecessaire. Sans borne sur
+$I(M;\Sigma|C)$, le produit $\Conf \cdot \Rel \cdot \Opp$ n'a pas besoin
+de d\'ecro\^itre avec $\lambda$. En effet, le protocole qui r\'ev\`ele $M$ avec
+probabilit\'e $1/2$ et produit sinon une preuve uniform\'ement
+al\'eatoire est $\beta$-r\'egulier avec $\beta \leq 1{,}04$ pour tout
+$\lambda \geq 64$, satisfait les
+Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regularite} et a
+$\Conf = 1/2$, $\Rel = 1/2 + 2^{-\lambda-1}$ et, avec un contexte $C$
+form\'e de deux bits uniformes ind\'ependants de $(M,\Sigma)$, $\alpha = 1$
+(donc $\gamma = \alpha H(C) - 1 = 1$) et $V$ le premier bit de $\Sigma$
+(donc $H(V|C) = 1 \geq \gamma$ et $\log_2|\mathcal{V}_\lambda| = 1 \leq \alpha H(C)$),
+$\Opp = 1$, pour tout $\lambda$. L'Hypoth\`ese~\ref{ass:extraction_bornee} est
+satisfaite avec $\Delta = 0$, puisque $I(V;\Sigma|C) = 1 \leq I(M;\Sigma|C)$. Ici
+$I(M;\Sigma|C) = \lambda/2 - 1 + O(\lambda 2^{-\lambda})$ se situe hors
+du r\'egime~\eqref{eq:regime}.
+\end{remark}
+
+\begin{remark}[Statut de v\'erification]
+\label{rem:statut_verification_classique}
+Le noyau alg\'ebrique de cette preuve est certifi\'e m\'ecaniquement en
+Lean4 \`a la section~\ref{sec:lean4}. Les in\'egalit\'es de Fano et de
+Pinsker, ainsi que les hypoth\`eses institutionnelles, y sont
+formalis\'ees comme propri\'et\'es des instances de protocole. Le
+d\'etail des formulations alternatives issues de la certification est pr\'esent\'e \`a la
+section~\ref{subsec:lean4_erreurs}.
+\end{remark}
+
+\begin{corollary}[Forme simplifi\'ee]\label{cor:forme_simplifiee}
+
+Pour $\lambda \geq 128$, $\beta = O(1)$, $\gamma = O(1)$~\cite{Goldreich01,KatzLindell14}~:
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \lesssim \frac{\Delta}{\lambda}
+\label{eq:trilemme_simplifie}
+\end{equation}
+
+\end{corollary}
+
+Pour $\Delta = 5$ bits, $\alpha = 1$, $H(\mathcal{C}) = 20$ bits
+($\gamma = 19$), $\kappa = 1$ et $\lambda = 128$, la
+forme~\eqref{eq:trilemme_cro_raffine} donne
+$\frac{1+1/128}{128}\cdot\frac{1/128 + 5}{19} \approx 2{,}1\cdot10^{-3}$,
+contre $\approx 7{,}9\cdot10^{-3}$ pour la borne de Fano seule, de sorte que la capacit\'e
+institutionnelle divise la borne par pr\`es de quatre. Pour $\Delta = 35$
+bits dans le m\^eme contexte, $\Delta > \gamma$ et la borne retombe sur
+celle de Fano ($\approx 7{,}9\cdot10^{-3}$)~; la forme publi\'ee
+$\Delta/\lambda \approx 0{,}27$ est alors tr\`es l\^ache. Ces valeurs ont
+statut d'illustration num\'erique~; elles sont calcul\'ees sous les hypoth\`eses
+institutionnelles et ne constituent pas des mesures empiriques~\cite{Tsybakov2009}.
+
+\textbf{Augmenter $\lambda$ n'am\'eliore pas le produit CRO si $\Delta$ reste fixe.}
+\`A hypoth\`eses fix\'ees, la borne d\'ecro\^it en $1/\lambda$ parce que
+l'Hypoth\`ese~\ref{ass:regime} force la fiabilit\'e de reconstruction \`a
+d\'ecro\^itre~; la capacit\'e institutionnelle d\'etermine, dans le
+r\'egime~\eqref{eq:seuil_activite}, la fraction de ce plafond que
+l'institution peut exploiter. C'est l\`a que les limites de l'interpr\`ete, au-del\`a
+de la seule puissance des adversaires, deviennent la contrainte liante.
+
+\begin{boiteArbitre}
+L'arbitre comprend que commander un algorithme plus fort ne changera rien,
+puisque le goulot d'\'etranglement se situe en lui d\`es que ses verdicts
+sont plus fins que ce qu'il sait extraire.
+\end{boiteArbitre}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    scale=0.8,
+    transform shape,
+    every node/.style={font=\small}
+]
+
+\node[circle, draw=enspblue,  fill=enspblue!10,  minimum size=1.5cm, thick]
+    (C) at ( 0, 5) {\textbf{Conf}};
+\node[circle, draw=enspgreen, fill=enspgreen!10, minimum size=1.5cm, thick]
+    (R) at (-4, 0) {\textbf{Rel}};
+\node[circle, draw=navyblue,  fill=navyblue!10,  minimum size=1.5cm, thick]
+    (O) at ( 4, 0) {\textbf{Opp}};
+
+\draw[thick, enspblue!50]  (C) -- (R);
+\draw[thick, enspgreen!50] (R) -- (O);
+\draw[thick, navyblue!50]  (O) -- (C);
+
+\node[draw=enspred, fill=enspred!8, rounded corners, thick,
+      minimum width=3cm, minimum height=1.2cm] (bound) at (0, 2)
+    {$\Conf \cdot \Rel \cdot \Opp \leq \dfrac{\Delta}{\lambda}$};
+
+\draw[-{Stealth[length=2mm]}, thick, enspblue]  (C.south) -- (bound.north west);
+\draw[-{Stealth[length=2mm]}, thick, enspgreen] (R.east)  -- (bound.south west);
+\draw[-{Stealth[length=2mm]}, thick, navyblue]  (O.west)  -- (bound.south east);
+
+\node[rotate=63,  font=\footnotesize, text=enspblue]  at (-2.3, 2.2)
+    {Contrainte $\Delta$};
+\node[rotate=-63, font=\footnotesize, text=navyblue]  at ( 2.3, 2.2)
+    {Goulot $H(C)$};
+\node[font=\footnotesize, text=enspgreen]              at (0,   -0.5)
+    {Borne de Fano};
+
+\node[above=0.3cm of C, font=\footnotesize, text=enspblue, align=center]
+    {Protection\\de la vie priv\'ee};
+\node[below left=0.3cm of R, font=\footnotesize, text=enspgreen, align=right]
+    {Recouvrement\\du message};
+\node[below right=0.3cm of O, font=\footnotesize, text=navyblue, align=left]
+    {Interpr\'etation\\institutionnelle};
+
+\end{tikzpicture}
+\caption[Triangle du Trilemme CRO]{%
+  Triangle du Trilemme CRO : trois propri\'et\'es de s\'ecurit\'e concurrentes.%
+}\label{fig:trilemma_triangle}
+
+\smallskip
+\begin{minipage}{\linewidth}
+  \small\textit{Note :} La borne centrale
+  $\Conf \cdot \Rel \cdot \Opp \leq \Delta/\lambda$ limite l'optimisation simultan\'ee.
+  Les \'etiquettes des ar\^etes indiquent le m\'ecanisme de contrainte principal
+  reliant chaque paire de propri\'et\'es.
+\end{minipage}
+
+\end{figure}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Port\'ee du th\'eor\`eme et syst\`emes d\'eploy\'es}
+\label{subsec:portee_trilemme}
+% -----------------------------------------------------------------------
+\begin{remark}[Port\'ee des \'etudes de cas]\label{rem:portee_cas_etude}
+Sous l'Hypoth\`ese~\ref{ass:regime}, l'\'Etape~1 donne
+$\Relrec \leq (1+\kappa/\lambda)/\lambda \approx 0{,}008$ \`a $\lambda = 128$.
+Les syst\`emes d\'eploy\'es de r\'ef\'erence (Helios, zk-SNARKs, ECDSA),
+dont la fiabilit\'e op\'erationnelle $\Relver$ est proche de~$1$, ne sont donc
+\emph{pas} des instances du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel},
+car leurs m\'etriques CLO sont exprim\'ees sur l'\'echelle op\'erationnelle
+de~\cite{MINKA2026CLO}, distincte des quantit\'es information-th\'eoriques des
+D\'efinitions~\ref{def:confidentialite_clo}--\ref{def:opposabilite_clo}. Dans
+la suite, ces syst\`emes servent \`a une \emph{calibration illustrative} des
+ordres de grandeur des param\`etres institutionnels, non \`a une
+validation de la borne. Le th\'eor\`eme s'applique aux protocoles \`a fuite
+contr\^ol\'ee ($I(M;\Sigma|C) \leq \kappa/\lambda$), dont les engagements
+parfaitement masquants et les preuves \`a divulgation nulle de connaissance
+sont les exemples canoniques.
+\end{remark}
+
+% -----------------------------------------------------------------------
+\subsection{R\'egimes op\'erationnels}
+\label{subsec:regimes_operationnels}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Le Trilemme CRO classique distingue deux r\'egimes, s\'epar\'es par le seuil
+$H^\sharp = (\Delta + 1 + \kappa/\lambda)/\alpha$ de la
+Remarque~\ref{rem:activite_delta}. Ce seuil, d\'eriv\'e du th\'eor\`eme,
+compare la richesse du contexte, pond\'er\'ee par la granularit\'e des
+verdicts, \`a la capacit\'e d'extraction de l'institution.
+
+\subsubsection{R\'egime \`a contexte rare~: $H(\mathcal{C}) \leq H^\sharp$}
+\label{subsubsec:regime_faible_contexte}
+
+La capacit\'e institutionnelle couvre la richesse du contexte~; le produit est
+born\'e par l'in\'egalit\'e de Fano, $(1+\kappa/\lambda)/\lambda$. Avec les
+param\`etres illustratifs de la calibration (Tableau~\ref{tab:validation_cro_classique}),
+un contrat standardis\'e ($H(\mathcal{C}) \approx 20$ bits, $\alpha = 1$,
+$\Delta \approx 35$ bits pour un juge g\'en\'eraliste~\cite{Mason07,Kerr04}, soit
+$H^\sharp \approx 36$) et un scrutin de taille moyenne ($H(\mathcal{C}) \approx 40$
+bits, $\alpha = 1{,}2$, $\Delta \approx 56$ bits pour un comit\'e de garants
+sp\'ecialis\'es~\cite{Goodman15}, soit $H^\sharp \approx 48$) rel\`event de ce
+r\'egime. La capacit\'e d'extraction n'y est pas la contrainte liante.
+
+\subsubsection{R\'egime \`a contexte riche~: $H(\mathcal{C}) > H^\sharp$}
+\label{subsubsec:regime_haute_contexte}
+\label{subsubsec:regime_transition}
+
+La granularit\'e des verdicts d\'epasse la capacit\'e d'extraction~; le produit
+est born\'e par
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \leq
+\frac{1+\kappa/\lambda}{\lambda}\cdot\frac{\kappa/\lambda+\Delta}{\gamma},
+\end{equation}
+strictement plus petit que la borne de Fano. La conformit\'e financi\`ere via
+zk-SNARKs~\cite{Groth16,BCTV14} en est l'exemple, avec $H(\mathcal{C}) \approx 70$
+bits, $\alpha = 1{,}5$, $\Delta \approx 73$ bits pour un r\'egulateur
+expert~\cite{BaselIII}, soit $H^\sharp \approx 49$ et $\gamma = 104$~; la borne
+vaut environ $0{,}70$ fois la borne de Fano. C'est dans ce r\'egime que la
+capacit\'e cognitive de l'institution, au-del\`a de la seule structure
+cryptographique, plafonne le produit.
+
+% -----------------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{Les deux r\'egimes op\'erationnels du Trilemme CRO classique}
+\label{tab:regimes_operationnels}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Crit\`ere} & \textbf{Contexte rare} & \textbf{Contexte riche} \\
+\midrule
+Condition & $H(\mathcal{C}) \leq H^\sharp$ & $H(\mathcal{C}) > H^\sharp$ \\
+Borne & $(1+\kappa/\lambda)/\lambda$ (Fano) & $\frac{1+\kappa/\lambda}{\lambda}\cdot\frac{\kappa/\lambda+\Delta}{\gamma}$ \\
+Contrainte liante & fiabilit\'e de reconstruction & capacit\'e institutionnelle $\Delta$ \\
+Construction de r\'ef\'erence & SOTP-Low / SOTP-Base & SOTP-High \\
+Exemple (calibration) & ECDSA, Helios & zk-SNARKs \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \footnotesize $H^\sharp = (\Delta + 1 + \kappa/\lambda)/\alpha$ (Remarque~\ref{rem:activite_delta}). Les exemples sont class\'es avec les param\`etres de calibration~; ils ne sont pas des instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}).
+\item \footnotesize Les constructions SOTP sont des constructions de r\'ef\'erence (chapitre~\ref{chap:constructions})~; leur optimalit\'e est une conjecture.
+\end{tablenotes}
+\end{table}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Calibration illustrative des param\`etres institutionnels}
+\label{subsec:analyse_comparative}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Les syst\`emes d\'eploy\'es n'\'etant pas des instances du th\'eor\`eme
+(Remarque~\ref{rem:portee_cas_etude}), leurs produits CLO ne peuvent ni
+valider ni r\'efuter la borne. Ils permettent en revanche de calibrer, sur
+l'\'echelle op\'erationnelle CLO, des ordres de grandeur plausibles de la
+capacit\'e $\Delta$~\cite{Adida08,Groth16,Johnson01}.
+
+% -----------------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{Calibration illustrative~: capacit\'es implicites sur l'\'echelle CLO}
+\label{tab:validation_cro_classique}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Syst\`eme} & $\boldsymbol{\Conf\cdot\Relver\cdot\Opp}$ & $\boldsymbol{\lambda}$ & $\boldsymbol{\Delta := \lambda \cdot \text{produit}}$ & $\boldsymbol{\Delta/\lambda}$ \\
+\midrule
+Helios~\cite{Adida08,Adida09UCL} & 0{,}437 & 128 & $\approx 56$ bits & 0{,}437 \\
+zk-SNARKs~\cite{Groth16,BCTV14} & 0{,}572 & 128 & $\approx 73$ bits & 0{,}572 \\
+ECDSA~\cite{Johnson01,NIST.FIPS.186-5} & 0{,}273 & 128 & $\approx 35$ bits & 0{,}273 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \footnotesize Les capacit\'es $\Delta$ sont \emph{d\'efinies} par $\Delta := \lambda \cdot (\Conf\cdot\Relver\cdot\Opp)$, c'est-\`a-dire par inversion de la forme publi\'ee $\Delta/\lambda$ sur l'\'echelle CLO~; les colonnes $\Delta/\lambda$ et produit co\"incident donc par construction.
+\item \footnotesize Ces syst\`emes ne sont pas des instances du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} (Remarque~\ref{rem:portee_cas_etude}). Voir la note m\'ethodologique de la sous-section~\ref{subsec:note_methodo}.
+\end{tablenotes}
+\end{table}
+% -----------------------------------------------------------------------
+
+Chaque capacit\'e implicite peut \^etre rapproch\'ee d'une d\'ecomposition en
+ressources cognitives et organisationnelles, d\'etaill\'ee au
+chapitre~\ref{chap:experimentation}
+(Tableau~\ref{tab:decomposition_delta})~:
+
+\begin{itemize}
+\item \textbf{Helios}~\cite{Adida08,Goodman15}, avec $\Delta \approx 56$ bits pour un comit\'e
+\'electoral sp\'ecialis\'e (expertise, pr\'ec\'edents, proc\'edures, collaboration)~\cite{Ericsson95,Simon82}.
+
+\item \textbf{zk-SNARKs}~\cite{Groth16,BCTV14}, avec $\Delta \approx 73$ bits pour une institution
+financi\`ere experte (cadres r\'eglementaires, analyse de sch\'emas, \'equipes
+forensiques, collaboration multi-agences)~\cite{BaselIII}.
+
+\item \textbf{ECDSA}~\cite{Johnson01,Mason07}, avec $\Delta \approx 35$ bits pour un juge de
+juridiction g\'en\'erale (pr\'ec\'edents, proc\'edures, expertise g\'en\'erale)~\cite{Kerr04,Casey11}.
+\end{itemize}
+
+Les capacit\'es implicites ainsi calibr\'ees ($35$--$73$ bits) tombent dans
+l'intervalle de quelques dizaines de bits sugg\'er\'e par la litt\'erature sur la
+rationalit\'e born\'ee~\cite{Miller56,Simon82,Ericsson95,Cowan2001}. Il s'agit
+d'une v\'erification de plausibilit\'e des ordres de grandeur, distincte d'une validation du th\'eor\`eme. Cette calibration est \textbf{r\'etrospective et
+illustrative}~; elle ne constitue pas une preuve empirique des hypoth\`eses
+institutionnelles~\cite{Tsybakov2009,Kahneman11}.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Positionnement par rapport au r\'egime quantique}
+\label{subsec:transition_postquantique}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Le Trilemme CRO classique \'etabli dans ce chapitre s'applique aux adversaires
+computationnels classiques (PPT)~\cite{Goldreich01,KatzLindell14}. La migration vers les standards post-quantiques
+NIST soul\`eve une question critique, celle de savoir si ces bornes tiennent face \`a des
+adversaires quantiques~\cite{NISTPQC,Watrous2009,Boneh2011,Zhandry}.
+
+La section~\ref{sec:cro_pq} \'etendra ce cadre en introduisant~:
+
+\begin{itemize}
+\item La capacit\'e d'extraction quantique $\Delta_q = \Delta + \delta_{\text{enh}} - \delta_{\text{degr}}$
+combinaison de la capacit\'e classique et des modifications induites par les
+techniques quantiques~\cite{NielsenChuang2010,Wilde2017}.
+
+\item Le coefficient de perte d'interpr\'etabilit\'e quantique $\eta_q$ quantifiant
+la d\'egradation s\'emantique dans les canaux quantiques (d\'ecoh\'erence, erreurs de portes)~\cite{Zurek2003,Wootters1982}.
+
+\item La borne post-quantique~:
+\begin{equation}
+\Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda} + O(\lambda^{-2})
+\end{equation}
+\end{itemize}
+
+La borne explicite restera port\'ee par la capacit\'e quantique $\Delta_q$ et par
+$\gamma_q$~; le terme $\eta_q \cdot H(C)/\lambda$ n'appara\^it que dans une
+majoration affaiblie, commode pour les ordres de grandeur. Le bruit quantique
+agit comme une r\'eduction de l'information interpr\'etable, dont une
+formalisation par contraction est propos\'ee en perspective
+(chapitre~\ref{chap:resultats_discussions}).
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\begin{boiteArbitre}
+L'arbitre referme le dossier du Trilemme CRO classique et termine ainsi l'\'etape \textbf{B}. Cette section lui a
+appris un r\'esultat contre-intuitif, puisque la limite se trouve en lui plut\^ot
+que dans la cryptographie d\`es que ses verdicts sont fins.
+
+Quatre contributions structurent ce qu'il retient. Le mod\`ele \'etendu
+d'abord, avec trois param\`etres mesurables ($\Delta$, $\alpha$, $\beta$) qui
+traduisent ses contraintes cognitives en grandeurs quantifiables. Les
+hypoth\`eses ensuite, explicites et honn\^etes sur ce qu'elles ne prouvent pas
+encore. Le th\'eor\`eme lui-m\^eme, $\Conf \cdot \Rel \cdot \Opp \leq
+\Delta/(\gamma\lambda) + O(\lambda^{-2})$, puis sa forme raffin\'ee, qui lui dit
+exactement quand sa capacit\'e d'extraction devient la contrainte liante. La
+distinction des deux r\'egimes enfin, qui transforme ce r\'esultat n\'egatif en
+guide de conception.
+
+Il est surtout marqu\'e par la franchise sur la port\'ee. Helios, les
+zk-SNARKs et ECDSA ne sont pas des instances du th\'eor\`eme et calibrent
+seulement les ordres de grandeur~; les capacit\'es $\Delta$ qui en
+d\'ecoulent ($35$ \`a $73$ bits) restent plausibles au regard de la
+litt\'erature cognitive.
+
+La borne est n\'ecessaire sans \^etre encore prouv\'ee serr\'ee de mani\`ere
+g\'en\'erale. La section suivante l'\'etendra au r\'egime quantique.
+
+Il veut voir si les constructions tiennent ce que le th\'eor\`eme promet.
+\end{boiteArbitre}

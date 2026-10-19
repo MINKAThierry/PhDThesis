@@ -1,0 +1,48 @@
+% ============================================================================
+% INTRODUCTION DU CHAPITRE 1 — CONTEXTE, \'ETAT DE L'ART ET PROBL\'eMATIQUE
+% source : partie1/introduction_partie1.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 révisée
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+\section{INTRODUCTION}
+\label{sec:introduction_contexte}
+% ----------------------------------------------------------------------------
+
+\begin{sloppypar}
+En quatre d\'ecennies, la cryptographie prouvable a produit des garanties
+d'une grande solidit\'e, qu'il s'agisse de la confidentialit\'e, mesur\'ee par
+l'avantage d'un distingueur polynomial, ou de la fiabilit\'e, \'etablie par
+r\'eduction \`a un probl\`eme computationnellement difficile. Ces r\'esultats,
+exacts sur le plan math\'ematique, restent pourtant souvent inexploitables
+lorsqu'une institution doit s'en saisir.
+
+Un juge ne raisonne pas comme un distingueur polynomial, pas plus qu'un
+auditeur financier ne v\'erifie un circuit arithm\'etique. Lorsque la preuve
+cryptographique d'une transaction doit convaincre un r\'egulateur, ou qu'une
+attestation zero-knowledge est vers\'ee au dossier d'une instruction p\'enale,
+la question d\'ecisive devient celle de l'interpr\'etation de cette preuve
+par un acteur institutionnel cognitivement born\'e. Cette th\`ese part de ce d\'eplacement de
+perspective, dont le pr\'esent chapitre pose les fondements.
+
+Trois syst\`emes cryptographiques d\'eploy\'es servent de construits
+illustratifs, \`a savoir Helios pour le vote \'electronique, les zk-SNARKs
+pour la conformit\'e financi\`ere et ECDSA pour les signatures
+contractuelles. Leurs profils estim\'es laissent appara\^itre un motif que
+l'\'etat de l'art interdisciplinaire permettra ensuite de nommer puis de
+borner. La probl\'ematique est alors formul\'ee en six objectifs de
+recherche qui structurent la progression canonique
+$\mathbf{F}\to\mathbf{B}\to\mathbf{E}\to\mathbf{S}\to\mathbf{C}\to\mathbf{X}$
+(Formaliser, Borner, \'Etendre, Saturer, Certifier, eXp\'erimenter) de
+cette th\`ese. Apr\`es avoir situ\'e la recherche dans son cadre
+institutionnel et professionnel (section~\ref{subsec:cadre_recherche}), nous
+posons les fondements de la th\'eorie de l'information classique
+(section~\ref{subsec:fondements_info}) avant de les \'etendre au cadre
+quantique (section~\ref{subsec:fondements_info_quantique}). Les primitives
+cryptographiques d'obscurcissement sont pr\'esent\'ees \`a la
+section~\ref{subsec:primitives_crypto}, suivies d'une revue des trilemmes
+d'impossibilit\'e fondateurs (section~\ref{subsec:trilemmes}). La
+section~\ref{subsec:paradoxe_authenticite} formalise ensuite le paradoxe de
+l'authenticit\'e invisible, dont la section~\ref{subsec:objectifs_recherche}
+d\'erive les six objectifs de recherche et leurs contributions.
+\end{sloppypar}

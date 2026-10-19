@@ -1,0 +1,1549 @@
+% =============================================================================
+% STYLE POUR THÈSE DE DOCTORAT ENSPY
+% École Doctorale de l'Université de Yaoundé I
+% =============================================================================
+% Auteur  : Thierry Emmanuel Minka Mi Nguidjoï
+% Version : 3.4 - Commentaires visibles pour preuves
+% Date    : 2026-09-17
+
+% =============================================================================
+
+\ProvidesPackage{style/these_ensp}[2026/09/17 Style pour thèse ENSP v3.4]
+
+% =============================================================================
+% SECTION 1: PACKAGES DE BASE ET ENCODAGE
+% =============================================================================
+
+% Détection du moteur de compilation
+\usepackage{ifluatex}
+\usepackage{iftex}
+
+% Gestion mémoire et compatibilité
+\RequirePackage{etex}
+
+% Encodage et langues — adapté selon le compilateur
+\ifLuaTeX
+  % Pour LuaLaTeX : pas besoin de inputenc/fontenc, gestion native UTF-8
+  \RequirePackage{fontspec}
+  \setmainfont{Times New Roman}
+  % Police à chasse fixe couvrant les symboles Unicode du code Lean (fournie avec TeX Live et MiKTeX)
+  \setmonofont{DejaVuSansMono.ttf}[BoldFont=DejaVuSansMono-Bold.ttf, ItalicFont=DejaVuSansMono-Oblique.ttf, BoldItalicFont=DejaVuSansMono-BoldOblique.ttf, Scale=MatchLowercase]
+\else
+  % Pour pdfLaTeX : encodage classique
+  \RequirePackage[T1]{fontenc}
+  \RequirePackage[utf8]{inputenc}
+  \RequirePackage{lmodern}
+\fi
+
+\RequirePackage[english,french]{babel}
+\RequirePackage{csquotes}
+\RequirePackage{csquotes}
+
+% Packages pour la page de garde
+\RequirePackage{titling}       % Pour titlingpage
+\RequirePackage{changepage}    % Pour adjustwidth*
+
+% Compteur pour les parties
+\newcounter{partiecounter}
+
+% [C1] \usepackage{tocbibind}  SUPPRIMÉ — incompatible avec biblatex.
+%      L'entrée de la bibliographie dans la ToC est gérée par
+%      \printbibliography[heading=bibintoc] dans these.tex.
+%
+% [C2] \usepackage{titletoc}   SUPPRIMÉ ici — chargé une seule fois
+%      en Section 13 pour éviter le doublon et les conflits.
+
+% =============================================================================
+% SECTION 2: POLICES ET TYPOGRAPHIE (Conforme ENSP: Times, 12pt, interligne 1.5)
+% =============================================================================
+
+% Typographie avancée — adaptée selon le compilateur
+\ifLuaTeX
+  \RequirePackage[final, stretch=10, protrusion=true, tracking=true,
+                  expansion=true]{microtype}
+\else
+  \RequirePackage[final, stretch=10, protrusion=true, tracking=true,
+                  spacing=on, kerning=on, expansion=true]{microtype}
+\fi
+\frenchspacing
+% =============================================================================
+% SECTION 3: MISE EN PAGE (Format A4, marges ENSP)
+% =============================================================================
+
+\RequirePackage[
+    a4paper,
+    top=2.5cm,
+    bottom=2.5cm,
+    left=3cm,
+    right=2.5cm,
+    headheight=15pt,
+    headsep=1cm,
+    footskip=1cm
+]{geometry}
+
+% Profondeur de la table des matières
+\setsecnumdepth{subsubsection}
+\maxsecnumdepth{subsubsection}
+\setcounter{tocdepth}{3}
+
+% =============================================================================
+% SECTION 4: MATHÉMATIQUES ET THÉORÈMES (AMSTHM STANDARD — PAS DE THMTOOLS)
+% =============================================================================
+% NOTE: Utilisation de amsthm standard pour éviter les duplications dans
+% les listes de théorèmes. thmtools crée des fichiers .thm qui peuvent
+% être écrits plusieurs fois et causer des duplications.
+% =============================================================================
+
+\RequirePackage{amsmath, amssymb, amsthm, amsfonts, mathrsfs}
+%\RequirePackage{stmaryrd, latexsym, wasysym, upgreek, mathrsfs}
+\RequirePackage{siunitx}
+\RequirePackage{pifont}
+\RequirePackage{calc}
+
+% --- Styles de théorèmes ---
+\theoremstyle{plain}
+\newtheorem{theorem}{Théorème}[chapter]
+\newtheorem{lemma}{Lemme}[chapter]
+\newtheorem{corollary}{Corollaire}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{assumption}{Hypothèse}[chapter]
+\newtheorem*{theorem*}{Théorème}
+\newtheorem*{lemma*}{Lemme}
+\newtheorem*{corollary*}{Corollaire}
+\newtheorem*{proposition*}{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}[chapter]
+\newtheorem{example}{Exemple}[chapter]
+\newtheorem{conjecture}{Conjecture}[chapter]
+\newtheorem{construction}{Construction}[chapter]
+\newtheorem{question}{Question}[chapter]
+\newtheorem{objectif}{Objectif}[chapter]
+\newtheorem{axiome}{Axiome}[chapter]
+\newtheorem*{definition*}{Définition}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remarque}[chapter]
+\newtheorem{observation}{Observation}[chapter]
+
+% --- Environnement Preuve ---
+\theoremstyle{remark}
+\newtheorem{Preuve}{Preuve}[subsection]
+
+% =============================================================================
+% SECTION 5: COULEURS
+% =============================================================================
+
+\RequirePackage[usenames, dvipsnames, svgnames, table]{xcolor}
+
+% Couleurs institutionnelles ENSP
+\definecolor{enspblue}{RGB}{0, 51, 102}
+\definecolor{enspgold}{RGB}{184, 134, 11}
+\definecolor{enspred}{RGB}{139, 0, 0}
+\definecolor{enspgreen}{RGB}{0, 100, 0}
+\definecolor{partcolor}{RGB}{25, 25, 112}
+\definecolor{chaptercolor}{RGB}{70, 70, 70}
+\definecolor{shadecolor}{rgb}{0.97, 0.97, 0.97}
+\definecolor{navyblue}{RGB}{10, 87, 115}
+% Couleurs métalliques — Paradigme Or/Fer/Argile
+\definecolor{metalor}{RGB}{212, 175, 55}
+\definecolor{metalorfonce}{RGB}{153, 101, 21}
+\definecolor{metalfer}{RGB}{113, 121, 126}
+\definecolor{metalferfonce}{RGB}{58, 63, 68}
+\definecolor{metalargile}{RGB}{180, 120, 75}
+\definecolor{metalargilefonce}{RGB}{120, 70, 35}
+% Couleurs pour le code Lean4
+\definecolor{leankeyword}{RGB}{0, 0, 255}
+\definecolor{leancomment}{RGB}{0, 128, 0}
+\definecolor{leanstring}{RGB}{163, 21, 21}
+
+% =============================================================================
+% SECTION 6: GRAPHIQUES ET FIGURES
+% =============================================================================
+
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{subcaption}
+\captionsetup[subfigure]{labelformat=simple}
+\renewcommand\thesubfigure{(\alph{subfigure})}
+\graphicspath{{./figures/}{./images/}{./preambule/}}
+
+% =============================================================================
+% SECTION 7: TIKZ ET ORNEMENTS
+% =============================================================================
+
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta, shapes, snakes, automata, backgrounds, petri,
+                topaths, chains, shapes.geometric, calc, positioning,
+                decorations.pathreplacing, decorations.markings}
+
+% =============================================================================
+% SECTION 8: TABLEAUX
+% =============================================================================
+
+\RequirePackage{array, tabularx, booktabs, multirow, makecell, longtable}
+\RequirePackage{colortbl}
+\RequirePackage{threeparttable}
+\RequirePackage{rotating}
+\RequirePackage{rotfloat}
+
+\makeatletter
+% =============================================================================
+% SECTION 8 bis: GESTION DU PLACEMENT DES FLOTTANTS
+% =============================================================================
+%
+% PROBLÈME TRAITÉ
+%   Un « flottant » (table, figure, algorithm) n'est pas posé là où il est
+%   déclaré : LaTeX le déplace selon la liste de préférences [htbp] et selon
+%   des seuils de remplissage de page. Quand une sous-section se réduit à un
+%   titre suivi d'un tableau, rien ne retient le flottant : il remonte en haut
+%   de page et apparaît AVANT le titre auquel il se rattache.
+%
+% TROIS LEVIERS SONT FOURNIS ICI
+%   1. Seuils assouplis          — actifs d'office, sans effet de bord.
+%   2. \ancrerTableaux           — placement absolu [H] pour tous les tableaux.
+%   3. \activerBarrieresFlottants — barrière avant chaque sous-section.
+%
+% USAGE RECOMMANDÉ (dans main.tex, juste après \begin{document})
+%   \ancrerTableaux
+%   \activerBarrieresFlottants
+%
+% USAGE LOCALISÉ (un seul chapitre)
+%   { \ancrerTableaux  \input{partie4/donnees_validation} }
+%   Les accolades limitent l'effet au groupe.
+%
+% RAPPEL
+%   Le package float étant chargé en Section 6, la spécification [H] est
+%   disponible tableau par tableau sans rien activer : \begin{table}[H].
+% =============================================================================
+
+\RequirePackage{placeins}   % fournit \FloatBarrier
+
+% -----------------------------------------------------------------------------
+% 1. Seuils de placement — actifs d'office
+% -----------------------------------------------------------------------------
+\setcounter{topnumber}{3}            % flottants max en haut de page   (déf. 2)
+\setcounter{bottomnumber}{2}         % flottants max en bas de page    (déf. 1)
+\setcounter{totalnumber}{5}          % flottants max par page          (déf. 3)
+\renewcommand{\topfraction}{0.90}    % part max du haut de page        (déf. 0.7)
+\renewcommand{\bottomfraction}{0.80} % part max du bas de page         (déf. 0.3)
+\renewcommand{\textfraction}{0.07}   % part min de texte               (déf. 0.2)
+\renewcommand{\floatpagefraction}{0.75} % remplissage min d'une page de flottants
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{12pt plus 2pt minus 4pt}
+
+% -----------------------------------------------------------------------------
+% 2. \ancrerTableaux — placement absolu
+% -----------------------------------------------------------------------------
+\newcommand{\ancrerTableaux}{%
+  \@ifstar
+    {\floatplacement{table}{H}\floatplacement{figure}{H}}%
+    {\floatplacement{table}{H}}%
+}
+\newcommand{\libererTableaux}{%
+  \floatplacement{table}{htbp}%
+  \floatplacement{figure}{htbp}%
+}
+
+% -----------------------------------------------------------------------------
+% 3. \activerBarrieresFlottants — barrières de section
+% -----------------------------------------------------------------------------
+\newcommand{\activerBarrieresFlottants}{%
+  \let\ENSP@orig@subsection\subsection
+  \renewcommand{\subsection}{\FloatBarrier\ENSP@orig@subsection}%
+  \let\ENSP@orig@subsubsection\subsubsection
+  \renewcommand{\subsubsection}{\FloatBarrier\ENSP@orig@subsubsection}%
+}
+
+% Variante plus stricte : barrière également avant chaque \section.
+\newcommand{\activerBarrieresFlottantsStrict}{%
+  \activerBarrieresFlottants
+  \let\ENSP@orig@section\section
+  \renewcommand{\section}{\FloatBarrier\ENSP@orig@section}%
+}
+
+\makeatother
+
+% =============================================================================
+% SECTION 9: LISTINGS ET CODE SOURCE — LEAN 4 [v2.0 — UTF-8 natif]
+% =============================================================================
+%
+% ÉVOLUTIONS v2.0 :
+%   - listingsutf8 remplace listings : gestion native de l'UTF-8
+%   - literate étendu : tous les symboles Lean 4 de la thèse sont couverts
+%   - escapeinside={(*}{*)} pour commentaires en français dans le code
+%   - mathescape=true pour formules inline dans les commentaires
+%   - columns=fullflexible pour un alignement propre
+% =============================================================================
+
+\RequirePackage{listingsutf8}
+\RequirePackage{verbatim, alltt}
+
+% -----------------------------------------------------------------------------
+% Configuration globale des listings
+% -----------------------------------------------------------------------------
+\lstset{
+  inputencoding=utf8,
+  extendedchars=true,
+  columns=fullflexible,
+  keepspaces=true,
+  mathescape=true,
+  showstringspaces=false,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=5pt,
+  frame=single,
+  tabsize=2,
+  breaklines=true,
+  breakatwhitespace=true,
+  escapeinside={(*}{*)},
+}
+
+% Sous LuaLaTeX, listings (v1.9) imprime les caractères Unicode au-delà de 255
+% avant l'identifiant en cours (« c₀ » devient « ₀c »). Ces caractères sont
+% déclarés ici comme lettres de listings afin qu'ils restent à leur place.
+\ifLuaTeX
+  \chardef\lstunicatat=\catcode`\@
+  \makeatletter
+  \def\lstuni@loop#1{\ifx#1\relax\else
+    \catcode`#1=\active\lccode`\~=`#1\lccode`\/=`#1%
+    \lowercase{\def~{\lst@ProcessLetter/}}%
+    \expandafter\lstuni@loop\fi}
+  \lst@AddToHook{SelectCharTable}{\lstuni@loop «²³·»É×àâèéêïΔΣαβγεκλᶠ—‖•…′₀₁₊ℕℝ←→⇒∀∃∈−√∧≠≤≥⊥⌈⌉⟨⟩\relax}
+  \catcode`\@=\lstunicatat
+\fi
+
+% -----------------------------------------------------------------------------
+% Définition du langage Lean4
+% -----------------------------------------------------------------------------
+\lstdefinelanguage{Lean4}{
+  % --- Mots-clés de base (tactiques, commandes, structures) ---
+  keywords=[1]{theorem, lemma, corollary, definition, structure, inductive,
+    def, axiom, instance, variable, variables, import, namespace, end,
+    section, open, begin, sorry, exact, refine, apply, intro,
+    intros, rw, simp, simp?, by, have, show, suffices, calc,
+    fun, let, in, if, then, else, match, with, assume,
+    obtain, use, set, unfold, cases, induction, constructor, split,
+    injection, congruence, nlinarith, linarith, field_simp, gcongr,
+    positivity, filter_upwards, atTop, eventually,
+    example, noncomputable, partial, private, protected, public,
+    class, extends, where, deriving, mutual, opaque, unsafe},
+  % --- Types et structures mathématiques ---
+  keywords=[2]{Real, Nat, Int, Rat, Filter, Tendsto, Negligible, BigO, LittleO,
+    ProtocolFamily, ProtocolInstance, InstitutionalParams,
+    InstitutionalRegime, HeliosParams, zkSNARKParams, TraditionalAuditParams,
+    Prop, Type, Sort, Set, List, Array, Option, Prod, Sum, Sigma,
+    Bool, String, Unit, Empty, Fin, Vector},
+  % --- Constantes et scores spécifiques à la thèse ---
+  keywords=[3]{C_score, R_score, O_score, I_val, Conf, Rel, Opp, TV, KL, Adv},
+  % --- Styles visuels ---
+  keywordstyle=[1]\color{leankeyword}\bfseries,
+  keywordstyle=[2]\color{enspgreen}\bfseries,
+  keywordstyle=[3]\color{navyblue}\bfseries,
+  commentstyle=\color{leancomment}\itshape,
+  stringstyle=\color{leanstring}\ttfamily,
+  % --- Table de conversion Unicode → LaTeX ---
+  literate=
+    % Lettres grecques
+    {α}{{$\alpha$}}1
+    {β}{{$\beta$}}1
+    {γ}{{$\gamma$}}1
+    {δ}{{$\delta$}}1
+    {ε}{{$\varepsilon$}}1
+    {η}{{$\eta$}}1
+    {λ}{{$\lambda$}}1
+    {μ}{{$\mu$}}1
+    {π}{{$\pi$}}1
+    {σ}{{$\sigma$}}1
+    {Δ}{{$\Delta$}}1
+    {Γ}{{$\Gamma$}}1
+    {Σ}{{$\Sigma$}}1
+    {Π}{{$\Pi$}}1
+    % Quantificateurs et logique
+    {∀}{{$\forall$}}1
+    {∃}{{$\exists$}}1
+    {ᶠ}{{$^{\mathrm{f}}$}}1
+    {∀ᶠ}{{$\forall^{\mathrm{f}}$}}2
+    {∧}{{$\land$}}1
+    {∨}{{$\lor$}}1
+    {¬}{{$\lnot$}}1
+    {⊤}{{$\top$}}1
+    {⊥}{{$\bot$}}1
+    % Ensembles et appartenance
+    {ℕ}{{$\mathbb{N}$}}1
+    {ℤ}{{$\mathbb{Z}$}}1
+    {ℝ}{{$\mathbb{R}$}}1
+    {ℚ}{{$\mathbb{Q}$}}1
+    {ℂ}{{$\mathbb{C}$}}1
+    {ℱ}{{$\mathcal{F}$}}1
+    {∈}{{$\in$}}1
+    {∉}{{$\notin$}}1
+    {⊆}{{$\subseteq$}}1
+    {⊂}{{$\subset$}}1
+    {∅}{{$\emptyset$}}1
+    {∪}{{$\cup$}}1
+    {∩}{{$\cap$}}1
+    % Opérateurs de comparaison
+    {≤}{{$\leq$}}1
+    {≥}{{$\geq$}}1
+    {≠}{{$\neq$}}1
+    {≡}{{$\equiv$}}1
+    {≪}{{$\ll$}}1
+    {≫}{{$\gg$}}1
+    {≈}{{$\approx$}}1
+    % Flèches et fonctions
+    {→}{{$\to$}}1
+    {↦}{{$\mapsto$}}1
+    {⇒}{{$\Rightarrow$}}1
+    {⇐}{{$\Leftarrow$}}1
+    {⇔}{{$\Leftrightarrow$}}1
+    {←}{{$\leftarrow$}}1
+    % Opérateurs algébriques
+    {×}{{$\times$}}1
+    {∘}{{$\circ$}}1
+    {⊗}{{$\otimes$}}1
+    {⊕}{{$\oplus$}}1
+    {∑}{{$\sum$}}1
+    {∏}{{$\prod$}}1
+    {√}{{$\sqrt{}$}}1
+    % Exposants et indices
+    {⁻¹}{{$^{-1}$}}1
+    {²}{{$^{2}$}}1
+    {³}{{$^{3}$}}1
+    {₀}{{$ _{0}$}}1
+    {₁}{{$ _{1}$}}1
+    {₂}{{$ _{2}$}}1
+    {ₙ}{{$ _{n}$}}1
+    % Délimiteurs spéciaux
+    {⟨}{{$\langle$}}1
+    {⟩}{{$\rangle$}}1
+    {⟪}{{$\llbracket$}}1
+    {⟫}{{$\rrbracket$}}1
+    {«}{{\guillemotleft}}1
+    {»}{{\guillemotright}}1
+    % Ponctuation mathématique
+    {·}{{$\cdot$}}1
+    {…}{{$\ldots$}}1
+    {⊢}{{$\vdash$}}1
+    {⊨}{{$\vDash$}}1
+    % Symboles spécifiques Lean 4 manquants
+    {⌈}{{$\lceil$}}1
+    {⌉}{{$\rceil$}}1
+    {₊}{{$ _{+}$}}1
+    {−}{{-}}1
+    {′}{{$^{\prime}$}}1
+    %{…}{{$\dots$}}1
+}
+
+% -----------------------------------------------------------------------------
+% Environnements dédiés au code Lean 4
+% -----------------------------------------------------------------------------
+\lstnewenvironment{leancode}[1][]
+  {\lstset{language=Lean4, #1}}
+  {}
+
+\lstnewenvironment{leancodeinner}[1][]
+  {\lstset{language=Lean4, frame=none, #1}}
+  {}
+
+% -----------------------------------------------------------------------------
+% Titres des listings (français)
+% -----------------------------------------------------------------------------
+\renewcommand{\lstlistingname}{Listing}
+\renewcommand{\lstlistlistingname}{Liste des Listings}
+
+% =============================================================================
+% SECTION 10: ALGORITHMES
+% =============================================================================
+
+\RequirePackage{algorithm}
+\RequirePackage{algorithmicx}
+\RequirePackage[noend]{algpseudocode}
+\renewcommand{\listalgorithmname}{Liste des Algorithmes}
+\floatname{algorithm}{Algorithme}
+
+% =============================================================================
+% SECTION 11: BOÎTES STYLISÉES  [palette gris — optimisée impression N&B]
+% =============================================================================
+%
+% RÉFÉRENCE VISUELLE : boiteRemarque (inchangée)
+%   colbacktitle = chaptercolor = RGB(70, 70, 70)  — gris foncé
+%   colframe     = chaptercolor
+%   colback      = gray!4                           — fond quasi-blanc
+%
+% PRINCIPE DE LA PALETTE :
+%   Tous les titres : texte blanc sur fond gris (contraste maximal à l'impression)
+%   Tous les fonds  : très légers (gray!3 à gray!7) — lisibilité du texte
+%   7 niveaux de gris distincts, du plus clair (Question) au plus sombre (Problématique)
+%
+%   boiteQuestion      → RGB(125,125,125)  gris clair      fond gray!3
+%   boiteResume        → RGB(105,105,105)  gris moyen      fond gray!4
+%   boiteHypothese     → RGB( 88, 88, 88)  gris moyen+     fond gray!4
+%   boiteRemarque      → RGB( 70, 70, 70)  gris foncé  ← RÉFÉRENCE
+%   boiteDefinition    → RGB( 52, 52, 52)  gris très f.    fond gray!5
+%   boiteTheoreme      → RGB( 32, 32, 32)  quasi-noir      fond gray!7
+%   boiteProblematique → RGB(  0,  0,  0)  noir pur        fond gray!5
+%
+% =============================================================================
+
+\RequirePackage[most]{tcolorbox}
+\tcbuselibrary{skins, breakable}
+
+% --- Palette (les anciennes couleurs steelblue, tealblue, cornflowerblue
+%     ne sont plus utilisées et peuvent être supprimées) ---
+\definecolor{grisQ}{RGB}{125, 125, 125}   % Question      — gris clair
+\definecolor{grisR}{RGB}{105, 105, 105}   % Résumé        — gris moyen
+\definecolor{grisH}{RGB}{ 88,  88,  88}   % Hypothèse     — gris moyen+
+% chaptercolor = RGB(70,70,70) déjà défini en Section 5  ← Remarque
+\definecolor{grisD}{RGB}{ 52,  52,  52}   % Définition    — gris très foncé
+\definecolor{grisL}{RGB}{ 42,  42,  42}   % Lemme         — entre Théorème et Définition
+\definecolor{grisT}{RGB}{ 32,  32,  32}   % Théorème      — quasi-noir
+% black                                   % Problématique — noir pur
+
+% -----------------------------------------------------------------------------
+% boiteTheoreme — quasi-noir / fond le plus sombre
+% Usage : théorèmes, lemmes, corollaires, propositions
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteTheoreme}[2][]{
+  enhanced,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=grisT,
+  colframe=grisT,
+  colback=gray!7,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=grisT, arc=2pt, boxrule=0.6pt},
+  title=\strut #2, #1
+}
+
+% -----------------------------------------------------------------------------
+% boiteLemme — entre quasi-noir et gris très foncé
+% Usage : lemmes, résultats intermédiaires, claims
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteLemme}[2][]{
+  enhanced,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=grisL,
+  colframe=grisL,
+  colback=gray!6,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=grisL, arc=2pt, boxrule=0.6pt},
+  title=\strut #2, #1
+}
+
+% -----------------------------------------------------------------------------
+% boiteDefinition — gris très foncé
+% Usage : définitions formelles, constructions, axiomes
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteDefinition}[2][]{
+  enhanced,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=grisD,
+  colframe=grisD,
+  colback=gray!5,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=grisD, arc=2pt, boxrule=0.6pt},
+  title=\strut #2, #1
+}
+
+% -----------------------------------------------------------------------------
+% boiteHypothese — gris moyen+
+% Usage : hypothèses, conditions, prémisses
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteHypothese}[2][]{
+  enhanced,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=grisH,
+  colframe=grisH,
+  colback=gray!4,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=grisH, arc=2pt, boxrule=0.6pt},
+  title=\strut #2, #1
+}
+
+% -----------------------------------------------------------------------------
+% boiteRemarque — RÉFÉRENCE (inchangée)
+% Usage : remarques, observations, notes marginales
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteRemarque}[2][]{
+  enhanced,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=chaptercolor,
+  colframe=chaptercolor,
+  colback=gray!4,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=chaptercolor, arc=2pt, boxrule=0.6pt},
+  title=\strut #2, #1
+}
+
+% -----------------------------------------------------------------------------
+% boiteResume — gris moyen
+% Usage : résumés de partie/chapitre, synthèses, contributions
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteResume}[2][]{
+  enhanced,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=grisR,
+  colframe=grisR,
+  colback=gray!4,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=grisR, arc=2pt, boxrule=0.6pt},
+  title=\strut #2, #1
+}
+
+% -----------------------------------------------------------------------------
+% boiteQuestion — gris clair
+% Usage : questions ouvertes, pistes de recherche, problèmes ouverts
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteQuestion}[2][]{
+  enhanced,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=grisQ,
+  colframe=grisQ,
+  colback=gray!3,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=grisQ, arc=2pt, boxrule=0.6pt},
+  title=\strut #2, #1
+}
+
+% -----------------------------------------------------------------------------
+% boiteProblematique — noir pur / le plus saillant visuellement
+% Usage : problématiques centrales, enjeux critiques
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteProblematique}[2][]{
+  enhanced,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=black,
+  colframe=black,
+  colback=gray!5,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=black, arc=2pt, boxrule=0.6pt},
+  title=\strut #2, #1
+}
+
+
+% -----------------------------------------------------------------------------
+% boiteArbitre — jalon narratif de la trame de fond
+% Niveau : grisQ (le plus clair) — registre narratif, non concurrent du formel
+% Titre fixe « L'Arbitre » en bandeau flottant — même patron que toutes les boîtes
+% Texte en italique pour marquer le registre distinct
+% Usage : \begin{boiteArbitre}...\end{boiteArbitre}  (sans argument)
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteArbitre}[1][]{%
+  enhanced,
+  breakable,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=grisQ,
+  colframe=grisQ,
+  colback=gray!3,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=grisQ, arc=2pt, boxrule=0.6pt},
+  title=\strut L'Arbitre,
+  fontupper=\itshape,
+  #1
+}
+
+% -----------------------------------------------------------------------------
+% boiteMethodologie — note transversale méta-discursive
+% Niveau : grisQ — même niveau que boiteArbitre, titre variable
+% Même patron cadre complet que toutes les boîtes
+% Usage : \begin{boiteMethodologie}{Titre}...\end{boiteMethodologie}
+% -----------------------------------------------------------------------------
+\newtcolorbox{boiteMethodologie}[2][]{%
+  enhanced,
+  breakable,
+  attach boxed title to top left={xshift=4mm, yshift=-3mm},
+  fonttitle=\bfseries\sffamily,
+  colbacktitle=grisQ,
+  colframe=grisQ,
+  colback=gray!3,
+  coltitle=white,
+  boxrule=0.6pt,
+  arc=2pt,
+  boxed title style={colframe=grisQ, arc=2pt, boxrule=0.6pt},
+  title=\strut #2,
+  #1
+}
+
+% =============================================================================
+% SECTION 11 bis: COMMENTAIRES VISIBLES POUR PREUVES
+% =============================================================================
+%
+% OBJET
+%   Cette section fournit trois commandes pour rendre les preuves
+%   détaillées (annexes) lisibles par un lecteur non spécialiste, sans
+%   alourdir le flux de lecture ni casser la rigueur formelle.
+%
+%   Les trois commandes s'articulent en deux niveaux :
+%
+%   L1 — COMMENTAIRES DE LIGNE
+%     \cmt{...}          : commentaire inline, texte bleu moyen italique,
+%                          indenté sous la ligne commentée
+%     \cmtFormule{...}   : annotation sous une équation, symbole ▸,
+%                          texte bleu moyen
+%
+%   L2 — COMMENTAIRES D'ÉTAPE
+%     cmtEtape{Titre}    : bloc bleu très clair, titre bleu foncé,
+%                          explique le pourquoi d'une étape
+%
+% PALETTE BLEUE
+%   bleuCmtTexte  = RGB(40, 110, 180)   — texte commentaire L1 et L1bis
+%   bleuCmtFond   = RGB(230, 242, 255)  — fond cmtEtape
+%   bleuCmtTitre  = RGB(0, 70, 140)     — titre cmtEtape
+%
+% PLACEMENT DANS LE FLUX
+%   \cmt doit être placé juste après la ligne commentée.
+%   \cmtFormule doit être placé juste après une équation, avant le texte.
+%   cmtEtape doit être placé avant le paragraphe de l'étape commentée.
+%
+% EXEMPLE D'USAGE
+%   Puisque $\TV(P,Q) \in [0,1]$ pour toutes distributions $P$ et $Q$,
+%   \cmt{La distance en variation totale est comprise entre 0 et 1.}
+%   on a $0 \leq 1 - \max \TV(\cdot) \leq 1$,
+%   \cmt{Si le max vaut 0, $\Conf = 1$. Si le max vaut 1, $\Conf = 0$.}
+%
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+% Palette bleue des commentaires
+% -----------------------------------------------------------------------------
+\definecolor{bleuCmtTexte}{RGB}{40, 110, 180}   % texte commentaire L1 et L1bis
+\definecolor{bleuCmtFond}{RGB}{230, 242, 255}   % fond cmtEtape
+\definecolor{bleuCmtTitre}{RGB}{0, 70, 140}     % titre cmtEtape
+
+% -----------------------------------------------------------------------------
+% \cmt — Commentaire inline (L1)
+% -----------------------------------------------------------------------------
+% Rendu : bloc indenté, texte bleu moyen italique, taille \small.
+%         Aucun trait vertical — la couleur seule distingue le commentaire.
+% Usage : à placer juste après la ligne ou l'équation commentée.
+% -----------------------------------------------------------------------------
+\newcommand{\cmt}[1]{%
+  \par\vspace{-0.1em}%
+  \noindent\hspace{1.5em}%
+  \begin{minipage}[t]{\dimexpr\linewidth-1.5em\relax}%
+    \small\itshape\color{bleuCmtTexte}%
+    #1%
+  \end{minipage}%
+  \par\vspace{0.1em}%
+}
+
+% -----------------------------------------------------------------------------
+% \cmtFormule — Commentaire de formule (L1 bis)
+% -----------------------------------------------------------------------------
+% Rendu : ligne alignée à droite, préfixée par un triangle ▸, en bleu
+%         moyen italique, taille \small.
+% -----------------------------------------------------------------------------
+\newcommand{\cmtFormule}[1]{%
+  \begin{flushright}
+    \small\itshape\color{bleuCmtTexte}%
+    $\blacktriangleright$~#1%
+  \end{flushright}
+  \vspace{-0.4em}
+}
+
+% -----------------------------------------------------------------------------
+% cmtEtape — Commentaire d'étape (L2)
+% -----------------------------------------------------------------------------
+% Rendu : bloc bleu très clair, sans bordure, avec titre bleu foncé en gras
+%         suivi du texte. Intégré au flux de la preuve.
+% Usage : \begin{cmtEtape}{Titre de l'étape}...\end{cmtEtape}
+% -----------------------------------------------------------------------------
+\newtcolorbox{cmtEtape}[2][]{%
+  enhanced,
+  breakable,
+  colback=bleuCmtFond,
+  colframe=bleuCmtFond,
+  boxrule=0pt,
+  arc=0pt,
+  left=4pt,
+  right=4pt,
+  top=4pt,
+  bottom=4pt,
+  fontupper=\small,
+  before skip=6pt,
+  after skip=6pt,
+  #1,
+  title={\textbf{#2}},
+  coltitle=bleuCmtTitre,
+  fonttitle=\bfseries\small,
+  attach title to upper,
+  after title={\enspace},
+} %=============================================================================
+% SECTION 12: LISTES ET ÉNUMÉRATIONS
+% =============================================================================
+
+\RequirePackage{enumitem}
+\newlist{titemize}{itemize}{1}
+\setlist[titemize]{label=--, left=0pt .. 1em, nosep}
+\setlist[itemize]{label=\textbullet}
+\setlist[enumerate]{label=\arabic*.}
+% =============================================================================
+% SECTION 13: SOMMAIRES LOCAUX PAR CHAPITRE — moteur etoc [v6.0]
+% =============================================================================
+% MODIFICATIONS v6.0 PAR RAPPORT A v5.0 :
+%   - \debutPartie conservee en commentaire (traçabilite)
+%   - \debutChapitre : nouvelle commande principale
+%     * compteur : \thechapter (natif memoir) au lieu de \Roman{partiecounter}
+%     * sommaire local : niveau section + subsection (ex-chapitre + ex-section)
+%     * 3 arguments au lieu de 4 (suppression arg contributions inutilise)
+%   - \cloturerPartie conservee vide pour compatibilite appels residuels
+% =============================================================================
+
+\RequirePackage{etoc}
+
+% Flag pour distinguer sommaires locaux de la ToC principale
+\newif\iflocaltoc
+\localtocfalse
+
+\AtBeginDocument{%
+  \renewcommand{\tocheadstart}{%
+    \iflocaltoc
+      \vspace*{-7\baselineskip}%
+    \else
+      \vspace*{2cm}%
+    \fi%
+  }%
+  \renewcommand{\printtoctitle}[1]{%
+    \iflocaltoc
+    \else
+      \null\hfill\normalfont\Large\bfseries\scshape\color{chapterdeco} #1\par%
+    \fi%
+  }%
+  \renewcommand{\aftertoctitle}{%
+    \iflocaltoc
+    \else
+      \par\nobreak\vskip\midchapskip%
+    \fi%
+  }%
+}
+
+% -----------------------------------------------------------------------------
+% \debutChapitre{titre}{résumé}{mots-clés}
+% Affiche la page d'introduction d'un chapitre avec résumé, mots-clés
+% et sommaire local (sections + sous-sections).
+% Appelé immédiatement après \chapter{titre} dans these2.tex.
+% -----------------------------------------------------------------------------
+\newcommand{\debutChapitre}[3]{%
+  \markboth{Chapitre~\thechapter~-~#1}{}%
+  \thispagestyle{partie}%
+  \vspace{0.1cm}
+  \begin{boiteResume}{R\'esum\'e de la contribution}
+    \textit{#2}
+  \end{boiteResume}
+  \vspace{0.1cm}
+  \begin{boiteRemarque}{Mots-cl\'es}
+    \color{enspblue}\textit{#3}
+  \end{boiteRemarque}
+  \vspace{0.1cm}
+  \begingroup
+    \etocsetstyle{section}%
+      {\smallskip}%
+      {}%
+      {\noindent{\bfseries\small\color{enspblue}%
+       \etocnumber\enspace\etocthelinkedname}%
+       \nobreak\leaders\hbox{$\mkern0.5mu.\mkern0.5mu$}\hfill\nobreak
+       {\small\etocpage}\par}%
+      {}%
+    \etocsetstyle{subsection}%
+      {}%
+      {}%
+      {\noindent\hspace{1.5em}%
+       {\small\etocnumber\enspace\etocthelinkedname}%
+       \nobreak\leaders\hbox{$\mkern0.5mu.\mkern0.5mu$}\hfill\nobreak
+       {\small\etocpage}\par}%
+      {}%
+    \etocsetstyle{chapter}{}{}{}{}%
+    \etocsetstyle{part}{}{}{}{}%
+    \etocsetnexttocdepth{subsection}%
+    \etocinline
+    \let\origclearpage\clearpage
+    \renewcommand{\clearpage}{}%
+    \localtableofcontents
+    \let\clearpage\origclearpage
+  \endgroup
+  \clearpage
+}
+% -----------------------------------------------------------------------------
+% \debutPartie — CONSERVEE EN COMMENTAIRE (ne pas supprimer)
+% Remplacee par \debutChapitre depuis v6.0
+% -----------------------------------------------------------------------------
+%\newcommand{\debutPartie}[4]{%
+%  \cleardoublepage
+%  \refstepcounter{partiecounter}%
+%  \markboth{Partie~\Roman{partiecounter}~--~#1}{}%
+%  \thispagestyle{partie}%
+%  \begin{center}
+%    {\Huge\bfseries\color{partcolor} Partie \Roman{partiecounter}\par}
+%    \vspace{0.1cm}
+%    {\fontsize{32}{36}\selectfont\bfseries\color{enspblue} #1\par}
+%  \end{center}
+%  \vspace{0.1cm}
+%  \begin{boiteResume}{Résumé de la contribution}
+%    \textit{#2}
+%  \end{boiteResume}
+%  \vspace{0.1cm}
+%  \begin{boiteRemarque}{Mots-clés}
+%    \color{enspblue}\textit{#3}
+%  \end{boiteRemarque}
+%  \vspace{0.1cm}
+%  \begingroup
+%    \etocsetstyle{chapter}%
+%      {\smallskip}{}%
+%      {\noindent{\bfseries\small\color{enspblue}%
+%       \etocnumber\enspace\etocthelinkedname}%
+%       \nobreak\leaders\hbox{$\mkern0.5mu.\mkern0.5mu$}\hfill\nobreak
+%       {\small\etocpage}\par}{}%
+%    \etocsetstyle{section}%
+%      {}{}%
+%      {\noindent\hspace{1.5em}%
+%       {\small\etocnumber\enspace\etocthelinkedname}%
+%       \nobreak\leaders\hbox{$\mkern0.5mu.\mkern0.5mu$}\hfill\nobreak
+%       {\small\etocpage}\par}{}%
+%    \etocsetstyle{part}{}{}{}{}%
+%    \etocsetnexttocdepth{section}%
+%    \etocinline
+%    \let\origclearpage\clearpage
+%    \renewcommand{\clearpage}{}%
+%    \etocstoptocdepth
+%    \localtableofcontents
+%    \etocresumetocdepth
+%    \let\clearpage\origclearpage
+%  \endgroup
+%}
+
+% Conservee vide pour tout appel residuel dans these2.tex
+\newcommand{\cloturerPartie}{}
+% -----------------------------------------------------------------------------
+% \debutAnnexes — page d'intro des annexes, borne etoc
+% -----------------------------------------------------------------------------
+\newcommand{\debutAnnexes}{%
+  \cleardoublepage
+  \markboth{Annexes}{}%
+  \thispagestyle{partie}%
+  \begin{center}
+    {\Huge\bfseries\color{partcolor} Annexes\par}
+  \end{center}
+  %\vspace{0.7cm}
+  %\noindent{\large\bfseries\color{enspblue}%
+    %Sommaire~--~Annexes}\\[0.25cm]
+  %\noindent\rule{\linewidth}{0.5pt}\\[0.15cm]
+  \begingroup
+    \etocsetstyle{chapter}%
+      {\smallskip}%
+      {}%
+      {\noindent{\bfseries\small\color{enspblue}%
+       \etocnumber\enspace\etocthelinkedname}%
+       \nobreak\leaders\hbox{$\mkern0.5mu.\mkern0.5mu$}\hfill\nobreak
+       {\small\etocpage}\par}%
+      {}%
+    \etocsetstyle{section}{}{}{}{}%
+    \etocsetstyle{part}{}{}{}{}%
+    \etocsetnexttocdepth{chapter}%
+   \etocinline
+    %\renewcommand{\contentsname}{}%
+    %\renewcommand{\tocheadstart}{}%
+    %\renewcommand{\aftertoctitle}{}%
+    %\renewcommand{\printtoctitle}[1]{}%
+    \let\origclearpage\clearpage
+    \renewcommand{\clearpage}{}%
+    \localtableofcontents
+    \let\clearpage\origclearpage
+  \endgroup
+  %\noindent\rule{\linewidth}{0.5pt}
+  \clearpage
+}
+\newcommand{\entreePartie}[1]{%
+  \addcontentsline{toc}{part}{#1}%
+}
+
+
+
+\newcommand{\demarrerSommairePartie}{}
+\newcommand{\finPartie}{}
+\newcommand{\afficherSommairePartie}[1]{}
+\newcommand{\sommairePartie}{}
+% -----------------------------------------------------------------------------
+% \cloturerAnnexes — clôture les annexes
+% -----------------------------------------------------------------------------
+\newcommand{\cloturerAnnexes}{%
+  \clearpage
+  \makeatletter
+  \renewcommand{\@chapapp}{Chapitre}%
+  \renewcommand{\thechapter}{\arabic{chapter}}%
+  \makeatother
+}
+%=============================================================================
+% SECTION 14: CARACTÈRES UNICODE
+% =============================================================================
+
+\RequirePackage{newunicodechar}
+
+% Lettres grecques minuscules
+\newunicodechar{α}{\alpha}
+\newunicodechar{β}{\beta}
+\newunicodechar{γ}{\gamma}
+\newunicodechar{δ}{\delta}
+\newunicodechar{ε}{\varepsilon}
+\newunicodechar{ζ}{\zeta}
+\newunicodechar{η}{\eta}
+\newunicodechar{θ}{\theta}
+\newunicodechar{ι}{\iota}
+\newunicodechar{κ}{\kappa}
+\newunicodechar{λ}{\lambda}
+\newunicodechar{μ}{\mu}
+\newunicodechar{ν}{\nu}
+\newunicodechar{ξ}{\xi}
+\newunicodechar{π}{\pi}
+\newunicodechar{ρ}{\rho}
+\newunicodechar{σ}{\sigma}
+\newunicodechar{τ}{\tau}
+\newunicodechar{υ}{\upsilon}
+\newunicodechar{φ}{\phi}
+\newunicodechar{χ}{\chi}
+\newunicodechar{ψ}{\psi}
+\newunicodechar{ω}{\omega}
+
+% Lettres grecques majuscules
+\newunicodechar{Γ}{\Gamma}
+\newunicodechar{Δ}{\Delta}
+\newunicodechar{Θ}{\Theta}
+\newunicodechar{Λ}{\Lambda}
+\newunicodechar{Ξ}{\Xi}
+\newunicodechar{Π}{\Pi}
+\newunicodechar{Σ}{\Sigma}
+\newunicodechar{Υ}{\Upsilon}
+\newunicodechar{Φ}{\Phi}
+\newunicodechar{Ψ}{\Psi}
+\newunicodechar{Ω}{\Omega}
+
+% Ensembles mathématiques
+\newunicodechar{ℕ}{\mathbb{N}}
+\newunicodechar{ℤ}{\mathbb{Z}}
+\newunicodechar{ℝ}{\mathbb{R}}
+\newunicodechar{ℚ}{\mathbb{Q}}
+\newunicodechar{ℂ}{\mathbb{C}}
+\newunicodechar{ℱ}{\mathcal{F}}
+\newunicodechar{ℋ}{\mathcal{H}}
+
+% Opérateurs mathématiques
+\newunicodechar{∑}{\sum}
+\newunicodechar{∀}{\forall}
+\newunicodechar{∃}{\exists}
+\newunicodechar{→}{\to}
+\newunicodechar{↦}{\mapsto}
+\newunicodechar{⇒}{\Rightarrow}
+\newunicodechar{⇐}{\Leftarrow}
+\newunicodechar{⇔}{\Leftrightarrow}
+\newunicodechar{∧}{\wedge}
+\newunicodechar{∨}{\vee}
+\newunicodechar{¬}{\neg}
+\newunicodechar{≠}{\neq}
+\newunicodechar{≡}{\equiv}
+\newunicodechar{≤}{\leq}
+\newunicodechar{≥}{\geq}
+\newunicodechar{≪}{\ll}
+\newunicodechar{≫}{\gg}
+\newunicodechar{∼}{\sim}
+\newunicodechar{≃}{\simeq}
+\newunicodechar{≅}{\cong}
+\newunicodechar{∘}{\circ}
+\newunicodechar{×}{\times}
+\newunicodechar{⊗}{\otimes}
+\newunicodechar{⊕}{\oplus}
+\newunicodechar{∈}{\in}
+\newunicodechar{∉}{\notin}
+\newunicodechar{⊆}{\subseteq}
+\newunicodechar{⊂}{\subset}
+\newunicodechar{∅}{\emptyset}
+\newunicodechar{∪}{\cup}
+\newunicodechar{∩}{\cap}
+\newunicodechar{⊤}{\top}
+\newunicodechar{⊥}{\bot}
+\newunicodechar{⊢}{\vdash}
+\newunicodechar{⊨}{\vDash}
+
+% Accents français
+\newunicodechar{é}{\'e}
+\newunicodechar{É}{\'E}
+\newunicodechar{è}{\`e}
+\newunicodechar{ê}{\^e}
+\newunicodechar{ë}{\"e}
+\newunicodechar{à}{\`a}
+\newunicodechar{â}{\^a}
+\newunicodechar{ç}{\c{c}}
+\newunicodechar{î}{\^i}
+\newunicodechar{ï}{\"i}
+\newunicodechar{ô}{\^o}
+\newunicodechar{ö}{\"o}
+\newunicodechar{ù}{\`u}
+\newunicodechar{û}{\^u}
+\newunicodechar{ü}{\"u}
+\newunicodechar{ÿ}{\"y}
+\newunicodechar{œ}{\oe}
+\newunicodechar{æ}{\ae}
+
+% =============================================================================
+% SECTION 15: MACROS MATHÉMATIQUES — CRYPTOGRAPHIE INSTITUTIONNELLE
+% =============================================================================
+
+\newcommand{\Conf}{\mathsf{Conf}}
+\newcommand{\Rel}{\mathsf{Rel}}
+\newcommand{\Relrec}{\mathsf{Rel}_{\mathrm{rec}}}% fiabilit\'e de reconstruction (Fano)
+\newcommand{\Relver}{\mathsf{Rel}_{\mathrm{ver}}}% fiabilit\'e de v\'erification (compl\'etude/solidit\'e)
+\newcommand{\Opp}{\mathsf{Opp}}
+\newcommand{\negl}{\mathsf{negl}}
+\newcommand{\poly}{\mathsf{poly}}
+
+\DeclareMathOperator{\TV}{TV}
+\DeclareMathOperator{\KL}{D_{\text{KL}}}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\Prob}{\mathbb{P}}
+\DeclareMathOperator{\Adv}{Adv}
+
+\newcommand{\setN}{\mathbb{N}}
+\newcommand{\setZ}{\mathbb{Z}}
+\newcommand{\setR}{\mathbb{R}}
+\newcommand{\setQ}{\mathbb{Q}}
+\newcommand{\setC}{\mathbb{C}}
+
+% =============================================================================
+% SECTION 16: EN-TÊTES ET PIEDS DE PAGE  [v3.5 — hiérarchie complète]
+% =============================================================================
+%
+% HIÉRARCHIE DES EN-TÊTES :
+%   preliminaire  → gauche : titre de la page courante (\leftmark)
+%   partie        → gauche : "Partie N — Titre"
+%   chapitre      → gauche : titre du chapitre  (1ère page : aucun en-tête)
+%   fancy         → droite : section courante (\rightmark)
+%
+% ALIASAGES memoir :
+%   chapter  → chapitre   (1ère page de chaque chapitre)
+%   part     → partie
+%   cleared  → selon contexte (frontmatter=preliminaire, mainmatter=chapitre)
+% =============================================================================
+
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+
+% -----------------------------------------------------------------------------
+% Style fancy — pages courantes (après la 1ère page d'un chapitre)
+% En-tête : rien à gauche | section courante à droite
+% -----------------------------------------------------------------------------
+\fancyhf{}
+\fancyhead[L]{}
+\fancyhead[R]{\small\itshape\rightmark}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyfoot[L]{%
+  \fontsize{7pt}{8pt}\selectfont
+  Thèse de Doctorat/Ph.D -
+  Aux Fondements de la Cryptographie Institutionnelle.
+  MINKA MI NGUIDJOÏ Thierry E.%
+}
+\fancyfoot[R]{\thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% -----------------------------------------------------------------------------
+% Style chapitre — 1ère page de chaque chapitre
+% En-tête : titre du chapitre à gauche (memoir alimente \leftmark via \chapter)
+% Pas de filet de tête (esthétique daleifmodif)
+% -----------------------------------------------------------------------------
+\fancypagestyle{chapitre}{%
+  \fancyhf{}
+  \fancyhead[L]{\small\scshape\leftmark}
+  \fancyhead[R]{}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \fancyfoot[L]{%
+    \fontsize{7pt}{8pt}\selectfont
+    Aux Fondements de la Cryptographie Institutionnelle :
+    Formalisation, Bornes d'Impossibilité,
+    Conditions d'Optimalité et Vérification Formelle%
+  }
+  \fancyfoot[R]{\thepage}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+% -----------------------------------------------------------------------------
+% Style partie — page d'introduction de chaque partie
+% En-tête : "Partie N — Titre" à gauche
+% Alimenté manuellement dans \debutPartie via \markboth
+% -----------------------------------------------------------------------------
+\fancypagestyle{partie}{%
+  \fancyhf{}
+  \fancyhead[L]{\small\scshape\leftmark}
+  \fancyhead[R]{}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \fancyfoot[L]{%
+    \fontsize{7pt}{8pt}\selectfont
+    Thèse de Doctorat PhD. Titre: Aux Fondements de la Cryptographie Institutionnelle.
+    Auteur: MINKA MI NGUIDJOÏ Thierry Emmanuel%
+  }
+  \fancyfoot[R]{\thepage}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+% -----------------------------------------------------------------------------
+% Style preliminaire — frontmatter (dédicaces, remerciements, abstract…)
+% En-tête : titre de la page courante à gauche
+% Alimenté via \markboth{Titre}{} dans chaque fichier préliminaire
+% -----------------------------------------------------------------------------
+\fancypagestyle{preliminaire}{%
+  \fancyhf{}
+  \fancyhead[L]{\small\scshape\leftmark}
+  \fancyhead[R]{}
+  \renewcommand{\headrulewidth}{0.4pt}
+  \fancyfoot[L]{%
+    \fontsize{7pt}{8pt}\selectfont
+    Aux Fondements de la Cryptographie Institutionnelle,
+    Thèse de Doctorat/Ph.D%
+  }
+  \fancyfoot[R]{\thepage}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+% -----------------------------------------------------------------------------
+% Aliasages memoir
+% -----------------------------------------------------------------------------
+\aliaspagestyle{chapter}{chapitre}
+\aliaspagestyle{part}{partie}
+\aliaspagestyle{cleared}{preliminaire}
+
+\newcommand{\activerStylesChapitres}{%
+  \aliaspagestyle{cleared}{chapitre}%
+}
+
+\newcommand{\forcerStyleChapitre}{%
+  \thispagestyle{chapitre}%
+}
+
+% =============================================================================
+% SECTION 17: PAGES DE COUVERTURE ENSP
+% =============================================================================
+
+\newcommand{\enspDiplome}{Doctorat/Ph.D en G\'enie Informatique}
+\newcommand{\enspSpecialite}{Cryptographie et S\'ecurit\'e de l'Information}
+
+\newcommand{\couvertureENSP}[9]{%
+  \pagecolor{black}
+  \color{white}
+  \begin{titlingpage}
+    \begin{SingleSpace}
+    \begin{adjustwidth*}{\unitlength}{-\unitlength}
+    \vspace*{5mm}
+    \centering
+    \begin{center}
+      \begin{tabular}{ccc}
+        {\large UNIVERSIT\'E DE YAOUND\'E I}
+        & \multirow{8}{*}{\includegraphics[width=2.5cm,height=2.5cm]{preambule/uy1.png}}
+        & {\large UNIVERSITY OF YAOUNDE I}\\
+        \textbf{*******} & & \textbf{*******} \\
+        {\'ECOLE NATIONALE SUP\'ERIEURE} & & {NATIONAL ADVANCED SCHOOL}\\
+        {POLYTECHNIQUE DE YAOUND\'E}     & & {OF ENGINEERING OF YAOUNDE}\\
+        \textbf{********}                & & \textbf{*******}\\
+        {D\'EPARTEMENT DE G\'ENIE}       & & {DEPARTMENT OF COMPUTER}\\
+        {INFORMATIQUE}                   & & {ENGINEERING}\\
+      \end{tabular}
+    \end{center}
+    \vspace{0.2cm}
+    \begin{center}
+      \rule[0.5ex]{\linewidth}{2pt}\vspace*{-\baselineskip}\vspace*{3.2pt}
+      \rule[0.5ex]{\linewidth}{1pt}\\[0.4\baselineskip]
+      {\large\textsc{\textbf{#1}}\\[2mm]\textsc{\textbf{#2}}}\\[2mm]
+      \rule[0.6ex]{\linewidth}{1pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+      \rule[0.5ex]{\linewidth}{2pt}\\[2mm]
+      {\large\textbf{Th\`ese de Doctorat/Ph.D}}\\[2mm]
+      {\normalsize\underline{Pr\'esent\'ee et soutenue par :}}\\[4mm]
+      {\large\textsc{\textbf{#3}}}\\
+      {\normalsize\textit{Matricule : #4}}\\[6mm]
+      {\normalsize\underline{En vue de l'obtention du :}}\\[3mm]
+      {\normalsize\textbf{\enspDiplome}}\\[0.15cm]
+      {\normalsize\textbf{\underline{Sp\'ecialit\'e} : \enspSpecialite}}\\[2mm]
+      {\normalsize\underline{Sous la supervision de :}}\\[3mm]
+      {\small\textsc{\textbf{#5}}}\\[1mm]
+      {\small\textsc{\textbf{#6}}}\\[4mm]
+      {\normalsize\underline{Devant le jury compos\'e de :}}\\[3mm]
+      #7\\[2cm]
+      {\normalsize Ann\'ee acad\'emique #8}\\[0.15cm]
+      {\normalsize Th\`ese soutenue le #9}
+    \end{center}
+    \end{adjustwidth*}
+    \end{SingleSpace}
+  \end{titlingpage}
+  \pagecolor{white}
+  \color{black}
+}
+
+\newcommand{\enspLabo}{Laboratoire d'Ing\'enierie Math\'ematiques et des Syst\`emes d'Information}
+\newcommand{\enspLogo}{preambule/ensp_logo.jpg}
+%\newcommand{\enspCitation}{%
+ % La cryptographie n'existe pas dans le vide.
+  %Elle est au service d'institutions humaines qui op\`erent sous des contraintes
+  %cognitives, organisationnelles et proc\'edurales.
+  %Comprendre ces contraintes n'est pas p\'eriph\'erique \`a la conception cryptographique,
+ % c'est le fondement m\^eme de la construction de syst\`emes qui fonctionnent
+ % dans le monde r\'eel.%
+%}
+%\newcommand{\enspCitationRef}{\cite{Minka2026CRO}}
+
+\newcommand{\couvertureENSPblanche}[5]{%
+  \begin{titlingpage}
+    \begin{SingleSpace}
+      \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.22\textwidth]{\enspLogo}
+      \end{figure}
+      \begin{center}
+        {\large \textcolor{enspblue}{\textsc{\textbf{\enspLabo}}}}
+      \end{center}
+      \vspace{0.2cm}
+      \begin{center}
+        \rule[0.5ex]{\linewidth}{2pt}\vspace*{-\baselineskip}\vspace*{3.2pt}
+        \rule[0.5ex]{\linewidth}{1pt}\\[0.4\baselineskip]
+        {\large \textcolor{enspblue}{\textsc{\textbf{#1}}}}\\
+        \vspace{2mm}
+        {\large \textcolor{enspblue}{\textsc{\textbf{#2}}}}
+        \\[0.4\baselineskip]
+        \rule[0.5ex]{\linewidth}{1pt}\vspace*{-\baselineskip}\vspace{3.2pt}
+        \rule[0.5ex]{\linewidth}{2pt}\\
+        \vspace{1cm}
+        {\large \textbf{Th\`ese de Doctorat/Ph.D}}\\
+        \vspace{1cm}
+        {\normalsize Pr\'esent\'ee et soutenue par}\\
+        \vspace{0.5cm}
+        {\large \textsc{\textbf{\textcolor{enspblue}{#3}}}}\\
+        \vspace{0.5cm}
+        {\normalsize En vue de l'obtention du :}\\
+        \vspace{0.5cm}
+        {\normalsize \textbf{Dipl\^ome de \textcolor{enspblue}{\enspDiplome}}}\\[0.2cm]
+        {\normalsize \textbf{Sp\'ecialit\'e : \textcolor{enspblue}{\enspSpecialite}}}\\
+        \vspace{6cm}
+        {\large \textcolor{enspblue}{Ann\'ee acad\'emique #4}}\\[0.3cm]
+        {\large \textcolor{enspblue}{Th\`ese soutenue le #5}}\\[0.4cm]
+        \parbox{0.85\textwidth}{%
+          %\begin{quote}
+            %\small\textit{%
+              %\guillemotleft~\enspCitation~\guillemotright
+            %}\enspCitationRef.
+          %\end{quote}
+        }
+      \end{center}
+    \end{SingleSpace}
+  \end{titlingpage}
+}
+
+% =============================================================================
+% SECTION 18: GLOSSAIRE ET INDEX
+% =============================================================================
+
+\RequirePackage[acronym, nomain, nonumberlist]{glossaries}
+\makeglossaries
+\makeindex
+
+% =============================================================================
+% SECTION 19: HYPERREF ET RÉFÉRENCES (chargé en avant-dernier)
+% =============================================================================
+
+\RequirePackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=enspblue,
+    citecolor=enspred,
+    urlcolor=enspgreen,
+    filecolor=black,
+    pdfauthor={Thierry Emmanuel Minka Mi Nguidjoï},
+    pdftitle={Aux Fondements de la Cryptographie Institutionnelle},
+    pdfsubject={Thèse de Doctorat en Génie Informatique},
+    pdfkeywords={CLO, CRO, SOTP, cryptographie institutionnelle, opposabilité juridique}
+}
+
+% =============================================================================
+% SECTION 20: BIBLIOGRAPHIE (chargé en dernier — après hyperref)
+% =============================================================================
+
+\RequirePackage[style=numeric, maxcitenames=2, uniquelist=false,
+                sorting=none, backend=bibtex]{biblatex}
+\defbibfilter{booksandarticles}{type=book or type=article}
+\defbibfilter{misc}{type=misc}
+
+% =============================================================================
+% SECTION XX: STYLE ET DÉCORATION DES CHAPITRES ET ANNEXES
+% =============================================================================
+
+\RequirePackage{calc}
+\RequirePackage{soul}
+%\RequirePackage{fourier}
+\RequirePackage{fourier-orns}
+
+\definecolor{chapterdeco}{RGB}{10, 87, 115}
+
+\makeatletter
+\newlength\dlf@normtxtw
+\setlength\dlf@normtxtw{\textwidth}
+\newsavebox{\feline@chapter}
+
+\newcommand\feline@chapter@marker[1][4cm]{%
+    \sbox\feline@chapter{%
+        \resizebox{!}{#1}{%
+            \fboxsep=1pt%
+            \colorbox{chapterdeco}{\color{white}\thechapter}%
+        }%
+    }%
+    \rotatebox{90}{%
+        \resizebox{%
+            \heightof{\usebox{\feline@chapter}}+\depthof{\usebox{\feline@chapter}}%
+        }{!}{\scshape\so\@chapapp}%
+    }\quad%
+    \raisebox{\depthof{\usebox{\feline@chapter}}}{\usebox{\feline@chapter}}%
+}
+
+\newcommand\feline@chm[1][4cm]{%
+    \sbox\feline@chapter{\feline@chapter@marker[#1]}%
+    \makebox[0pt][c]{\makebox[1cm][r]{\usebox\feline@chapter}}%
+}
+
+\makechapterstyle{daleifmodif}{%
+    \renewcommand\chapnamefont{\normalfont\Large\scshape\raggedleft\so}%
+    \renewcommand\chaptitlefont{\normalfont\Large\bfseries\scshape}%
+    \renewcommand\chapternamenum{}%
+    \renewcommand\printchaptername{}%
+    \renewcommand\printchapternum{\null\hfill\feline@chm[2.5cm]\par}%
+    \renewcommand\afterchapternum{\par\vskip\midchapskip}%
+    \renewcommand\printchaptertitle[1]{%
+        \color{chapterdeco}\chaptitlefont\raggedleft ##1\par%
+    }%
+}
+\makeatother
+
+\chapterstyle{daleifmodif}
+
+\newcommand{\ornamento}{%
+    \vspace{-2em}%
+    \noindent\textcolor{chapterdeco}{%
+        \hrulefill~%
+        \raisebox{-2.5pt}[10pt][10pt]{\decofourleft\floweroneleft\decofourright}%
+        ~\hrulefill%
+    }%
+}
+
+\newcommand{\ornpar}{%
+    \noindent\textcolor{chapterdeco}{%
+        \raisebox{-1.9pt}[10pt][10pt]{\leafright}%
+        \hrulefill%
+        \raisebox{-1.9pt}[10pt][10pt]{\decofour\floweroneleft\floweroneright}%
+    }%
+}
+
+\newcommand{\ornimpar}{%
+    \textcolor{chapterdeco}{%
+        \raisebox{-2.4pt}[10pt][10pt]{\decoone\floweroneright}%
+        \hrulefill%
+        \raisebox{-2.4pt}[10pt][10pt]{\decosix~Page \thepage}%
+    }%
+}
+
+\makeatletter
+\def\headrule{%
+    \color{chapterdeco}%
+    \raisebox{-2.1pt}[10pt][10pt]{\leafright}%
+    \hrulefill%
+    \raisebox{-2.1pt}[10pt][10pt]{~~~\floweroneleft\floweroneright\floweroneleft~~~}%
+    \hrulefill%
+    \raisebox{-2.1pt}[10pt][10pt]{\leafleft}%
+}
+\makeatother
+
+\makepagestyle{myvf}
+\makeoddfoot{myvf}{}{\ornimpar}{}
+\makeevenfoot{myvf}{}{\ornpar}{}
+\makeevenhead{myvf}{\leftmark}{\ornamento}{\rightmark}
+\makeoddhead{myvf}{\leftmark}{\ornamento}{\rightmark}
+
+\newcommand{\styleAnnexes}{%
+  \makeatletter
+  \renewcommand{\@chapapp}{Annexe}%
+  \renewcommand{\thechapter}{\Alph{chapter}}%
+  \setcounter{chapter}{0}%
+  \makeatother
+  \chapterstyle{daleifmodif}%
+}
+
+% =============================================================================
+% SECTION 21: MACROS UTILITAIRES
+% =============================================================================
+
+\RequirePackage{lettrine}
+\newcommand{\initial}[1]{%
+  \lettrine[lines=2, lhang=0.22, nindent=0em]{\color{enspblue}{\textsc{#1}}}{}%
+}
+\newcommand{\cqd}{\hfill$\square$}
+\newcommand{\contributionItem}[2]{\item[\textbf{#1:}] #2}
+
+% =============================================================================
+% SECTION 22: MACROS DE DÉNUMÉROTATION
+% =============================================================================
+
+\makeatletter
+\newcommand{\chapitreNonNumerote}[2]{%
+  % #1 = titre affiché ; #2 = préfixe de numérotation des flottants (ex. IG, CG)
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{#1}%
+  \markboth{\MakeUppercase{#1}}{\MakeUppercase{#1}}%
+  % --- Affichage manuel du titre, SANS \chapter* ---
+  \thispagestyle{partie}%
+  \vspace*{0.5cm}
+  \begin{center}
+    {\Huge\bfseries\color{chapterdeco} #1\par}
+  \end{center}
+  \vspace{1cm}
+  % --- Réinitialisation des compteurs ---
+  \renewcommand{\thesection}{\arabic{section}}%
+  \renewcommand{\thetable}{#2.\arabic{table}}%
+  \renewcommand{\thefigure}{#2.\arabic{figure}}%
+  \renewcommand{\theequation}{#2.\arabic{equation}}%
+  \setcounter{section}{0}%
+  \setcounter{table}{0}%
+  \setcounter{figure}{0}%
+  \setcounter{equation}{0}%
+}
+\newcommand{\retablirNumerotation}{%
+  \renewcommand{\thesection}{\thechapter.\arabic{section}}%
+  \renewcommand{\thetable}{\thechapter.\arabic{table}}%
+  \renewcommand{\thefigure}{\thechapter.\arabic{figure}}%
+  \renewcommand{\theequation}{\thechapter.\arabic{equation}}%
+}
+\makeatother
+ 
+
+% =============================================================================
+% FIN DU PACKAGE
+% =============================================================================
+\endinput

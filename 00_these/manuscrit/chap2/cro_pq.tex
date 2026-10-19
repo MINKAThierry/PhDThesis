@@ -1,0 +1,1030 @@
+% ============================================================================
+% SECTION 2.4 : EXTENSION QUANTIQUE DU TRILEMME CRO CONDITIONNEL
+% Source : partie2/cro_pq.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
+% ============================================================================
+
+\section{EXTENSION QUANTIQUE DU TRILEMME CRO CONDITIONNEL}
+\label{sec:cro_pq}
+\begin{sloppypar}
+La section~\ref{sec:cro_classique} a \'etabli le Trilemme CRO conditionnel
+classique~\cite{MINKA2026CRO}, selon lequel, sous les hypoth\`eses de capacit\'e institutionnelle,
+$\Conf \cdot \Rel \cdot \Opp \leq \Delta/(\gamma\lambda) + O(\lambda^{-2})$, avec une
+forme raffin\'ee qui identifie le r\'egime o\`u la capacit\'e institutionnelle est la
+contrainte liante. L'Objectif~\ref{obj:obj3_postquantique} reste ouvert, car il reste \`a savoir si ces bornes
+tiennent face aux adversaires quantiques.
+
+Nous \'etendons ici le cadre classique au r\'egime quantique.
+Ce r\'esultat, \`a notre connaissance la premi\`ere caract\'erisation quantitative des limites
+de la cryptographie institutionnelle sous adversaires quantiques~\cite{NISTPQC,Zhandry},
+\'etablit une borne explicite de m\^eme forme que dans le cas classique, en
+$\Delta_q$ et $\gamma_q$ (Th\'eor\`eme~\ref{thm:trilemme_pq}), dont d\'ecoule la
+majoration affaiblie publi\'ee~:
+\begin{equation}
+\Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda}
++ \mathcal{O}(\lambda^{-2})
+\label{eq:cro_pq_borne_principale}
+\end{equation}
+o\`u $\Delta_q$ repr\'esente la capacit\'e d'extraction institutionnelle
+consciente du quantique, $\eta_q$ le coefficient de perte d'interpr\'etabilit\'e
+quantique et $H(C)$ l'entropie contextuelle. Le r\'esultat central tient \`a ce que la
+structure du trilemme survit au passage quantique, puisque la borne explicite garde la m\^eme
+forme que dans le cas classique. Le terme $\eta_q H(C)/\lambda$ n'appara\^it que
+dans la majoration affaiblie et mesure l'effet additionnel du bruit sur
+l'information interpr\'etable.
+
+Deux contributions additionnelles compl\`etent cette section. Une calibration
+illustrative (sous-section~\ref{subsec:analyse_coherence_pq}) situe les ordres de
+grandeur des param\`etres quantiques \`a partir de six syst\`emes (trois classiques issus de la
+section~\ref{sec:cro_classique} et trois sch\'emas standardis\'es par le NIST ou
+associ\'es~\cite{Dilithium2022,Kyber2022,SPHINCS2022}), qui ne sont pas des
+instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}), conform\'ement
+\`a la note de m\'ethodologie pr\'esent\'ee dans la sous-section~\ref{subsec:note_methodo}.
+Les implications pour les standards NIST PQC
+(sous-section~\ref{subsec:implications_standards}) fournissent des
+recommandations concr\`etes pour la migration institutionnelle.
+
+Cette section correspond \`a l'\'etape \textbf{E (\'Etendre)} de la progression
+F$\to$B$\to$\textbf{E}$\to$S$\to$C$\to$X et apporte la contribution \textbf{C3} de
+cette th\`ese.
+
+La r\'eponse \`a l'Objectif~\ref{obj:obj3_postquantique} est affirmative puisque les
+bornes CRO s'\'etendent au r\'egime quantique, param\'etr\'ees par la capacit\'e
+$\Delta_q$ et la perte $\eta_q$ (D\'efinition~\ref{def:perte_interp_quantique}).
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre de demain travaillera avec des signatures ML-DSA ($3\,309$
+octets pour ML-DSA-65, l\`a o\`u ECDSA en produit~$64$) et avec des preuves sur r\'eseaux
+euclidiens l\`a o\`u il v\'erifie un logarithme discret. Sa capacit\'e
+$\Delta_q$ risque de diminuer pendant que la complexit\'e des preuves augmente.
+Cette section d\'emontre que la borne du Trilemme CRO r\'esiste face aux
+adversaires quantiques et que sa forme est inchang\'ee~; ce sont les
+param\`etres institutionnels $\Delta_q$ et $\eta_q$ qui portent l'effet de la
+transition. La contrainte cognitive persiste donc dans le monde quantique au lieu
+de relever d'un artefact classique.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Pr\'eliminaires : th\'eorie de l'information quantique}
+\label{subsec:preliminaires_quantiques}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous \'etendons les notations classiques de th\'eorie de l'information du
+Trilemme CRO conditionnel aux param\`etres quantiques~\cite{MINKA2026CRO,Fano61,Pinsker1964}.
+Cette extension suit Wilde~\cite{Wilde2017} et Nielsen \& Chuang~\cite{NielsenChuang2010},
+assurant la compatibilit\'e arri\`ere avec le cadre classique~\cite{Shannon48,CoverThomas06}.
+
+\subsubsection{Mesures d'information quantique}
+\label{subsubsec:mesures_info_quantique}
+
+\begin{definition}[Entropie de von Neumann~\cite{vonNeumann1932,NielsenChuang2010}]\label{def:entropie_conditionnelle_quantique}
+Pour un \'etat quantique $\rho$~:
+\begin{equation}
+S(\rho) = -\operatorname{Tr}(\rho \log \rho)
+\end{equation}
+Pour un \'etat classique-quantique $\rho_{XE} = \sum_x P_X(x) |x\rangle\langle x|
+\otimes \rho_E^x$, l'entropie conditionnelle est~:
+\begin{equation}
+S(X|E)_\rho = S(\rho_{XE}) - S(\rho_E)
+\end{equation}
+o\`u $\rho_E = \operatorname{Tr}_X(\rho_{XE})$.
+\end{definition}
+
+\begin{definition}[Information mutuelle quantique]\label{def:information_mutuelle_quantique}
+Pour un \'etat biparti $\rho_{AB}$~:
+\begin{equation}
+I(A; B)_\rho = S(\rho_A) + S(\rho_B) - S(\rho_{AB})
+\end{equation}
+\end{definition}
+
+\begin{definition}[Information quantique accessible]\label{def:info_accessible}
+Pour un ensemble $\{P_X(x), \rho_x\}$, l'information accessible est~:
+\begin{equation}
+I_{\mathrm{acc}} = \sup_{\{\Pi_y\}} I(X; Y)
+\end{equation}
+o\`u le supremum est pris sur toutes les POVMs $\{\Pi_y\}$ sur le syst\`eme
+quantique~\cite{NielsenChuang2010}. Selon la borne de Holevo~\cite{Holevo1973},
+$I_{\mathrm{acc}} \leq \chi$.
+\end{definition}
+
+\begin{definition}[Entropie min-max liss\'ee]\label{def:entropie_min_max_lissee}
+Pour $\varepsilon \in [0,1)$ et un \'etat $\rho_{AB}$, l'entropie min-max
+liss\'ee est~:
+\begin{equation}
+H_{\min}^\varepsilon(A|B)_\rho = \max_{\bar{\rho}_{AB} \in \mathcal{B}^\varepsilon(\rho_{AB})}
+H_{\min}(A|B)_{\bar{\rho}}
+\end{equation}
+o\`u $H_{\min}(A|B)_\rho = -\log_2 \min\{\mathrm{Tr}\,\sigma_B : \rho_{AB} \leq \mathbb{I}_A \otimes \sigma_B,\ \sigma_B \geq 0\}$
+est l'entropie min conditionnelle et $\mathcal{B}^\varepsilon(\rho)$ la boule de
+rayon $\varepsilon$ autour de $\rho$ pour la distance de purification.
+\end{definition}
+
+\begin{remark}[Relation avec l'entropie de Shannon]\label{rem:relation_shannon}
+Lorsque $\rho = \sum_x P_X(x) |x\rangle\langle x|$ est diagonal dans la base
+computationnelle (encodage classique)~:
+\begin{equation}
+S(\rho) = H(X)
+\end{equation}
+Ceci assure la compatibilit\'e arri\`ere avec le cadre CRO conditionnel pour
+les protocoles classiques~\cite{CoverThomas06,HanVerdu}.
+\end{remark}
+
+\subsubsection{In\'egalit\'es quantiques cl\'es}
+\label{subsubsec:inegalites_quantiques}
+
+\begin{lemma}[In\'egalit\'e de Pinsker quantique]\label{lem:pinsker_quantique}
+Pour tous \'etats quantiques $\rho, \sigma$~:
+\begin{equation}
+\|\rho - \sigma\|_1^2 \leq 2 \ln 2 \cdot D(\rho\|\sigma)
+\end{equation}
+\end{lemma}
+
+\begin{Preuve}[Lemme~\ref{lem:pinsker_quantique}~: Pinsker quantique]\label{prv:pinsker_quantique}
+
+\begin{cmtEtape}{Objectif.}
+\'Etablir l'analogue quantique de l'in\'egalit\'e de Pinsker (sous-sous-section~\ref{subsubsec:pinsker_classique}) classique,
+reliant la distance de trace \`a l'entropie relative quantique.
+\end{cmtEtape}
+
+Soit $\Pi$ le projecteur sur le sous-espace propre positif de
+$\rho - \sigma$ et $\mathcal{M}$ la mesure \`a deux issues
+$\{\Pi, \mathbb{I} - \Pi\}$ (mesure de Helstrom). Les lois de l'issue sont
+$p = (\mathrm{Tr}\,\Pi\rho,\, 1 - \mathrm{Tr}\,\Pi\rho)$ et
+$q = (\mathrm{Tr}\,\Pi\sigma,\, 1 - \mathrm{Tr}\,\Pi\sigma)$, de sorte que
+\begin{equation}
+\|p - q\|_1 = 2\,\mathrm{Tr}\,\Pi(\rho-\sigma) = \|\rho - \sigma\|_1 .
+\end{equation}
+\cmtFormule{La mesure de Helstrom pr\'eserve exactement la distance de trace.}
+
+Par l'in\'egalit\'e de traitement de l'entropie relative quantique sous le
+canal de mesure~\cite{Wilde2017}, $D(p\|q) \leq D(\rho\|\sigma)$.
+\cmtFormule{Mesurer ne peut que r\'eduire la distinguabilit\'e.}
+
+L'in\'egalit\'e de Pinsker classique, avec une entropie relative en bits,
+donne $\|p - q\|_1^2 \leq 2\ln 2 \cdot D(p\|q)$. En combinant ces in\'egalit\'es, on obtient
+\begin{equation}
+\|\rho - \sigma\|_1^2 = \|p - q\|_1^2 \leq 2 \ln 2 \cdot D(p\|q) \leq 2\ln 2 \cdot D(\rho\|\sigma).
+\end{equation}
+\cmtFormule{C'est exactement l'in\'egalit\'e de Pinsker quantique.}
+\cmt{Une diagonalisation simultan\'ee de $\rho$ et $\sigma$ n'est possible que s'ils commutent~; le passage par la mesure de Helstrom \'evite cette restriction.}
+\end{Preuve}
+
+\begin{lemma}[Mesure douce (gentle measurement)]\label{lem:mesure_douce}
+Soit $\rho$ un \'etat quantique et $\{M_m\}$ une mesure POVM. Si le r\'esultat
+$m$ se produit avec probabilit\'e $p_m = \operatorname{Tr}(M_m \rho) \geq 1 - \delta$
+pour $\delta \in [0, 1)$, alors l'\'etat post-mesure
+\begin{equation}
+\rho' = \frac{\sqrt{M_m}\rho\sqrt{M_m}}{\operatorname{Tr}(M_m\rho)}
+\end{equation}
+satisfait
+\begin{equation}
+\|\rho - \rho'\|_1 \leq 3\sqrt{\delta}
+\end{equation}
+La constante optimale, $2\sqrt{\delta}$, est \'etablie
+dans~\cite{Winter,OgawaNagaoka}~; la d\'emonstration donn\'ee ici,
+volontairement \'el\'ementaire, fournit $3\sqrt{\delta}$, ce qui suffit
+\`a tous les usages qui en sont faits dans cette th\`ese.
+\end{lemma}
+
+\begin{Preuve}[Lemme~\ref{lem:mesure_douce}~: Mesure douce]\label{prv:mesure_douce}
+
+\begin{cmtEtape}{Objectif.}
+Montrer qu'une mesure quasi-certaine ne perturbe presque pas l'\'etat.
+\end{cmtEtape}
+
+Par d\'efinition de $\rho'$~:
+\begin{equation}
+\rho' = \frac{\sqrt{M_m}\rho\sqrt{M_m}}{p_m}
+\end{equation}
+\cmtFormule{Formule de l'\'etat post-mesure.}
+
+On a~:
+\begin{equation}
+\|\rho - \rho'\|_1 \leq \|\rho - \sqrt{M_m}\rho\sqrt{M_m}\|_1 + \|\sqrt{M_m}\rho\sqrt{M_m} - \rho'\|_1
+\end{equation}
+\cmtFormule{In\'egalit\'e triangulaire.}
+
+Le second terme vaut
+\begin{equation}
+\|\sqrt{M_m}\rho\sqrt{M_m} - \rho'\|_1 = \left|1 - \frac{1}{p_m}\right| \cdot \|\sqrt{M_m}\rho\sqrt{M_m}\|_1 = \frac{1 - p_m}{p_m} \cdot p_m = 1 - p_m
+\end{equation}
+\cmtFormule{Calcul direct.}
+
+Le premier terme est born\'e par l'in\'egalit\'e de Fuchs-van de Graaf, qui donne
+\begin{equation}
+\|\rho - \sqrt{M_m}\rho\sqrt{M_m}\|_1 \leq 2\sqrt{1 - \operatorname{Tr}(M_m\rho)} = 2\sqrt{\delta}
+\end{equation}
+\cmtFormule{Borne par la fid\'elit\'e.}
+
+En combinant ces deux termes et en utilisant $1 - p_m \leq \delta$, on obtient
+\begin{equation}
+\|\rho - \rho'\|_1 \leq 2\sqrt{\delta} + \delta \leq 3\sqrt{\delta}
+\end{equation}
+\cmtFormule{La borne finale est $O(\sqrt{\delta})$.}
+\end{Preuve}
+
+\begin{lemma}[In\'egalit\'e de Fano quantique]\label{lem:fano_quantique}
+Soit $X$ une variable al\'eatoire classique encod\'ee dans l'\'etat quantique
+$\rho_X$ et $\hat{X}$ le r\'esultat d'une mesure POVM avec probabilit\'e
+d'erreur $p_e = \Pr[\hat{X} \neq X]$. Alors
+\begin{equation}
+S(X|\hat{X}) \leq h_2(p_e) + p_e \log(|\mathcal{X}| - 1)
+\end{equation}
+o\`u $h_2(p) = -p\log p - (1-p)\log(1-p)$ est l'entropie binaire.
+\end{lemma}
+
+\begin{Preuve}[Lemme~\ref{lem:fano_quantique}~: Fano quantique]\label{prv:fano_quantique}
+
+\begin{cmtEtape}{Objectif.}
+\'Etablir l'analogue quantique de l'in\'egalit\'e de Fano (sous-sous-section~\ref{subsubsec:fano_classique}) classique,
+reliant l'entropie conditionnelle \`a la probabilit\'e d'erreur de mesure.
+\end{cmtEtape}
+
+Soit $E$ l'\'ev\'enement $\{\hat{X} \neq X\}$. On d\'ecompose l'entropie
+conditionnelle en observant que l'issue $\hat{X}$ de la mesure est une variable al\'eatoire classique~;
+$(X,\hat{X})$ a donc une loi jointe classique et $S(X|\hat{X}) = H(X|\hat{X})$.
+L'in\'egalit\'e de Fano classique s'applique alors directement et donne
+\begin{equation}
+S(X|\hat{X}) \leq h_2(p_e) + p_e \log(|\mathcal{X}| - 1)
+\end{equation}
+\cmtFormule{La m\^eme borne que Fano classique, appliqu\'ee \`a l'issue de la mesure.}
+\cmt{Le contenu quantique du lemme tient au choix de la mesure, puisque la borne vaut pour toute POVM.}
+\end{Preuve}
+
+\begin{lemma}[Borne de Holevo-Helstrom]\label{lem:holevo_helstrom}
+Pour deux \'etats quantiques $\rho_0, \rho_1$ avec probabilit\'es a priori
+\'egales, la probabilit\'e d'erreur minimale de distinction est
+\begin{equation}
+p_{\mathrm{err}}^{\min} = \frac{1}{2}\left(1 - \frac{1}{2}\|\rho_0 - \rho_1\|_1\right)
+\end{equation}
+\end{lemma}
+
+\subsubsection{Mod\`eles de canaux quantiques}
+\label{subsubsec:modeles_canaux}
+
+\begin{definition}[Canal d\'epolarisant]\label{def:canal_depolarisant}
+Le canal d\'epolarisant avec param\`etre $p \in [0, 1]$ agit sur un \'etat
+quantique de dimension $d$ comme
+\begin{equation}
+\Lambda_{\text{dep}}(\rho) = (1-p)\rho + \frac{p}{d} I_d
+\end{equation}
+Ce mod\`ele pr\'esente un bruit sym\'etrique dans les syst\`emes quantiques et
+est le mod\`ele d'erreur dominant dans les dispositifs NISQ actuels~\cite{Preskill2018,Bharti2022}.
+\end{definition}
+
+\begin{definition}[Canal d'amortissement]\label{def:canal_amortissement}
+Le canal d'amortissement d'amplitude avec param\`etre $g \in [0, 1]$ est d\'efini par
+\begin{equation}
+\Lambda_{\text{AD}}(\rho) = E_0 \rho E_0^\dagger + E_1 \rho E_1^\dagger
+\end{equation}
+o\`u $E_0 = \begin{pmatrix} 1 & 0 \\ 0 & \sqrt{1-g} \end{pmatrix}$ et
+$E_1 = \begin{pmatrix} 0 & \sqrt{g} \\ 0 & 0 \end{pmatrix}$ (not\'e $g$ pour \'eviter
+toute confusion avec $\gamma = \alpha H(C) - 1$).
+\end{definition}
+
+\begin{definition}[Canal de d\'ephasage]\label{def:canal_dephasage}
+Le canal de d\'ephasage avec param\`etre $p \in [0, 1]$ (not\'e $p$ pour \'eviter
+toute confusion avec le param\`etre de s\'ecurit\'e $\lambda$) est d\'efini par
+\begin{equation}
+\Lambda_{\text{ph}}(\rho) = (1-p)\rho + p\, Z \rho Z
+\end{equation}
+o\`u $Z$ est la matrice de Pauli $Z$.
+\end{definition}
+
+\begin{definition}[Canal d'effacement]\label{def:canal_effacement}
+Le canal d'effacement avec param\`etre $e \in [0, 1]$ est d\'efini par
+\begin{equation}
+\Lambda_{\text{er}}(\rho) = (1-e)\rho + e |\bot\rangle\langle\bot|
+\end{equation}
+o\`u $|\bot\rangle$ est un \'etat orthogonal \`a l'espace original.
+\end{definition}
+
+\begin{definition}[Norme diamant]\label{def:norme_diamant}
+La norme diamant d'une application lin\'eaire $\Phi$ entre espaces
+d'op\'erateurs est
+\begin{equation}
+\|\Phi\|_\diamond = \sup_{\rho_{RA}} \|(\mathcal{I}_R \otimes \Phi)(\rho_{RA})\|_1
+\end{equation}
+o\`u le supremum est pris sur tous les \'etats $\rho_{RA}$ d'un syst\`eme
+de r\'ef\'erence $R$ arbitrairement grand.
+\end{definition}
+
+% -----------------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{Comparaison des mod\`eles de canaux quantiques pour l'analyse CRO}
+\label{tab:modeles_canaux_quantiques}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Type de canal} & \textbf{M\'ecanisme} & \textbf{Comportement $\eta_q$} & \textbf{Usage PQC} \\
+\midrule
+D\'epolarisant~\cite{NielsenChuang2010}      & Erreurs uniformes    & $\eta_q \propto p$           & R\'ef\'erence g\'en\'erale    \\
+Amortissement~\cite{Breuer2002}     & Dissipation         & $\eta_q \propto \sqrt{g}$ & Stockage quantique   \\
+D\'ephasage~\cite{Zurek2003}         & D\'ecoh\'erence      & $\eta_q \propto p$     & Perte de coh\'erence    \\
+Effacement~\cite{Grassl1997}        & Perte compl\`ete    & $\eta_q = e$                 & Erreurs transmission \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \footnotesize Les valeurs $\eta_q$ sont des ordres de grandeur indicatifs.
+\end{tablenotes}
+\end{table}
+% -----------------------------------------------------------------------
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Mod\`ele formel quantique}
+\label{subsec:modele_formel_pq}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+\textbf{Nous d\'efinissons} les extensions quantiques des trois m\'etriques
+CLO, assurant la compatibilit\'e d\'efinitionnelle avec le cadre classique.
+
+\subsubsection{Syntaxe des protocoles de preuve post-quantiques}
+\label{subsubsec:syntaxe_pq}
+
+\begin{definition}[Protocole de preuve quantique]\label{def:protocole_pq}
+Un protocole de preuve post-quantique $\mathcal{P}$ avec param\`etre de
+s\'ecurit\'e $\lambda$ comprend~\cite{Unruh2016,Chatterjee2021}~:
+\begin{itemize}
+\item \textbf{Espace de messages} $\mathcal{M}_\lambda$ avec $|\mathcal{M}_\lambda| = 2^\lambda$
+\item \textbf{Espace de contexte} $\mathcal{C}_\lambda$ avec distribution $P_C$ et entropie $H(C)$
+\item \textbf{Espace de preuves} $\Sigma_\lambda$ (peut \^etre classique ou quantique)
+\item \textbf{Algorithme de preuve} $\mathcal{P}(\lambda, m, c) \to \sigma$
+pour $m \in \mathcal{M}_\lambda, c \in \mathcal{C}_\lambda$
+\item \textbf{Espace de verdicts} $\mathcal{Y}_\lambda$ de taille finie $k_\lambda$
+\item \textbf{Algorithme de v\'erification quantique} $\mathcal{V}^q(\lambda, \sigma, c)$
+pouvant utiliser des requ\^etes en superposition quantique~\cite{Watrous2009}
+\end{itemize}
+\end{definition}
+
+\subsubsection{D\'efinitions CLO quantiques}
+\label{subsubsec:definitions_clo_quantiques}
+
+\begin{definition}[Confidentialit\'e quantique]\label{def:conf_quantique}
+Pour le protocole $\mathcal{P}$ avec param\`etre de s\'ecurit\'e $\lambda$, soit
+$\rho_\Sigma^{m,c}$ l'\'etat quantique de preuve pour le message $m$ dans le
+contexte $c$. La confidentialit\'e quantique est la version statistique de la
+D\'efinition~\ref{def:conf_quantique_clo}, soit
+\begin{equation}
+\Conf^q(\mathcal{P}) := 1 - \max_{m_0,m_1,c}\tfrac{1}{2}\bigl\|\rho_\Sigma^{m_0,c} - \rho_\Sigma^{m_1,c}\bigr\|_1 ,
+\label{eq:conf_q_pq}
+\end{equation}
+c'est-\`a-dire un moins l'avantage maximal de toute mesure POVM (th\'eor\`eme de
+Helstrom). La s\'ecurit\'e contre des adversaires QPT est une propri\'et\'e
+calculatoire distincte, plus faible, qui rel\`eve des jeux de s\'ecurit\'e.
+\end{definition}
+
+\begin{definition}[Fiabilit\'e quantique]\label{def:fiabilite_quantique}
+Soit $\hat{M}$ l'\textbf{estimateur quantique optimal de message}, d\'efini
+comme la mesure POVM $\{\Pi_m\}$ sur l'espace de Hilbert de preuve
+$\mathcal{H}_\Sigma$ qui maximise la probabilit\'e d'identifier correctement
+le message.
+La \textbf{fiabilit\'e quantique} est la fiabilit\'e de reconstruction, d\'efinie par
+\begin{equation}
+\Rel^q(\mathcal{P}) = 1 - \Pr[\hat{M} \neq M]
+\label{eq:rel_q_pq}
+\end{equation}
+o\`u la probabilit\'e est sur la distribution jointe $(M, C, \Sigma)$ et les
+r\'esultats de mesure de l'estimateur optimal.
+\end{definition}
+
+\begin{definition}[Opposabilit\'e quantique]\label{def:opposabilite_quantique}
+Soit $V = \mathsf{Interpret}(Y, C, K)$ le verdict du v\'erificateur institutionnel
+$\mathcal{J}$, o\`u $Y$ est l'issue classique de sa mesure sur la preuve (\'eventuellement
+apr\`es passage dans un canal $\Lambda$) et $K$ ses ressources propres,
+avec $K \perp M \mid (\Sigma, C)$ (D\'efinition~\ref{def:interp_admissible}). L'opposabilit\'e quantique vaut
+\begin{equation}
+\Opp^q(\mathcal{P}) = \frac{I(V; \Sigma|C)}{H(V|C)}
+\label{eq:opp_q_pq}
+\end{equation}
+o\`u l'information mutuelle et l'entropie sont calcul\'ees sur la distribution
+jointe $(M, C, \Sigma, V)$. Comme dans le cas classique, un verdict fonction
+d\'eterministe de $(\Sigma,C)$ donnerait $\Opp^q = 1$
+(Remarque~\ref{rem:verdict_deterministe}).
+\end{definition}
+
+\begin{remark}[Compatibilit\'e avec la confidentialit\'e classique]\label{rem:compatibilite_classique}
+Pour les protocoles classiques o\`u $\Sigma$ prend des valeurs dans un alphabet
+fini $\mathcal{S}$ (i.e., $\rho_\Sigma^{m,c} = \sum_{s} P_{\Sigma|M,C}(s|m,c)\,|s\rangle\langle s|$
+est diagonal), la distance de trace se r\'eduit \`a la distance de variation
+totale~\cite{Levin,Pinsker1964}~:
+\begin{equation}
+\tfrac{1}{2}\|\rho_\Sigma^{m_0,c} - \rho_\Sigma^{m_1,c}\|_1
+= \mathrm{TV}\!\bigl(P_{\Sigma|m_0,c},\, P_{\Sigma|m_1,c}\bigr)
+\end{equation}
+Donc $\Conf^q$ se r\'eduit \`a $\Conf$ du cadre classique~\cite{MINKA2026CLO},
+confirmant que la d\'efinition est une g\'en\'eralisation stricte.
+\end{remark}
+
+\subsubsection{Perte d'interpr\'etabilit\'e quantique}
+\label{subsubsec:perte_interpretabilite_quantique}
+
+\begin{definition}[Perte d'interpr\'etabilit\'e quantique]\label{def:perte_interp_quantique_pq}
+La perte d'interpr\'etabilit\'e quantique $\eta_q \in [0,1]$ associ\'ee \`a un
+canal $\Lambda$ agissant sur le support de la preuve est celle de la
+D\'efinition~\ref{def:perte_interp_quantique}, c'est-\`a-dire le plus petit r\'eel tel que
+\begin{equation}
+I(V;\Lambda(\Sigma)|C) \;\geq\; I(V;\Sigma|C) - \eta_q\, H(C).
+\label{eq:eta_q_definition}
+\end{equation}
+C'est l'unique d\'efinition de $\eta_q$ utilis\'ee dans cette th\`ese.
+\end{definition}
+
+\begin{remark}[Interpr\'etation physique]\label{rem:interpretation_physique_pq}
+$\eta_q$ quantifie la quantit\'e de contenu s\'emantique perdue lorsque la
+preuve cryptographique passe par des canaux
+quantiques~\cite{Zurek2003,Schumacher1997}. Pour les preuves qui sont des
+cha\^ines de bits classiques, y compris les signatures ML-DSA, SLH-DSA et Falcon,
+$\Lambda$ est l'identit\'e et $\eta_q = 0$. Pour un support ou un v\'erificateur
+quantique, sc\'enario encore hypoth\'etique, $\eta_q > 0$ en raison du bruit
+quantique~\cite{Holevo1973,Preskill2018}.
+\end{remark}
+
+\subsubsection{Mod\`ele d'interaction institutionnelle quantique}
+\label{subsubsec:interaction_institutionnelle}
+
+\begin{definition}[V\'erificateur institutionnel quantique]\label{def:verificateur_institutionnel_quantique}
+Un v\'erificateur institutionnel quantique $\mathcal{J}$ est un algorithme
+QPT op\'erant sur un espace de Hilbert $\mathcal{H}_\mathcal{J}$ et
+impl\'ementant une fonction de verdict~:
+\begin{equation}
+V^q: \Sigma_\lambda \times \mathcal{C}_\lambda \to \mathcal{Y}_\lambda
+\end{equation}
+Le v\'erificateur est caract\'eris\'e par sa capacit\'e d'extraction
+$\Delta_q$ et sa granularit\'e $\alpha_q$.
+\end{definition}
+
+\begin{definition}[Protocole d'interaction quantique]\label{def:protocole_interaction_quantique}
+Un protocole d'interaction quantique entre un prouveur $\mathcal{P}$ et
+un v\'erificateur $\mathcal{J}$ est une suite d'\'echanges quantiques~:
+\begin{equation}
+(\rho_1, \rho_2, \ldots, \rho_r) = \mathsf{Interact}(\mathcal{P}, \mathcal{J}, m, c)
+\end{equation}
+o\`u chaque $\rho_i$ est un \'etat quantique et $r$ est le nombre de rounds.
+\end{definition}
+
+\begin{remark}[Capacit\'e institutionnelle quantique]\label{thm:capacite_institutionnelle_quantique}
+L'in\'egalit\'e
+$I(V^q; \Sigma|C) \leq I(M; \Sigma|C) + \Delta_q$
+est le \emph{contenu} de l'Hypoth\`ese~\ref{ass:extraction_quantique}~;
+elle ne d\'ecoule pas de l'in\'egalit\'e de traitement des donn\'ees, qui
+donne seulement $I(M;V^q|C) \leq I(M;\Sigma|C)$ (une borne sur ce que le verdict
+apprend du message, distinct de ce qu'il apprend de la preuve). Pour une interpr\'etation
+admissible (D\'efinition~\ref{def:interp_admissible}, avec
+$K \perp M \mid (\Sigma, C)$), la Proposition~\ref{prop:fondement_extraction}
+s'applique \`a l'issue classique de la mesure de l'institution et fournit le
+fondement $\Delta_q \geq I(V^q;\Sigma|M,C)$. La formulation initiale de ce
+r\'esultat, \'enonc\'ee comme th\'eor\`eme avec l'information accessible $I_{\mathrm{acc}}$,
+est remplac\'ee par cette formulation plus pr\'ecise. Un verdict \'egal \`a un bit
+d'al\'ea de $\Sigma$ ind\'ependant de $M$ montre en effet que l'in\'egalit\'e de
+traitement ne s'applique pas sous cette forme.
+\end{remark}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Hypoth\`eses de capacit\'e institutionnelle quantique}
+\label{subsec:hypotheses_quantiques}
+% -----------------------------------------------------------------------
+
+\begin{sloppypar}
+Nous posons quatre hypoth\`eses sur les capacit\'es
+institutionnelles~\cite{Simon1955,Miller56,Ericsson95,Kahneman11} en
+prenant en compte les r\'ealit\'es du quantique. Chacune repose sur des
+justifications multidisciplinaires. Aucune n'a toutefois \'et\'e valid\'ee \`a ce
+stade par protocoles exp\'erimentaux contr\^ol\'es mesurant directement
+$\Delta_q$, $\eta_q$, $\beta_q$, $\zeta_q$ aupr\`es d'acteurs institutionnels
+r\'eels, limitation reconnue explicitement
+(sous-section~\ref{subsec:note_methodo}).
+
+\begin{remark}[Version de la preuve]
+\label{rem:version_preuve_pq}
+La version de la preuve pr\'esent\'ee ici diff\`ere de celle de l'article
+publi\'e~\cite{MINKA2026PQCRO}. Les formulations alternatives retenues, issues
+de la certification Lean4, sont d\'etaill\'ees \`a la
+section~\ref{subsec:lean4_erreurs}.
+\end{remark}
+
+\begin{assumption}[Extraction institutionnelle born\'ee quantique]
+\label{ass:extraction_quantique}
+Pour tout interpr\`ete institutionnel avec fonction de verdict $V$
+op\'erant dans un contexte quantique ou hybride :
+\begin{equation}
+I(V; \Sigma|C) \leq I(M; \Sigma|C) + \Delta_q
+\label{eq:extraction_quantique}
+\end{equation}
+o\`u $\Delta_q \geq 0$ capture \`a la fois la capacit\'e institutionnelle
+classique et les modifications induites par le quantique.
+\end{assumption}
+
+\begin{assumption}[Verdict efficace quantique]
+\label{ass:verdict_quantique}
+L'espace de verdict institutionnel satisfait $k_\lambda \leq
+2^{\alpha_q H(C)}$ pour une constante $\alpha_q > 0$, \emph{et} la
+fonction de verdict utilise efficacement le contexte disponible :
+\begin{equation}
+H(V|C) \geq \theta_q \cdot \alpha_q H(C) =: \gamma_q, \qquad \gamma_q \geq 1
+\label{eq:verdict_quantique}
+\end{equation}
+pour une constante de non-d\'eg\'en\'erescence $\theta_q \in (0, 1]$.
+\end{assumption}
+
+\begin{remark}[Statut de l'Hypoth\`ese~\ref{ass:verdict_quantique}]
+\label{rem:statut_verdict_quantique}
+L'Hypoth\`ese~4 initiale \'enon\c{c}ait $H(V|C) \geq \theta_q \log_2
+k_\lambda$, mais l'Hypoth\`ese~2 donne $\log_2 k_\lambda \leq
+\alpha_q H(C)$, une borne \textbf{sup\'erieure}. La borne inf\'erieure ne
+peut donc pas \^etre d\'eduite de l'Hypoth\`ese~2. Elle est maintenant
+postul\'ee explicitement comme propri\'et\'e d'efficacit\'e.
+\end{remark}
+
+\begin{assumption}[R\'egularit\'e de protocole quantique]
+\label{ass:regularite_quantique}
+Un protocole $\mathcal{P}$ est $(\beta_q, \zeta_q)$-\emph{quantique-r\'egulier}
+s'il existe des constantes $\beta_q \geq 1$ et $\zeta_q \geq 0$ telles que
+pour tout contexte $c$ et toute paire de messages $(m_0, m_1)$ :
+\begin{equation}
+D(\rho_\Sigma^{m_0,c} \| \rho_\Sigma^{m_1,c}) \leq \beta_q \cdot \chi(\mathcal{E}_{m,c}) + \zeta_q \cdot D(\bar{\rho}_\Sigma^c \| \mathbb{I}/d_\Sigma)
+\label{eq:regularite_quantique}
+\end{equation}
+La constante $\zeta_q$ est une constante de r\'egularit\'e~; elle est
+distincte du coefficient de perte d'interpr\'etabilit\'e $\eta_q$
+(D\'efinition~\ref{def:perte_interp_quantique_pq}).
+\end{assumption}
+
+\begin{assumption}[R\'egime de pr\'eservation de la confidentialit\'e quantique]
+\label{ass:regime_quantique}
+Il existe une constante $\kappa \geq 0$, ind\'ependante de $\lambda$,
+telle que
+\begin{equation}
+\chi_{\max} = \max_c \chi(\mathcal{E}_{m,c}) \leq \frac{\kappa}{\lambda}
+\label{eq:regime_quantique}
+\end{equation}
+\end{assumption}
+
+\begin{remark}[Statut de l'Hypoth\`ese~\ref{ass:regime_quantique}]
+\label{rem:statut_regime_quantique}
+Puisque $I(M;\Sigma|C)$ est la moyenne de $\chi(\mathcal{E}_{m,c})$ sur
+les contextes et que $I_{\mathrm{acc}} \leq I(M;\Sigma|C)$ par la borne de
+Holevo, l'Hypoth\`ese~\ref{ass:regime_quantique} implique
+$I_{\mathrm{acc}} \leq I(M;\Sigma|C) \leq \kappa/\lambda$. Par le
+Lemme~\ref{lem:q_conf_mi_pq}, c'est le r\'egime dans lequel les
+protocoles quantiques-r\'eguliers garantissent la confidentialit\'e, avec
+$\Conf^q \geq 1 - \frac{1}{2}\sqrt{2\beta_q \kappa/\lambda + 2\zeta_q
+D_{\max}}$, minorant informatif seulement si $\zeta_q D_{\max}$ est petit
+(Lemme~\ref{lem:q_conf_mi_pq}).
+\end{remark}
+\end{sloppypar}
+
+
+% -----------------------------------------------------------------------
+\subsection{\'Enonc\'e et preuve du Trilemme CRO conditionnel quantique}
+\label{subsec:enonce_preuve_pq}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous \'etablissons le r\'esultat principal du r\'egime post-quantique.
+
+\subsubsection{Lemme pr\'eparatoire : confidentialit\'e quantique et information de Holevo}
+\label{subsubsec:lemme_conf_mi_pq}
+
+\begin{remark}[Lemme~6 de la version publi\'ee]
+\label{rem:retrait_lemma6}
+La formalisation a mis en \'evidence un cas limite pour l'in\'egalit\'e (68)
+de la version publi\'ee, avec l'esp\'erance prise sur des tirages
+\emph{ind\'ependants} de $m_0, m_1$. Pour deux messages encod\'es dans des \'etats orthogonaux
+(classiques, parfaitement distinguables), $I_{\mathrm{acc}} = 1$ bit,
+alors que le membre de droite de (68) vaut $1/2$. La pr\'esente formulation
+se passe donc du Lemme~6 et de la borne sup\'erieure (72) du Lemme~7 qui en
+d\'epend. Le d\'etail de ces formulations alternatives est pr\'esent\'e \`a la
+section~\ref{subsec:lean4_erreurs}.
+\end{remark}
+
+\begin{lemma}[Garantie de confidentialit\'e quantique]
+\label{lem:q_conf_mi_pq}
+Pour tout protocole $(\beta_q, \zeta_q)$-quantique-r\'egulier
+(Hypoth\`ese~\ref{ass:regularite_quantique}) :
+\begin{equation}
+\Conf^q(\mathcal{P}) \geq 1 - \frac{1}{2}\sqrt{2\beta_q \chi_{\max} + 2\zeta_q D_{\max}}
+\label{eq:conf_lower_pq}
+\end{equation}
+o\`u $\chi_{\max} = \max_c \chi(\mathcal{E}_{m,c})$ et
+$D_{\max} = \max_c D(\bar{\rho}_\Sigma^c \| \mathbb{I}/d_\Sigma)
+= \max_c\bigl(\log_2 d_\Sigma - S(\bar{\rho}_\Sigma^c)\bigr)$.
+\end{lemma}
+
+\begin{proof}
+Pour tous $m_0, m_1, c$, l'in\'egalit\'e de Pinsker quantique
+(Lemme~\ref{lem:pinsker_quantique}) et
+l'Hypoth\`ese~\ref{ass:regularite_quantique} donnent
+\begin{equation}
+\|\rho_\Sigma^{m_0,c} - \rho_\Sigma^{m_1,c}\|_1^2 \leq 2\beta_q \chi(\mathcal{E}_{m,c}) + 2\zeta_q D(\bar{\rho}_\Sigma^c \| \mathbb{I}/d_\Sigma) \leq 2\beta_q \chi_{\max} + 2\zeta_q D_{\max}
+\end{equation}
+En prenant le maximum sur $(m_0, m_1, c)$ dans la relation entre
+$\Conf^q$ et la distance de trace
+(D\'efinition~\ref{def:conf_quantique}), on obtient~\eqref{eq:conf_lower_pq}.
+\end{proof}
+
+\begin{remark}[Interpr\'etation du Lemme~\ref{lem:q_conf_mi_pq}]
+\label{rem:interp_lemme7}
+Seule la borne inf\'erieure~\eqref{eq:conf_lower_pq} est utilis\'ee dans
+la preuve du Th\'eor\`eme~\ref{thm:trilemme_pq}. Ce minorant n'est
+informatif que si $\zeta_q D_{\max}$ est petit. Pour une preuve classique de
+$n$ bits encod\'ee dans $d_\Sigma = 2^n$ dimensions,
+$D_{\max} = n - H(\Sigma|C=c)$, qui vaut plusieurs milliers de bits pour les
+signatures NIST PQC (plus de $2{,}6\cdot10^4$ bits pour ML-DSA-65, dont la
+signature compte $3\,309$ octets). Pour ces sch\'emas, la confidentialit\'e
+s'\'etablit par le Lemme~\ref{lem:confidentiality_guarantee} appliqu\'e \`a l'issue classique. La version publi\'ee
+posait $D_{\max} = \negl(\lambda)$ pour ces sch\'emas. La pr\'esente formulation
+pr\'ecise ce point.
+\end{remark}
+
+\subsubsection{Preuve principale en trois \'etapes}
+\label{subsubsec:preuve_trois_etapes}
+
+\begin{theorem}[Trilemme CRO conditionnel quantique]
+\label{thm:trilemme_pq}
+Sous les Hypoth\`eses~\ref{ass:extraction_quantique},
+\ref{ass:verdict_quantique}, \ref{ass:regularite_quantique} et
+\ref{ass:regime_quantique}, pour tout protocole de preuve post-quantique
+$\mathcal{P}$ avec param\`etre de s\'ecurit\'e $\lambda \geq 64$,
+entropie de message $H(M) = \lambda$, $M$ ind\'ependant de $C$ et
+param\`etres institutionnels quantiques $(\Delta_q, \alpha_q, \beta_q,
+\eta_q)$ :
+\begin{equation}
+\Conf^q(\mathcal{P}) \cdot \Rel^q(\mathcal{P}) \cdot \Opp^q(\mathcal{P}) \leq \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa(\Delta_q+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right) \leq \frac{\Delta_q + \eta_q H(C)}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
+\label{eq:trilemme_pq}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\begin{cmtEtape}{Vue d'ensemble.}
+La structure est celle du cas classique, transpos\'ee aux outils de la
+th\'eorie de l'information quantique. L'in\'egalit\'e de Fano y devient sa
+version quantique (sous-sous-section~\ref{subsubsec:fano_quantique}) tandis que la
+distinguabilit\'e de deux \'etats se mesure par la distance de trace
+(sous-sous-section~\ref{subsubsec:distance_trace_fidelite}), analogue quantique de la distance en variation totale. Posons $x = I(M;\Sigma|C)$~; par
+l'Hypoth\`ese~\ref{ass:regime_quantique}, $x \leq \kappa/\lambda$.
+\end{cmtEtape}
+
+\paragraph{\'Etape 1. Fano quantique contraint la fiabilit\'e.}
+Soit $I_{\mathrm{acc}}$ l'information accessible, c'est-\`a-dire la
+quantit\'e maximale d'information que l'institution peut extraire de la
+preuve quantique par une mesure, quelle qu'elle soit
+(sous-sous-section~\ref{subsubsec:holevo}). L'in\'egalit\'e de Fano
+quantique (Lemme~\ref{lem:fano_quantique}) appliqu\'ee \`a l'estimateur
+optimal de $M$ donne, exactement comme dans le cas classique,
+\begin{equation}
+I_{\mathrm{acc}} \geq \Rel^q \cdot \lambda - 1
+\label{eq:fano_q_applique}
+\end{equation}
+\cmtFormule{Une fiabilit\'e \'elev\'ee exige une information accessible \'elev\'ee.}
+\cmt{La majoration $h(p_e) \leq 1$ vaut ici aussi, de sorte qu'aucune restriction sur $\Rel^q$ n'est n\'ecessaire.}
+
+La borne de Holevo~\cite{Holevo1973} \'enonce qu'aucune mesure ne peut
+extraire plus d'information que ce que l'\'etat contient, soit
+$I_{\mathrm{acc}} \leq I(M;\Sigma|C) = x$. C'est la diff\'erence
+principale avec le cas classique, o\`u les deux quantit\'es co\"incident.
+En cha\^inant avec \eqref{eq:fano_q_applique}, on obtient
+\begin{equation}
+\boxed{\;\Rel^q(\mathcal{P}) \leq \frac{x+1}{\lambda}\;}
+\label{eq:relq_bound}
+\end{equation}
+\cmt{Le passage par $I_{\mathrm{acc}}$ laisse la borne intacte et la rend seulement conditionnelle \`a la mesurabilit\'e effective de l'information.}
+
+\paragraph{\'Etape 2. Extraction quantique born\'ee et verdict efficace contraignent l'opposabilit\'e.}
+Par la D\'efinition~\ref{def:opposabilite_quantique}, l'opposabilit\'e
+quantique garde la m\^eme forme, $\Opp^q = I(V;\Sigma|C)/H(V|C)$.
+L'Hypoth\`ese~\ref{ass:extraction_quantique} majore son num\'erateur, car
+l'institution n'extrait de la preuve que $x$, augment\'e d'au plus
+$\Delta_q$ bits issus de ses propres ressources, d'o\`u
+\begin{equation}
+I(V;\Sigma|C) \leq x + \Delta_q
+\end{equation}
+\cmtFormule{Capacit\'e d'extraction institutionnelle en r\'egime quantique.}
+\cmt{$\Delta_q$ peut \^etre inf\'erieur \`a son homologue classique $\Delta$ si lire une preuve post-quantique co\^ute plus cher cognitivement~; c'est une hypoth\`ese \`a mesurer.}
+
+L'Hypoth\`ese~\ref{ass:verdict_quantique} minore son d\'enominateur par
+$\gamma_q = \theta_q\,\alpha_q H(C) \geq 1$, o\`u $\theta_q \in (0,1]$
+mesure la non-d\'eg\'en\'erescence du verdict. En divisant, on obtient
+\begin{equation}
+\boxed{\;\Opp^q(\mathcal{P}) = \frac{I(V; \Sigma|C)}{H(V|C)} \leq \frac{x + \Delta_q}{\gamma_q}\;}
+\label{eq:oppq_bound}
+\end{equation}
+
+\paragraph{\'Etape 3. Formation du produit et application du r\'egime.}
+Les facteurs \'etant tous positifs et $\Conf^q \leq 1$ par d\'efinition
+d'une probabilit\'e de distinction, le produit des bornes
+\eqref{eq:relq_bound} et \eqref{eq:oppq_bound} donne
+\begin{equation}
+\Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{x+1}{\lambda} \cdot \frac{x+\Delta_q}{\gamma_q}
+\label{eq:produit_q_brut}
+\end{equation}
+\cmt{Comme dans le cas classique, seule la quantit\'e $x$ relie les trois m\'etriques.}
+
+Ce membre de droite est croissant en $x$~; on l'\'evalue donc en
+$x = \kappa/\lambda$, borne sup\'erieure du r\'egime fix\'e par
+l'Hypoth\`ese~\ref{ass:regime_quantique}, puis on d\'eveloppe le produit
+\begin{align}
+\Conf^q \cdot \Rel^q \cdot \Opp^q
+&\leq \frac{1}{\gamma_q}\left(\frac{1}{\lambda} + \frac{\kappa}{\lambda^2}\right)\left(\Delta_q + \frac{\kappa}{\lambda}\right) \nonumber \\
+&= \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa\Delta_q}{\lambda^2} + \frac{\kappa}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right) \nonumber \\
+&= \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa(\Delta_q+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\end{align}
+\cmtFormule{Les deux termes en $\lambda^{-2}$ se regroupent, comme dans le cas classique.}
+
+La derni\`ere in\'egalit\'e de~\eqref{eq:trilemme_pq} s'obtient en
+observant que $\gamma_q \geq 1$ et que $\eta_q H(C) \geq 0$. La borne
+\'enonc\'ee sous la forme $(\Delta_q + \eta_q H(C))/\lambda$ est donc plus
+faible, mais elle fait appara\^itre explicitement la p\'enalit\'e
+s\'emantique quantique.
+\cmt{Lecture. Le terme $\eta_q H(C)$ n'appara\^it pas dans la borne explicite, qui ne d\'epend que de $\Delta_q$. Il figure dans la majoration affaiblie, o\`u il rend visible le co\^ut s\'emantique du canal quantique. L'effet du bruit sur les compromis r\'ealisables passe, lui, par deux autres voies, puisqu'il ampute la capacit\'e effective $\Delta_q$ et d\'egrade la garantie de confidentialit\'e du Lemme~\ref{lem:q_conf_mi_pq}.}
+\end{proof}
+
+\begin{remark}[Port\'ee du Th\'eor\`eme~\ref{thm:trilemme_pq}]
+\label{rem:scope_trilemme_pq}
+L'Hypoth\`ese~\ref{ass:regime_quantique} est n\'ecessaire. Pour
+l'encodage classique diagonal ($\beta_q = \beta$, $\zeta_q = 0$,
+$\eta_q = 0$), le protocole qui r\'ev\`ele $M$ avec probabilit\'e $1/2$ et
+produit sinon une preuve uniform\'ement al\'eatoire satisfait les
+Hypoth\`eses~\ref{ass:extraction_quantique}--\ref{ass:regularite_quantique}
+avec $\beta_q \leq 1{,}04$ pour tout $\lambda \geq 64$ (contexte $C$ form\'e
+de deux bits uniformes, $\alpha_q = 1$, $\theta_q = 1/2$, donc $\gamma_q = 1$~;
+$V$ \'egal au premier bit de $\Sigma$, donc $H(V|C) = 1 \geq \gamma_q$). Ce protocole v\'erifie
+$\Conf^q = 1/2$, $\Rel^q = 1/2 + 2^{-\lambda-1}$ et $\Opp^q = 1$, pour tout
+$\lambda$ ; ici
+$I(M;\Sigma|C) = \lambda/2 - 1 + O(\lambda 2^{-\lambda})$ se situe hors
+du r\'egime~\eqref{eq:regime_quantique}. La borne ne tient donc pas
+uniform\'ement pour $I = \Theta(\lambda)$.
+\end{remark}
+
+\begin{remark}[Statut de v\'erification]
+\label{rem:statut_verification_pq}
+Le noyau alg\'ebrique de cette preuve est analogue \`a celui du
+Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} classique, certifi\'e
+m\'ecaniquement en Lean4 \`a la section~\ref{sec:lean4}. Le d\'etail des
+formulations alternatives issues de la certification est pr\'esent\'e \`a la
+section~\ref{subsec:lean4_erreurs}.
+\end{remark}
+
+\begin{remark}[Forme raffin\'ee quantique]\label{rem:forme_raffinee_pq}
+Exactement comme dans le cas classique (Remarque~\ref{rem:activite_delta}),
+$\Opp^q \leq 1$ donne la forme raffin\'ee
+\begin{equation}
+\Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{1+\kappa/\lambda}{\lambda}\,
+\min\left\{1,\; \frac{\kappa/\lambda + \Delta_q}{\gamma_q}\right\},
+\label{eq:trilemme_pq_raffine}
+\end{equation}
+et la capacit\'e quantique est contraignante si et seulement si
+$\Delta_q < \gamma_q - \kappa/\lambda$, soit
+$H(C) > H^\sharp_q := (\Delta_q + \kappa/\lambda)/(\theta_q\alpha_q)$. Le
+coefficient $\eta_q$ n'intervient pas dans cette forme.
+\end{remark}
+
+\begin{corollary}[Forme simplifi\'ee quantique]\label{cor:forme_simplifiee_pq}
+Pour $\lambda \geq 128$, $\beta_q = O(1)$, $\gamma_q = O(1)$~:
+\begin{equation}
+\Conf^q \cdot \Rel^q \cdot \Opp^q \lesssim \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda}
+\label{eq:trilemme_pq_simplifie}
+\end{equation}
+\end{corollary}
+
+\begin{boiteArbitre}
+L'arbitre comprend que ce terme $\eta_q H(C)/\lambda$ rel\^ache la borne
+au lieu de lui imposer un plancher. Si un jour ses preuves
+transitent par des canaux quantiques, le bruit lui prendra une partie de ce
+qu'elles disent. Pour les signatures qu'il recevra demain, qui sont
+des cha\^ines de bits, $\eta_q$ reste en revanche nul.
+\end{boiteArbitre}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{R\'egimes op\'erationnels quantiques}
+\label{subsec:regimes_quantiques}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Comme dans le cas classique, le Trilemme CRO conditionnel quantique
+distingue deux r\'egimes, s\'epar\'es par le seuil
+$H^\sharp_q = (\Delta_q + \kappa/\lambda)/(\theta_q\alpha_q)$ de la
+Remarque~\ref{rem:forme_raffinee_pq}. Pour $H(C) \leq H^\sharp_q$, le produit
+est born\'e par l'in\'egalit\'e de Fano, alors que pour $H(C) > H^\sharp_q$ la capacit\'e
+quantique $\Delta_q$ est la contrainte liante. La transition post-quantique
+d\'eplace une institution d'un r\'egime \`a l'autre lorsqu'elle modifie
+$\Delta_q$ (formation, outils) ou la granularit\'e de ses verdicts.
+
+\subsubsection{Profils institutionnels de migration (illustratifs)}
+\label{subsubsec:regime_quantique_limite}
+\label{subsubsec:regime_quantique_pret}
+\label{subsubsec:regime_quantique_ameliore}
+
+Trois profils de maturit\'e, qui rejoignent les recommandations des
+r\'egulateurs europ\'eens~\cite{ENISA2021,ANSSI2022}, permettent de situer
+les institutions. Ils d\'ecrivent des niveaux de capacit\'e. Le r\'egime de la borne d\'epend aussi de $H(C)$ et de la
+granularit\'e des verdicts.
+
+\begin{itemize}
+\item \textbf{D\'ebut de migration.} La capacit\'e $\Delta_q$ est r\'eduite par le manque d'expertise
+  PQC~; les protocoles doivent privil\'egier la transparence et
+  l'explicabilit\'e.
+\item \textbf{Institutions form\'ees.} La capacit\'e $\Delta_q$ est proche de la capacit\'e
+  classique~; les constructions hybrides (classique + PQC) sont adapt\'ees.
+\item \textbf{Institutions expertes.} La capacit\'e $\Delta_q$ est \'elev\'ee et l'outillage
+  sp\'ecialis\'e~; les protocoles PQC purs sont envisageables.
+\end{itemize}
+
+% -----------------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{R\'egimes du Trilemme CRO quantique et profils institutionnels}
+\label{tab:regimes_quantiques_comp}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Crit\`ere} & \textbf{Contexte rare} & \textbf{Contexte riche} \\
+\midrule
+Condition & $H(C) \leq H^\sharp_q$ & $H(C) > H^\sharp_q$ \\
+Borne & $(1+\kappa/\lambda)/\lambda$ (Fano) & $\frac{1+\kappa/\lambda}{\lambda}\cdot\frac{\kappa/\lambda+\Delta_q}{\gamma_q}$ \\
+Contrainte liante & fiabilit\'e de reconstruction & capacit\'e quantique $\Delta_q$ \\
+Profil typique & institution form\'ee ou experte & d\'ebut de migration \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \footnotesize $H^\sharp_q = (\Delta_q + \kappa/\lambda)/(\theta_q\alpha_q)$ (Remarque~\ref{rem:forme_raffinee_pq}). Le coefficient $\eta_q$ n'intervient pas dans la distinction des r\'egimes. Les niveaux de s\'ecurit\'e NIST (1 \`a 5) mesurent la r\'esistance cryptographique et sont sans rapport avec ces r\'egimes. Valeur illustrative (sous-section~\ref{subsec:note_methodo}).
+\end{tablenotes}
+\end{table}
+\end{sloppypar}
+% -----------------------------------------------------------------------
+
+% -----------------------------------------------------------------------
+\subsection{Calibration illustrative des param\`etres quantiques}
+\label{subsec:analyse_coherence_pq}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Comme dans le cas classique, les syst\`emes d\'eploy\'es ne sont pas des
+instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}). Leurs
+produits CLO permettent seulement de calibrer des ordres de grandeur
+de $\Delta_q$~\cite{Adida08,Groth16,Johnson01,Dilithium2022,SPHINCS2022}.
+
+\subsubsection{Syst\`emes classiques}
+
+Pour les trois syst\`emes classiques, la preuve est une cha\^ine de bits et
+$\eta_q = 0$ (Remarque~\ref{rem:interpretation_physique_pq}), de sorte que la calibration
+quantique se r\'eduit \`a la calibration classique
+(Tableau~\ref{tab:validation_cro_classique}), avec $\Delta_q = \Delta$.
+
+% -----------------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{Calibration illustrative~: syst\`emes classiques en cadre quantique}
+\label{tab:validation_classiques_pq}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Syst\`eme} & $\boldsymbol{\eta_q}$ & $\boldsymbol{H(C)}$ \textbf{(domaine)} & $\boldsymbol{\Delta_q}$ \textbf{implicite} & $\boldsymbol{\Delta_q/\lambda}$ \\
+\midrule
+Helios~\cite{Adida08,Adida09UCL} & $0$ & 40 bits & $\approx 56$ bits & $0{,}437$ \\
+zk-SNARKs~\cite{Groth16,BCTV14} & $0$ & 70 bits & $\approx 73$ bits & $0{,}570$ \\
+ECDSA~\cite{Johnson01,NIST.FIPS.186-5} & $0$ & 20 bits & $\approx 35$ bits & $0{,}273$ \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \footnotesize $\lambda = 128$. Valeurs de $H(C)$ tir\'ees du Tableau~\ref{tab:parametres_reference}. $\Delta_q := \lambda \cdot (\Conf\cdot\Relver\cdot\Opp) - \eta_q H(C)$, d\'efini par inversion de la forme publi\'ee (calibration circulaire par construction).
+\end{tablenotes}
+\end{table}
+% -----------------------------------------------------------------------
+
+\subsubsection{Sch\'emas post-quantiques standardis\'es}
+
+% -----------------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{Calibration illustrative~: signatures post-quantiques}
+\label{tab:validation_pqc}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Sch\'ema} & \textbf{Type} & $\boldsymbol{\lambda}$ & $\boldsymbol{\eta_q}$ & $\boldsymbol{\Delta_q}$ \textbf{implicite} \\
+\midrule
+ML-DSA-65 (Dilithium-3)~\cite{Dilithium2022} & R\'eseau & 192 & $0$ & $\approx 54$ bits \\
+ML-DSA-87 (Dilithium-5)~\cite{Dilithium2022} & R\'eseau & 256 & $0$ & $\approx 72$ bits \\
+SLH-DSA (SPHINCS+)~\cite{SPHINCS2022} & Hachage & 256 & $0$ & $\approx 97$ bits \\
+Falcon~\cite{Falcon2022} & R\'eseau & 256 & $0$ & $\approx 70$ bits \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item \footnotesize $\eta_q = 0$ car ces signatures sont des cha\^ines de bits classiques. Les valeurs $\eta_q \in [0{,}012 ; 0{,}020]$ de la formulation initiale correspondaient au sc\'enario hypoth\'etique d'un support quantique~; elles modifiaient $\Delta_q$ de moins d'un bit. ML-KEM (Kyber), m\'ecanisme d'encapsulation de cl\'e et non syst\`eme de preuve, ne figure pas dans le tableau.
+\end{tablenotes}
+\end{table}
+% -----------------------------------------------------------------------
+
+Les capacit\'es implicites ($54$ \`a $97$ bits) sont de l'ordre de quelques
+dizaines de bits~; celle de SLH-DSA d\'epasse l'intervalle $[20, 80]$ bits
+sugg\'er\'e par la litt\'erature sur la rationalit\'e
+born\'ee~\cite{Miller56,Simon82,Ericsson95,Cowan2001}, ce qui signale soit une
+sur\'evaluation du produit CLO retenu pour ce sch\'ema, soit une limite de
+la calibration. Cette calibration est \textbf{r\'etrospective et
+illustrative}~; elle ne constitue pas une preuve empirique des hypoth\`eses
+institutionnelles quantiques.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Implications pour les standards NIST PQC}
+\label{subsec:implications_standards}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Notre analyse r\'ev\`ele que les standards NIST PQC actuels se concentrent
+exclusivement sur la s\'ecurit\'e computationnelle (IND-CCA2,
+EUF-CMA)~\cite{Goldreich01,KatzLindell14} tout en n\'egligeant
+l'interpr\'etabilit\'e institutionnelle. Nous fournissons trois recommandations
+concr\`etes pour la migration institutionnelle.
+
+\subsubsection{Tampon d'entropie pour la conformit\'e inter-juridictionnelle}
+
+\textbf{Recommandation~1.} Inclure $\Delta H = \max_{J_1, J_2} |H_{J_1}(C) - H_{J_2}(C)|$
+bits de redondance s\'emantique dans les formats de signature pour accommoder
+les variations d'entropie contextuelle entre syst\`emes juridiques.
+
+\subsubsection{M\'etadonn\'ees s\'emantiques pour applications \`a enjeux \'elev\'es}
+
+\textbf{Recommandation~2.} Ajouter des champs de m\'etadonn\'ees
+structur\'ees aux signatures PQC qui encodent les pr\'edicats l\'egaux, les
+bornes temporelles et les exigences proc\'edurales pour l'interpr\'etation
+institutionnelle.
+
+\subsubsection{Constructions hybrides pour les p\'eriodes de transition}
+
+\textbf{Recommandation~3.} Superposer des structures classiques riches en
+s\'emantique sur des primitives r\'esistantes au quantique pendant la
+p\'eriode de transition (2024--2035) o\`u les institutions manquent de
+capacit\'e pour l'interpr\'etation PQC pure~:
+\begin{equation}
+\sigma_{\text{hybride}} = (\sigma_{\text{PQC}}, \sigma_{\text{explication}},
+\pi_{\text{liaison}})
+\end{equation}
+o\`u $\sigma_{\text{explication}}$ fournit un contenu s\'emantique lisible par
+l'homme et $\pi_{\text{liaison}}$ lie cryptographiquement les deux composants.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Positionnement par rapport au r\'egime classique}
+\label{subsec:transition_classique_quantique}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Le Trilemme CRO conditionnel quantique g\'en\'eralise le Trilemme classique
+de la section~\ref{sec:cro_classique}.
+Le tableau~\ref{tab:comparaison_classique_quantique} r\'ecapitule les
+diff\'erences structurelles.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparaison des Trilemmes CRO classique et quantique}
+\label{tab:comparaison_classique_quantique}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Aspect} & \textbf{Classique} & \textbf{Quantique} \\
+\midrule
+Borne explicite & $\frac{1}{\gamma}(\frac{\Delta}{\lambda} + O(\lambda^{-2}))$ & $\frac{1}{\gamma_q}(\frac{\Delta_q}{\lambda} + O(\lambda^{-2}))$ \\
+Majoration affaiblie & $\Delta/\lambda$ & $(\Delta_q + \eta_q H(C))/\lambda$ \\
+Contrainte liante (contexte riche) & Capacit\'e $\Delta$ & Capacit\'e $\Delta_q$ \\
+Terme $\eta_q$ & Absent & Majoration affaiblie seulement \\
+Adversaire & Statistique (PPT pour les jeux) & Statistique (QPT pour les jeux) \\
+D\'egradation & Calculatoire & Calculatoire + physique (si support quantique) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La diff\'erence structurelle majeure est l'apparition du terme
+$\eta_q \cdot H(C)$, sans analogue classique. Il ne figure pas dans la
+borne explicite, qui conserve la forme du cas classique avec $\Delta_q$ \`a
+la place de $\Delta$~; il appara\^it dans la majoration affaiblie et
+mesure le co\^ut s\'emantique impos\'e par le canal quantique. Son effet
+sur les compromis r\'ealisables est indirect mais r\'eel, puisque le bruit
+diminue la capacit\'e d'extraction effective $\Delta_q$ et affaiblit la
+garantie de confidentialit\'e, deux canaux par lesquels une institution
+per\c{c}oit concr\`etement la d\'egradation.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre referme le dossier quantique au terme de l'\'etape \textbf{E}.
+Ce qu'il en retient est \`a la fois rassurant et exigeant, puisque la structure
+du trilemme ne change pas dans le monde quantique alors que sa capacit\'e
+$\Delta_q$ d\'ecidera de sa place.
+
+Il en retient quatre apports. Les outils (von Neumann, Holevo, Pinsker
+quantique) g\'en\'eralisent proprement ce qu'il connaissait du cadre classique.
+Les hypoth\`eses, honn\^etes sur ce qu'elles ne prouvent pas encore, restent
+coh\'erentes avec la litt\'erature cognitive. Le th\'eor\`eme conserve la forme
+du cas classique et s'accompagne de la majoration affaiblie
+$(\Delta_q + \eta_q H(C))/\lambda$. Enfin, la distinction des deux r\'egimes,
+compl\'et\'ee par des profils de migration, transforme ce r\'esultat en
+guide.
+
+Le terme $\eta_q H(C)/\lambda$, sans \'equivalent classique, retient
+particuli\`erement son attention. Il laisse la borne explicite inchang\'ee et
+chiffre ce que le bruit quantique co\^uterait \`a l'interpr\'etation si la
+preuve transitait par un support quantique. Pour les signatures
+post-quantiques qu'il recevra, qui sont des cha\^ines de bits, ce terme est nul.
+
+La calibration reste illustrative, car les syst\`emes analys\'es ne sont pas
+des instances du th\'eor\`eme. Les capacit\'es implicites, de quelques
+dizaines de bits, sont plausibles sans \^etre mesur\'ees.
+
+Les bornes \'etant \'etablies, il reste \`a savoir si des constructions les
+approchent, question \`a laquelle s'attelle le chapitre suivant.
+\end{boiteArbitre}

@@ -1,0 +1,150 @@
+% ============================================================================
+% CHAPITRE 3 — SECTION 3.1 : INTRODUCTION
+% Fichier : partie3/introduction_validation.tex
+% ============================================================================
+
+\section{INTRODUCTION}
+\label{sec:introduction_experimentation}
+% ============================================================================
+\begin{sloppypar}
+
+Les Trilemmes CRO classique et post-quantique \'etablis au
+chapitre~\ref{chap:cadre_formel} sont des r\'esultats conditionnels, car leur
+port\'ee pratique d\'epend enti\`erement de la possibilit\'e de mesurer
+empiriquement les param\`etres institutionnels qui les param\`etrent. Pour le
+cadre classique (Contribution~C2), il s'agit de $\Delta$ (capacit\'e
+d'extraction), $\alpha$ (granularit\'e des verdicts), $\beta$ (r\'egularit\'e)
+et $H(\mathcal{C})$ (entropie contextuelle). Pour l'extension post-quantique
+(Contribution~C3), s'y ajoutent $\Delta_q$ (capacit\'e quantique) et $\eta_q$
+(coefficient de perte d'interpr\'etabilit\'e quantique). Sans proc\'edure de
+mesure, ces grandeurs demeurent des postulats~; sans estimation, les bornes
+demeurent muettes sur les syst\`emes r\'eels.
+
+\subsection{Statut \'epist\'emique des deux volets}
+\label{subsec:statut_epistemique}
+
+Ce chapitre r\'epond \`a cette double exigence en deux temps de nature
+distincte, qu'il importe de ne pas confondre.
+
+\textbf{Premi\`erement}, les
+sections~\ref{sec:protocoles_experimentaux}
+\`a~\ref{subsec:calendrier_ressources} sp\'ecifient, jusqu'au niveau
+op\'erationnel, le dispositif exp\'erimental permettant de mesurer chacun des
+param\`etres, qu'il s'agisse de la stratification des \'echantillons, des estimateurs, des crit\`eres de
+fiabilit\'e inter-\'evaluateurs ou des seuils de falsification. Ce programme n'a pas
+\'et\'e d\'eploy\'e dans le cadre de cette th\`ese~; son statut exact est
+explicit\'e \`a la sous-section~\ref{subsubsec:statut_deploiement}, qui referme
+cette partie.
+
+\textbf{Deuxi\`emement}, les
+sections~\ref{sec:derivation_opposabilite}
+\`a~\ref{sec:reproductibilite} proc\`edent \`a une analyse
+\emph{r\'etrospective et analytique}. Elle d\'erive d'abord, pour trois
+syst\`emes cryptographiques r\'eellement d\'eploy\'es, les valeurs
+d'opposabilit\'e et les produits CRO qui servent de r\'ef\'erence \`a tout le
+chapitre. Elle estime ensuite, par une voie enti\`erement distincte (triangulation de la litt\'erature cognitive, de l'analyse documentaire et des
+sp\'ecifications techniques), les param\`etres institutionnels qui
+param\`etrent les bornes avant de mettre les deux estimations en regard. Ces deux voies
+ne sont pas ind\'ependantes, puisque les valeurs de $\Delta$ ont d'abord \'et\'e fix\'ees
+par inversion de la borne. Les syst\`emes d\'eploy\'es ne sont pas non plus des
+instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}). Cette partie
+constitue donc une \emph{calibration illustrative}. Elle v\'erifie que les ordres
+de grandeur retenus sont mutuellement coh\'erents, sans constituer une validation
+empirique.
+
+Le chapitre sp\'ecifie d'abord les protocoles de mesure puis exploite les donn\'ees existantes.
+Cet ordre m\'ethodologique r\'epond \`a une n\'ecessit\'e logique, car on ne peut extraire
+d'information de mesures que si l'on sait d\'efinir ce qui doit \^etre mesur\'e.
+La sp\'ecification des protocoles pr\'ec\`ede donc l'application aux
+syst\`emes d\'eploy\'es. Les estimations r\'etrospectives restent ainsi ancr\'ees
+dans une proc\'edure explicite et falsifiable.
+
+\subsection{Param\`etres \`a mesurer et statut de leur validation}
+\label{subsec:parametres_mesurer}
+
+Le tableau~\ref{tab:parametres_mesure} r\'ecapitule, pour chaque contribution,
+les param\`etres concern\'es, le protocole de mesure qui leur est d\'edi\'e et
+l'\'etat de leur validation.
+
+\begin{table}[htbp]
+\centering
+\caption{Param\`etres institutionnels~: protocole de mesure et statut de validation}
+\label{tab:parametres_mesure}
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+\textbf{Contribution} & \textbf{Param\`etres} & \textbf{Protocole de mesure} &
+\textbf{Statut de validation} & \textbf{Type} \\
+\midrule
+C2 (Trilemme classique)
+  & $\Delta$, $\alpha$, $\beta$, $H(\mathcal{C})$
+  & \S\ref{subsec:protocole_delta}--\S\ref{subsec:protocole_conjoint}
+  & Calibration illustrative & R\'etrospectif \\
+C3 (Trilemme post-quantique)
+  & $\Delta_q$, $\eta_q$, $\beta_q$
+  & \S\ref{subsec:protocole_delta_q}--\S\ref{subsec:protocole_combine}
+  & Calibration illustrative & R\'etrospectif \\
+C4 (Famille SOTP)
+  & Opposabilit\'e r\'ealis\'ee
+  & \S\ref{subsec:protocole_opp}
+  & Calibration illustrative & R\'etrospectif \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La section~\ref{subsec:protocole_delta} d\'etaille la mesure de $\Delta$,
+la section~\ref{subsec:protocole_HC} celle de $H(\mathcal{C})$ tandis que la
+section~\ref{subsec:protocole_opp} porte sur la mesure de l'opposabilit\'e sur
+syst\`emes d\'eploy\'es. Les protocoles post-quantiques
+($\Delta_q$ en section~\ref{subsec:protocole_delta_q}, $\eta_q$ en
+section~\ref{subsec:protocole_eta_q}) compl\`etent le dispositif, avant que
+la section~\ref{subsec:protocole_combine} n'en articule la validation
+conjointe.
+
+La section~\ref{sec:derivation_opposabilite} \'etablit ensuite les
+opposabilit\'es des trois syst\`emes classiques. La
+section~\ref{sec:validation_retrospective} met ces d\'erivations en regard
+des param\`etres institutionnels estim\'es par ailleurs. Cette mise en regard
+v\'erifie la coh\'erence des ordres de grandeur. Le test du cadre rel\`eve du
+programme exp\'erimental (crit\`eres de r\'efutation du
+tableau~\ref{tab:criteres_refutation}).
+
+\subsection{Table unique des param\`etres de r\'ef\'erence}
+\label{subsec:parametres_reference}
+
+Le tableau~\ref{tab:parametres_reference} fixe la seule source de r\'ef\'erence
+pour $H(\mathcal{C})$, $\alpha$, $\Delta$ et $\Delta_q$. Toute valeur employ\'ee
+ailleurs y renvoie. Il est reproduit dans le fichier
+\texttt{06\_calcul/data/parametres\_reference.csv} du d\'ep\^ot
+compagnon~\cite{CROTrilemmaDepot}.
+
+\begin{table}[htbp]
+\centering
+\caption{Param\`etres institutionnels de r\'ef\'erence (valeurs illustratives)}
+\label{tab:parametres_reference}
+\small
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Syst\`eme} & $H(\mathcal{C})$ domaine & $H(\mathcal{C})$ esp\`ece & $\alpha$ & $\Delta$ & $\Delta_q$ / $\eta_q$ \\
+\midrule
+ECDSA (contrat) & 20 & 20 & 1{,}0 & 35 & --- \\
+Helios (scrutin) & 40 & 8 & 1{,}2 & 56 & --- \\
+zk-SNARKs (AML) & 70 & 11 & 1{,}5 & 73 & --- \\
+ML-DSA-65 (contrat) & 20 & 10{,}5 & 1{,}0 & --- & 28 (hyp.) / $0$ \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+\begin{minipage}{0.92\linewidth}\footnotesize
+Entropies en bits. \og Domaine\fg{} d\'esigne la richesse du contexte institutionnel
+g\'en\'eral (chapitre~\ref{chap:cadre_formel})~; \og esp\`ece\fg{} d\'esigne le contexte d'une
+d\'ecision particuli\`ere (section~\ref{sec:derivation_opposabilite}). Pour
+ML-DSA-65, $\eta_q = 0$ car la signature est une cha\^{\i}ne de bits classique
+(les valeurs $\eta_q > 0$ du chapitre d\'ecrivent un sc\'enario hypoth\'etique)~;
+$\Delta_q = 28$~bits est une hypoth\`ese de travail
+(section~\ref{sec:etude_cas_dilithium}), \`a estimer par le protocole de la
+section~\ref{subsec:protocole_delta_q}.
+\end{minipage}
+\end{table}
+
+\end{sloppypar}

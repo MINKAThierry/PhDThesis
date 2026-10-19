@@ -1,0 +1,1007 @@
+% ============================================================================
+% SECTION 2.5 : LA FAMILLE SOTP — CONSTRUCTIONS OPTIMALES
+% Source : partie2/sotp_construction.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
+% ============================================================================
+
+\section{LA FAMILLE SOTP~: UNE CONSTRUCTION PAR R\'EGIME}
+\label{sec:sotp_construction}
+\begin{sloppypar}
+Le Trilemme CRO conditionnel classique~(section~\ref{sec:cro_classique}) \'etablit
+que $\Conf \cdot \Rel \cdot \Opp \leq \Delta/(\gamma\lambda) +
+O(\lambda^{-2})$, avec une forme raffin\'ee. Une borne d'impossibilit\'e sans
+construction est incompl\`ete, car elle \'enonce une limite sans dire si
+cette limite est approchable. La \textbf{famille SOTP} (Semantic One-Time
+Pad) propose des constructions de r\'ef\'erence, une par r\'egime de richesse
+contextuelle, dont les propri\'et\'es cryptographiques sont prouv\'ees et dont
+l'optimalit\'e \`a facteur constant est formul\'ee comme conjecture
+(Conjecture~\ref{conj:optimalite_universelle}). Cette mise en regard
+borne/construction transforme un r\'esultat n\'egatif en guide de conception.
+
+\medskip
+\noindent\textbf{Statut de cette contribution.} La famille SOTP
+constitue la contribution \textbf{C4} de cette th\`ese. Elle est
+aussi importante que la borne elle-m\^eme, puisqu'elle
+donne au Trilemme CRO sa port\'ee op\'erationnelle. Les trois variantes
+(SOTP-Low pour le contexte rare, SOTP-Base pour la transition, SOTP-High
+pour le contexte riche) couvrent l'ensemble du spectre
+d'entropie contextuelle et fournissent chacune une construction
+cryptographique concr\`ete, dont la saturation de la borne reste \`a d\'emontrer. Cette sym\'etrie
+se retrouve dans les th\'eor\`emes d'impossibilit\'e f\'econds. CAP trouve
+son sens dans les syst\`emes distribu\'es r\'eels et FLP dans les protocoles
+partiels (Paxos, Raft). Le Trilemme CRO trouve le sien dans les trois
+variantes SOTP.
+
+Cette section correspond \`a l'\'etape \textbf{S (Saturer)} de la progression
+F$\to$B$\to$E$\to$\textbf{S}$\to$C$\to$X et apporte la contribution \textbf{C4}
+de cette th\`ese.
+
+La philosophie architecturale
+commune est d'abord pos\'ee en sous-section~\ref{subsec:philosophie_sotp}. Les trois
+constructions sont d\'etaill\'ees ensuite par ordre croissant de complexit\'e
+contextuelle, avec SOTP-Low pour contexte rare (sous-section~\ref{subsec:sotp_low}),
+SOTP-Base pour le r\'egime de transition (sous-section~\ref{subsec:sotp_base}),
+SOTP-High pour contexte riche (sous-section~\ref{subsec:sotp_high}). Les
+crit\`eres de s\'election entre variantes pour guider la conception
+d'architecture sont fournis en sous-section~\ref{subsec:synthese_selection}.
+La section se conclut par la conjecture d'optimalit\'e universelle et
+l'analyse de sensibilit\'e (sous-section~\ref{subsec:optimalite_sensibilite}).
+\end{sloppypar}
+
+\begin{boiteArbitre}
+La borne existe sans \^etre pour autant inaccessible. L'arbitre dispose
+d\'esormais d'un protocole con\c{c}u \emph{pour lui}, \`a savoir SOTP-Low quand son
+contexte est rare, SOTP-Base quand il est interm\'ediaire, SOTP-High quand il
+est riche. Chaque variante calibre ses couches Gold,
+Iron, Clay sur ce que son $\Delta$ lui permet d'extraire,
+sans lui en demander davantage. L'impossibilit\'e devient ainsi un guide de
+conception. Savoir \`a quel point ces constructions approchent la borne reste
+une question ouverte. La borne sert d\'esormais de carte au concepteur.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Philosophie de conception~: paradigme Gold-Iron-Clay}
+\label{subsec:philosophie_sotp}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous d\'efinissons l'architecture commune \`a toutes les variantes SOTP.
+
+Trois couches fonctionnelles structurent chaque protocole selon le paradigme
+Gold-Iron-Clay~(sous-section~\ref{subsec:gold_iron_clay}).
+La couche \textbf{Gold} accomplit le masquage cryptographique au moyen de one-time pads
+pseudo-al\'eatoires dans les r\'egimes bas et interm\'ediaire~\cite{Shannon49,BlumMicali84}, preuves zero-knowledge dans
+le r\'egime riche~\cite{GMR85,BenOr88}. La couche \textbf{Iron} assure le binding via des commitments
+contraignants, Pedersen~\cite{Pedersen91,ChaumPedersen92} pour SOTP-Low/Base, Groth16~\cite{Groth16,BCTV14}
+pour SOTP-High, permettant l'ouverture v\'erifiable du message. La couche
+\textbf{Clay} enfin pr\'esente le contexte institutionnel sous une forme que des
+interpr\`etes \`a capacit\'e born\'ee~$\Delta$ peuvent exploiter pour rendre leurs
+verdicts~\cite{Simon82,Miller56}~; elle n'accro\^it $\Opp$ que si elle transmet une
+information que l'institution ne d\'etient pas d\'ej\`a (Remarque~\ref{rem:statut_sotp}).
+
+L'architecture elle-m\^eme \'etait d\'ej\`a esquiss\'ee par la
+construction S-OTP de la section~\ref{subsec:construction_sotp}. L'apport propre \`a cette section tient \`a son adaptation
+par r\'egime, puisque chaque variante SOTP sp\'ecialise la couche Clay selon l'entropie
+contextuelle $H(\mathcal{C})$, substituant encodage d\'eterministe, compression
+Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03,Vempala05}, ou hachage SNARK
+Poseidon~\cite{Groth16,Poseidon2019} selon la richesse du contexte.
+
+\subsubsection{Correspondance entre m\'etriques CLO et propri\'et\'es cryptographiques}
+\label{subsubsec:interpretation_operationnelle}
+
+Tandis que le cadre CLO d\'efinit $\Conf$, $\Rel$, $\Opp$ via la th\'eorie de
+l'information~\cite{MINKA2026CLO,Shannon48,CoverThomas06}, les preuves de ce chapitre les
+expriment en termes de propri\'et\'es de s\'ecurit\'e cryptographique standard admettant des
+r\'eductions aux hypoth\`eses bien \'etablies~\cite{Goldreich01,KatzLindell14}.
+
+La \textbf{confidentialit\'e} $\Conf$, notion statistique, a pour pendant calculatoire l'indistinguabilit\'e s\'emantique~\cite{GoldwasserMicali84,MicaliRackoff91}, selon laquelle, pour
+toute paire de messages $(m_0, m_1)$ dans le m\^eme contexte $c$, nul adversaire polynomial
+ne peut distinguer la preuve de $m_0$ de celle de $m_1$ avec avantage non n\'egligeable.
+La \textbf{fiabilit\'e de v\'erification} $\Relver$ (Remarque~\ref{rem:rel_ver}) correspond au binding~\cite{Pedersen91,Damgard87}, propri\'et\'e selon laquelle aucun adversaire polynomial ne peut
+produire deux ouvertures distinctes d'un m\^eme commitment sur des messages diff\'erents avec
+probabilit\'e non n\'egligeable. Quant \`a l'\textbf{opposabilit\'e} $\Opp$, elle correspond \`a
+la fraction d'information extractible sur le verdict, soit $I(V;\Sigma|C)/H(V|C)$, quantifi\'ee
+via la capacit\'e d'extraction institutionnelle~$\Delta$ (D\'efinition~\ref{def:delta_extraction})~\cite{Simon82,Miller56,Ericsson95}.
+
+Cette traduction rend le cycle des preuves explicite, car les garanties de confidentialit\'e
+et de fiabilit\'e de v\'erification r\'esultent de r\'eductions formelles \`a des hypoth\`eses
+cryptographiques standard (PRG~\cite{BlumMicali84,Yao82}, DLog~\cite{DiffieHellman76},
+q-SDH/q-PKE~\cite{BonehBoyen08})~; l'opposabilit\'e, elle, d\'epend de l'interpr\'etation
+institutionnelle et n'est pas minor\'ee par ces r\'eductions.
+
+\subsubsection{Architecture de la couche Clay et budget entropique}
+\label{subsubsec:couche_clay}
+
+La couche Clay encode le contexte $c$ sous une forme maximisant l'information extractible
+par l'interpr\`ete institutionnel tout en maintenant les garanties Gold et Iron. Chacun des
+trois r\'egimes appelle une technique propre.
+
+Pour le r\'egime rare ($H(\mathcal{C}) < H^*(\lambda)$), l'encodage d\'eterministe
+$\phi:\mathcal{C} \to \{0,1\}^{H(\mathcal{C})}$ encode l'int\'egralit\'e du contexte sans
+perte~\cite{Shannon48}. Pour la zone de transition, la compression Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,Achlioptas2003} projette le
+contexte depuis la dimension $d = \Theta(\Delta \cdot H(\mathcal{C}))$ vers $k =
+O(\log n/\epsilon^2)$ dimensions, pr\'eservant les distances \`a $\epsilon$ pr\`es. Pour le
+r\'egime riche enfin, le hachage Poseidon~\cite{Poseidon2019,Grassi2021} compresse un contexte arbitrairement complexe en
+un condens\'e de taille fixe ($256$ bits), agr\'ement\'e de m\'etadonn\'ees structur\'ees pour les
+recherches institutionnelles.
+
+Le budget entropique total de chaque preuve SOTP s'\'ecrit
+\begin{equation}
+H_{\text{total}} = H_{\text{Gold}} + H_{\text{Iron}} + H_{\text{Clay}}
+  \approx 2\lambda + H(\mathcal{C})
+\label{eq:entropy_budget}
+\end{equation}
+Pour $\lambda = 128$ et $H(\mathcal{C}) = 40$ bits (vote type Helios~\cite{Adida08}), cela donne
+$\approx 296$ bits. Ce budget contraint la couche Clay, car pr\'eserver trop de contexte
+peut corr\'eler $\Sigma$ avec $m$, r\'eduisant $\Conf$~; compresser trop agressivement
+r\'eduit $\Opp$ parce que l'interpr\`ete ne peut plus extraire les verdicts~\cite{Smith09,Alvim12}.
+
+L'allocation \'equilibr\'ee est modulaire par conception~\cite{canetti2001,Goldreich02}. La couche Gold peut substituer
+AES-GCM~\cite{AES01} \`a ChaCha20~\cite{ChaCha20} sans affecter Iron ou Clay~; la couche Iron peut passer d'un
+commitment Pedersen \`a un accumulateur RSA~\cite{CamenischLysyanskaya02} sans toucher Gold ou Clay~; la couche Clay
+peut changer de technique d'encodage ind\'ependamment. Cette modularit\'e facilite les
+migrations quantiques et l'adaptation aux \'evolutions r\'eglementaires.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{SOTP-Low~: r\'egime \`a contexte rare}
+\label{subsec:sotp_low}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous proposons, pour le r\'egime \`a contexte rare, une construction
+d\'eterministe simple dont nous \'etablissons les propri\'et\'es cryptographiques
+(Remarque~\ref{rem:statut_sotp}).
+
+\subsubsection{Motivation et champ d'application}
+\label{subsubsec:motivation_low}
+
+Le r\'egime cible est celui des contextes que l'on peut encoder int\'egralement dans
+la preuve, $H(\mathcal{C}) < H^*(\lambda)$, avec $H^*(\lambda) = \sqrt{\lambda}$ comme
+crit\`ere de construction (environ $11$ bits \`a $\lambda = 128$), distinct du seuil
+$H^\sharp$ du th\'eor\`eme (Remarque~\ref{rem:activite_delta}). Les signatures contractuelles ECDSA~\cite{Johnson01,NIST.FIPS.186-5} en sont le cas d'\'ecole, puisqu'un contrat
+standardis\'e et ses parties sont souvent param\'etr\'es par un contexte d'entropie
+$H(\mathcal{C}) \approx 20$ bits~\cite{Mason07,Kerr04}. D\`es lors que $\Delta \gtrsim H(\mathcal{C})$, la
+capacit\'e institutionnelle absorbe l'int\'egralit\'e du contexte de sorte que l'opposabilit\'e peut
+approcher~1.
+
+L'id\'ee consiste \`a encoder le contexte \emph{d\'eterministiquement} dans la couche Clay,
+ce qui n'entra\^ine ni perte de compression ni circuit co\^uteux. La preuve se compose d'un masque PRG
+(Gold), d'un commitment Pedersen (Iron) et d'un triplet $(\phi(c), \mathsf{Hash}(c), V(c))$
+(Clay), cette derni\`ere composante r\'ev\`ele le contexte sans r\'ev\'eler le message, puisque
+$M \perp C$ par construction.
+
+\subsubsection{Construction SOTP-Low}
+\label{subsubsec:construction_low}
+
+\begin{algorithm}[H]
+\caption{SOTP-Low}
+\label{alg:sotp_low}
+\begin{algorithmic}[1]
+\State \textbf{Param\`etres} : $\lambda$, $H(\mathcal{C}) < H^*(\lambda)$, $(\Delta, \alpha, \beta)$
+\State \textbf{$\mathsf{Setup}(1^\lambda)$} :
+\State \quad G\'en\'erer groupe cyclique $(\mathbb{G}, q)$ avec $|q| \geq 2\lambda$ et DLog difficile
+\State \quad \'echantillonner $g, h \xleftarrow{\$} \mathbb{G}$ tels que $\log_g h$ inconnu
+\State \quad Choisir PRG $\mathsf{PRG}: \mathbb{Z}_q \to \{0,1\}^\lambda$
+\State \quad Choisir $\mathsf{Hash}: \mathcal{C} \to \{0,1\}^\lambda$ r\'esistante aux collisions
+\State \quad D\'efinir encodage d\'eterministe $\phi: \mathcal{C} \to \{0,1\}^{H(\mathcal{C})}$
+\State \quad \textbf{Retourner} $pk = (\mathbb{G}, q, g, h, \mathsf{PRG}, \mathsf{Hash}, \phi)$
+\State \textbf{$\mathsf{Prove}(pk, m, c)$} :
+\State \quad \textcolor{blue}{// Gold}
+\State \quad $s \xleftarrow{\$} \mathbb{Z}_q$ ;\; $\sigma_1 \leftarrow m \oplus \mathsf{PRG}(s)$
+\State \quad \textcolor{blue}{// Iron}
+\State \quad $\rho \xleftarrow{\$} \mathbb{Z}_q$ ;\; $\sigma_2 \leftarrow g^{s} \cdot h^\rho$~\cite{Pedersen91}
+\State \quad \textcolor{blue}{// Clay}
+\State \quad $\sigma_3 \leftarrow (\phi(c),\; \mathsf{Hash}(c),\; V(c))$
+\State \quad \textbf{Retourner} $\sigma = (\sigma_1, \sigma_2, \sigma_3)$ ;\; t\'emoin secret $(s, \rho)$
+\State \textbf{$\mathsf{Verify}(pk, \sigma, c)$} :
+\State \quad V\'erifier $\mathsf{Hash}(c) \stackrel{?}{=} \sigma_3.\mathsf{hc}$ et
+         $\phi(c) \stackrel{?}{=} \sigma_3.h_c$ et $\sigma_2 \in \mathbb{G}$
+\State \textbf{$\mathsf{Open}(pk, \sigma, c, (m, s, \rho))$} :
+\State \quad Accepter ssi $\sigma_2 = g^{s} h^{\rho}$ et $\sigma_1 = m \oplus \mathsf{PRG}(s)$
+\end{algorithmic}
+\end{algorithm}
+
+L'algorithme op\`ere en trois phases distinctes qui correspondent exactement
+aux trois couches du paradigme Gold-Iron-Clay.
+
+La phase \textsf{Setup} installe les param\`etres cryptographiques partag\'es.
+Elle g\'en\`ere un groupe cyclique $(\mathbb{G}, q)$ d'ordre premier $\lambda$
+bits dans lequel le logarithme discret est difficile, ce qui fonde
+la s\'ecurit\'e de la couche Iron. Elle tire al\'eatoirement deux g\'en\'erateurs
+$g$ et $h$ dont le rapport discret $\log_g h$ est inconnu de tous les
+participants~; cette inconnaissance rend l'engagement de Pedersen
+statistiquement cachant. Elle fixe enfin trois primitives fonctionnelles, \`a savoir
+un PRG pour le masquage de message, une fonction de hachage r\'esistante
+aux collisions pour l'authentification du contexte et un encodage
+d\'eterministe $\phi$ qui serialise le contexte institutionnel $c$ sur
+exactement $H(\mathcal{C})$ bits. Ce dernier point est sp\'ecifique au
+r\'egime \`a contexte rare. En effet, parce que $H(\mathcal{C}) < H^*(\lambda)$, la
+totalit\'e du contexte tient dans cet encodage sans compression avec perte.
+
+La phase \textsf{Prove} construit la preuve en trois \'etapes parall\`eles
+ind\'ependantes. La couche Gold (ligne~11) tire une graine
+secr\`ete $s$ uniform\'ement dans $\mathbb{Z}_q$ et produit le message
+masqu\'e $\sigma_1 = m \oplus \mathsf{PRG}(s)$. Le message r\'eel est ainsi
+int\'egralement dissimul\'e derri\`ere un pad pseudoal\'eatoire, rendant
+$\sigma_1$ indistinguable d'une cha\^ine uniforme pour tout adversaire ne
+connaissant pas $s$. La couche Iron (ligne~13) construit
+un engagement de Pedersen sur la graine $s$, soit $\sigma_2 = g^{s} \cdot h^\rho$
+o\`u $\rho$ est un scalaire al\'eatoire. Tirer la graine dans $\mathbb{Z}_q$ est
+n\'ecessaire. Avec $s \in \{0,1\}^\lambda$ et un engagement sur $\mathsf{int}(s)
+\bmod q$, deux graines $s$ et $s+q$ donneraient en effet le m\^eme engagement, ce qui ferait perdre le
+caract\`ere liant. Cet
+engagement lie le producteur de la preuve \`a la valeur de $s$ sans la
+r\'ev\'eler~; il garantit que le message masqu\'e $\sigma_1$ ne peut \^etre
+ouvert que sur un unique message $m$. La couche Clay
+(ligne~15) produit le triplet $\sigma_3 = (\phi(c), \mathsf{Hash}(c), V(c))$.
+L'encodage d\'eterministe $\phi(c)$ y transmet la structure s\'emantique du
+contexte, le condens\'e $\mathsf{Hash}(c)$ en garantit l'int\'egrit\'e tandis que
+$V(c)$ est le verdict institutionnel attendu. Cette couche porte
+l'int\'egralit\'e de l'information contextuelle exploitable par l'arbitre.
+La preuve compl\`ete $\sigma = (\sigma_1, \sigma_2, \sigma_3)$ est
+retourn\'ee publiquement~; la paire $(s, \rho)$ reste secr\`ete chez le
+producteur.
+
+La phase \textsf{Verify} est d\'elib\'er\'ement l\'eg\`ere, puisqu'elle contr\^ole
+uniquement que le condens\'e de hachage du contexte soumis correspond \`a
+celui encod\'e dans $\sigma_3$, que l'encodage $\phi(c)$ co\"incide et que
+$\sigma_2$ appartient bien au groupe $\mathbb{G}$. Elle ne v\'erifie pas la
+coh\'erence entre $\sigma_1$ et $\sigma_2$, car ce lien n'est contr\^ol\'e que lors
+de l'ouverture ($\mathsf{Open}$), qui requiert le t\'emoin $(m, s, \rho)$~;
+sans ouverture, $\sigma_1$ et $\sigma_2$ ne sont pas li\'es, de sorte que
+$\mathsf{Verify}$ seul accepte toute paire bien form\'ee. L'arbitre peut
+donc v\'erifier la forme de la preuve sans acc\'eder au message $m$~; la
+garantie de liaison porte sur l'ouverture. La couche Clay pr\'esente le
+contexte sous une forme lisible, mais, \'etant une fonction du contexte public
+$c$, elle n'apporte aucune information conditionnelle au sens de $\Opp$
+(Remarque~\ref{rem:statut_sotp}).
+
+\subsubsection{Propri\'et\'es de SOTP-Low}
+\label{subsubsec:saturation_low}
+
+\begin{proposition}[Propri\'et\'es cryptographiques de SOTP-Low]\label{thm:saturation_sotp_low}
+Sous s\'ecurit\'e PRG~\cite{BlumMicali84,Yao82} et difficult\'e DLog~\cite{DiffieHellman76}~:
+\begin{enumerate}
+\item tout adversaire PPT a un avantage IND-CONF n\'egligeable contre SOTP-Low
+      (confidentialit\'e calculatoire)~;
+\item la compl\'etude est parfaite et, pour la proc\'edure d'ouverture,
+      la probabilit\'e de gain BIND-REL est n\'egligeable, donc
+      $\Relver(\mathrm{SOTP\text{-}Low}) = 1 - \negl(\lambda)$ au sens de la
+      Remarque~\ref{rem:jeu_bind_rel_link}.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[Heuristique de conception de SOTP-Low (non prouv\'ee)]
+\label{rem:facteur_limitant_low}
+La formulation initiale de ce r\'esultat \'enon\c{c}ait la minoration
+$\Conf \cdot \Rel \cdot \Opp \geq 0{,}75 \cdot \min\{\Delta, H(\mathcal{C})\}/\lambda$.
+La formalisation a conduit \`a la remplacer, pour trois raisons. (i)~La composante $\sigma_3 = (\phi(c), \mathsf{Hash}(c), V(c))$
+est une fonction du contexte public, donc $I(V;\sigma_3|C) = 0$~; (ii)~le passage
+par $H(V|C) \approx \lambda$ contredit l'Hypoth\`ese~\ref{ass:verdicts_efficace}
+($\log_2|\mathcal{V}_\lambda| \leq \alpha H(\mathcal{C})$)~; (iii)~une telle minoration
+d\'epasserait le majorant du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} d\`es
+que $\gamma > 4/3$ tout en portant sur $\Relver$ au lieu de $\Relrec$. L'expression
+$0{,}75\,\Delta/\lambda$ est conserv\'ee comme \emph{heuristique de conception}, car
+elle d\'ecrit la fraction de la capacit\'e d'extraction qu'un encodage entier de
+$\lfloor H(\mathcal{C}) \rfloor$ bits permettrait d'exploiter si ce contexte
+\'etait un contexte d'esp\`ece inconnu de l'institution ($1 - 1/\Delta \geq 0{,}75$
+pour $\Delta \geq 4$). Sa justification rigoureuse, dans un mod\`ele \`a contexte
+priv\'e, est une perspective (chapitre~\ref{chap:resultats_discussions}).
+\end{remark}
+
+\begin{Preuve}[Proposition~\ref{thm:saturation_sotp_low}~: propri\'et\'es cryptographiques de SOTP-Low]\label{prv:saturation_sotp_low}
+
+\begin{cmtEtape}{Vue d'ensemble.}
+SOTP-Low est constitu\'e de trois couches, Gold (masquage par PRG),
+Iron (engagement de Pedersen sur la graine $s$) et Clay (encodage
+d\'eterministe $\phi(c)$). La confidentialit\'e et la fiabilit\'e de
+v\'erification sont \'etablies s\'epar\'ement.
+\end{cmtEtape}
+
+\noindent\textbf{Rappel de la construction.}
+\begin{align}
+\sigma_1 &= m \oplus \mathsf{PRG}(s),
+\quad s \xleftarrow{\$} \mathbb{Z}_q
+\tag{couche Gold}\\
+\sigma_2 &= g^{s} \cdot h^\rho,
+\quad \rho \xleftarrow{\$} \mathbb{Z}_q
+\tag{couche Iron}\\
+\sigma_3 &= \bigl(\phi(c),\; \mathsf{Hash}(c),\; V(c)\bigr)
+\tag{couche Clay}
+\end{align}
+o\`u $(g, h)$ sont des g\'en\'erateurs du groupe $(\mathbb{G}, q)$ avec
+$\log_g h$ inconnu. Le t\'emoin secret est $(s, \rho)$.
+
+\medskip
+\noindent\textbf{Partie I~. Confidentialit\'e calculatoire.}
+La loi de $\sigma$ sachant $M = m_i$ ne d\'epend de $m_i$ que par
+$\sigma_1$. En effet, $\sigma_2$ est parfaitement masquant (pour tout $s$, $g^s h^\rho$
+est uniforme dans $\mathbb{G}$ lorsque $\rho$ est uniforme) tandis que $\sigma_3$ ne
+d\'epend que de $c$, ind\'ependant de $m$ ($M \perp C$).
+\cmt{Seule $\sigma_1$ porte de l'information sur $m$.}
+
+Supposons qu'un distingueur PPT $\mathcal{D}$ distingue $m_0 \oplus
+\mathsf{PRG}(s)$ de $m_1 \oplus \mathsf{PRG}(s)$ avec un avantage non
+n\'egligeable $\mu(\lambda)$. L'adversaire $\mathcal{B}$ qui re\c{c}oit
+$y$ (sortie du PRG ou cha\^ine uniforme), tire $b$, soumet $m_b \oplus y$ \`a
+$\mathcal{D}$ et r\'epond \og PRG\fg{} si $\mathcal{D}$ retrouve $b$, distingue le
+PRG avec un avantage $\mu(\lambda)/2$, puisque si $y$ est uniforme, $m_b \oplus y$ ne
+contient aucune information sur $b$. Cela contredit la s\'ecurit\'e du
+PRG~\cite{BlumMicali84}. L'avantage IND-CONF de tout adversaire PPT est donc
+n\'egligeable.
+\cmt{La confidentialit\'e est calculatoire. Au sens statistique de la D\'efinition~\ref{def:confidentialite_clo}, elle n'est garantie que si le PRG est remplac\'e par un masque uniforme.}
+
+\medskip
+\noindent\textbf{Partie II~. Fiabilit\'e de v\'erification.}
+
+\textit{Compl\'etude.} Pour toute preuve honn\^ete, $\mathsf{Hash}(c) = \sigma_3.\mathsf{hc}$
+et $\phi(c) = \sigma_3.h_c$ par construction, $\sigma_2 \in \mathbb{G}$ par
+fermeture du groupe~; enfin $\mathsf{Open}$ accepte le t\'emoin honn\^ete $(m, s, \rho)$.
+La compl\'etude est parfaite.
+\cmtFormule{La v\'erification et l'ouverture acceptent toute preuve honn\^ete.}
+
+\textit{Liaison (r\'eduction \`a DLog).} Supposons qu'un adversaire PPT
+produise une preuve $\sigma$ et deux ouvertures accept\'ees
+$(m_0, s_0, \rho_0)$ et $(m_1, s_1, \rho_1)$ avec $m_0 \neq m_1$. Comme
+$\sigma_1 = m_0 \oplus \mathsf{PRG}(s_0) = m_1 \oplus \mathsf{PRG}(s_1)$ et
+$m_0 \neq m_1$, on a $s_0 \neq s_1$ dans $\mathbb{Z}_q$. L'\'egalit\'e
+$g^{s_0} h^{\rho_0} = g^{s_1} h^{\rho_1}$ impose alors $\rho_0 \neq \rho_1$ et
+\begin{equation}
+\log_g h = \frac{s_0 - s_1}{\rho_1 - \rho_0} \bmod q,
+\end{equation}
+\cmtFormule{Deux ouvertures distinctes r\'ev\`elent $\log_g h$.}
+ce qui contredit la difficult\'e du logarithme discret~\cite{DiffieHellman76}.
+La probabilit\'e de gain BIND-REL est donc n\'egligeable, d'o\`u
+$\Relver(\mathrm{SOTP\text{-}Low}) = 1 - \negl(\lambda)$.
+\cmt{C'est ici que le tirage de $s$ dans $\mathbb{Z}_q$ est indispensable.}
+\end{Preuve}
+
+\subsubsection{Support de validation~: signatures ECDSA}
+\label{subsubsec:validation_ecdsa}
+
+\`A titre d'illustration, sans valeur de validation (les m\'etriques CLO d'ECDSA sont
+des estimations param\'etriques analytiques issues des sp\'ecifications
+publi\'ees~\cite{Johnson01,NIST.FIPS.186-5} et ECDSA n'est pas une instance du
+th\'eor\`eme, Remarque~\ref{rem:portee_cas_etude}), les param\`etres $\Delta = 35$ bits,
+$\lambda = 128$ donnent pour l'heuristique de SOTP-Low la valeur
+$0{,}75 \times 35/128 \approx 0{,}205$. Cette valeur n'est pas comparable au produit
+CLO d'ECDSA ($0{,}273$).
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{SOTP-Base~: r\'egime de transition}
+\label{subsec:sotp_base}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Pour les contextes interm\'ediaires, nous proposons une construction fond\'ee sur la
+compression Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84}, qui r\'eduit la taille de la
+repr\'esentation du contexte tout en pr\'eservant ses distances \`a $\varepsilon$ pr\`es.
+
+\subsubsection{Motivation et champ d'application}
+\label{subsubsec:motivation_base}
+
+Helios~\cite{Adida08,Adida09UCL} est l'ach\'etype m\^eme de ce r\'egime, puisque le contexte \'electoral (registre des \'electeurs, r\`egles du
+scrutin, proc\`es-verbal) repr\'esente $H(\mathcal{C}) \approx 40$--$50$ bits pour une
+\'election de taille moyenne, la capacit\'e d'un comit\'e de garants sp\'ecialis\'es \'etant estim\'ee
+\`a $\Delta \approx 56$ bits. L'encodage d\'eterministe de SOTP-Low ne passe pas \`a
+l'\'echelle, car la preuve serait trop volumineuse. Les zk-SNARKs de SOTP-High
+seraient \`a l'inverse surdimensionn\'es pour ce niveau d'entropie.
+
+La compression Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03,Achlioptas2003} permet de
+projeter le contexte depuis la dimension $d = \Theta(\Delta \cdot H(\mathcal{C}))$ vers
+$k = O(\log n/\epsilon^2)$ dimensions via une matrice al\'eatoire $\Phi$, pr\'eservant les
+distances \`a un facteur $1 \pm \epsilon$ pr\`es. Que l'information extractible soit
+pr\'eserv\'ee dans la m\^eme proportion rel\`eve d'une hypoth\`ese de conception que le
+lemme ne garantit pas.
+
+\subsubsection{Construction SOTP-Base}
+\label{subsubsec:construction_base}
+
+\begin{algorithm}[H]
+\caption{SOTP-Base~: construction avec compression JL}
+\label{alg:sotp_base}
+\begin{algorithmic}[1]
+\State \textbf{Param\`etres} : $\lambda$, $H^*(\lambda) \leq H(\mathcal{C}) \leq \lambda/\log\lambda$, $\varepsilon = 0{,}1$
+\State \textbf{$\mathsf{Setup}(1^\lambda)$} :
+\State \quad G\'en\'erer $(\mathbb{G}, q, g, h)$, PRG, Hash comme SOTP-Low
+\State \quad Fixer $d \leftarrow \lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$
+\State \quad Fixer $k \leftarrow \lceil 8\log(2^{H(\mathcal{C})})/\varepsilon^2 \rceil$
+\State \quad G\'en\'erer matrice JL $\Phi \xleftarrow{\$} \mathcal{N}(0, 1/k)^{k \times d}$~\cite{DasguptaGupta03,Vempala05}
+\State \quad \textbf{Retourner} $pk = (\mathbb{G}, q, g, h, \mathsf{PRG}, \mathsf{Hash}, \Phi, k, d)$
+\State \textbf{$\mathsf{Prove}(pk, m, c)$} :
+\State \quad Couches Gold et Iron identiques \`a SOTP-Low
+\State \quad \textcolor{blue}{// Clay JL}
+\State \quad $\vec{c} \leftarrow \mathsf{embed}(c) \in \mathbb{R}^d$
+\State \quad $\sigma_3 \leftarrow \Phi \vec{c} \in \mathbb{R}^k$
+\State \quad \textbf{Retourner} $\sigma = (\sigma_1, \sigma_2, \sigma_3)$
+\State \textbf{$\mathsf{Verify}(pk, \sigma, c)$} :
+\State \quad V\'erifier $\|\Phi \cdot \mathsf{embed}(c) - \sigma_3\| \leq \varepsilon$
+\State \quad V\'erifier $\sigma_2 \in \mathbb{G}$ et coh\'erence Gold
+\end{algorithmic}
+\end{algorithm}
+
+SOTP-Base partage avec SOTP-Low les couches Gold et Iron inchang\'ees.
+La diff\'erence enti\`ere r\'eside dans la couche Clay, qui remplace
+l'encodage d\'eterministe bijectif par une compression
+Johnson-Lindenstrauss. Cette substitution est rendue n\'ecessaire par
+le r\'egime contextuel. Ici $H(\mathcal{C}) \geq H^*(\lambda)$, ce
+qui signifie que le contexte institutionnel est trop riche pour tenir
+enti\`erement dans un encodage de taille fixe sans perte.
+
+La phase \textsf{Setup} h\'erite du groupe, du PRG et du Hash de
+SOTP-Low, puis calcule deux dimensions caract\'eristiques de la
+compression. La dimension cible $d = \lceil 4\Delta
+H(\mathcal{C})/\varepsilon^2 \rceil$ (ligne~4) calibre l'espace de
+repr\'esentation interm\'ediaire sur le produit de la capacit\'e
+d'extraction institutionnelle $\Delta$ et de l'entropie contextuelle, car
+plus le contexte est riche et plus l'institution peut en extraire,
+plus la repr\'esentation doit \^etre large pour pr\'eserver les
+distances s\'emantiques pertinentes. La dimension de sortie
+$k = \lceil 8\log(2^{H(\mathcal{C})})/\varepsilon^2 \rceil$
+(ligne~5) d\'etermine la taille finale de la couche Clay transmise
+dans la preuve~; elle est calibr\'ee pour que le lemme JL garantisse
+la pr\'eservation des distances \`a $\varepsilon = 0{,}1$ pr\`es avec
+haute probabilit\'e. La matrice $\Phi$ (ligne~6) est tir\'ee
+al\'eatoirement selon une gaussienne centr\'ee de variance $1/k$. 
+Cette normalisation assure que les normes euclidiennes sont pr\'eserv\'ees
+en esp\'erance, propri\'et\'e sur laquelle repose la
+garantie JL.
+
+La phase \textsf{Prove} (lignes~8--13) reconstruit $\sigma_1$ et
+$\sigma_2$ exactement comme SOTP-Low, puis traite le contexte
+diff\'eremment. La ligne~11 plonge d'abord le contexte $c$ dans
+$\mathbb{R}^d$ via la fonction $\mathsf{embed}$, qui traduit la
+structure s\'emantique du contexte institutionnel en vecteur de r\'eels, de sorte que
+deux contextes proches s\'emantiquement produisent des vecteurs proches
+au sens de la distance euclidienne. La ligne~12 applique ensuite la
+compression $\sigma_3 = \Phi\vec{c} \in \mathbb{R}^k$, par laquelle le vecteur de
+$d$ dimensions est projet\'e vers un espace de $k \ll d$ dimensions.
+Cette projection constitue la couche Clay de SOTP-Base. La
+preuve transmise $\sigma_3$ est donc la projection compress\'ee du contexte,
+distincte du contexte lui-m\^eme et de son encodage exact. Les distances
+s\'emantiques entre contextes distincts y sont pr\'eserv\'ees \`a
+$\varepsilon$ pr\`es par la garantie JL. La pr\'eservation de l'information
+extractible reste une hypoth\`ese de conception.
+
+La phase \textsf{Verify} (lignes~14--16) refl\`ete cette logique, puisqu'elle v\'erifie la proximit\'e $\|\Phi \cdot
+\mathsf{embed}(c) - \sigma_3\| \leq \varepsilon$ au lieu de l'\'egalit\'e exacte
+$\Phi \cdot \mathsf{embed}(c) = \sigma_3$. Ce crit\`ere souple
+est in\'evitable, car la compression avec perte $\varepsilon = 0{,}1$
+signifie que le v\'erificateur ne peut retrouver $\sigma_3$ qu'\`a
+$10\%$ pr\`es depuis le contexte re\c{c}u. Le choix de $\varepsilon$
+est ainsi un param\`etre de conception explicite qui gouverne le
+compromis entre la fid\'elit\'e de la repr\'esentation contextuelle
+et la dimension $k$ de la preuve transmise. R\'eduire $\varepsilon$
+augmente la fid\'elit\'e mais exige un $k$ plus grand, alourdissant
+la preuve. Avec $\varepsilon = 0{,}1$, $\Delta = 56$ et $H(\mathcal{C}) = 40$, la
+dimension interm\'ediaire vaut $d = \lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil
+= 896\,000$.
+
+\subsubsection{Propri\'et\'es de SOTP-Base}
+\label{subsubsec:saturation_base}
+
+\begin{proposition}[Propri\'et\'es cryptographiques de SOTP-Base]\label{thm:saturation_sotp_base}
+Sous s\'ecurit\'e PRG~\cite{BlumMicali84} et difficult\'e DLog~\cite{DiffieHellman76}, les
+couches Gold et Iron de SOTP-Base \'etant identiques \`a celles de SOTP-Low,
+SOTP-Base v\'erifie les deux propri\'et\'es de la
+Proposition~\ref{thm:saturation_sotp_low}, \`a savoir la confidentialit\'e calculatoire et
+$\Relver = 1 - \negl(\lambda)$ pour la proc\'edure d'ouverture. De plus, pour
+tous contextes $c, c'$, avec probabilit\'e au moins $1 - \delta$ sur le tirage
+de $\Phi$, $\|\Phi\,\mathsf{embed}(c) - \Phi\,\mathsf{embed}(c')\|^2 \in
+(1 \pm \varepsilon)\|\mathsf{embed}(c) - \mathsf{embed}(c')\|^2$
+(Lemme~\ref{lem:johnson_lindenstrauss}).
+\end{proposition}
+
+\begin{proof}
+Les arguments de la Proposition~\ref{thm:saturation_sotp_low} s'appliquent sans
+changement aux couches Gold et Iron~; la couche Clay n'intervient ni dans la
+confidentialit\'e (elle ne d\'epend que de $c$, ind\'ependant de $m$) ni dans la
+liaison. La derni\`ere propri\'et\'e est le lemme de Johnson--Lindenstrauss appliqu\'e
+\`a l'ensemble fini des plongements de contextes.
+\end{proof}
+
+\begin{remark}[Heuristique de conception de SOTP-Base (non prouv\'ee)]
+\label{rem:heuristique_sotp_base}
+La formulation initiale de ce r\'esultat \'enon\c{c}ait
+$\Conf \cdot \Rel \cdot \Opp \geq 0{,}5 \cdot \min\{\Delta/d,\, \beta\log_2 d/d\}$.
+La formalisation a conduit \`a la remplacer pour les raisons expos\'ees \`a la
+Remarque~\ref{rem:facteur_limitant_low}. En effet, $\sigma_3 = \Phi\,\mathsf{embed}(c)$ est
+une fonction du contexte public, donc $I(V;\sigma_3|C) = 0$~; la pr\'eservation
+des distances n'implique pas celle de l'information extractible~; enfin une
+minoration ne peut se d\'eduire d'une majoration. L'expression
+$0{,}5 \cdot \min\{\Delta/d, \Delta/(\beta\log_2 d)\}$ est conserv\'ee comme
+heuristique de dimensionnement de la couche Clay.
+\end{remark}
+
+\subsubsection{Support de validation~: vote \'electronique Helios}
+\label{subsubsec:validation_helios}
+
+\`A titre d'illustration, l'heuristique de SOTP-Base pour les param\`etres
+analytiques de Helios~\cite{Adida08,MINKA2026CRO} ($\Delta = 56$ bits, $\beta = 1{,}4$,
+$d = 560$) donne $0{,}5 \times \min\{56/560,\, 56/(1{,}4 \log_2 560)\} \approx 0{,}050$.
+Cette valeur n'est pas comparable au produit CLO de Helios ($0{,}437$), qui porte
+sur $\Relver$ et n'est pas une instance du th\'eor\`eme
+(Remarque~\ref{rem:portee_cas_etude}). La dimension $d = 560$ retenue ici est un
+choix de dimensionnement, distinct de la r\`egle $d = \lceil 4\Delta H(\mathcal{C})/\varepsilon^2\rceil$.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{SOTP-High~: r\'egime \`a contexte riche}
+\label{subsec:sotp_high}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Pour les contextes riches, nous proposons une construction fond\'ee sur les zk-SNARKs
+succincts Groth16, qui prot\`ege le t\'emoin (divulgation nulle de connaissance) au prix
+d'une opposabilit\'e r\'eduite.
+
+\subsubsection{Motivation et champ d'application}
+\label{subsubsec:motivation_high}
+
+La conformit\'e financi\`ere via zk-SNARKs~\cite{Groth16,Garratt15,BaselIII} illustre ce r\'egime, o\`u transactions complexes,
+r\'eglementations multi-juridictionnelles et historiques longs produisent $H(\mathcal{C})
+\approx 70$--$90$ bits. M\^eme la compression JL de SOTP-Base serait insuffisante, car la
+dimension cible $k = \Omega(H(\mathcal{C}))$ resterait trop large pour absorption par
+un interpr\`ete \`a capacit\'e $\Delta$ born\'ee~\cite{Simon82,Miller56}.
+
+Les zk-SNARKs succincts~(Groth16~\cite{Groth16,BCTV14,Gennaro13}) l\`event cet obstacle en produisant une preuve
+de taille constante ($128$ \`a $192$ octets selon la courbe) ind\'ependante de la complexit\'e du
+circuit v\'erifi\'e. Le caract\`ere succinct brise le couplage lin\'eaire entre $H(\mathcal{C})$ et la
+taille de preuve, permettant d'encoder des relations complexes sur un contexte de
+plusieurs milliers de bits dans un condens\'e que l'interpr\`ete peut v\'erifier en quelques millisecondes.
+
+Cette solution a une double contrepartie. Une \'etape de mise en place de confiance (\emph{trusted
+setup}) est requise~\cite{Bowe2017}. L'opposabilit\'e est aussi r\'eduite, plafonn\'ee par la perte
+entropique du hachage compressant le contexte en 256 bits.
+
+\subsubsection{Construction SOTP-High}
+\label{subsubsec:construction_high}
+
+\begin{algorithm}[H]
+\caption{SOTP-High~: construction avec zk-SNARKs Groth16}
+\label{alg:sotp_high}
+\begin{algorithmic}[1]
+\State \textbf{Param\`etres} : $\lambda$, $H(\mathcal{C}) > \lambda/\log\lambda$, circuit $\mathcal{C}_{\text{circuit}}$
+\State \textbf{$\mathsf{Setup}(1^\lambda, \mathcal{C}_{\text{circuit}})$} :
+\State \quad \'echantillonner $\tau, \alpha_s, \beta_s, \gamma, \delta \xleftarrow{\$} \mathbb{F}_p^*$ (toxiques)
+\State \quad Construire $pk_{\mathsf{prove}}$ et $vk_{\mathsf{verify}}$ (CRS Groth16)~\cite{Groth16,BCTV14}
+\State \quad \textcolor{red}{// D\'etruire toxiques~: $\tau, \alpha_s, \beta_s, \gamma, \delta$}
+\State \quad $(g, h) \xleftarrow{\$} \mathbb{G}^2$ pour couche Iron
+\State \quad \textbf{Retourner} $pk = (pk_{\mathsf{prove}}, vk_{\mathsf{verify}}, g, h)$
+\State \textbf{$\mathsf{Prove}(pk, m, c)$} :
+\State \quad \textcolor{blue}{// Gold + Iron (Groth16 + Pedersen)}
+\State \quad $\rho \xleftarrow{\$} \mathbb{Z}_q$ ;\; $c_m \leftarrow g^m \cdot h^\rho$~\cite{Pedersen91}
+\State \quad $h_c \leftarrow \mathsf{Poseidon}(c)$~\cite{Poseidon2019,Grassi2021} ;\; $\pi \leftarrow \mathsf{Groth16.Prove}(pk_{\mathsf{prove}}, (h_c, c_m), (m, c, \rho))$
+\State \quad \textit{relation~: $h_c = \mathsf{Poseidon}(c) \wedge c_m = g^m h^\rho \wedge \mathsf{Conforme}(m, c) = 1$}
+\State \quad \textcolor{blue}{// Clay~: condens\'e hash + m\'etadonn\'ees}
+\State \quad \textbf{Retourner} $\sigma = (h_c, \pi, c_m, \mathsf{metadata})$
+\State \textbf{$\mathsf{Verify}(\sigma)$} :
+\State \quad $b_1 \leftarrow \mathsf{Groth16.Verify}(vk_{\mathsf{verify}}, (h_c, c_m), \pi)$
+\State \quad $b_2 \leftarrow [c_m \in \mathbb{G}]$
+\State \quad \textbf{Retourner} $b_1 \wedge b_2$
+\end{algorithmic}
+\end{algorithm}
+
+SOTP-High est la construction la plus complexe des trois. Elle est
+con\c{c}ue pour le r\'egime o\`u le contexte institutionnel est
+arbitrairement riche, $H(\mathcal{C}) > \lambda/\log\lambda$, ce qui
+rend impossible toute repr\'esentation fid\`ele du contexte dans la
+preuve sans r\'ev\'eler de l'information confidentielle. La solution
+adopt\'ee s'\'ecarte donc de SOTP-Low et SOTP-Base. Au lieu de transmettre le contexte ou sa compression, on transmet une
+\emph{preuve de connaissance} du contexte via un zk-SNARK Groth16.
+
+La phase \textsf{Setup} (lignes~2--7) est la plus sensible des trois
+constructions. Elle \'echantillonne cinq scalaires $\tau, \alpha_s,
+\beta_s, \gamma, \delta$ dans le corps premier $\mathbb{F}_p^*$, qui
+sont les param\`etres toxiques de l'\'etape de configuration
+Groth16. Ils servent \`a construire la cl\'e de preuve $pk_{\mathsf{prove}}$
+et la cl\'e de v\'erification $vk_{\mathsf{verify}}$ qui forment le
+Common Reference String (CRS). La ligne~5, signal\'ee en rouge, est
+un imp\'eratif de s\'ecurit\'e. Si l'un quelconque de ces cinq
+scalaires subsistait apr\`es le \textsf{Setup}, son d\'etenteur pourrait
+forger des preuves valides pour n'importe quelle assertion, brisant
+enti\`erement la propri\'et\'e de soundness du syst\`eme. En pratique,
+cette destruction est r\'ealis\'ee via une \'etape multi-partite
+o\`u la compromission simultan\'ee de tous les participants serait
+n\'ecessaire pour reconstituer les toxiques. Le Setup produit enfin
+une paire $(g, h)$ pour la couche Iron de Pedersen, ind\'ependante
+du CRS Groth16.
+
+La phase \textsf{Prove} (lignes~8--14) fusionne les trois couches
+en deux op\'erations principales. Les lignes~10 et~11 r\'ealisent les
+trois couches. Le hash Poseidon $h_c =
+\mathsf{Poseidon}(c)$ comprime le contexte arbitrairement riche $c$
+vers un condens\'e de 256 bits qui constitue l'entr\'ee publique du
+circuit~; l'engagement de Pedersen $c_m = g^m \cdot h^\rho$ joue le r\^ole de
+la couche Iron, puisqu'il lie le prouveur au message $m$ sans le r\'ev\'eler. La
+preuve $\pi$ atteste que le prouveur conna\^it $(m, c, \rho)$ tels que
+$h_c = \mathsf{Poseidon}(c)$, $c_m = g^m h^\rho$ et que le pr\'edicat de
+conformit\'e $\mathsf{Conforme}(m, c)$ est satisfait~; cette relation
+lie l'engagement au contexte et \`a l'assertion prouv\'ee. Cette preuve ne
+r\'ev\`ele rien sur $(m, c)$ au-del\`a de ce que les entr\'ees publiques
+r\'ev\`elent d\'ej\`a~; la propri\'et\'e de divulgation nulle de connaissance de
+Groth16 en garantit la confidentialit\'e. La preuve finale $\sigma = (h_c, \pi, c_m,
+\mathsf{metadata})$ est ainsi constitu\'ee du condens\'e contextuel,
+de la preuve zk-SNARK, de l'engagement sur le message et de
+m\'etadonn\'ees permettant \`a l'arbitre de situer la preuve dans son
+contexte institutionnel.
+
+La phase \textsf{Verify} (lignes~15--18) est l\'eg\`ere
+au regard de la richesse du contexte original. Elle r\'eduit \`a deux
+v\'erifications bool\'eennes ind\'ependantes. La premi\`ere, $b_1$, v\'erifie que la
+preuve Groth16 $\pi$ est valide pour le condens\'e public $h_c$ via
+la cl\'e $vk_{\mathsf{verify}}$~; la seconde, $b_2$, v\'erifie que $c_m$ est un
+point l\'egitime du groupe $\mathbb{G}$. La conjonction $b_1 \wedge
+b_2$ suffit \`a \'etablir que le prouveur connaissait effectivement
+un message $m$ et un contexte $c$ dont $\mathsf{Poseidon}(c) = h_c$,
+sans que le v\'erificateur ait acc\`es \`a $m$ ou \`a
+$c$. Le co\^ut du r\'egime \`a contexte riche se situe
+l\`a. L'arbitre peut v\'erifier la coh\'erence de la
+preuve, mais l'information contextuelle qu'il peut extraire de $h_c$
+est born\'ee par la taille du condens\'e ($256$ bits). Elle est m\^eme nulle si $c$ est
+d\'ej\`a connu de l'institution. Ce que la preuve apporte au verdict tient \`a
+l'assertion certifi\'ee ($\mathsf{Conforme}(m,c) = 1$), non au condens\'e.
+
+\subsubsection{Propri\'et\'es de SOTP-High}
+\label{subsubsec:saturation_high}
+
+\begin{proposition}[Propri\'et\'es cryptographiques de SOTP-High]\label{thm:saturation_sotp_high}
+Sous les hypoth\`eses q-SDH et q-PKE (\emph{knowledge soundness} de
+Groth16~\cite{BonehBoyen08,BCTV14}), la difficult\'e DLog et une c\'er\'emonie de mise en
+place de confiance honn\^ete~\cite{Bowe2017}~:
+\begin{enumerate}
+\item la preuve $\pi$ est \`a divulgation nulle de connaissance parfaite et
+      $c_m$ est parfaitement masquant, de sorte que $(\pi, c_m)$ ne r\'ev\`ele rien de $m$
+      au-del\`a des entr\'ees publiques~;
+\item la compl\'etude est parfaite et, par la \emph{knowledge soundness}, pour
+      tout prouveur PPT qui fait accepter $\sigma$, il existe un
+      \emph{extracteur} (qui rembobine le prouveur ou exploite la trappe de
+      l'hypoth\`ese q-PKE, contrairement au v\'erificateur) produisant un t\'emoin
+      $(m, c, \rho)$ satisfaisant la relation~; d'o\`u $\Relver = 1 - \negl(\lambda)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[Heuristique de conception de SOTP-High (non prouv\'ee)]
+\label{rem:heuristique_sotp_high}
+La formulation initiale de ce r\'esultat \'enon\c{c}ait
+$\Conf \cdot \Rel \cdot \Opp \geq 0{,}45 \cdot \beta\log_2\lambda/\lambda$, avec une
+constante $0{,}45$ \og calibr\'ee\fg{} sur les syst\`emes d\'eploy\'es. La formalisation a
+conduit \`a la remplacer. Le condens\'e $h_c = \mathsf{Poseidon}(c)$ et les
+m\'etadonn\'ees sont des fonctions du contexte public ($I(V;h_c|C) = 0$)~; trois
+\'el\'ements de groupe repr\'esentent $\Theta(\lambda)$ bits et non $O(\log\lambda)$~;
+le v\'erificateur ne peut extraire le t\'emoin, faute de quoi la preuve ne serait
+pas \`a divulgation nulle~; enfin une constante ajust\'ee sur des donn\'ees n'a pas sa place
+dans un \'enonc\'e de th\'eor\`eme. L'expression $0{,}45\,\beta\log_2\lambda/\lambda$ est
+conserv\'ee comme heuristique de conception~; $\beta$ y d\'esigne la constante de
+r\'egularit\'e du protocole (D\'efinition~\ref{def:beta_regularite}).
+\end{remark}
+
+\subsubsection{Support de validation~: conformit\'e zk-SNARKs}
+\label{subsubsec:validation_snark}
+
+Pour les param\`etres analytiques $\Delta = 73$ bits, $\alpha = 1{,}5$, $\beta = 1{,}5$,
+$\lambda = 128$ (estimations param\'etriques sans mesure empirique contr\^ol\'ee),
+l'heuristique de SOTP-High donne $0{,}45 \times 1{,}5 \times 7/128 \approx 0{,}037$.
+Cette valeur n'est pas comparable au produit CLO des zk-SNARKs de conformit\'e
+($\approx 0{,}572$), qui porte sur $\Relver$ et n'est pas une instance du
+th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}).
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Synth\`ese et s\'election de variante}
+\label{subsec:synthese_selection}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+\subsubsection{Comparaison des trois variantes}
+\label{subsubsec:tableau_comparatif}
+
+% -----------------------------------------------------------------------
+\begin{table}[htbp]
+\centering
+\caption{Comparaison des variantes SOTP}
+\label{tab:comparaison_sotp_construction}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lp{4cm}p{4cm}p{4cm}}
+\toprule
+\textbf{Crit\`ere} & \textbf{SOTP-Low} & \textbf{SOTP-Base} & \textbf{SOTP-High} \\
+\midrule
+\multicolumn{4}{l}{\textit{\textbf{R\'egime op\'erationnel}}} \\
+Entropie $H(\mathcal{C})$ & $< H^*(\lambda) \approx O(\sqrt{\lambda})$ & $H^*(\lambda) \leq H(\mathcal{C}) \leq \lambda/\log\lambda$ & $> \lambda/\log\lambda$ \\
+Valeurs ($\lambda = 128$) & $< 11$ bits & $11$--$18$ bits & $> 18$ bits \\
+\midrule
+\multicolumn{4}{l}{\textit{\textbf{Techniques cryptographiques}}} \\
+Couche Gold & PRG~\cite{BlumMicali84} & PRG~\cite{BlumMicali84} & ZK parfait (Groth16)~\cite{Groth16} \\
+Couche Iron & Pedersen~\cite{Pedersen91} & Pedersen~\cite{Pedersen91} & knowledge soundness (q-SDH)~\cite{BonehBoyen08} \\
+Couche Clay & $\phi:\mathcal{C}\to\{0,1\}^{H(\mathcal{C})}$ & JL $\Phi:\mathbb{R}^d\to\mathbb{R}^k$~\cite{JohnsonLindenstrauss84} & Poseidon + SNARK~\cite{Poseidon2019} \\
+Primitives & SHA-256, Pedersen & Gaussienne, Pedersen & Groth16, Poseidon, BLS12-381~\cite{BLS12-381} \\
+\midrule
+\multicolumn{4}{l}{\textit{\textbf{M\'etriques CLO atteintes}}} \\
+Confidentialit\'e & calculatoire (PRG) & calculatoire (PRG) & ZK parfait \\
+$\Relver$ & $1 - \epsilon_{\text{DLog}}$ & $1 - \epsilon_{\text{DLog}}$ & $1 - \epsilon_{\text{q-SDH}}$ \\
+$\Opp$ & d\'epend du contexte d'esp\`ece transmis & idem & idem \\
+\midrule
+\multicolumn{4}{l}{\textit{\textbf{Heuristique de conception (non prouv\'ee)}}} \\
+Expression & $0{,}75 \cdot \Delta/\lambda$ & $0{,}5 \cdot \min\{\Delta/d, \Delta/(\beta\log_2 d)\}$ & $0{,}45 \cdot \beta\log_2\lambda/\lambda$ \\
+Trusted setup & Non & Non & Oui~\cite{Bowe2017} \\
+\midrule
+\multicolumn{4}{l}{\textit{\textbf{Illustration (non comparable aux produits CLO)}}} \\
+Syst\`eme de r\'ef\'erence & ECDSA~\cite{Johnson01} & Helios~\cite{Adida08} & zk-SNARKs conformit\'e~\cite{Groth16} \\
+Valeur de l'heuristique & $\approx 0{,}205$ & $\approx 0{,}050$ & $\approx 0{,}037$ \\
+Produit CLO (\'echelle $\Relver$) & $\approx 0{,}273$ & $\approx 0{,}437$ & $\approx 0{,}572$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+% -----------------------------------------------------------------------
+
+L'association de chaque syst\`eme de r\'ef\'erence \`a une variante est
+illustrative. Elle suit l'ordre relatif des entropies contextuelles de ces
+syst\`emes (ECDSA, puis Helios, puis la conformit\'e financi\`ere). Les seuils
+$H^*(\lambda)$ et $H^{**}(\lambda)$ de
+l'Algorithme~\ref{alg:selection_variante_sotp} restent des crit\`eres de
+dimensionnement \`a $\lambda$ fix\'e et ne servent pas \`a classer ces syst\`emes.
+
+Les trois variantes forment un continuum adaptatif couvrant l'ensemble du spectre
+d'entropie contextuelle. SOTP-Low privil\'egie la lisibilit\'e du contexte au prix d'une restriction sur
+$H(\mathcal{C})$, id\'eal pour applications juridiques ou contractuelles~\cite{Mason07,Kerr04}. SOTP-Base
+\'equilibre les trois m\'etriques via compression adaptative, polyvalent pour applications
+gouvernementales et \'electorales~\cite{Adida08,Goodman15}. SOTP-High sacrifie l'opposabilit\'e pour la confidentialit\'e
+parfaite et la scalabilit\'e, n\'ecessaire pour applications financi\`eres ou m\'edicales \`a
+contexte tr\`es riche~\cite{Garratt15,BaselIII}.
+
+\subsubsection{Crit\`ere de s\'election de variante}
+\label{subsubsec:regle_selection}
+
+\begin{algorithm}[H]
+\caption{S\'election automatique de variante SOTP}
+\label{alg:selection_variante_sotp}
+\begin{algorithmic}[1]
+\State \textbf{Entr\'ees} : $H(\mathcal{C})$, $\Delta$, $\lambda$, $\text{Priority}$,
+  $\text{TrustedSetup\_OK}$
+\State $H^*(\lambda) \leftarrow \sqrt{\lambda}$ ;\; $H^{**}(\lambda) \leftarrow \lambda/\log_2\lambda$
+\If{$\text{TrustedSetup\_OK} = \texttt{False}$ \textbf{and} $H(\mathcal{C}) > H^{**}(\lambda)$}
+  \State \textbf{ALERTE} : SOTP-High requis mais trusted setup indisponible~\cite{Bowe2017}
+  \State \textbf{Recommander} : SOTP-Base avec perte d'opposabilit\'e, ou d\'eployer MPC
+  \State \textbf{Retourner} SOTP-Base
+\EndIf
+\If{$H(\mathcal{C}) < H^*(\lambda)$}
+  \State \textbf{Retourner} SOTP-Low
+\ElsIf{$H(\mathcal{C}) \leq H^{**}(\lambda)$}
+  \State \textbf{Retourner} SOTP-Base ;\; $d \leftarrow \lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$
+\Else
+  \State \textbf{Retourner} SOTP-High ;\; compiler circuit $\mathcal{C}_{\text{circuit}}$
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+Cet algorithme est un m\'eta-algorithme de d\'eploiement, distinct des
+constructions cryptographiques. Il prend en entr\'ee les param\`etres
+du contexte institutionnel et retourne la variante SOTP adapt\'ee, en
+tenant compte des propri\'et\'es math\'ematiques du contexte
+et des contraintes op\'erationnelles de l'environnement de
+d\'eploiement.
+
+La ligne~2 calcule les deux seuils qui partitionnent l'espace des
+entropies contextuelles. $H^*(\lambda) = \sqrt{\lambda}$ est la
+fronti\`ere inf\'erieure s\'eparant le r\'egime \`a contexte rare du r\'egime
+de transition tandis que $H^{**}(\lambda) = \lambda/\log_2\lambda$ est la
+fronti\`ere sup\'erieure s\'eparant le r\'egime de transition du r\'egime
+\`a contexte riche. Ces deux seuils sont des fonctions croissantes de
+$\lambda$, car plus le param\`etre de s\'ecurit\'e est \'elev\'e, plus les
+fronti\`eres se d\'eplacent vers des entropies contextuelles plus grandes,
+ce qui signifie qu'une m\^eme richesse contextuelle peut relever de
+r\'egimes diff\'erents selon le niveau de s\'ecurit\'e cible.
+
+Les lignes~3--7 constituent la garde de s\'ecurit\'e op\'erationnelle, qui
+est la partie la plus importante de l'algorithme du point de vue du
+d\'eploiement. SOTP-High requiert une \'etape de configuration
+de confiance (\emph{trusted setup}) pour g\'en\'erer le CRS Groth16~;
+si cette \'etape n'a pas \'et\'e conduite~(parce que
+l'organisation n'a pas les ressources pour organiser un protocole
+multi-parties, ou parce que le contexte r\'eglementaire ne l'autorise
+pas) et que le contexte est n\'eanmoins riche ($H(\mathcal{C}) >
+H^{**}(\lambda)$), l'algorithme \'emet une alerte explicite et ne
+d\'egrade pas silencieusement la s\'ecurit\'e. Il recommande alors
+soit d'accepter SOTP-Base avec la perte d'opposabilit\'e
+associ\'ee au r\'egime pour lequel il n'est pas optimal, soit de d\'eployer
+un protocole MPC pour r\'ealiser le trusted setup de mani\`ere
+distribu\'ee. Ce traitement explicite de la d\'efaillance op\'erationnelle
+distingue SOTP-High des deux autres variantes, qui n'ont aucune
+d\'ependance envers une \'etape externe.
+
+Les lignes~8--14 impl\'ementent la s\'election proprement dite par
+comparaison en cascade. Si $H(\mathcal{C}) < H^*(\lambda)$, le contexte
+est assez rare pour que l'encodage d\'eterministe de SOTP-Low soit
+suffisant, sans qu'aucun param\`etre suppl\'ementaire ne soit n\'ecessaire. Si
+$H(\mathcal{C})$ est compris entre les deux seuils, SOTP-Base est
+s\'electionn\'e et la dimension de compression $d = \lceil 4\Delta
+H(\mathcal{C})/\varepsilon^2 \rceil$ est calcul\'ee imm\'ediatement. Ce calcul est effectu\'e \`a la s\'election et non dans le \textsf{Setup}
+pour permettre d'adapter $d$ \`a la valeur effective de $H(\mathcal{C})$
+observ\'ee au moment du d\'eploiement. Si $H(\mathcal{C})$ exc\`ede
+$H^{**}(\lambda)$ et que le trusted setup est disponible, SOTP-High
+est s\'electionn\'e et le circuit arithm\'etique $\mathcal{C}_{\text{circuit}}$
+est compil\'e. Cette compilation \'etant l'op\'eration la plus co\^uteuse
+du processus, elle n'est d\'eclench\'ee qu'en
+dernier recours.
+
+La logique de s\'election refl\`ete ainsi une hi\'erarchie de pr\'ef\'erences
+implicite. SOTP-Low est pr\'ef\'er\'e quand il est applicable (co\^ut
+minimal, pas de d\'ependance externe), SOTP-Base est le choix par d\'efaut
+en r\'egime interm\'ediaire (robuste, sans trusted setup), alors que SOTP-High
+n'est d\'eploy\'e que lorsque la richesse contextuelle le rend
+in\'evitable et que les conditions op\'erationnelles le permettent.
+
+\subsubsection{M\'ethodologie de conception en cinq phases}
+\label{subsubsec:methodologie_cinq_phases_sotp}
+
+La s\'election algorithmique ci-dessus s'inscrit dans une m\'ethodologie plus large, organis\'ee en cinq phases.
+
+\textbf{Phase 1. Analyse applicative.} Estimer $H(\mathcal{C})$ et identifier les
+exigences minimales $\Conf_{\min}$, $\Rel_{\min}$, $\Opp_{\min}$.
+
+\textbf{Phase 2. \'Evaluation institutionnelle.} Estimer $\Delta$ (capacit\'e de
+d\'elib\'eration, expertise, m\'emoire institutionnelle) et $\alpha$ (granularit\'e des verdicts).
+Ces estimations sont analytiques, car une mesure directe via protocoles cognitifs contr\^ol\'es
+reste un travail futur.
+
+\textbf{Phase 3. Test de faisabilit\'e.} V\'erifier l'in\'egalit\'e
+\begin{equation}
+\Conf_{\min} \cdot \mathsf{Rel}_{\mathrm{rec},\min} \cdot \Opp_{\min} \stackrel{?}{\leq}
+\frac{1+\kappa/\lambda}{\lambda}\,\min\left\{1, \frac{\kappa/\lambda + \Delta}{\gamma}\right\}
+\label{eq:test_faisabilite_sotp}
+\end{equation}
+pour les exigences exprim\'ees en fiabilit\'e de reconstruction
+(\'equation~\eqref{eq:trilemme_cro_raffine}). Si l'in\'egalit\'e est viol\'ee, il est possible de
+relaxer une exigence, d'augmenter $\Delta$ par investissement dans la
+formation institutionnelle (effectif seulement si $\Delta < \gamma$) ou de r\'eviser la
+granularit\'e des verdicts. Les exigences exprim\'ees en fiabilit\'e de v\'erification
+$\Relver$ ne sont pas contraintes par ce test.
+
+\textbf{Phase 4. S\'election et param\'etrage.} Appliquer l'Algorithme~\ref{alg:selection_variante_sotp}
+et optimiser les primitives Gold/Iron/Clay dans le r\'egime identifi\'e.
+
+\textbf{Phase 5. Preuves et validation.} \'Etablir les r\'eductions formelles aux
+hypoth\`eses standard, puis mesurer $\Delta$ et l'opposabilit\'e obtenue selon les
+protocoles du chapitre~\ref{chap:experimentation}.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Optimalit\'e universelle et analyse de sensibilit\'e}
+\label{subsec:optimalite_sensibilite}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+\subsubsection{Conjecture d'optimalit\'e universelle}
+\label{subsubsec:optimalite_universelle}
+
+\begin{conjecture}[Optimalit\'e universelle SOTP]\label{conj:optimalite_universelle}
+\label{thm:optimalite_universelle}%
+Sous les Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regime}, pour chaque
+r\'egime de richesse contextuelle, il existe une variante SOTP et une
+constante $C_R \geq 1$ ind\'ependante de $\lambda$ telles que, pour tout
+protocole CLO $\mathcal{P}'$ du m\^eme r\'egime,
+\begin{equation}
+\Conf(\mathcal{P}')\,\Relrec(\mathcal{P}')\,\Opp(\mathcal{P}')
+\;\leq\; C_R \cdot \Conf(\text{SOTP})\,\Relrec(\text{SOTP})\,\Opp(\text{SOTP}).
+\label{eq:optimalite_universelle}
+\end{equation}
+\end{conjecture}
+
+\begin{remark}[Statut et argument heuristique]\label{rem:statut_optimalite}
+La formulation initiale de cet \'enonc\'e, pr\'esent\'ee comme th\'eor\`eme sous la forme
+$\text{produit}(\mathcal{P}') \leq c \cdot \text{produit}(\text{SOTP}) + o(1)$ avec
+$c \in [0{,}45;\,0{,}75]$, a \'et\'e remplac\'ee par une formulation plus pr\'ecise, pour
+quatre raisons. (i)~Avec $c < 1$ et $\mathcal{P}' = \text{SOTP}$, elle donnerait
+$\text{produit} \leq 0{,}75 \times \text{produit}$, ce qui impose $C_R \geq 1$~;
+(ii)~le terme additif $o(1)$ domine des produits tous en $O(1/\lambda)$~;
+(iii)~son argument invoquait le trilemme sans l'Hypoth\`ese~\ref{ass:regime}~;
+(iv)~elle s'appuyait sur les minorations des Remarques~\ref{rem:facteur_limitant_low},
+\ref{rem:heuristique_sotp_base} et~\ref{rem:heuristique_sotp_high}, qui rel\`event
+d'heuristiques de conception. La forme multiplicative ci-dessus, avec $C_R \geq 1$, est l'\'enonc\'e que
+l'argument vise. Celui-ci proc\`ede en trois temps, qui consistent \`a majorer le produit de tout
+$\mathcal{P}'$ par la forme raffin\'ee~\eqref{eq:trilemme_cro_raffine}~; minorer celui
+de la variante SOTP du r\'egime~; former le ratio. La deuxi\`eme \'etape reste ouverte, car
+elle requiert un mod\`ele dans lequel la couche Clay transmet un contexte d'esp\`ece
+que l'institution ne d\'etient pas (perspective d\'evelopp\'ee au
+chapitre~\ref{chap:resultats_discussions}). Les rapports indicatifs que donneraient
+les heuristiques de conception, $1/0{,}75 \approx 1{,}33$ (SOTP-Low), $1/0{,}5 = 2$
+(SOTP-Base) et $1/0{,}45 \approx 2{,}2$ (SOTP-High), fixent l'ordre de grandeur
+de $C_R$ vis\'e.
+\end{remark}
+
+\begin{boiteArbitre}
+L'arbitre comprend que la recherche du meilleur protocole peut
+continuer. La borne lui dit ce qui est interdit~; savoir jusqu'o\`u les
+constructions SOTP l'approchent reste une question ouverte, pos\'ee avec pr\'ecision.
+\end{boiteArbitre}
+
+\subsubsection{Analyse de sensibilit\'e}
+\label{subsubsec:analyse_sensibilite}
+
+L'analyse porte sur la borne raffin\'ee~\eqref{eq:trilemme_cro_raffine}, qui est le seul
+\'enonc\'e prouv\'e, ainsi que sur les heuristiques de conception.
+
+\textbf{Sensibilit\'e \`a $\Delta$.} Dans le r\'egime \`a contexte riche ($\Delta < \gamma$),
+la borne est proportionnelle \`a $\kappa/\lambda + \Delta$. Augmenter $\Delta$ de $50$ \`a
+$65$ bits (formation intensive des garants~\cite{Ericsson95}) rel\`eve la borne d'environ
+$30\%$. Dans le r\'egime \`a contexte rare ($\Delta \geq \gamma$), la borne est celle de
+Fano et ne d\'epend pas de $\Delta$.
+
+\textbf{Sensibilit\'e \`a $\alpha$.} Dans le r\'egime \`a contexte riche, la borne varie en
+$1/\gamma = 1/(\alpha H(\mathcal{C}) - 1)$, de sorte que des verdicts plus grossiers (passer de 12
+niveaux \`a 6) rel\`event la borne et peuvent faire basculer l'institution dans le
+r\'egime \`a contexte rare. Les institutions \`a verdicts tr\`es nuanc\'es (\'echelles de risque
+fines, montants d'amendes gradu\'es) paient ainsi une p\'enalit\'e r\'eelle. L'optimum entre
+pr\'ecision d\'ecisionnelle et compromis CRO d\'epend des priorit\'es applicatives.
+
+\textbf{Sensibilit\'e \`a $\beta$.} La constante $\beta$ n'appara\^it pas dans la borne~;
+elle intervient dans la garantie de confidentialit\'e du
+Lemme~\ref{lem:confidentiality_guarantee}, o\`u un protocole plus r\'egulier (plus petit
+$\beta$) resserre cette garantie. Dans l'heuristique de SOTP-High, qui est
+proportionnelle \`a $\beta$, passer de $\beta = 1{,}5$ \`a $\beta = 1{,}2$ diminue
+la valeur de $20\%$. $\beta$ est une propri\'et\'e des lois de preuve (divergence
+KL) et ne d\'epend pas de la fonction de hachage utilis\'ee dans le circuit.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Extension quantique des constructions SOTP}
+\label{subsec:extension_postquantique_sotp}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Les constructions SOTP pr\'esent\'ees dans cette section s'appliquent au r\'egime classique.
+La section~\ref{sec:cro_pq} a \'etabli les bornes quantiques~; 
+l'extension des constructions SOTP au r\'egime quantique requiert des adaptations 
+propres \`a chaque variante.
+
+\textbf{SOTP-Low post-quantique.} La couche Gold peut int\'egrer des PRG bas\'es sur 
+les fonctions de hachage (dont l'algorithme de Grover~\cite{Grover96} r\'eduit la s\'ecurit\'e de $\lambda$
+\`a $\lambda/2$ bits). L'engagement de Pedersen
+reste parfaitement masquant, mais son caract\`ere liant repose sur DLog, que
+l'algorithme de Shor r\'esout. Il doit donc \^etre remplac\'e par un engagement
+post-quantique, par exemple \`a base de r\'eseaux sous SIS/LWE~\cite{Peikert2016}.
+
+\textbf{SOTP-Base post-quantique.} La compression JL est ind\'ependante du mod\`ele 
+adversaire~\cite{JohnsonLindenstrauss84,DasguptaGupta03}. Les adaptations concernent les couches Gold et Iron avec des primitives 
+post-quantiques (engagement \`a base de r\'eseaux~\cite{Peikert2016}, signatures ML-DSA~\cite{Dilithium2022}).
+
+\textbf{SOTP-High post-quantique.} Les zk-SNARKs Groth16 n\'ecessitent une attention 
+particuli\`ere~\cite{Unruh2016,Chatterjee2021}. Les hypoth\`eses q-SDH et q-PKE peuvent \^etre affaiblies face \`a des 
+adversaires quantiques (elles reposent sur des couplages, que l'algorithme de Shor
+compromet). Les STARKs~\cite{BenSasson2019}, qui ne reposent que sur des fonctions de
+hachage, constituent l'alternative post-quantique~; les Bulletproofs~\cite{Bulletproofs2018}
+reposent sur DLog et ne sont pas post-quantiques.
+
+Le coefficient de perte d'interpr\'etabilit\'e $\eta_q$
+(D\'efinition~\ref{def:perte_interp_quantique}) s'applique \`a toutes les variantes
+lorsque la preuve transite par un support quantique~:
+\begin{equation}
+\Opp^q \geq \Opp - \eta_q\,\frac{H(C)}{H(V|C)},
+\end{equation}
+et $\eta_q = 0$ lorsque la preuve reste une cha\^ine de bits classique.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+% Synth\`ese
+% -----------------------------------------------------------------------
+\begin{boiteArbitre}
+L'arbitre referme le dossier SOTP. Il vient de terminer l'\'etape \textbf{S}. 
+Cette section a modifi\'e sa mani\`ere de lire le Trilemme CRO. Une borne sup\'erieure
+sans construction ressemble \`a une condamnation, alors qu'accompagn\'ee de trois constructions de
+r\'ef\'erence elle devient une carte, dont une partie reste \`a lever.
+
+Quatre contributions structurent ce qu'il retient. L'architecture commune
+d'abord (Gold pour le masquage, Iron pour le liage, Clay pour lui), dont
+la couche Clay s'adapte au r\'egime contextuel. Les trois constructions
+ensuite, calibr\'ees chacune sur ce que son $\Delta$ lui permet d'extraire
+sans lui en demander davantage, avec SOTP-Low quand le contexte est rare et
+l'encodage d\'eterministe suffit, SOTP-Base quand la compression
+Johnson-Lindenstrauss absorbe la transition, SOTP-High quand les preuves
+succinctes Groth16 compriment un contexte arbitrairement riche en quelques
+centaines d'octets. Viennent enfin la conjecture d'optimalit\'e universelle, qui
+dit ce qu'il reste \`a d\'emontrer, puis la m\'ethodologie de s\'election, qui
+transforme le r\'esultat en proc\'edure.
+
+Il retient surtout la franchise du propos. Les propri\'et\'es cryptographiques des
+constructions sont prouv\'ees~; les facteurs $0{,}75$, $0{,}5$ et $0{,}45$ sont des
+heuristiques de conception que les syst\`emes qu'il conna\^it depuis le premier
+chapitre ne servent pas \`a valider.
+
+La certification formelle du trilemme, qui l'attend encore, fait l'objet de la section suivante.
+\end{boiteArbitre}

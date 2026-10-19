@@ -1,0 +1,366 @@
+% ============================================================================
+% CHAPITRE 3 - LE SEMANTIC ONE-TIME PAD (bloc issu de clo.tex)
+% ============================================================================
+
+\section{LE SEMANTIC ONE-TIME PAD~: CONSTRUCTION DE BASE}
+\label{sec:sotp_base}
+
+% Bloc issu de clo.tex : paradigme Gold-Iron-Clay, S-OTP de base, metriques CLO atteintes
+\subsection{Le paradigme Gold-Iron-Clay}
+\label{subsec:gold_iron_clay}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Les trois m\'etriques \'etant d\'efinies, il faut une m\'ethodologie pour
+concevoir des protocoles qui les \'equilibrent~\cite{Shoup01,Damgard87}. Le paradigme
+\textbf{Gold-Iron-Clay} structure cette conception en trois couches
+fonctionnelles. Sa d\'enomination, inspir\'ee de la m\'etallurgie m\'edi\'evale,
+refl\`ete la relation entre mall\'eabilit\'e et r\'esistance.
+
+\paragraph{Couche Gold (confidentialit\'e).}
+Masquage cryptographique du message via one-time pads bas\'es sur PRG,
+chiffrements s\'emantiquement s\^urs~\cite{GoldwasserMicali84,Bellare97}, ou preuves zero-knowledge~\cite{GMR85,BenOr88}. La couche
+Gold r\'epond \`a la question \emph{\guillemotleft~Comment rendre $\sigma$ indiscernable entre deux
+messages~?\guillemotright}
+
+\paragraph{Couche Iron (fiabilit\'e).}
+Commitments contraignants (\emph{binding}) permettant la r\'ecup\'eration
+v\'erifiable, commitments de Pedersen~\cite{Pedersen91,ChaumPedersen92}, accumulateurs~\cite{CamenischLysyanskaya02}, signatures. La couche
+Iron r\'epond \`a la question \emph{\guillemotleft~Comment garantir que $\sigma$
+permet de retrouver $m$ avec probabilit\'e $1 - \negl(\lambda)$~?\guillemotright}
+
+\paragraph{Couche Clay (opposabilit\'e).}
+Encodage pr\'eservant le contexte institutionnel pour l'extraction
+d'information par des interpr\`etes aux ressources born\'ees~\cite{Miller56,Simon82}, par encodage
+d\'eterministe, compression Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03} ou hachage d\'eterministe. La couche
+Clay r\'epond \`a la question \emph{\guillemotleft~Comment permettre \`a $\mathsf{Interpret}$ d'extraire
+un maximum d'information sur $V$ depuis $(c, \sigma)$~?\guillemotright}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    scale=0.9,
+    transform shape
+]
+
+% ---------------------------------------------------------------
+% D\'EGRAD\'ES M\'ETALLIQUES
+% ---------------------------------------------------------------
+
+% Couche Or
+\shade[left color=metalorfonce!60, right color=metalor!40,
+       middle color=metalor!80]
+    (-4, 4) rectangle (4, 5.5);
+\draw[thick, metalorfonce] (-4, 4) rectangle (4, 5.5);
+
+% Couche Fer
+\shade[left color=metalferfonce!70, right color=metalfer!50,
+       middle color=metalfer!90]
+    (-4, 2) rectangle (4, 3.5);
+\draw[thick, metalferfonce] (-4, 2) rectangle (4, 3.5);
+
+% Couche Argile
+\shade[left color=metalargilefonce!70, right color=metalargile!50,
+       middle color=metalargile!90]
+    (-4, 0) rectangle (4, 1.5);
+\draw[thick, metalargilefonce] (-4, 0) rectangle (4, 1.5);
+
+% ---------------------------------------------------------------
+% \'ETIQUETTES DES COUCHES
+% ---------------------------------------------------------------
+\node[font=\bfseries\sffamily, text=metalorfonce] at (0, 4.75)
+    {Couche Or \quad - \quad Confidentialit\'e};
+\node[font=\bfseries\sffamily, text=white] at (0, 2.75)
+    {Couche Fer \quad - \quad Fiabilit\'e};
+\node[font=\bfseries\sffamily, text=white] at (0, 0.75)
+    {Couche Argile \quad - \quad Opposabilit\'e};
+
+% ---------------------------------------------------------------
+% CONTENU DES COUCHES
+% ---------------------------------------------------------------
+\node[font=\small, align=center, text=metalorfonce] at (0, 4.25)
+    {Masquage PRG, preuves ZK \quad $\Conf \to 1$};
+\node[font=\small, align=center, text=white] at (0, 2.25)
+    {Engagement liant \quad $\Relver \to 1$};
+\node[font=\small, align=center, text=white] at (0, 0.25)
+    {Encodage contextuel \quad $\Opp \to \max$};
+
+% ---------------------------------------------------------------
+% REFLETS M\'ETALLIQUES
+% ---------------------------------------------------------------
+\draw[white!70!metalor, very thick, opacity=0.4]
+    (-3.6, 5.2) -- (3.6, 5.2);
+\draw[white!50!metalfer, very thick, opacity=0.3]
+    (-3.6, 3.2) -- (3.6, 3.2);
+\draw[white!50!metalargile, very thick, opacity=0.3]
+    (-3.6, 1.2) -- (3.6, 1.2);
+
+% ---------------------------------------------------------------
+% FL\`ECHES DE FLUX
+% ---------------------------------------------------------------
+\draw[-{Stealth[length=2.5mm]}, thick, metalorfonce]
+    (-5.2, 4.75) -- (-4.2, 4.75)
+    node[left, xshift=-1cm, font=\small] {$M$};
+\draw[-{Stealth[length=2.5mm]}, thick, metalferfonce]
+    (4.2, 2.75) -- (5.2, 2.75)
+    node[right, font=\small] {$\Sigma$};
+\draw[-{Stealth[length=2.5mm]}, thick, metalargilefonce]
+    (4.2, 0.75) -- (5.2, 0.75)
+    node[right, font=\small] {$V$};
+
+% ---------------------------------------------------------------
+% FL\`ECHES VERTICALES INTER-COUCHES
+% ---------------------------------------------------------------
+\draw[-{Stealth[length=2.5mm]}, thick, chaptercolor]
+    (3.2, 3.9) -- (3.2, 3.6);
+\draw[-{Stealth[length=2.5mm]}, thick, chaptercolor]
+    (3.2, 1.9) -- (3.2, 1.6);
+
+% ---------------------------------------------------------------
+% ACCOLADES LAT\'ERALES (propri\'et\'es CRO \`a droite)
+% ---------------------------------------------------------------
+\draw[decorate, decoration={brace, amplitude=5pt, mirror},
+      thick, enspblue]
+    (4.1, 4.0) -- (4.1, 5.5)
+    node[midway, right=6pt, font=\footnotesize, text=enspblue]
+        {$\Conf$};
+\draw[decorate, decoration={brace, amplitude=5pt, mirror},
+      thick, enspgreen]
+    (4.1, 2.0) -- (4.1, 3.5)
+    node[midway, right=6pt, font=\footnotesize, text=enspgreen]
+        {$\Relver$};
+\draw[decorate, decoration={brace, amplitude=5pt, mirror},
+      thick, navyblue]
+    (4.1, 0.0) -- (4.1, 1.5)
+    node[midway, right=6pt, font=\footnotesize, text=navyblue]
+        {$\Opp$};
+
+\end{tikzpicture}
+\caption[Paradigme Gold-Iron-Clay (or, fer, argile)~: architecture \`a trois couches]{%
+  Paradigme Gold-Iron-Clay (or, fer, argile)~: architecture \`a trois couches pour les protocoles
+  cryptographiques institutionnels.%
+}\label{fig:gold_iron_clay}
+
+\smallskip
+\begin{minipage}{\linewidth}
+  \small\textit{Note :} La couche \textbf{Or} (dor\'ee, $\Conf$) assure le
+  masquage cryptographique, la couche \textbf{Fer} (acier, $\Relver$) garantit
+  le liage et la v\'erification fiable, tandis que la couche \textbf{Argile} (terre
+  cuite, $\Opp$) pr\'esente le contexte sous une forme interpr\'etable~; elle
+  n'accro\^it $\Opp$ que si elle transmet une information que l'institution
+  ne d\'etient pas d\'ej\`a (Remarque~\ref{rem:statut_sotp}). Les accolades
+  droites maintiennent la correspondance avec les propri\'et\'es du Trilemme CRO.
+\end{minipage}
+
+\end{figure}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Principes de conception \'equilibr\'ee}
+\label{subsec:principes_conception}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Un protocole CLO optimal alloue son budget entropique selon les exigences
+applicatives. Le budget total d\'efini par
+\begin{equation}
+H_{\text{total}} = H_{\text{Gold}} + H_{\text{Iron}} + H_{\text{Clay}} \approx 2\lambda + H(\mathcal{C})
+\label{eq:entropy_budget_clo}
+\end{equation}
+vaut par exemple $296$ bits pour $\lambda = 128$ et un contexte de vote
+Helios \`a $H(\mathcal{C}) = 40$ bits.
+
+Lorsque l'application priorise la confidentialit\'e ($\Conf_{\min} = 0{,}9$),
+l'allocation recommand\'ee affecte $60\%$ du budget \`a la couche Gold
+($\approx 180$ bits), $30\%$ \`a Iron ($\approx 90$ bits) et les
+$10\%$ restants \`a Clay (compression agressive du contexte). Lorsqu'au
+contraire l'opposabilit\'e prime ($\Opp_{\min} = 0{,}8$), les proportions
+s'inversent, avec $20\%$ pour Gold (masquage minimal), $30\%$ pour Iron
+(binding standard) et $50\%$ pour Clay (pr\'eservation riche du contexte).
+
+L'ind\'ependance modulaire des couches est n\'ecessaire, car Gold, Iron et Clay
+doivent pouvoir \^etre substitu\'es sans refonte compl\`ete~\cite{canetti2001,Goldreich02}. Remplacer le PRG
+par AES-GCM n'affecte pas Iron ni Clay~; remplacer Pedersen par un
+accumulateur RSA laisse Gold et Clay intacts~; remplacer le hachage
+contextuel par une compression JL n'impacte pas les deux premi\`eres
+couches. Cette modularit\'e facilite l'adaptation aux \'evolutions
+cryptographiques (post-quantique, homomorphe) et r\'eglementaires~\cite{NISTPQC,Kyber2022,Dilithium2022}.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Construction~: le Semantic One-Time Pad (S-OTP)}
+\label{subsec:construction_sotp}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Nous montrons que le paradigme Gold-Iron-Clay est instanciable
+dans la classe des protocoles bas\'es XOR, via la construction
+\textbf{Semantic One-Time Pad (S-OTP)}, prototype de la famille SOTP
+\'etendue \`a la section~\ref{sec:sotp_construction}.
+
+\begin{theorem}[Propri\'et\'es de s\'ecurit\'e S-OTP]\label{thm:proprietes_sotp}
+Sous hypoth\`eses PRG (g\'en\'erateur pseudo-al\'eatoire) et difficult\'e du
+logarithme discret (DLog) dans $\mathbb{G}$~\cite{BlumMicali84,Yao82}, on a
+\begin{align}
+\Conf(\text{S-OTP}) &= 1 - \negl(\lambda) \\
+\Relver(\text{S-OTP}) &= 1 - \negl(\lambda) \\
+\Opp(\text{S-OTP}) &\leq \frac{H(h \mid C)}{H(V|C)}
+\end{align}
+o\`u $h$ est la composante auxiliaire de la preuve qui porte l'information
+contextuelle.
+\end{theorem}
+
+\begin{remark}[Port\'ee du Th\'eor\`eme~\ref{thm:proprietes_sotp}]\label{rem:portee_sotp}
+La fiabilit\'e \'etablie est la fiabilit\'e de v\'erification $\Relver$~; la
+fiabilit\'e de reconstruction v\'erifie $\Relrec \leq (1+\kappa/\lambda)/\lambda$
+d\`es que $I(M;\Sigma|C) \leq \kappa/\lambda$ (Remarque~\ref{rem:rel_ver}). Si $h$ est
+une fonction du contexte public $C$, alors $H(h|C) = 0$ et $\Opp(\text{S-OTP}) = 0$.
+L'opposabilit\'e de S-OTP suppose donc que $h$ transmette une information
+contextuelle que l'institution ne d\'etient pas d\'ej\`a (contexte d'esp\`ece
+priv\'e). L'expression $H(\mathcal{C})/\lambda$ de~\cite{MINKA2026CLO} correspond \`a la
+convention $H(h|C) = H(\mathcal{C})$ et $H(V|C) \approx \lambda$.
+\end{remark}
+
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}~: Confidentialit\'e]\label{prv:sotp_conf}
+
+\begin{cmtEtape}{Objectif.}
+Montrer que $\Conf(\text{S-OTP}) = 1 - \negl(\lambda)$. Le masquage
+one-time pad rend le message chiffr\'e indiscernable, propri\'et\'e dont
+h\'erite l'engagement Pedersen.
+\end{cmtEtape}
+
+Par la construction du masquage one-time pad, $M^* = m \oplus \mathsf{mask}_m$
+o\`u $\mathsf{mask}_m \xleftarrow{\$} \{0,1\}^{|m|}$. Pour tout couple
+$(m_0, m_1) \in \mathcal{M}$, on a
+\begin{equation}
+\TV(P_{M^*|M=m_0}, P_{M^*|M=m_1}) = 0
+\end{equation}
+\cmtFormule{Le masque uniforme rend les deux distributions identiques.}
+\cmt{Un XOR avec un al\'ea uniforme efface toute trace du message.}
+
+car les deux distributions sont uniformes sur $\{0,1\}^{|m|}$.
+\cmt{Quel que soit $m$, $m \oplus \mathsf{mask}$ est uniforme.}
+
+L'engagement $c_\Sigma = \mathsf{Com}(M^*)$ h\'erite de cette
+indiscernabilit\'e, car l'engagement de Pedersen est \emph{parfaitement} masquant
+sans hypoth\`ese calculatoire~\cite{Pedersen91}. Il en r\'esulte que
+\begin{equation}
+\Conf(\text{S-OTP}) = 1 - \max_{m_0,m_1} \TV(P_{\Sigma|M=m_0}, P_{\Sigma|M=m_1})
+= 1 - \negl(\lambda)
+\end{equation}
+\cmtFormule{La confidentialit\'e atteint son maximum \`a une quantit\'e n\'egligeable pr\`es.}
+\cmt{Pedersen cache parfaitement $M^*$, inconditionnellement~; seul le caract\`ere liant repose sur DLog.}
+\end{Preuve}
+
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}~: Fiabilit\'e]\label{prv:sotp_rel}
+
+\begin{cmtEtape}{Objectif.}
+Montrer que $\Relver(\text{S-OTP}) = 1 - \negl(\lambda)$. Il faut
+\'etablir deux propri\'et\'es, la compl\'etude (une preuve honn\^ete est accept\'ee) et
+la soundness (une preuve forg\'ee est rejet\'ee).
+\end{cmtEtape}
+
+La compl\'etude suit directement de la compl\'etude du sch\'ema
+d'engagement. Pour tout $(m, c)$, on a
+\begin{equation}
+\Pr[\mathsf{Verify}(pk, \mathsf{Prove}(sk,m,c), c) = 1]
+= 1 - \delta_{\mathsf{Com}}
+\end{equation}
+\cmtFormule{Une preuve honn\^ete est accept\'ee sauf erreur du sch\'ema d'engagement.}
+o\`u $\delta_{\mathsf{Com}} = \negl(\lambda)$ est l'erreur d'engagement.
+\cmt{L'erreur d'engagement est n\'egligeable en $\lambda$.}
+
+Pour \'etablir la \emph{soundness}, supposons qu'un adversaire $\mathcal{A}$ produise
+$\sigma^* = (c_\Sigma^*, h^*, \ldots)$ avec $\mathsf{Verify}(\sigma^*, c) = 1$
+sans passer par $\mathsf{Prove}$. Alors $\mathcal{A}$ aurait ouvert
+l'engagement $c_\Sigma^*$ sur un contenu valide~; cela contredit la
+propri\'et\'e de \emph{binding} calculatoire du sch\'ema de Pedersen sous
+l'hypoth\`ese DLog (probabilit\'e $\leq \negl(\lambda)$)~\cite{Pedersen91}. Donc
+$\Relver(\text{S-OTP}) = 1 - \negl(\lambda)$.
+\cmt{Pour forger, il faudrait ouvrir un engagement sur deux valeurs distinctes.}
+\cmt{Cela \'equivaut \`a r\'esoudre le logarithme discret, ce qui est difficile.}
+\end{Preuve}
+
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}~: Opposabilit\'e]\label{prv:sotp_opp}
+
+\begin{cmtEtape}{Objectif.}
+Montrer que $\Opp(\text{S-OTP}) \leq H(h|C)/H(V|C)$.
+L'information pertinente pour le verdict ne peut transiter que par la
+composante auxiliaire $h$.
+\end{cmtEtape}
+
+L'information auxiliaire $h$ encode $\ell_{\text{aux}} = H(\mathcal{C})$
+bits de contexte. Par construction, on a
+\begin{equation}
+I(V;\Sigma|C) \leq I(V;h|C) = H(h|C) - H(h|V,C) \leq H(h|C)
+\end{equation}
+\cmtFormule{Seule la composante $h$ porte l'information utile au verdict.}
+\cmt{Le masque $M^*$ est ind\'ependant des verdicts.}
+\cmt{L'engagement $c_\Sigma$ est parfaitement cach\'e.}
+
+En divisant par $H(V|C)$, on obtient
+\begin{equation}
+\Opp(\text{S-OTP}) = \frac{I(V;\Sigma|C)}{H(V|C)}
+\leq \frac{H(h|C)}{H(V|C)}
+\end{equation}
+\cmtFormule{L'opposabilit\'e est born\'ee par ce que $h$ apprend \`a l'institution au-del\`a du contexte public.}
+\cmt{Si $h$ est une fonction de $C$, alors $H(h|C) = 0$ (voir la Remarque~\ref{rem:portee_sotp}).}
+\end{Preuve}
+
+\begin{remark}[Optimalit\'e de S-OTP dans la classe OTP~: argument heuristique]\label{thm:optimalite_sotp}
+Parmi les protocoles qui masquent le message par un one-time pad et
+n'encodent le contexte que dans une composante auxiliaire $h$, S-OTP
+semble r\'ealiser le meilleur compromis, puisque tout protocole de ce type
+consacre $|m| = \lambda$ bits d'al\'ea au masquage pour la s\'ecurit\'e
+parfaite et voit son opposabilit\'e born\'ee par $H(h|C)/H(V|C)$ (m\^eme argument
+que ci-dessus). Une preuve d'optimalit\'e demanderait de d\'efinir
+formellement la classe OTP et d'y d\'emontrer une borne sup\'erieure
+uniforme~; nous la laissons ouverte. Toute construction atteignant une
+opposabilit\'e sup\'erieure doit soit (i) abandonner la confidentialit\'e
+information-th\'eorique au profit d'hypoth\`eses calculatoires, soit (ii) utiliser
+des protocoles interactifs multi-tours, soit (iii) employer des primitives
+diff\'erentes, au-del\`a du paradigme OTP.
+\end{remark}
+
+\subsection{M\'etriques CLO atteintes}
+\label{subsec:metriques_sotp}
+
+Pour les param\`etres typiques $\lambda = 128$, $\Delta = 50$ bits,
+$H(\mathcal{C}) = 30$ bits (r\'egime contexte rare), on obtient
+\begin{align}
+\Conf(\text{S-OTP}) &\approx 0{,}999 \label{eq:sotp_conf_numerique} \\
+\Relver(\text{S-OTP}) &\approx 0{,}999 \label{eq:sotp_rel_numerique} \\
+\Opp(\text{S-OTP}) &\approx \min\!\left\{1,\; \frac{50}{30}\right\} = 1 \label{eq:sotp_opp_numerique}
+\end{align}
+
+Ces valeurs sont des estimations th\'eoriques calcul\'ees sous les hypoth\`eses
+PRG et DLog~\cite{Goldreich01,KatzLindell14}, sans mesure empirique
+contr\^ol\'ee. Le produit vaut alors
+\begin{equation}
+\Conf \cdot \Relver \cdot \Opp \approx 0{,}998
+\label{eq:sotp_produit}
+\end{equation}
+Cette valeur porte sur la fiabilit\'e de v\'erification et sur une
+opposabilit\'e calcul\'ee sous la convention $\Opp = \min\{1,\Delta/H(\mathcal{C})\}$,
+qui suppose que $h$ transmet un contexte d'esp\`ece inconnu de l'institution~;
+elle n'est pas comparable \`a la borne du
+Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}. En fiabilit\'e de
+reconstruction, la confidentialit\'e statistique de S-OTP impose
+$\Relrec \leq (1+\kappa/\lambda)/\lambda$ (Remarque~\ref{rem:rel_ver}),
+tandis que~\cite{MINKA2026CLO} donne un produit de l'ordre de $H(\mathcal{C})/\lambda$.
+Ce produit \'elev\'e n'est r\'ealisable qu'en r\'egime contexte rare ($H(\mathcal{C}) \leq \Delta$).
+D\`es que le contexte s'enrichit ($H(\mathcal{C}) \gg \Delta$), l'opposabilit\'e
+s'effondre \`a $\Opp \approx \Delta / H(\mathcal{C}) \ll 1$, ce qui motive
+les variantes SOTP-Base et SOTP-High de la section~\ref{sec:sotp_construction}.
+
+\begin{boiteArbitre}
+L'arbitre comprend que $0{,}998$ correspond au meilleur cas. D\`es que le
+contexte s'enrichit, l'opposabilit\'e s'effondre et d'autres constructions
+deviennent n\'ecessaires.
+\end{boiteArbitre}
+
+La remarque~\ref{thm:optimalite_sotp} indique que S-OTP serait optimal
+dans sa classe, sans le d\'emontrer. Cette optimalit\'e, m\^eme \'etablie,
+resterait restreinte, car les variantes SOTP-Base et SOTP-High utilisent
+des techniques au-del\`a des protocoles XOR (compression JL, zk-SNARKs)
+et surpassent S-OTP dans les r\'egimes appropri\'es.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------

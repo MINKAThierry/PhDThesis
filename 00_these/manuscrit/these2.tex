@@ -1,0 +1,339 @@
+% =============================================================================
+% THÈSE DE DOCTORAT - CRYPTOGRAPHIE INSTITUTIONNELLE
+% =============================================================================
+% Auteur  : Thierry Emmanuel Minka Mi Nguidjoï
+% École   : ENSP / Université de Yaoundé I
+% Version : 3.4 - Sommaires locaux avec minitoc
+% Date    : 2026-09-20
+% =============================================================================
+\UseRawInputEncoding
+%\RequirePackage[l2tabu]{nag}
+\newcommand{\hmmax}{0}
+\newcommand{\bmmax}{0}
+\documentclass[a4paper,11pt,reqno,oneside]{memoir}
+%\usepackage{fourier-orns}
+\usepackage{style/these_ensp}
+
+\addbibresource{annexes/bibliographie.bib}
+
+\title{AUX FONDEMENTS DE LA CRYPTOGRAPHIE INSTITUTIONNELLE :\\
+       Formalisation, Bornes d'Impossibilité, Conditions d'Optimalité\\
+       et Vérification Formelle}
+\author{MINKA MI NGUIDJOÏ Thierry Emmanuel}
+\date{2025--2026}
+
+% =============================================================================
+\begin{document}
+
+\ancrerTableaux
+\activerBarrieresFlottants
+% =============================================================================
+
+% =============================================================================
+% PRÉLIMINAIRES
+% =============================================================================
+\frontmatter
+% -----------------------------------------------------------------------------
+% COUVERTURES
+% -----------------------------------------------------------------------------
+\renewcommand{\enspDiplome}{Doctorat/Ph.D en G\'enie Informatique}
+\renewcommand{\enspSpecialite}{Cryptographie et S\'ecurit\'e de l'Information}
+
+\couvertureENSP%
+  {AUX FONDEMENTS DE LA CRYPTOGRAPHIE INSTITUTIONNELLE :}%
+  {Formalisation, Bornes d'Impossibilit\'e, Conditions d'Optimalit\'e
+   et V\'erification Formelle}%
+  {MINKA MI NGUIDJO\"I Thierry Emmanuel}%
+  {17P318}%
+  {Prof. Thomas \textbf{DJOTIO NDI\'E}, Ma\^itre de Conf\'erences, UYI}%
+  {Dr. Flavien Serge \textbf{MANI ONANA}, Charg\'e de Cours, UYI}%
+  {%
+    \small
+    \begin{tabular}{@{}lll@{}}
+      \textbf{Pr\'esident :}    & Prof. [Prenom] \textbf{[NOM]}   & [Grade], [Institution]         \\[0.2cm]
+      \textbf{Rapporteur 1 :}  & Prof. [Prenom] \textbf{[NOM]}    & [Grade], [Institution]  \\[0.2cm]
+      \textbf{Rapporteur 2 :}  & Dr. [Prenom] \textbf{[NOM]}   & [Grade], [Institution]         \\[0.2cm]
+      \textbf{Examinateur :} & Prof. [Prenom] \textbf{[NOM]}    & [Grade], [Institution]       \\[0.2cm]
+      \textbf{Membre 1 :} & Prof.   [Prenom] \textbf{[NOM]}    & [Grade], [Institution]         \\[0.2cm]
+      \textbf{Membre 2 :}    & Prof.    [Prenom] \textbf{[NOM]}  & [Grade], [Institution]       \\
+    \end{tabular}%
+  }%
+  {2025-2026}%
+  {jour mois 2026}%
+
+\couvertureENSPblanche%
+  {AUX FONDEMENTS DE LA CRYPTOGRAPHIE INSTITUTIONNELLE :}%
+  {Formalisation, Bornes d'Impossibilit\'e, Conditions d'Optimalit\'e 
+  et V\'erification Formelle}%
+  {MINKA MI NGUIDJO\"I Thierry Emmanuel}%
+  {2025-2026}%
+  {jour mois 2026}%
+
+% -----------------------------------------------------------------------------
+% PAGES PRÉLIMINAIRES
+% -----------------------------------------------------------------------------
+\pagestyle{preliminaire}
+\input{preambule/dedicaces}
+\input{preambule/remerciements}
+\input{preambule/glossaire}
+\input{preambule/preambule}
+\input{preambule/resume}
+\input{preambule/abstract}
+
+
+% -----------------------------------------------------------------------------
+% TABLE DES MATIÈRES GÉNÉRALE
+% -----------------------------------------------------------------------------
+\clearpage
+\markboth{Table des mati\`eres}{}
+\activerStylesChapitres
+\tableofcontents
+\thispagestyle{chapitre}
+
+
+% -----------------------------------------------------------------------------
+% LISTES
+% -----------------------------------------------------------------------------
+\clearpage
+\markboth{Table des figures}{}
+\listoffigures
+\thispagestyle{chapitre}
+
+\clearpage
+\markboth{Liste des tableaux}{}
+\listoftables
+\thispagestyle{chapitre}
+
+\clearpage
+\markboth{Liste des listings}{}
+\lstlistoflistings
+\thispagestyle{chapitre}
+
+\clearpage
+\markboth{Liste des algorithmes}{}
+\listofalgorithms
+\thispagestyle{chapitre}
+% =============================================================================
+% CORPS DU DOCUMENT
+% =============================================================================
+\mainmatter
+\setcounter{tocdepth}{3}
+\setsecnumdepth{subsubsection}
+\pagestyle{fancy}
+%\input{annexes/Resume_etendu}
+
+% -----------------------------------------------------------------------------
+% INTRODUCTION GÉNÉRALE
+% -----------------------------------------------------------------------------
+\chapitreNonNumerote{INTRODUCTION G\'EN\'ERALE}{IG}
+\input{intro_conclu_gen/introduction_generale}
+ 
+\retablirNumerotation
+
+% ==========================================================
+% CHAPITRE 1 : CONTEXTE, ETAT DE L'ART ET PROBLEMATIQUE
+% ==========================================================
+\chapter{CONTEXTE, \'ETAT DE l'ART ET PROBL\'EMATIQUE}
+        %{CONTEXTE, \'ETAT DE l'ART ET PROBL\'EMATIQUE}
+\label{chap:contexte}
+\debutChapitre%
+   {Contexte, \'etat de l'art et probl\'ematique}%
+  {%
+    Ce chapitre pose les fondements th\'eoriques et empiriques de la
+    recherche. Apr\`es avoir d\'ecrit le cadre institutionnel dans lequel
+    s'inscrit ce travail, il parcourt l'\'etat de l'art interdisciplinaire
+    sur lequel il s'appuie, qui couvre la th\'eorie de l'information classique
+    et quantique, la cryptographie et les primitives d'obscurcissement, les
+    trilemmes d'impossibilit\'e, les standards post-quantiques du NIST ainsi que
+    les sciences cognitives. Il formule ensuite les six objectifs de recherche
+    qui structurent la progression canonique de la th\`ese. Il met enfin en
+    \'evidence le paradoxe de l'authenticit\'e invisible, selon lequel les
+    protocoles cryptographiques les plus s\^urs, ceux qui maximisent la
+    confidentialit\'e, induisent une opacit\'e institutionnelle s\'ev\`ere, alors
+    que les protocoles transparents sacrifient la confidentialit\'e. Ce paradoxe,
+    qui traverse l'ensemble de la contribution, motive l'introduction de la
+    m\'etrique d'opposabilit\'e et structure la probl\'ematique centrale de la th\`ese.%
+  }%
+  {%
+    cryptographie institutionnelle, opposabilit\'e juridique, paradoxe de
+    l'authenticit\'e invisible, th\'eorie de l'information, rationalit\'e
+    born\'ee, post-quantique%
+  }%
+
+\input{chap1/introduction_chap1}
+\input{chap1/contexte}
+\input{chap1/etat_art}
+\input{chap1/problematique}
+\input{chap1/conclusion_chap1}
+
+% ==========================================================
+% CHAPITRE 2 : CADRE FORMEL ET BORNES D'IMPOSSIBILITE
+% ==========================================================
+\chapter[CADRE FORMEL ET BORNES D'IMPOSSIBILIT\'E POUR L'OPPOSABILIT\'E L\'EGALE]%
+        {CADRE FORMEL ET BORNES D'IMPOSSIBILIT\'E POUR L'OPPOSABILIT\'E L\'EGALE}
+\label{chap:cadre_formel}
+\debutChapitre%
+  {Cadre formel et bornes d'impossibilit\'e pour l'opposabilit\'e l\'egale}%
+  {%
+    Ce chapitre pose le socle th\'eorique de la th\`ese en accomplissant les
+    trois premiers actes du cycle canonique (formaliser, borner, \'etendre).
+    Le cadre CLO y est d'abord d\'evelopp\'e afin de formaliser les trois
+    dimensions concurrentes de la cryptographie institutionnelle que sont la
+    confidentialit\'e, la fiabilit\'e et l'opposabilit\'e. Vient ensuite le
+    Trilemme CRO conditionnel classique. Sous quatre hypoth\`eses explicites
+    portant sur les limites de l'institution, il borne le produit des trois
+    m\'etriques par une quantit\'e dont le terme dominant est le rapport entre
+    la capacit\'e institutionnelle et le param\`etre de s\'ecurit\'e, pond\'er\'e par
+    la richesse des verdicts. Sa forme raffin\'ee identifie le r\'egime
+    o\`u cette capacit\'e est la contrainte liante. Le chapitre \'etend enfin ce
+    r\'esultat au r\'egime post-quantique. La borne y garde la m\^eme structure,
+    tandis qu'une perte d'interpr\'etabilit\'e $\eta_q$, nulle pour les preuves
+    classiques, intervient dans le sc\'enario d'un support quantique.%
+  }%
+  {%
+    cadre CLO, opposabilit\'e juridique, trilemme CRO, trilemme CRO
+    post-quantique, bornes d'impossibilit\'e conditionnelles%
+  }%
+
+\input{chap2/introduction_chap2}
+\input{chap2/clo}
+\input{chap2/cro_classique}
+\input{chap2/cro_pq}
+\input{chap2/conclusion_chap2}
+
+% ==========================================================
+% CHAPITRE 3 : CONSTRUCTIONS OPTIMALES ET CERTIFICATION FORMELLE
+% ==========================================================
+\chapter[CONSTRUCTIONS ET CERTIFICATION FORMELLE]%
+        {CONSTRUCTIONS ET CERTIFICATION FORMELLE}
+\label{chap:constructions}
+\debutChapitre%
+  {Constructions et certification formelle}%
+  {%
+    Ce chapitre r\'ealise les actes saturer et certifier du cycle
+    canonique. Il construit d'abord le Semantic One-Time Pad, prototype qui
+    montre que le paradigme Gold-Iron-Clay est instanciable, puis la famille
+    SOTP. Les trois variantes de cette famille, une par r\'egime op\'erationnel,
+    ont des propri\'et\'es de confidentialit\'e et de fiabilit\'e de v\'erification
+    prouv\'ees, alors que leur opposabilit\'e est guid\'ee par une heuristique de conception.
+    Leur optimalit\'e universelle est formul\'ee comme conjecture. Il soumet enfin le noyau alg\'ebrique du
+    trilemme \`a l'assistant de preuve Lean4, d\'emarche qui conduit \`a
+    expliciter les hypoth\`eses de la preuve, \`a en donner les constantes, \`a en
+    caract\'eriser le r\'egime de validit\'e et \`a pr\'eciser trois \'enonc\'es publi\'es.%
+  }%
+  {%
+    famille SOTP, heuristique de conception, conjecture d'optimalit\'e,
+    formalisation Lean4, certification m\'ecanique%
+  }%
+
+\input{chap3/introduction_chap3}
+\input{chap3/sotp_base}
+\input{chap3/sotp_construction}
+\input{chap3/cro_lean4}
+\input{chap3/conclusion_chap3}
+
+% ==========================================================
+% CHAPITRE 4 : PROTOCOLES DE MESURE ET VALIDATION RETROSPECTIVE
+% ==========================================================
+\chapter[PROTOCOLES DE MESURE ET VALIDATION R\'ETROSPECTIVE]%
+        {PROTOCOLES DE MESURE ET VALIDATION R\'ETROSPECTIVE}
+\label{chap:experimentation}
+\debutChapitre%
+  {Protocoles de mesure et validation r\'etrospective}%
+  {%
+    Les bornes \'etablies aux chapitres pr\'ec\'edents sont conditionnelles,
+    de sorte que leur port\'ee pratique d\'epend enti\`erement de la mesurabilit\'e des
+    param\`etres institutionnels. Ce chapitre r\'ealise l'acte exp\'erimenter du
+    cycle canonique. Il sp\'ecifie d'abord le dispositif exp\'erimental complet
+    permettant de mesurer ces param\`etres, sous la forme de six protocoles
+    op\'erationnels portant sur la capacit\'e d'extraction institutionnelle,
+    l'entropie contextuelle, l'opposabilit\'e sur syst\`emes d\'eploy\'es,
+    l'estimation conjointe de la capacit\'e et de la granularit\'e, la capacit\'e
+    d'extraction quantique et le coefficient de perte d'interpr\'etabilit\'e quantique. Il
+    d\'erive ensuite les valeurs d'opposabilit\'e de trois syst\`emes
+    d\'eploy\'es et les met en regard d'une d\'ecomposition des param\`etres
+    institutionnels. Cette calibration illustrative v\'erifie la coh\'erence des ordres de
+    grandeur, sans constituer une validation empirique, puisque ces
+    syst\`emes ne sont pas des instances du th\'eor\`eme et que le programme
+    exp\'erimental d\'ecrit n'a pas \'et\'e d\'eploy\'e dans le cadre de cette th\`ese.%
+  }%
+  {%
+    protocole exp\'erimental, mesure de $\Delta$, entropie contextuelle,
+    validation r\'etrospective, coh\'erence interne, reproductibilit\'e%
+  }%
+
+\input{chap4/introduction_chap4}
+\input{chap4/protocoles}
+\input{chap4/derivation_opposabilite}
+\input{chap4/validation_retrospective}
+\input{chap4/conclusion_chap4}
+
+% ==========================================================
+% CHAPITRE 5 : RESULTATS, DISCUSSIONS ET PERSPECTIVES
+% ==========================================================
+
+\chapter{R\'ESULTATS, DISCUSSIONS ET PERSPECTIVES}%
+        %{R\'ESULTATS, DISCUSSIONS ET\\ PERSPECTIVES}
+\label{chap:resultats_discussions}
+\debutChapitre%
+  {R\'esultats, discussions et perspectives}%
+  {%
+    Ce chapitre pr\'esente le bilan et l'interpr\'etation des
+    contributions. Il r\'esume d'abord la calibration illustrative sur des
+    syst\`emes d\'eploy\'es, classiques et post-quantiques, qui ne sont pas des
+    instances du th\'eor\`eme. Il dresse ensuite le bilan formel du corpus,
+    dans lequel les r\'esultats sont class\'es selon les actes du cycle canonique et selon
+    leur statut (prouv\'e sous hypoth\`eses, heuristique ou conjectur\'e,
+    calibr\'e). Le chapitre analyse aussi les implications th\'eoriques et
+    pratiques de ces r\'esultats. Il les positionne parmi les impossibilit\'es
+    fondamentales, d\'egage quatre sch\'emas structurels du compromis, \'etablit
+    des seuils d'opposabilit\'e par r\'egime juridictionnel, examine les
+    implications pour les standards post-quantiques et formule une hypoth\`ese de travail sur l'audit des syst\`emes de r\'emun\'eration
+    de l'\'Etat. Il documente enfin
+    les limitations et propose un programme de recherche futur
+    structur\'e en quatre axes.%
+  }%
+  {%
+    calibration r\'etrospective, coh\'erence interne, implications
+    r\'eglementaires, questions ouvertes, standards post-quantiques,
+    perspectives de recherche%
+  }%
+
+\input{chap5/introduction_chap5}
+\input{chap5/resultats}
+\input{chap5/discussions}
+\input{chap5/perspectives}
+\input{chap5/conclusion_chap5}
+
+
+% -----------------------------------------------------------------------------
+% CONCLUSION GÉNÉRALE
+% -----------------------------------------------------------------------------
+\chapitreNonNumerote{CONCLUSION G\'EN\'ERALE}{CG}
+\input{intro_conclu_gen/conclusion_generale}
+
+% -----------------------------------------------------------------------------
+% BIBLIOGRAPHIE
+% -----------------------------------------------------------------------------
+\clearpage
+\markboth{R\'EF\'ERENCES BIBLIOGRAPHIQUES}{}
+\printbibliography[
+  title={R\'EF\'ERENCES BIBLIOGRAPHIQUES},
+  heading=bibintoc
+]
+% =============================================================================
+% ANNEXES
+% =============================================================================
+\appendix
+\addtocontents{toc}{\protect\etocsettocdepth{chapter}}
+\entreePartie{ANNEXES}     
+\debutAnnexes
+
+\input{annexes/gamebased}
+\input{annexes/code_lean4}
+\input{annexes/publications}
+\cloturerAnnexes
+
+
+
+\end{document}

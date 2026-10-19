@@ -1,0 +1,71 @@
+% ============================================================================
+% R\'ESUM\'E FRAN\c{C}AIS
+% Fichier : preambule/resume.tex
+% ============================================================================
+
+\chapter*{R\'ESUM\'E}
+\markboth{R\'esum\'e}{}
+\addcontentsline{toc}{chapter}{R\'esum\'e}
+\thispagestyle{preliminaire}
+\begin{sloppypar}
+La cryptographie classique appr\'ecie la s\'ecurit\'e d'une preuve \`a
+l'aune de sa robustesse face \`a des adversaires computationnellement
+born\'es. \`A l'inverse, le paradigme institutionnel impose que la preuve
+demeure intelligible pour un arbitre non sp\'ecialiste afin d'\'eclairer
+une d\'ecision. Les d\'eploiements op\'erationnels r\'ev\`elent une
+pathologie r\'ecurrente. Une preuve irr\'eprochable du point de vue
+math\'ematique peut se r\'ev\'eler inutilisable par l'agent charg\'e de
+trancher. Cette tension structurelle entre les deux paradigmes constitue
+le paradoxe de l'authenticit\'e invisible, selon lequel plus une preuve
+prot\`ege efficacement, plus elle devient opaque pour un tiers profane.
+
+La th\`ese introduit une m\'etrique informationnelle in\'edite,
+l'opposabilit\'e Opp, d\'efinie comme la proportion d'incertitude
+institutionnelle qu'une preuve parvient \`a dissiper. Elle propose le
+cadre CLO, qui agr\`ege confidentialit\'e (Conf), fiabilit\'e (Rel) et
+opposabilit\'e (Opp) et l'articule \`a des param\`etres cognitifs
+explicites, en particulier la capacit\'e d'extraction institutionnelle
+$\Delta$ et la granularit\'e des verdicts $\alpha$. Elle \'etablit un
+trilemme d'impossibilit\'e conditionnel. Sous quatre hypoth\`eses bornant
+les capacit\'es de l'institution, le produit Conf$\cdot$Rel$\cdot$Opp
+est major\'e par $\Delta/(\gamma\lambda)$, o\`u $\gamma = \alpha H(C) - 1$,
+\`a un terme d'ordre $\lambda^{-2}$ et \`a un reste n\'egligeable pr\`es.
+Une forme raffin\'ee identifie le r\'egime o\`u la capacit\'e
+institutionnelle devient la contrainte liante. La ressource limitante
+est alors la quantit\'e d'information qu'une institution peut
+extraire humainement d'une preuve, bien plus que la taille des cl\'es.
+
+Ce r\'esultat se prolonge au contexte post-quantique. Dans le sc\'enario
+d'un support ou d'un v\'erificateur quantique, le bruit induit une perte
+d'interpr\'etabilit\'e $\eta_q$, nulle pour les preuves classiques, dont
+l'effet sur la borne cro\^it avec l'entropie contextuelle. La th\`ese
+propose aussi la famille SOTP, param\'etr\'ee pour diff\'erents
+r\'egimes de richesse contextuelle, dont elle \'etablit les propri\'et\'es
+cryptographiques. Son optimalit\'e asymptotique est formul\'ee comme
+conjecture. Le noyau alg\'ebrique du
+trilemme est certifi\'e m\'ecaniquement dans Lean4, qui explicite
+hypoth\`eses, constantes et domaine de validit\'e et fournit deux
+t\'emoins formels garantissant la coh\'erence interne et la port\'ee du
+r\'esultat.
+
+Enfin, la th\`ese sp\'ecifie un programme exp\'erimental r\'efutable
+comprenant six protocoles destin\'es \`a mesurer les param\`etres
+institutionnels, avec estimateurs et seuils de r\'efutation, puis une
+calibration illustrative de ces param\`etres sur des syst\`emes
+d\'eploy\'es. Elle v\'erifie la plausibilit\'e des ordres de grandeur sans
+constituer une validation empirique, le programme n'ayant pas \'et\'e ex\'ecut\'e en conditions
+prospectives.
+
+En \'erigeant l'opposabilit\'e au rang de propri\'et\'e cryptographique de
+premi\`ere classe, ce travail constitue la cryptographie institutionnelle
+comme domaine th\'eorique autonome. Il fournit des instruments d'aide au
+choix des protocoles dans des secteurs sensibles tels que le vote
+\'electronique, la conformit\'e r\'eglementaire et la transition
+post-quantique et pr\'epare une normalisation future int\'egrant
+l'interpr\'etabilit\'e parmi les crit\`eres de s\'ecurit\'e.
+
+\vspace{0.5cm}
+\noindent\textbf{Mots-cl\'es~:} cryptographie institutionnelle,
+opposabilit\'e, Trilemme CRO, protocoles SOTP, v\'erification formelle,
+programme exp\'erimental falsifiable, Lean4.
+\end{sloppypar}

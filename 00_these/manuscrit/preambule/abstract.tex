@@ -1,0 +1,69 @@
+% ============================================================================
+% ABSTRACT
+% Fichier : preambule/abstract.tex
+% ============================================================================
+
+\chapter*{ABSTRACT}
+\markboth{Abstract}{}
+\addcontentsline{toc}{chapter}{Abstract}
+\thispagestyle{preliminaire}
+
+\begin{sloppypar}
+
+Classical cryptography evaluates the security of a proof by the yardstick
+of its robustness against computationally bounded adversaries. Conversely,
+the institutional paradigm requires that the proof remain intelligible to
+a non-specialist arbitrator in order to inform a decision. Operational
+deployments reveal a recurrent pathology. A proof that is irreproachable
+from the mathematical point of view may prove unusable to the agent tasked
+with deciding. This structural tension between the two paradigms
+constitutes the paradox of invisible authenticity, according to which the
+more effectively a proof protects, the more opaque it becomes to a lay
+third party.
+
+The thesis introduces a novel informational metric, opposability Opp,
+defined as the proportion of institutional uncertainty that a proof
+succeeds in dissipating. It proposes the CLO framework, which aggregates
+confidentiality (Conf), reliability (Rel) and opposability (Opp) and
+articulates it with explicit cognitive parameters, in particular the
+institutional extraction capacity $\Delta$ and the granularity of verdicts
+$\alpha$. It establishes a conditional impossibility trilemma. Under four
+hypotheses bounding the capacities of the institution, the product
+Conf$\cdot$Rel$\cdot$Opp is bounded above by $\Delta/(\gamma\lambda)$,
+where $\gamma = \alpha H(C) - 1$, up to a term of order $\lambda^{-2}$ and
+a negligible remainder. A refined form identifies the regime in which institutional capacity
+becomes the binding constraint. The limiting resource is then the quantity
+of information that an institution can humanly extract from a proof, far
+more than the size of the keys.
+
+This result extends to the post-quantum setting. In the scenario of a
+quantum support or verifier, the noise induces an interpretability loss $\eta_q$, which vanishes for
+classical proofs and whose effect on the bound grows with the contextual
+entropy. The thesis also proposes the SOTP family,
+parameterised for different regimes of contextual richness, and
+establishes its cryptographic properties. Its asymptotic optimality is
+stated as a conjecture. The
+algebraic core of the trilemma is mechanically certified in Lean4, which
+makes explicit the hypotheses, constants and domain of validity and provides two formal witnesses guaranteeing the internal consistency and
+the scope of the result.
+
+Finally, the thesis specifies a refutable experimental programme
+comprising six protocols intended to measure the institutional parameters,
+with estimators and refutation thresholds, followed by an illustrative calibration of
+these parameters on deployed systems. It checks the plausibility of the
+orders of magnitude without constituting an empirical validation, since
+the programme has not been executed under prospective conditions.
+
+By raising opposability to the rank of a first-class cryptographic
+property, this work constitutes institutional cryptography as an
+autonomous theoretical domain. It provides instruments to guide the choice
+of protocols in sensitive sectors such as electronic voting, regulatory
+compliance and the post-quantum transition and prepares a future
+standardisation integrating interpretability among the security criteria.
+
+\vspace{0.5cm}
+\noindent\textbf{Keywords:} Institutional cryptography, opposability,
+CRO Trilemma, SOTP protocols, formal verification, falsifiable experimental
+programme, Lean4.
+
+\end{sloppypar}

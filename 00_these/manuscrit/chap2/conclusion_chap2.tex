@@ -1,0 +1,50 @@
+% ============================================================================
+% CONCLUSION DU CHAPITRE 2 
+% source  : partie2/conclusion_partie2.tex
+% Version : 2.1 — alignée sur la formalisation Lean4 révisée
+% ============================================================================
+
+\section{CONCLUSION DU CHAPITRE~\ref{chap:cadre_formel}}
+\label{sec:conclusion_cadre_formel}
+
+\begin{sloppypar}
+Le cadre CLO (section~\ref{sec:clo}) a fait de $\Conf$, $\Rel$ et $\Opp$
+des grandeurs mesurables. Le
+th\'eor\`eme du goulot d'\'etranglement contextuel \'etablit que
+$I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$, liant l'opposabilit\'e
+accessible \`a la granularit\'e des verdicts et \`a la richesse du contexte
+institutionnel. Le cadre distingue la fiabilit\'e de reconstruction
+$\Relrec$, contr\^ol\'ee par Fano, de la fiabilit\'e de v\'erification
+$\Relver$. Il exige aussi une interpr\'etation admissible pour que $\Opp$ discrimine
+les protocoles. Les jeux cryptographiques (IND-CONF,
+BIND-REL, EXT-OPP) compl\`etent cette formalisation en \'etablissant le pont
+avec les r\'eductions de s\'ecurit\'e standard.
+
+Le Trilemme CRO classique (section~\ref{sec:cro_classique}) a born\'e
+ces m\'etriques sous quatre hypoth\`eses explicites sur les limites
+institutionnelles, \`a savoir l'extraction born\'ee, le verdict efficace, la r\'egularit\'e
+du protocole et le r\'egime de confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$.
+Le produit $\Conf\cdot\Rel\cdot\Opp$ ne peut
+d\'epasser $\Delta/(\gamma\lambda) + O(\lambda^{-2})$, tandis que la forme raffin\'ee
+identifie le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la capacit\'e
+institutionnelle $\Delta$ est la contrainte liante~; l'Hypoth\`ese d'extraction
+born\'ee y re\c{c}oit un fondement informationnel exact
+(Proposition~\ref{prop:fondement_extraction}). Les syst\`emes d\'eploy\'es ne
+sont pas des instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}).
+Ils servent seulement \`a calibrer des capacit\'es implicites,
+$\Delta_{\text{Helios}} \approx 56$~bits,
+$\Delta_{\text{zk-SNARKs}} \approx 73$~bits, $\Delta_{\text{ECDSA}}
+\approx 35$~bits, plausibles au regard de la litt\'erature sur la
+rationalit\'e born\'ee.
+
+L'extension post-quantique (section~\ref{sec:cro_pq}) a montr\'e que
+cette borne s'\'etend aux adversaires quantiques avec la m\^eme forme,
+param\'etr\'ee par la capacit\'e $\Delta_q$. Le coefficient de perte
+d'interpr\'etabilit\'e $\eta_q$ n'appara\^it que dans une majoration
+affaiblie~; il est nul pour les preuves qui sont des cha\^ines de bits,
+y compris les signatures post-quantiques standardis\'ees.
+
+Ces trois acquis, des m\'etriques, une borne classique et son extension
+quantique, d\'elimitent ce qui est interdit sans encore indiquer ce qui est
+atteignable, question que traite le chapitre~\ref{chap:constructions}.
+\end{sloppypar}

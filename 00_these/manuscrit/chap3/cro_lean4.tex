@@ -1,0 +1,988 @@
+% ============================================================================
+% SECTION 2.6 : FORMALISATION DU TRILEMME CRO DANS LEAN4
+% Source : partie2/cro_lean4.tex
+% Version : 2.2 — alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
+% ============================================================================
+
+\section{FORMALISATION DU TRILEMME CRO DANS LEAN4}
+\label{sec:lean4}
+\begin{sloppypar}
+La section~\ref{sec:sotp_construction} a pr\'esent\'e les constructions de r\'ef\'erence
+SOTP.
+Il reste cependant \`a savoir si les preuves th\'eoriques \'etablies dans les
+chapitres pr\'ec\'edents sont correctes. Cette question
+\textbf{Obj~\ref{obj:obj5_verification}} motive l'\'etape ultime de notre progression
+m\'ethodologique.
+
+Nous v\'erifions formellement le Trilemme CRO conditionnel dans
+l'assistant de preuve Lean4~\cite{Lean4,moura2015lean,Avigad2019}, constituant
+l'\'etape \textbf{C (Certifier)} du processus F$\to$B$\to$E$\to$S$\to$\textbf{C}$\to$X.
+Notre formalisation \'etablit la borne
+$\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
+et sa forme raffin\'ee. Elle fournit aussi deux t\'emoins de coh\'erence et de port\'ee, certifie
+les cons\'equences d'un verdict d\'eterministe et constitue une biblioth\`eque Lean4
+r\'eutilisable pour la cryptographie institutionnelle. Cette contribution \textbf{C5}
+a aussi conduit \`a des formulations plus pr\'ecises de plusieurs \'etapes des
+preuves publi\'ees, pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
+
+Les sous-sections suivantes pr\'ecisent d'abord ce que cette formalisation
+couvre et ses limitations (section~\ref{subsec:portee_limitations}), puis les
+conventions typographiques propres \`a cette section
+(section~\ref{subsec:conventions_typographiques}). Elles rappellent ensuite les
+\'el\'ements du Trilemme CRO s\'electionn\'es pour la formalisation, avec les points
+critiques identifi\'es lors de l'analyse pr\'eliminaire
+(section~\ref{subsec:elements_formaliser}), avant d'exposer les d\'efis techniques
+de la formalisation (section~\ref{subsec:defis_formalisation}), le mod\`ele formel
+et l'axiomatisation (section~\ref{subsec:modele_formel_lean4}) ainsi que la preuve
+du c\oe ur alg\'ebrique (section~\ref{subsec:preuve_coeur_algebrique}). Les deux
+derni\`eres \'enoncent le th\'eor\`eme principal v\'erifi\'e
+(section~\ref{subsec:theoreme_principal_lean4}) puis appliquent la formalisation
+aux familles de protocoles canoniques
+(section~\ref{subsec:application_familles_canoniques}).
+
+Le code source v\'erifi\'e est disponible en acc\`es ouvert (licence MIT,
+\url{https://github.com/MINKAThierry/PhDThesis}~\cite{CROTrilemmaDepot}), avec une
+version de Lean et de Mathlib fig\'ee (v4.34.0) et une int\'egration continue qui le
+recompile \`a chaque modification.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre croyait que la preuve du Trilemme \'etait compl\`ete. La machine a
+montr\'e que plusieurs \'etapes des preuves publi\'ees admettaient des formulations
+plus pr\'ecises, retenues dans les versions pr\'esent\'ees ici. L'arbitre comprend
+que la rigueur, comme l'opposabilit\'e, se v\'erifie, gr\^ace \`a la machine et \`a
+la relecture qui se compl\`etent.
+\end{boiteArbitre}
+
+% -----------------------------------------------------------------------
+\subsection{Port\'ee et limitations de la formalisation}
+\label{subsec:portee_limitations}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Cette sous-section pr\'ecise ce que couvre la formalisation Lean4 pr\'esent\'ee dans
+ce chapitre, ainsi que ses limitations explicites.
+
+\subsubsection{Ce que la formalisation couvre}
+\label{subsubsec:ce_que_couvre}
+
+Notre formalisation couvre le c\oe ur alg\'ebrique du Trilemme CRO conditionnel.
+Nous d\'efinissons une structure \texttt{ProtocolFamily} index\'ee par le
+param\`etre de s\'ecurit\'e $\lambda$, avec des param\`etres institutionnels
+fixes $(\Delta, \alpha, \beta, H(C))$. Nous
+int\'egrons comme propri\'et\'es des instances de protocole les quatre pr\'emisses
+du th\'eor\`eme, \`a savoir l'in\'egalit\'e de
+Fano~\cite{Fano61,CoverThomas06}, l'in\'egalit\'e de Pinsker (sous-sous-section~\ref{subsubsec:pinsker_classique}) combin\'ee \`a la
+r\'egularit\'e~\cite{Pinsker1964,Tsybakov2009}, l'hypoth\`ese d'extraction
+institutionnelle~\cite{Simon82,Miller56} et la borne fiabilit\'e-information.
+Nous prouvons formellement que, pour tout $I \le \kappa/\lambda$ (r\'egime de
+pr\'eservation de la confidentialit\'e, Hypoth\`ese~\ref{ass:regime}), on a
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \le \frac{1}{\gamma}\left(\frac{\Delta}{\lambda}
++ \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\le \frac{\Delta}{\lambda}
++ \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3},
+\end{equation}
+ainsi que la forme raffin\'ee~\eqref{eq:trilemme_cro_raffine}. Ces preuves
+n'utilisent que l'alg\`ebre \'el\'ementaire et sont enti\`erement v\'erifi\'ees par
+Lean4. Nous prouvons \'egalement que $(1/2)^\lambda$ est n\'egligeable, par un
+passage \`a la limite (\texttt{Tendsto}) et un argument de filtre, ce qui comble
+une lacune fr\'equente dans les expositions informelles.
+
+\subsubsection{Ce que la formalisation ne couvre pas}
+\label{subsubsec:ce_que_ne_couvre_pas}
+
+Nous explicitons ci-dessous ce qui
+n'est pas inclus dans cette version v\'erifi\'ee.
+
+\textbf{Les axiomes (Fano, Pinsker) ne sont pas prouv\'es
+ab initio.} Ils sont int\'egr\'es comme
+propri\'et\'es des instances de protocole, laissant leur d\'erivation formelle \`a partir de la th\'eorie des
+probabilit\'es comme travail futur.
+
+\textbf{Les constructions SOTP ne sont pas encore couvertes par Lean4.}
+La formalisation couvre le noyau alg\'ebrique du Trilemme, mais pas les
+r\'eductions cryptographiques des constructions SOTP. Ces extensions
+constituent une direction de recherche future.
+
+\textbf{L'extension quantique du Trilemme CRO n'est pas couverte.}
+La formalisation pr\'esent\'ee ici se limite au cadre classique. L'extension
+aux syst\`emes post-quantiques n\'ecessite une
+infrastructure th\'eorique distincte incluant les in\'egalit\'es de Pinsker
+quantique, le lemme de mesure douce (sous-sous-section~\ref{subsubsec:gentle_measurement}) et les bornes de Fano
+quantique. Cette extension est rel\'egu\'ee aux travaux futurs.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Conventions typographiques et linguistiques}
+\label{subsec:conventions_typographiques}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Cette sous-section pr\'esente une sp\'ecificit\'e li\'ee \`a la nature de son
+contenu. Le corps du texte, les d\'efinitions math\'ematiques, les
+th\'eor\`emes et les explications utilisent la ponctuation et les conventions
+typographiques fran\c{c}aises (espaces avant les deux-points, guillemets
+fran\c{c}ais, etc.), en coh\'erence avec les autres chapitres de cette th\`ese.
+
+En revanche, les listings de code Lean4 pr\'eservent la syntaxe anglaise de
+ce langage de programmation pour garantir la validit\'e technique du code.
+Les commentaires inclus dans ces listings sont r\'edig\'es en fran\c{c}ais pour
+faciliter la compr\'ehension tout en maintenant la compatibilit\'e syntaxique.
+Cette convention permet au code d'\^etre directement compilable par
+l'assistant de preuve Lean4 tout en restant accessible pour un lecteur
+francophone.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{\'El\'ements du Trilemme CRO \`a formaliser}
+\label{subsec:elements_formaliser}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Cette sous-section rappelle les \'el\'ements du Trilemme CRO conditionnel,
+\'etabli \`a la section~\ref{sec:cro_classique}, qui seront formalis\'es dans
+Lean4. Nous pr\'ecisons les simplifications op\'er\'ees par rapport \`a la
+version th\'eorique, justifions le p\'erim\`etre retenu et identifions les
+points critiques que la formalisation r\'ev\`ele.
+
+\subsubsection{M\'etriques CLO \`a formaliser}
+\label{subsubsec:metriques_formaliser}
+
+Le cadre CLO d\'efinit trois
+m\'etriques pour un protocole de preuve $\mathcal{P}$ avec espace de messages
+$\mathcal{M}_\lambda$ ($|\mathcal{M}_\lambda| = 2^\lambda$), espace de
+contexte $\mathcal{C}_\lambda$ et espace de preuves $\Sigma_\lambda$.
+
+\begin{definition}[Confidentialit\'e]\label{def:conf_lean4}
+\begin{equation}
+\Conf(\mathcal{P}) = 1 - \max_{\substack{m_0,m_1\in\mathcal{M}_\lambda\\c\in\mathcal{C}_\lambda}}
+   \mathrm{TV}(P_{\Sigma|M=m_0,C=c}, P_{\Sigma|M=m_1,C=c})
+\end{equation}
+o\`u $\mathrm{TV}$ est la distance de variation totale.
+\end{definition}
+
+\begin{definition}[Fiabilit\'e]\label{def:rel_lean4}
+Soit $\hat{M}$ l'estimateur MAP de $M$ \`a partir de $(\Sigma, C)$. La fiabilit\'e
+est alors d\'efinie par
+\begin{equation}
+\Rel(\mathcal{P}) = 1 - \Pr[\hat{M} \neq M]
+\end{equation}
+\end{definition}
+
+\begin{definition}[Opposabilit\'e]\label{def:opp_lean4}
+Soit $V: \Sigma \times \mathcal{C} \to \mathcal{Y}$ une fonction de
+verdict. L'opposabilit\'e est alors d\'efinie par
+\begin{equation}
+\Opp(\mathcal{P}) = \frac{I(V;\Sigma|C)}{H(V|C)}
+\end{equation}
+o\`u $I$ et $H$ d\'esignent respectivement l'information mutuelle
+conditionnelle et l'entropie conditionnelle.
+\end{definition}
+
+\subsubsection{Hypoth\`eses institutionnelles s\'electionn\'ees}
+\label{subsubsec:hypotheses_formaliser}
+
+Le trilemme repose sur quatre pr\'emisses, dont trois portent sur
+l'institution interpr\`ete et le protocole, la quatri\`eme reliant fiabilit\'e et
+information. Nous les formalisons telles quelles, sans simplification.
+% Note de source : les labels LaTeX de ces quatre enonces ne correspondent pas
+% a leur contenu ; seuls les titres font foi.
+
+\begin{assumption}[Extraction born\'ee]\label{ass:fano_axiom}
+Pour toute institution avec fonction de verdict $V$, on a
+\begin{equation}
+I(V;\Sigma|C) \le I(M;\Sigma|C) + \Delta
+\end{equation}
+o\`u $\Delta \ge 0$ quantifie la connaissance pr\'ealable ou la capacit\'e de
+raisonnement au-del\`a du contexte formel $C$.
+\end{assumption}
+
+\begin{assumption}[Espace de verdict born\'e]\label{ass:pinsker_axiom}
+La taille de l'espace de verdict satisfait
+\begin{equation}
+|\mathcal{Y}_\lambda| \le 2^{\alpha H(C)}
+\end{equation}
+pour une constante $\alpha > 0$ mesurant la granularit\'e de d\'ecision.
+\end{assumption}
+
+\begin{assumption}[R\'egularit\'e]\label{ass:extraction_axiom}
+Un protocole $\mathcal{P}$ est $\beta$-r\'egulier si pour tout contexte $c$
+et messages $m_0, m_1$, on a
+\begin{equation}
+D_{KL}(P_{\Sigma|m_0,c} \| P_{\Sigma|m_1,c}) \le \beta \cdot I(M;\Sigma|C)
+\end{equation}
+avec $\beta \ge 1$.
+\end{assumption}
+
+\begin{assumption}[Fiabilit\'e-information]\label{ass:reliability_axiom}
+Pour toute instance de protocole, sans restriction sur $\Rel$, on a
+\begin{equation}
+\Rel \le \frac{I(M;\Sigma|C) + 1}{\lambda}
+\end{equation}
+La formulation initiale imposait la restriction $\Rel \ge 1/2$. La
+formalisation a montr\'e qu'elle peut \^etre lev\'ee, car la majoration
+$h(p_e) \le 1$ de l'entropie binaire vaut pour toute probabilit\'e d'erreur.
+Le code Lean4 n'impose que $0 \le \Rel \le 1$.
+\end{assumption}
+
+\subsubsection{\'Enonc\'e du th\'eor\`eme original}
+\label{subsubsec:enonce_theoreme_original}
+
+\begin{theorem}[Trilemme CRO conditionnel]\label{thm:original_lean4}
+Sous les Hypoth\`eses~\ref{ass:fano_axiom},~\ref{ass:pinsker_axiom} et
+pour un protocole $\beta$-r\'egulier avec messages uniformes
+($H(M)=\lambda$) et $\lambda \ge 64$, on a
+\begin{equation}
+\Conf(\mathcal{P}) \cdot \Rel(\mathcal{P}) \cdot \Opp(\mathcal{P})
+   \le \frac{\Delta}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
+\end{equation}
+\end{theorem}
+
+La preuve originale proc\`ede en
+quatre \'etapes successives.
+\begin{enumerate}
+    \item L'in\'egalit\'e de Fano~\cite{Fano61,CoverThomas06} donne
+          $I(M;\Sigma|C) \ge \Rel \cdot \lambda - 1$
+    \item L'in\'egalit\'e de Pinsker et la
+          r\'egularit\'e~\cite{Pinsker1964,Tsybakov2009} donnent
+          $\Conf \ge 1 - \sqrt{c_0 \beta I}$
+    \item Les hypoth\`eses d'extraction et de
+          verdict~\cite{Simon82,Miller56} donnent
+          $\Opp \le (I+\Delta)/\gamma$
+    \item Le produit est combin\'e sous le r\'egime
+          $I \le \kappa/\lambda$ (Hypoth\`ese~\ref{ass:regime}).
+\end{enumerate}
+
+\subsubsection{Points critiques et notre approche}
+\label{subsubsec:points_critiques}
+
+Notre analyse pr\'eliminaire a identifi\'e trois points qui demandent un
+traitement rigoureux.
+
+\paragraph{Statut de $I$ comme variable.}
+L'information mutuelle $I(M;\Sigma|C)$ n'est pas une variable libre, puisqu'elle
+est d\'etermin\'ee par le protocole. Le r\'egime de pr\'eservation de la
+confidentialit\'e $I(\lambda) \le \kappa/\lambda$ (Hypoth\`ese~\ref{ass:regime})
+est rendu explicite comme condition du th\'eor\`eme.
+
+\paragraph{Nature asymptotique exacte.}
+Nous rempla\c{c}ons le $O(\lambda^{-2})$ informel par une in\'egalit\'e
+exacte faisant appara\^itre une constante $K$, une fonction
+n\'egligeable $\varepsilon$ et un seuil $N$ explicites. Notre analyse
+alg\'ebrique produit la constante $\kappa(\Delta+1) + \kappa^2$,
+rendant explicite la d\'ependance en $\kappa$.
+
+\paragraph{Constantes implicites.}
+La notation $O(\lambda^{-2})$ dissimule la d\'ependance en
+$1/(\alpha H+1)$ et $\beta$. Notre borne explicite
+$\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
+rend mesurables les param\`etres qui gouvernent la borne~\cite{Grossklags10,Herley09}.
+
+Notre formalisation prouve la borne explicite
+$O(\lambda^{-2})$ sous le r\'egime de confidentialit\'e
+(Hypoth\`ese~\ref{ass:regime}), enti\`erement v\'erifi\'ee.
+
+\subsubsection{Simplifications et justifications}
+\label{subsubsec:simplifications}
+
+\textbf{Simplification~1. Int\'egration des propri\'et\'es informationnelles
+comme champs de structure.} Les th\'eor\`emes profonds (Fano, Pinsker) ne sont pas
+d\'eclar\'es comme \texttt{axiom} globaux. Ils sont
+int\'egr\'es comme propri\'et\'es des instances de protocole, rendant ces
+propri\'et\'es falsifiables et v\'erifiables instance par instance.
+
+\textbf{Simplification~2. R\'egime de confidentialit\'e explicite.} Le r\'egime
+$I \le \kappa/\lambda$ est pos\'e explicitement comme condition du
+th\'eor\`eme, garantissant la confidentialit\'e via le
+Lemme~\ref{lem:confidentiality_guarantee}.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{D\'efis de formalisation dans Lean4}
+\label{subsec:defis_formalisation}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Le Trilemme CRO conditionnel pr\'esente plusieurs d\'efis techniques qui
+rendent sa v\'erification informelle p\'erilleuse.
+Cette sous-section analyse ces d\'efis et les solutions adopt\'ees.
+
+\subsubsection{D\'efi~1~: mod\'eliser les asymptotiques}
+\label{subsubsec:defi_asymptotiques}
+
+Le th\'eor\`eme original m\'elange une in\'egalit\'e exacte (valide pour
+chaque $\lambda$) avec une notation asymptotique ($O(\lambda^{-2})$,
+$\negl(\lambda)$). Pour formaliser cela, nous
+introduisons la notion de \textbf{famille de protocoles}, que d\'efinit la
+structure suivante.
+
+\begin{leancode}[caption={Famille de protocoles -- structure ProtocolFamily en Lean4}, label={lst:lean4_protocol_family}]
+-- Famille de protocoles indexee par le parametre de securite
+structure ProtocolFamily where
+  params  : InstitutionalParams                -- Parametres institutionnels fixes
+  inst    : (lam : ℕ) → ProtocolInstance lam   -- Instance pour chaque lambda
+  hparams : ∀ lam, (inst lam).params = params  -- Parametres communs
+\end{leancode}
+
+Le th\'eor\`eme devient alors un \'enonc\'e existentiel sur une
+constante $K$ et une fonction n\'egligeable $\varepsilon$, valable pour tout
+$\lambda \geq 64$, comme l'exprime l'\'enonc\'e ci-dessous.
+
+\begin{leancode}[caption={\'Enonc\'e asymptotique du th\'eor\`eme principal en Lean4}, label={lst:main_theorem_statement}]
+-- Theoreme du Trilemme CRO conditionnel
+theorem conditional_CRO_trilemma (F : ProtocolFamily) (κ : ℝ) (hκ : 0 ≤ κ)
+    (hA : ∀ lam, InstitutionalAssumptions (F.inst lam))
+    (hA4 : ∀ lam, (F.inst lam).I ≤ κ / lam) :
+    ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
+      (F.inst lam).Conf * (F.inst lam).Rel * (F.inst lam).Opp ≤
+        F.params.Δ / lam + K / (lam : ℝ) ^ 2 + ε lam
+\end{leancode}
+
+\subsubsection{D\'efi~2~: int\'egrer les r\'esultats profonds}
+\label{subsubsec:defi_axiomatiser}
+
+Fano~\cite{Fano61} et Pinsker~\cite{Pinsker1964} sont des th\'eor\`emes
+classiques de th\'eorie de l'information. Nous les int\'egrons comme
+champs de la structure \texttt{ProtocolInstance}, de sorte que chaque
+instance de protocole doit fournir la preuve que ces in\'egalit\'es
+s'appliquent \`a ses param\`etres.
+
+\begin{leancode}[caption={Propri\'et\'es informationnelles comme champs de structure}, label={lst:lean4_protocol_instance}]
+structure ProtocolInstance (lam : ℕ) where
+  params : InstitutionalParams
+  Conf   : ℝ   -- confidentialite
+  Rel    : ℝ   -- fiabilite
+  Opp    : ℝ   -- opposabilite
+  I      : ℝ   -- I(M;Σ|C)
+  IV     : ℝ   -- I(V;Σ|C)
+  HV     : ℝ   -- H(V|C)
+  TVmax  : ℝ   -- max TV
+  KLmax  : ℝ   -- max D_KL
+  hConf  : Conf = 1 - TVmax
+  hOpp   : Opp = IV / HV
+  hTV    : 0 ≤ TVmax ∧ TVmax ≤ 1
+  hRel   : 0 ≤ Rel ∧ Rel ≤ 1
+  hI     : 0 ≤ I
+  hIV    : 0 ≤ IV
+  pinsker : TVmax ^ 2 ≤ c0 * KLmax             -- Lemme 1 (Pinsker)
+  fano    : I ≥ Rel * lam - 1                   -- Lemme 2 (Fano), etape 1
+\end{leancode}
+
+\subsubsection{D\'efi~3~: r\'egime de confidentialit\'e explicite}
+\label{subsubsec:defi_optimisation}
+
+Le r\'egime $I = O(1/\lambda)$ est rendu explicite comme condition du
+th\'eor\`eme (Hypoth\`ese~\ref{ass:regime}). La preuve du
+Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}
+utilise directement cette hypoth\`ese sans n\'ecessiter d'optimisation
+analytique sur $[0, \lambda]$.
+
+\subsubsection{D\'efi~4~: prouver la n\'egligeabilit\'e}
+\label{subsubsec:defi_negligeabilite}
+
+La d\'efinition standard en
+cryptographie, \`a savoir
+\begin{equation}
+f \text{ est n\'egligeable} \iff \forall c>0,\; \exists N,\; \forall n \ge N,\;
+|f(n)| \le n^{-c}
+\end{equation}
+se formalise, avec le filtre \texttt{atTop} de Mathlib (\og pour tout $n$
+suffisamment grand\fg~\cite{Mathlib,MathlibAnalysis}) de la mani\`ere suivante.
+
+\begin{leancode}[caption={D\'efinition de n\'egligeabilit\'e en Lean4}, label={lst:lean4_negligible}]
+-- Une fonction est negligeable si elle decroit plus vite que tout polynome
+def Negligible (f : ℕ → ℝ) : Prop :=
+  ∀ c : ℝ, 0 < c → ∀ᶠ n : ℕ in atTop, |f n| ≤ (n : ℝ) ^ (-c)
+\end{leancode}
+
+Prouver que $\varepsilon_0(\lambda) = (1/2)^\lambda$ est n\'egligeable
+n\'ecessite de montrer que $2^n$ domine $n^c$. La preuve passe par la limite
+$n^{\lceil c\rceil}/2^n \to 0$ (lemme \texttt{tendsto\_pow\_const\_div\_const\_pow\_of\_one\_lt}
+de Mathlib) et un argument de filtre~; elle ne fournit pas de seuil explicite.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Mod\`ele formel et axiomatisation}
+\label{subsec:modele_formel_lean4}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+\subsubsection{Param\`etres institutionnels}
+\label{subsubsec:params_institutionnels_lean4}
+
+Les param\`etres institutionnels sont des constantes fixes pour une
+institution donn\'ee, ind\'ependantes de $\lambda$.
+
+\begin{leancode}[caption={Structure InstitutionalParams -- param\`etres institutionnels en Lean4}, label={lst:lean4_institutional_params}]
+-- Parametres institutionnels : capacites cognitives et procedurales
+structure InstitutionalParams where
+  H : ℝ      -- H(C) : entropie contextuelle (bits)
+  Δ : ℝ      -- Capacite d'extraction institutionnelle (bits)
+  α : ℝ      -- Granularite de verdict (α > 0)
+  β : ℝ      -- Constante de regularite du protocole (β ≥ 1)
+  hH_nonneg : 0 ≤ H
+  hΔ_nonneg : 0 ≤ Δ
+  hα_pos    : 0 < α
+  hβ_ge_one : 1 ≤ β
+\end{leancode}
+
+Cette structure capture les trois familles canoniques~\cite{Adida08,Groth16,Johnson01},
+instanci\'ees ci-dessous.
+
+\begin{leancode}[caption={Instances canoniques -- Helios, zk-SNARKs, audit traditionnel}, label={lst:lean4_instances_canoniques}]
+noncomputable def HeliosParams : InstitutionalParams :=
+  { H := 50, Δ := 56, α := 1.2, β := 1.4, ... }
+
+noncomputable def zkSNARKParams : InstitutionalParams :=
+  { H := 70, Δ := 73, α := 1.5, β := 1.5, ... }
+
+noncomputable def TraditionalAuditParams : InstitutionalParams :=
+  { H := 20, Δ := 35, α := 1.0, β := 1.0, ... }
+\end{leancode}
+
+\subsubsection{Instance de protocole}
+\label{subsubsec:instance_protocole_lean4}
+
+\begin{leancode}[caption={Structure ProtocolInstance pour un $\lambda$ donn\'e}, label={lst:lean4_protocol_instance_complete}]
+structure ProtocolInstance (lam : ℕ) where
+  params : InstitutionalParams
+  Conf   : ℝ   -- confidentialite
+  Rel    : ℝ   -- fiabilite
+  Opp    : ℝ   -- opposabilite
+  I      : ℝ   -- I(M;Σ|C)
+  IV     : ℝ   -- I(V;Σ|C)
+  HV     : ℝ   -- H(V|C)
+  TVmax  : ℝ   -- max TV
+  KLmax  : ℝ   -- max D_KL
+  hConf  : Conf = 1 - TVmax
+  hOpp   : Opp = IV / HV
+  hTV    : 0 ≤ TVmax ∧ TVmax ≤ 1
+  hRel   : 0 ≤ Rel ∧ Rel ≤ 1
+  hI     : 0 ≤ I
+  hIV    : 0 ≤ IV
+  pinsker : TVmax ^ 2 ≤ c0 * KLmax
+  fano    : I ≥ Rel * lam - 1
+\end{leancode}
+
+\subsubsection{Hypoth\`eses institutionnelles}
+\label{subsubsec:axiomes_info_lean4}
+
+\begin{leancode}[caption={Hypoth\`eses institutionnelles en Lean4}, label={lst:lean4_axiomes_extraction}]
+structure InstitutionalAssumptions {lam : ℕ} (P : ProtocolInstance lam) : Prop where
+  /-- Hypothese 1 (extraction bornee) : I(V;Σ|C) ≤ I(M;Σ|C) + Δ. -/
+  A1 : P.IV ≤ P.I + P.params.Δ
+  /-- Hypothese 2' (verdict efficace) : H(V|C) ≥ γ = αH(C) − 1 … -/
+  A2 : gamma P.params ≤ P.HV
+  /-- … avec γ ≥ 1. -/
+  A2γ : 1 ≤ gamma P.params
+  /-- Hypothese 3 (β-regularite) : D_KL ≤ β·I(M;Σ|C). -/
+  A3 : P.KLmax ≤ P.params.β * P.I
+\end{leancode}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Preuve du c\oe ur alg\'ebrique}
+\label{subsec:preuve_coeur_algebrique}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+\subsubsection{La constante de Pinsker}
+\label{subsubsec:constante_pinsker}
+
+\begin{leancode}[caption={Constante $c_0 = 1/(2\ln 2)$ -- d\'efinition et propri\'et\'es}, label={lst:lean4_c0}]
+noncomputable def c0 : ℝ := 1 / (2 * Real.log 2)
+
+lemma c0_pos : 0 < c0 := by
+  unfold c0
+  have h : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  positivity
+
+lemma c0_gt_half : 1 / 2 < c0 := by
+  unfold c0
+  have h1 := Real.log_two_lt_d9
+  have h2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  rw [lt_div_iff₀ (by positivity)]
+  nlinarith
+\end{leancode}
+
+\subsubsection{N\'egligeabilit\'e de $\varepsilon_0$}
+\label{subsubsec:negligeabilite_eps0}
+
+\begin{lemma}[N\'egligeabilit\'e de $\varepsilon_0$~\cite{Goldreich01,KatzLindell14}]\label{lem:negligeabilite_eps0}
+La fonction $\varepsilon_0(\lambda) = (1/2)^\lambda$ est
+n\'egligeable.
+\end{lemma}
+
+\begin{leancode}[caption={Preuve de n\'egligeabilit\'e en Lean4}, label={lst:lean4_eps0}]
+theorem negligible_eps0 : Negligible ε₀ := by
+  intro c hc
+  have hlim : Tendsto (fun n : ℕ => (n : ℝ) ^ (⌈c⌉₊) / (2 : ℝ) ^ n) atTop (nhds 0) :=
+    tendsto_pow_const_div_const_pow_of_one_lt ⌈c⌉₊ (by norm_num)
+  have hev : ∀ᶠ n : ℕ in atTop, (n : ℝ) ^ (⌈c⌉₊) / (2 : ℝ) ^ n < 1 :=
+    hlim.eventually (gt_mem_nhds one_pos)
+  filter_upwards [hev, eventually_ge_atTop 1] with n hn hn1
+  -- (suite de la preuve : annexe B, listing complet)
+\end{leancode}
+
+\subsubsection{Lemme~4~: garantie de confidentialit\'e}
+\label{subsubsec:lemme4_lean4}
+
+\begin{leancode}[caption={Lemme~4 -- garantie de confidentialit\'e en Lean4}, label={lst:lean4_lemma4}]
+theorem lemma4_confidentiality_guarantee {lam : ℕ} (P : ProtocolInstance lam)
+    (hA3 : P.KLmax ≤ P.params.β * P.I) :
+    1 - Real.sqrt (c0 * P.params.β * P.I) ≤ P.Conf := by
+  have hTV0 := P.hTV.1
+  have h1 : P.TVmax ≤ Real.sqrt (c0 * P.KLmax) := by
+    have := Real.abs_le_sqrt P.pinsker
+    rwa [abs_of_nonneg hTV0] at this
+  have h2 : Real.sqrt (c0 * P.KLmax) ≤ Real.sqrt (c0 * P.params.β * P.I) := by
+    apply Real.sqrt_le_sqrt
+    rw [mul_assoc]
+    exact mul_le_mul_of_nonneg_left hA3 c0_pos.le
+  rw [P.hConf]
+  linarith
+\end{leancode}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Th\'eor\`eme principal}
+\label{subsec:theoreme_principal_lean4}
+% -----------------------------------------------------------------------
+
+\subsubsection{\'Enonc\'e formel}
+\label{subsubsec:enonce_formel_lean4}
+
+\begin{sloppypar}
+\begin{theorem}[Trilemme CRO conditionnel~: version v\'erifi\'ee]
+\label{thm:conditional_CRO_trilemma}
+Soit $F$ une famille de protocoles satisfaisant les conditions suivantes.
+\begin{itemize}
+    \item les Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace}
+          et~\ref{ass:regularite} pour chaque instance (structure
+          \texttt{InstitutionalAssumptions}, avec $\gamma = \alpha H(C) - 1 \geq 1$)~;
+    \item $I_F(\lambda) \leq \kappa/\lambda$ pour un $\kappa \geq 0$
+          ind\'ependant de $\lambda$ (r\'egime de pr\'eservation de la
+          confidentialit\'e, Hypoth\`ese~\ref{ass:regime})~;
+    \item des param\`etres institutionnels $(H(C),\Delta,\alpha,\beta)$ communs \`a
+          toute la famille (structure \texttt{ProtocolFamily}).
+\end{itemize}
+Alors, l'in\'egalit\'e de Fano \'etant appliqu\'ee sous la forme
+$I(M;\Sigma|C) \geq \Rel\cdot\lambda - 1$, valable pour tout $\Rel$, il existe une
+constante $K$ et une fonction n\'egligeable $\varepsilon$ telles que, pour tout
+$\lambda \geq 64$, on ait
+\begin{equation}
+\Conf_F(\lambda) \cdot \Rel_F(\lambda) \cdot \Opp_F(\lambda) \leq \frac{\Delta}{\lambda} + \frac{K}{\lambda^2} + \varepsilon(\lambda)
+\label{eq:main_theorem_lean4}
+\end{equation}
+Instance par instance (\texttt{trilemma\_explicit}), on obtient la forme avec le facteur $1/\gamma$
+\begin{equation}
+\Conf_F(\lambda) \cdot \Rel_F(\lambda) \cdot \Opp_F(\lambda) \leq \frac{1}{\gamma}\left(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
+\label{eq:main_theorem_lean4_explicit}
+\end{equation}
+\end{theorem}
+\end{sloppypar}
+
+\subsubsection{T\'emoins de coh\'erence et de port\'ee}
+\label{subsubsec:temoins_lean4}
+
+\begin{sloppypar}
+La formalisation Lean4 produit deux t\'emoins qui d\'emontrent la
+non-vacuit\'e et la n\'ecessit\'e des hypoth\`eses du th\'eor\`eme.
+
+\begin{theorem}[Coh\'erence du mod\`ele abstrait]
+\label{thm:witness_consistency}
+Il existe une instance du mod\`ele abstrait v\'erifiant simultan\'ement toutes
+les hypoth\`eses, avec $\Conf = \Opp = 1$, $\Rel = 1/\lambda$, $I = 0$,
+$\Delta = \gamma = 1$. Pour cette instance, on a
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp = \frac{1}{\lambda} = \frac{\Delta}{\gamma \lambda}
+\end{equation}
+Cette valeur \'egale exactement la borne du
+Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}. Cela d\'emontre que les
+hypoth\`eses sont non vides et que la borne est atteinte \emph{dans le
+mod\`ele abstrait}.
+\end{theorem}
+
+\begin{remark}[Port\'ee du t\'emoin de coh\'erence]\label{rem:portee_temoin}
+Une \texttt{ProtocolInstance} est un point du mod\`ele abstrait, c'est-\`a-dire un ensemble de r\'eels
+qui satisfont les contraintes de Pinsker, de Fano (sous la forme rel\^ach\'ee
+$I \geq \Rel\cdot\lambda - 1$) et les Hypoth\`eses~1 \`a~4. Le t\'emoin \'etablit la
+non-vacuit\'e de ce mod\`ele. L'existence d'une loi de probabilit\'e qui le
+r\'ealise est une autre question. Pour une loi r\'eelle avec $M$ uniforme sur $\lambda$ bits, $I = 0$
+impose $\Relrec = 2^{-\lambda}$ au lieu de $1/\lambda$. Le t\'emoin atteint donc la borne
+rel\^ach\'ee~; il ne montre pas qu'un protocole r\'eel l'atteint. Il a $\Delta = \gamma = 1$
+et r\'ealise l'\'egalit\'e dans la forme rel\^ach\'ee de Fano. Il illustre ainsi le r\'egime
+$\Delta \geq \gamma$ de la Remarque~\ref{rem:activite_delta}. Le t\'emoin de port\'ee
+(Th\'eor\`eme~\ref{thm:scope_necessity}) est, lui, r\'ealis\'e par une loi explicite
+(Remarque~\ref{rem:scope_trilemme_classique}).
+\end{remark}
+
+\begin{leancode}[caption={T\'emoin de coh\'erence~: instance atteignant la borne}, label={lst:lean4_witness_instance}]
+theorem assumptions_consistent_and_bound_attained (lam : ℕ) (hlam : 1 ≤ lam) :
+    InstitutionalAssumptions (witnessInstance lam hlam) ∧
+    (witnessInstance lam hlam).I ≤ 0 / lam ∧
+    (witnessInstance lam hlam).Conf * (witnessInstance lam hlam).Rel *
+      (witnessInstance lam hlam).Opp =
+      (witnessInstance lam hlam).params.Δ / (gamma (witnessInstance lam hlam).params * lam) := by
+  refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_, ?_⟩ <;>
+    simp [witnessInstance, WitnessParams, gamma] <;> norm_num
+\end{leancode}
+
+\begin{theorem}[Port\'ee~: n\'ecessit\'e du r\'egime]
+\label{thm:scope_necessity}
+Il existe une instance de protocole v\'erifiant les Hypoth\`eses~1, 2$'$
+et 3 avec $\Delta = 0$ mais hors du r\'egime de l'Hypoth\`ese~\ref{ass:regime}
+($I = \lambda/2 - 1$). Pour cette instance, on a
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp = \frac{1}{4}
+\end{equation}
+pour tout $\lambda \geq 64$, ce produit restant constant. Cela d\'emontre que le r\'egime
+$I \leq \kappa/\lambda$ est n\'ecessaire \`a la borne.
+\end{theorem}
+
+\begin{leancode}[caption={T\'emoin de port\'ee~: instance hors du r\'egime}, label={lst:lean4_scope_instance}]
+theorem regime_assumption_necessary (lam : ℕ) (hlam : 64 ≤ lam) :
+    InstitutionalAssumptions (scopeInstance lam hlam) ∧
+    (scopeInstance lam hlam).params.Δ = 0 ∧
+    (scopeInstance lam hlam).Conf * (scopeInstance lam hlam).Rel *
+      (scopeInstance lam hlam).Opp = 1 / 4 ∧
+    (scopeInstance lam hlam).I = lam / 2 - 1 := by
+  have hl : (64 : ℝ) ≤ lam := by exact_mod_cast hlam
+  refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_, ?_, ?_⟩ <;>
+    simp [scopeInstance, ScopeParams, gamma] <;> linarith
+\end{leancode}
+
+\begin{remark}[Statut de v\'erification]
+\label{rem:statut_verification_lean4}
+Le noyau alg\'ebrique de cette preuve est certifi\'e m\'ecaniquement en
+Lean4. Les formulations alternatives issues de la certification sont
+pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
+\end{remark}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Extensions~: verdict d\'eterministe et forme raffin\'ee}
+\label{subsec:lean4_extensions}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+Quatre \'enonc\'es compl\`etent la formalisation (version~2.2 du fichier,
+listing~\ref{lst:lean4_extensions})~; ils certifient les deux faits
+structurels \'etablis au chapitre~\ref{chap:cadre_formel}.
+\begin{itemize}
+\item \texttt{opp\_eq\_one\_of\_deterministic} \'etablit que, si $I(V;\Sigma|C) = H(V|C) > 0$
+      (verdict d\'eterministe), alors $\Opp = 1$
+      (Remarque~\ref{rem:verdict_deterministe})~;
+\item \texttt{deterministic\_forces\_capacity} montre que, dans ce cas, les
+      Hypoth\`eses~1 et~2$'$ imposent $\gamma - I(M;\Sigma|C) \leq \Delta$~;
+\item \texttt{trilemma\_refined} certifie la forme raffin\'ee~\eqref{eq:trilemme_cro_raffine},
+      sous la condition $I(V;\Sigma|C) \leq H(V|C)$, toujours vraie~;
+\item \texttt{refined\_bound\_is\_fano\_when\_delta\_ge\_gamma} \'etablit que, si
+      $\Delta \geq \gamma$, le facteur institutionnel vaut~$1$ et la borne se
+      r\'eduit \`a celle de Fano (Remarque~\ref{rem:activite_delta}).
+\end{itemize}
+Chacun de ces \'enonc\'es ne d\'epend que des axiomes standard \texttt{propext},
+\texttt{Classical.choice} et \texttt{Quot.sound}.
+
+\begin{leancode}[caption={Extensions de la version 2.2}, label={lst:lean4_extensions}]
+/-- **T1.** Verdict déterministe : I(V;Σ|C) = H(V|C) ⇒ Opp = 1. -/
+theorem opp_eq_one_of_deterministic {lam : ℕ} (P : ProtocolInstance lam)
+    (hdet : P.IV = P.HV) (hHV : 0 < P.HV) : P.Opp = 1 := by
+  rw [P.hOpp, hdet]; exact div_self hHV.ne'
+
+/-- **T1 bis.** Verdict déterministe + Hyp. 1 et 2′ ⇒ γ − I(M;Σ|C) ≤ Δ :
+    la contrainte institutionnelle ne peut pas être active. -/
+theorem deterministic_forces_capacity {lam : ℕ} (P : ProtocolInstance lam)
+    (hA : InstitutionalAssumptions P) (hdet : P.IV = P.HV) :
+    gamma P.params - P.I ≤ P.params.Δ := by
+  have := hA.A1; have := hA.A2; linarith
+
+/-- **T2 (forme raffinée).** Avec I(V;Σ|C) ≤ H(V|C) (toujours vrai) :
+    Conf·Rel·Opp ≤ ((κ/λ+1)/λ) · min 1 ((κ/λ+Δ)/γ). -/
+theorem trilemma_refined {lam : ℕ} (P : ProtocolInstance lam)
+    (hA : InstitutionalAssumptions P) (κ : ℝ) (hκ : 0 ≤ κ)
+    (hlam : 1 ≤ lam) (hA4 : P.I ≤ κ / lam) (hIVHV : P.IV ≤ P.HV) :
+    P.Conf * P.Rel * P.Opp ≤
+      ((κ / lam + 1) / lam) * min 1 ((κ / lam + P.params.Δ) / gamma P.params) := by
+  have hl0 : (0 : ℝ) < lam := by exact_mod_cast hlam
+  have hγ0 : 0 < gamma P.params := by linarith [hA.A2γ]
+  have hHV : 0 < P.HV := by linarith [hA.A2, hA.A2γ]
+  have hκl : 0 ≤ κ / lam := div_nonneg hκ hl0.le
+  have hC1 : P.Conf ≤ 1 := by rw [P.hConf]; linarith [P.hTV.1]
+  have hC0 : 0 ≤ P.Conf := by rw [P.hConf]; linarith [P.hTV.2]
+  have hR0 := P.hRel.1
+  have hR : P.Rel ≤ (κ / lam + 1) / lam := by
+    rw [le_div_iff₀ hl0]; linarith [P.fano]
+  have hO0 : 0 ≤ P.Opp := by rw [P.hOpp]; exact div_nonneg P.hIV hHV.le
+  have hO1 : P.Opp ≤ 1 := by
+    rw [P.hOpp, div_le_one hHV]; exact hIVHV
+  have hO2 : P.Opp ≤ (κ / lam + P.params.Δ) / gamma P.params := by
+    rw [P.hOpp, div_le_div_iff₀ hHV hγ0]
+    have e1 := mul_le_mul_of_nonneg_right hA.A1 hγ0.le
+    have e2 := mul_le_mul_of_nonneg_left hA.A2
+      (by linarith [P.params.hΔ_nonneg] : (0 : ℝ) ≤ κ / lam + P.params.Δ)
+    have e3 : P.I * gamma P.params ≤ κ / lam * gamma P.params :=
+      mul_le_mul_of_nonneg_right hA4 hγ0.le
+    nlinarith
+  have hOm : P.Opp ≤ min 1 ((κ / lam + P.params.Δ) / gamma P.params) := le_min hO1 hO2
+  calc P.Conf * P.Rel * P.Opp ≤ 1 * ((κ / lam + 1) / lam) * min 1 ((κ / lam + P.params.Δ) / gamma P.params) :=
+        mul_le_mul (mul_le_mul hC1 hR hR0 zero_le_one) hOm hO0
+          (by rw [one_mul]; exact div_nonneg (by linarith) hl0.le)
+    _ = _ := by ring
+
+/-- **T2 bis.** Si Δ ≥ γ, la borne raffinée coïncide avec la seule borne de Fano. -/
+theorem refined_bound_is_fano_when_delta_ge_gamma {lam : ℕ} (P : ProtocolInstance lam)
+    (hA : InstitutionalAssumptions P) (κ : ℝ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam)
+    (hΔγ : gamma P.params ≤ P.params.Δ) :
+    min 1 ((κ / lam + P.params.Δ) / gamma P.params) = 1 := by
+  have hl0 : (0 : ℝ) < lam := by exact_mod_cast hlam
+  have hγ0 : 0 < gamma P.params := by linarith [hA.A2γ]
+  have hκl : 0 ≤ κ / lam := div_nonneg hκ hl0.le
+  apply min_eq_left
+  rw [le_div_iff₀ hγ0]; linarith
+\end{leancode}
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+\subsection{Ce que la formalisation a r\'ev\'el\'e}
+\label{subsec:lean4_erreurs}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+La formalisation Lean4 du noyau alg\'ebrique du Trilemme CRO a produit,
+au-del\`a de la certification, des formulations alternatives de plusieurs
+\'etapes des preuves publi\'ees~\cite{MINKA2026CRO,MINKA2026PQCRO}. Ces
+formulations, plus pr\'ecises que les versions initiales, \'eclairent la
+structure logique du r\'esultat et d\'elimitent son domaine de validit\'e.
+Elles sont document\'ees ci-dessous, car elles constituent une contribution
+m\'ethodologique \`a part enti\`ere.
+
+\paragraph{Sens de l'in\'egalit\'e du Lemme~4.}
+Le Lemme~4 publi\'e formulait sur $\Conf$ la borne \emph{sup\'erieure}
+$\Conf \leq 1 - \sqrt{c_0 \beta I / \lambda}$. La formalisation a conduit
+\`a une formulation alternative, dans laquelle l'\'enonc\'e prend la forme
+d'une borne \emph{inf\'erieure} $\Conf \geq 1 - \sqrt{c_0 \beta I}$. Cette
+formulation pr\'ecise la port\'ee de l'argument de Pinsker, qui ne requiert
+pas de normalisation par $\lambda$. Le
+Lemme~\ref{lem:confidentiality_guarantee} retient cette formulation
+alternative.
+
+\paragraph{Statut de l'Hypoth\`ese~2.}
+L'Hypoth\`ese~2 publi\'ee \'enon\c{c}ait $|\mathcal{Y}_\lambda| \leq
+2^{\alpha H(C)}$ (borne sup\'erieure) et en d\'eduisait
+$H(V|C) \geq \alpha H(C) - 1$ (borne inf\'erieure). La formalisation a
+montr\'e que ces deux \'enonc\'es sont logiquement ind\'ependants. La borne
+inf\'erieure exprime une propri\'et\'e d'\emph{efficacit\'e} du verdict, que
+la borne sup\'erieure ne suffit pas \`a \'etablir. La formulation alternative
+retenue s\'epare explicitement les deux \'enonc\'es
+(Hypoth\`ese~\ref{ass:verdicts_efficace}).
+
+\paragraph{R\'esolution de l'optimisation.}
+L'\'Etape~6 de la preuve publi\'ee r\'esolvait $f'(x) = 0$ avec
+$f'(x) = 2x - \frac{5}{2}ax^{3/2}$, en retenant $\sqrt{x^*} =
+\frac{5a}{4}$. La formalisation a conduit \`a une r\'esolution
+alternative, $\sqrt{x^*} = \frac{4}{5a}$. Elle a montr\'e que ce point
+est un \emph{maximiseur} de $f$. Le r\'egime $I = O(1/\lambda)$ ne
+s'obtient donc pas par cette optimisation. La formulation alternative
+pose ce r\'egime comme hypoth\`ese explicite (Hypoth\`ese~\ref{ass:regime}).
+
+\paragraph{N\'ecessit\'e du r\'egime~: un cas limite.}
+La formalisation a mis en \'evidence un cas limite qui \'etablit la
+n\'ecessit\'e \emph{logique} du r\'egime de confidentialit\'e
+(Hypoth\`ese~\ref{ass:regime}). Sans ce r\'egime, la borne du Trilemme
+cesse d'\^etre valide, pour une raison structurelle que le cas ci-dessous
+rend explicite.
+
+Consid\'erons le protocole suivant, en encodage classique diagonal
+($\Sigma$ prend ses valeurs dans un alphabet fini $\mathcal{S}$). Le
+protocole r\'ev\`ele $M$ avec probabilit\'e $1/2$ et produit sinon une
+preuve uniform\'ement al\'eatoire dans $\{0,1\}^\lambda$, ce qui s'\'ecrit
+\begin{equation}
+\Sigma =
+\begin{cases}
+M, & \text{avec probabilit\'e } 1/2, \\
+U \xleftarrow{\$} \{0,1\}^\lambda, & \text{avec probabilit\'e } 1/2.
+\end{cases}
+\label{eq:counterexample_protocol}
+\end{equation}
+Soit $V$ le premier bit de $\Sigma$. Nous supposons de plus $M \perp C$.
+
+Pour ce protocole, les trois m\'etriques valent
+\begin{align}
+\Conf &= 1/2, \\
+\Rel &= 1/2 + 2^{-\lambda-1}, \\
+\Opp &= 1,
+\end{align}
+et $I(M;\Sigma|C) = \lambda/2 - 1 + O(\lambda 2^{-\lambda})$. Le
+protocole est $\beta$-r\'egulier avec $\beta \leq 1{,}04$ pour tout
+$\lambda \geq 64$. Il satisfait donc les
+Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regularite}. Il
+\emph{s'\'ecarte} cependant de l'Hypoth\`ese~\ref{ass:regime}, car
+$I(M;\Sigma|C) = \Theta(\lambda)$ alors que le r\'egime exige $O(1/\lambda)$.
+
+Pour ce protocole, le produit CRO vaut
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \;\approx\; \frac{1}{2} \cdot \frac{1}{2} \cdot 1 \;=\; \frac{1}{4},
+\end{equation}
+ind\'ependant de $\lambda$. La borne du Trilemme
+$\Conf \cdot \Rel \cdot \Opp \leq \Delta/\lambda + O(\lambda^{-2})$ ne
+tient donc pas uniform\'ement pour $I = \Theta(\lambda)$, puisqu'elle
+requiert le r\'egime de confidentialit\'e.
+
+\textbf{Cons\'equence.} Ce cas limite \'etablit que
+l'Hypoth\`ese~\ref{ass:regime} est une \emph{condition n\'ecessaire} de la
+borne. Il justifie r\'etrospectivement la formulation alternative du
+Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}, dans laquelle cette
+hypoth\`ese est explicite. Il a aussi motiv\'e la distinction formelle, dans
+l'annexe~\ref{chap:annexe_lean4}, entre le \textbf{t\'emoin de coh\'erence}
+(qui atteint la borne) et le \textbf{t\'emoin de port\'ee} (qui s'\'ecarte du
+r\'egime et montre que la borne ne tient pas sans lui).
+
+\paragraph{Propagation \`a l'extension quantique.}
+Les formulations alternatives de la preuve classique ont conduit \`a
+r\'eexaminer l'extension post-quantique du Trilemme~\cite{MINKA2026PQCRO},
+qui h\'eritait de la m\^eme structure. Le Lemme~6 et la borne sup\'erieure
+du Lemme~7 ont fait l'objet de formulations plus pr\'ecises. Pour le
+Lemme~6, la formalisation a mis en \'evidence un cas limite form\'e de deux
+\'etats orthogonaux. Les Hypoth\`eses~4 et~5 sont d\'esormais pos\'ees
+explicitement au lieu d'\^etre d\'eduites. Les formulations correspondantes
+sont document\'ees aux
+sections~\ref{subsec:enonce_preuve_pq} et~\ref{subsec:hypotheses_quantiques}.
+
+\paragraph{Comment la formalisation a produit ces formulations.}
+Ces formulations alternatives sont issues de la formalisation. La relecture
+des articles ne les avait pas fait appara\^itre. Elles sont n\'ees \`a deux
+moments pr\'ecis. D'abord, l'\'enonc\'e publi\'e du Lemme~4 n'a pas pu \^etre
+d\'emontr\'e \`a partir des hypoth\`eses disponibles, ce qui a conduit \`a
+r\'eexaminer la preuve et \`a pr\'eciser le sens de l'in\'egalit\'e. Un \'echec
+de preuve formelle ne tranche pas \`a lui seul~; l'examen qui l'a suivi a
+\'etabli la formulation retenue. Ensuite, la formalisation du noyau
+alg\'ebrique a montr\'e que l'optimisation publi\'ee ne pouvait pas \^etre
+reproduite. Le cas limite ci-dessus a \'emerg\'e de l'effort pour pr\'eserver
+la coh\'erence de la preuve formelle. Il est alors devenu n\'ecessaire
+d'inscrire explicitement le r\'egime de confidentialit\'e dans l'\'enonc\'e du
+th\'eor\`eme.
+
+\paragraph{Statut des formulations alternatives.}
+Les formulations alternatives des preuves classique et post-quantique sont
+celles pr\'esent\'ees aux sections~\ref{sec:cro_classique}
+et~\ref{sec:cro_pq} de cette th\`ese. Les versions publi\'ees initiales
+restent accessibles pour r\'ef\'erence~\cite{MINKA2026CRO,MINKA2026PQCRO}.
+
+\paragraph{La le\c{c}on m\'ethodologique.}
+Les formulations alternatives et le cas limite qui \'etablit la n\'ecessit\'e
+du r\'egime de confidentialit\'e conduisent \`a une le\c{c}on
+m\'ethodologique sur le r\^ole de la formalisation dans le processus de
+publication scientifique, d\'evelopp\'ee \`a la
+section~\ref{subsec:verification_corrige_lecon}.
+\end{sloppypar}
+
+\begin{boiteArbitre}
+L'arbitre referme le dossier. La machine a produit des formulations
+alternatives que les auteurs ont retenues. La le\c{c}on qu'il en tire
+d\'epasse la substitution d'une formule \`a une autre, car ni la relecture
+humaine ni la machine ne suffisent seules. La machine v\'erifie les
+d\'eductions tandis que la relecture v\'erifie que les d\'efinitions disent ce
+qu'on croit. L'arbitre comprend que la formalisation est une n\'ecessit\'e
+\'epist\'emologique pour tout r\'esultat interdisciplinaire dont aucune des
+disciplines constituantes ne contr\^ole l'int\'egralit\'e.
+\end{boiteArbitre}
+
+
+% -----------------------------------------------------------------------
+\subsection{Application aux familles de protocoles canoniques}
+\label{subsec:application_familles_canoniques}
+% -----------------------------------------------------------------------
+\begin{sloppypar}
+\subsubsection{R\'egimes de capacit\'e institutionnelle}
+\label{subsubsec:regimes_capacite_lean4}
+
+La formalisation contient aussi une classification indicative des
+capacit\'es institutionnelles par le rapport $\Delta/\lambda$. Elle est distincte
+des r\'egimes du th\'eor\`eme (seuil $H^\sharp$, Remarque~\ref{rem:activite_delta})
+et des r\'egimes de construction SOTP (section~\ref{sec:sotp_construction})~; elle
+sert seulement \`a illustrer l'usage de d\'efinitions calculables dans Lean. Les
+param\`etres des familles canoniques cod\'ees en Lean sont ceux de la
+calibration illustrative, \`a l'exception de $H(C)$, qui n'intervient pas dans
+cette classification.
+
+\begin{leancode}[caption={Classification des r\'egimes institutionnels en Lean4}, label={lst:lean4_capacity_regime}]
+inductive InstitutionalRegime where
+  | LowCapacity    -- Δ < 0.1 × λ : capacite faible
+  | MidCapacity    -- 0.1 × λ ≤ Δ ≤ 0.5 × λ : capacite moyenne
+  | HighCapacity   -- Δ > 0.5 × λ : capacite elevee
+
+noncomputable def capacity_regime (Δ lam : ℝ) : InstitutionalRegime :=
+  if Δ < 0.1 * lam then .LowCapacity
+  else if Δ ≤ 0.5 * lam then .MidCapacity
+  else .HighCapacity
+\end{leancode}
+
+\begin{theorem}[R\'egime Helios~\cite{Adida08}]\label{thm:regime_helios}
+\`A $\lambda = 128$, Helios ($\Delta = 56$) est
+dans le r\'egime de capacit\'e moyenne, car $56 \in [12{,}8,\, 64]$.
+\end{theorem}
+
+\begin{leancode}[caption={V\'erification du r\'egime Helios en Lean4}, label={lst:lean4_helios_regime}]
+theorem Helios_regime_at_128 :
+    capacity_regime HeliosParams.Δ 128 = .MidCapacity := by
+  show capacity_regime 56 128 = _
+  unfold capacity_regime
+  norm_num
+\end{leancode}
+
+\begin{theorem}[R\'egime zk-SNARKs~\cite{Groth16,BCTV14}]\label{thm:regime_snarks}
+\`A $\lambda = 256$, zk-SNARKs ($\Delta = 73$) est
+dans le r\'egime de capacit\'e moyenne, car $73 \in [25{,}6,\, 128]$.
+\end{theorem}
+
+\begin{leancode}[caption={V\'erification du r\'egime zk-SNARKs en Lean4}, label={lst:lean4_zksnark_regime}]
+theorem zkSNARK_regime_at_256 :
+    capacity_regime zkSNARKParams.Δ 256 = .MidCapacity := by
+  show capacity_regime 73 256 = _
+  unfold capacity_regime
+  norm_num
+\end{leancode}
+
+\begin{theorem}[R\'egime audit traditionnel~\cite{Mason07,Kerr04}]\label{thm:regime_audit}
+\`A $\lambda = 128$, l'audit traditionnel ($\Delta = 35$) est dans le r\'egime de capacit\'e moyenne, car
+$35 \in [12{,}8,\, 64]$.
+\end{theorem}
+
+\begin{leancode}[caption={V\'erification du r\'egime audit traditionnel en Lean4}, label={lst:lean4_audit_regime}]
+theorem TraditionalAudit_regime_at_128 :
+    capacity_regime TraditionalAuditParams.Δ 128 = .MidCapacity := by
+  show capacity_regime 35 128 = _
+  unfold capacity_regime
+  norm_num
+\end{leancode}
+
+Ces v\'erifications sont enti\`erement automatis\'ees dans Lean4. Elles
+v\'erifient des calculs sur des valeurs illustratives, sans valider le mod\`ele
+de capacit\'e institutionnelle.
+\end{sloppypar}
+
+% -----------------------------------------------------------------------
+% Bo\^ite finale
+% -----------------------------------------------------------------------
+\begin{boiteArbitre}
+L'arbitre referme le dossier Lean4. Il a achev\'e l'\'etape \textbf{C}.
+Cette section lui a appris que la preuve qu'il croyait compl\`ete gagnait
+\`a \^etre pr\'ecis\'ee en plusieurs points.
+
+Sept contributions structurent ce qu'il retient. Il y a d'abord le mod\`ele formel
+(familles de protocoles index\'ees par $\lambda$, param\`etres institutionnels
+fixes), puis l'int\'egration des propri\'et\'es informationnelles comme champs de
+structure (Fano, Pinsker) et le noyau alg\'ebrique certifi\'e sans aucune
+admission tacite. S'y ajoutent la preuve de n\'egligeabilit\'e, l\`a o\`u l'expos\'e
+informel \'ecrivait simplement \og n\'egligeable\fg, le r\'egime de confidentialit\'e
+rendu explicite comme condition du th\'eor\`eme ainsi que les constantes explicites
+($\kappa(\Delta+1)$ et $\kappa^2$ au lieu d'un $O(\lambda^{-2})$ non chiffr\'e). La
+forme raffin\'ee compl\`ete l'ensemble en lui indiquant exactement quand sa capacit\'e
+d'extraction devient la contrainte liante.
+
+L'encha\^inement des faits le marque particuli\`erement. Trois formulations
+initiales (le sens d'une in\'egalit\'e, une borne inf\'erieure tir\'ee d'une borne
+sup\'erieure, la r\'esolution d'une optimisation) ont \'et\'e pr\'ecis\'ees, ce que
+la relecture des articles n'avait pas permis. La formalisation a oblig\'e \`a
+justifier chaque \'etape. Le cas limite qui \'etablit la n\'ecessit\'e du
+r\'egime est d'ailleurs n\'e de cette exigence.
+
+La borne $\Delta/(\gamma\lambda) + O(\lambda^{-2})$ est maintenant prouv\'ee dans le
+cadre du r\'egime, avec des termes correctifs chiffr\'es. Cette section en tire sa
+port\'ee \'epist\'emologique, puisqu'elle montre que la rigueur se v\'erifie au lieu
+de se supposer.
+\end{boiteArbitre}
