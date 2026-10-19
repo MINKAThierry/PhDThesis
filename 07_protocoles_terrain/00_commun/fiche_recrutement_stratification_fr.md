@@ -1,6 +1,6 @@
 # Fiche de recrutement et de suivi des quotas
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.2 (tableau `tab:stratification_delta`) et §4.2.2.4
+> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.2 (tableau `tab:stratification_delta`) et §4.2.2.4
 
 [English version](fiche_recrutement_stratification_en.md)
 
@@ -50,7 +50,7 @@ Les numéros sont attribués dans l'ordre de signature du consentement. Un numé
 
 Cocher chaque phase terminée. Inscrire la date de la phase 2 à J+14 de la phase 1.
 
-### Strate JG — Juges, Généralistes (juridictions civiles)
+### Strate JG - Juges, Généralistes (juridictions civiles)
 
 | Code | Invité le | Consentement signé le | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 prévue J+14 le | Phase 2 (1 h) | Phase 4 (30 min) | Statut | Enquêteur |
 |---|---|---|---|---|---|---|---|---|---|
@@ -75,7 +75,7 @@ Cocher chaque phase terminée. Inscrire la date de la phase 2 à J+14 de la phas
 | `P1-JG-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 | `P1-JG-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 
-### Strate JS — Juges, Spécialisés (contrats, PKI, numérique)
+### Strate JS - Juges, Spécialisés (contrats, PKI, numérique)
 
 | Code | Invité le | Consentement signé le | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 prévue J+14 le | Phase 2 (1 h) | Phase 4 (30 min) | Statut | Enquêteur |
 |---|---|---|---|---|---|---|---|---|---|
@@ -100,7 +100,7 @@ Cocher chaque phase terminée. Inscrire la date de la phase 2 à J+14 de la phas
 | `P1-JS-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 | `P1-JS-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 
-### Strate RJ — Régulateurs financiers, Juniors (< 5 ans d'expérience)
+### Strate RJ - Régulateurs financiers, Juniors (< 5 ans d'expérience)
 
 | Code | Invité le | Consentement signé le | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 prévue J+14 le | Phase 2 (1 h) | Phase 4 (30 min) | Statut | Enquêteur |
 |---|---|---|---|---|---|---|---|---|---|
@@ -125,7 +125,7 @@ Cocher chaque phase terminée. Inscrire la date de la phase 2 à J+14 de la phas
 | `P1-RJ-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 | `P1-RJ-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 
-### Strate RS — Régulateurs financiers, Seniors (≥ 5 ans, superviseurs)
+### Strate RS - Régulateurs financiers, Seniors (≥ 5 ans, superviseurs)
 
 | Code | Invité le | Consentement signé le | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 prévue J+14 le | Phase 2 (1 h) | Phase 4 (30 min) | Statut | Enquêteur |
 |---|---|---|---|---|---|---|---|---|---|
@@ -150,7 +150,7 @@ Cocher chaque phase terminée. Inscrire la date de la phase 2 à J+14 de la phas
 | `P1-RS-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 | `P1-RS-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 
-### Strate AP — Auditeurs, Cour des comptes (secteur public)
+### Strate AP - Auditeurs, Cour des comptes (secteur public)
 
 | Code | Invité le | Consentement signé le | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 prévue J+14 le | Phase 2 (1 h) | Phase 4 (30 min) | Statut | Enquêteur |
 |---|---|---|---|---|---|---|---|---|---|
@@ -175,7 +175,7 @@ Cocher chaque phase terminée. Inscrire la date de la phase 2 à J+14 de la phas
 | `P1-AP-019` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 | `P1-AP-020` | __/__/____ | __/__/____ | ☐ | ☐ | __/__/____ | ☐ | ☐ | ☐ actif ☐ terminé ☐ retiré ☐ exclu | `ENQ-__` |
 
-### Strate AC — Auditeurs, Cabinets privés (Big 4 et équivalents)
+### Strate AC - Auditeurs, Cabinets privés (Big 4 et équivalents)
 
 | Code | Invité le | Consentement signé le | Phase 0 (2 h) | Phase 1 (4 h) | Phase 2 prévue J+14 le | Phase 2 (1 h) | Phase 4 (30 min) | Statut | Enquêteur |
 |---|---|---|---|---|---|---|---|---|---|
