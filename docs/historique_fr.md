@@ -1,6 +1,6 @@
 # Historique des travaux et du dépôt
 
-> **Statut : PROPOSITION — documentation du dépôt** · Source : fiches de [`../01_publie/`](../01_publie/README_fr.md) et [`../02_preprints/`](../02_preprints/README_fr.md), en-tête de [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean)
+> **Statut : PROPOSITION: documentation du dépôt** · Source : fiches de [`../01_publie/`](../01_publie/README_fr.md) et [`../02_preprints/`](../02_preprints/README_fr.md), en-tête de [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean)
 
 [English version](historique_en.md) · [Retour à docs](README_fr.md)
 
