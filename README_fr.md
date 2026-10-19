@@ -1,4 +1,4 @@
-# PhDThesis — Aux Fondements de la Cryptographie Institutionnelle
+# PhDThesis: Aux Fondements de la Cryptographie Institutionnelle
 
 *English version: [README_en.md](README_en.md)*
 
