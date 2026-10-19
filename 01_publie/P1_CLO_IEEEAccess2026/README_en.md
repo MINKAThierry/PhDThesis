@@ -1,4 +1,4 @@
-# P1 — CLO framework (IEEE Access, 2026)
+# P1: CLO framework (IEEE Access, 2026)
 
 > **Status: PUBLISHED** · Source: *IEEE Access*, vol. 14, pp. 20427–20445, 2026, DOI [10.1109/ACCESS.2026.3660105](https://doi.org/10.1109/ACCESS.2026.3660105) · Thesis, Chapter 2, §2.2
 
