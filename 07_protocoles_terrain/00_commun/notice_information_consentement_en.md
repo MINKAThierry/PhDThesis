@@ -1,6 +1,6 @@
 # Information sheet and free and informed consent form
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1, §4.2.2 and §4.2.4 (ethics prerequisite)
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1, §4.2.2 and §4.2.4 (ethics prerequisite)
 
 [Version française](notice_information_consentement_fr.md)
 
@@ -8,7 +8,7 @@ Two-part document. Part A is given to the participant, who keeps it. Part B is s
 
 ---
 
-## Part A — Information sheet
+## Part A. Information sheet
 
 **Study title.** Measuring the institutional parameters of the interpretation of cryptographic evidence
 
@@ -69,7 +69,7 @@ Ethics committee (for any complaint): ____________________ Telephone: __________
 
 ---
 
-## Part B — Consent form
+## Part B. Consent form
 
 Participant code: `P__-____-___` (filled in by the interviewer)
 
