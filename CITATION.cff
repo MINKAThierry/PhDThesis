@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "Si vous utilisez ce dépôt, merci de citer la thèse. / If you use this repository, please cite the thesis."
+title: "Aux Fondements de la Cryptographie Institutionnelle — dépôt de recherche de la thèse (PhDThesis)"
+type: software
+authors:
+  - family-names: "Minka Mi Nguidjoï"
+    given-names: "Thierry Emmanuel"
+    affiliation: "LIMSI, École Nationale Supérieure Polytechnique, Université de Yaoundé I"
+license: [MIT, CC-BY-4.0]
+repository-code: "https://github.com/MINKAThierry/PhDThesis"
+version: "1.0.0-pre"
+date-released: "2026-10-12"
+keywords: [institutional cryptography, legal opposability, CRO trilemma, SOTP, Lean 4, Groth16]
