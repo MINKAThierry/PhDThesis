@@ -1,4 +1,4 @@
-# ePrint 2025/1138 — ZK-NR (v1)
+# ePrint 2025/1138 - ZK-NR
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1138
 
