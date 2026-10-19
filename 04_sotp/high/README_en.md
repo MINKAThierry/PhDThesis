@@ -1,6 +1,6 @@
-> **Status: PROPOSAL — reference implementation** (SOTP-High construction, not audited, demonstration) · Source: thesis, Chapter 3, SOTP-High subsection (Algorithm 3, proposition and remarks); Appendix A, theorem `thm:ann_sotp_high`
+> **Status: PROPOSAL: reference implementation** (SOTP-High construction, not audited, demonstration) · Source: thesis, Chapter 3, SOTP-High subsection (Algorithm 3, proposition and remarks); Appendix A, theorem `thm:ann_sotp_high`
 
-# SOTP-High — executable reference implementation
+# SOTP-High: executable reference implementation
 
 [Version française](README_fr.md)
 
