@@ -1,4 +1,4 @@
-# ePrint 2025/1708 — SH
+# ePrint 2025/1708 - SH
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1708
 
