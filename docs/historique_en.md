@@ -1,6 +1,6 @@
 # History of the work and of the repository
 
-> **Status: PROPOSAL — repository documentation** · Source: records in [`../01_publie/`](../01_publie/README_en.md) and [`../02_preprints/`](../02_preprints/README_en.md), header of [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean)
+> **Status: PROPOSAL: repository documentation** · Source: records in [`../01_publie/`](../01_publie/README_en.md) and [`../02_preprints/`](../02_preprints/README_en.md), header of [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean)
 
 [Version française](historique_fr.md) · [Back to docs](README_en.md)
 
