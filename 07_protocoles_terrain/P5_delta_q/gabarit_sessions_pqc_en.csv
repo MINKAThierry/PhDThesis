@@ -1,0 +1,1 @@
+participant_id,stratum,scheme,stimulus_id,context_id,proof_id,sigma_code,message_m,aid,noise_condition,p_noise,verdict,gold_verdict,interpretation_error,confidence_0_10,time_s,session,notes
