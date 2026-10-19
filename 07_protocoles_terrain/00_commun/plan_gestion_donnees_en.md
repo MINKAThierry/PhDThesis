@@ -1,6 +1,6 @@
 # Data management plan
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1, §4.2.2, §4.2.4 and §4.2.8.3
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1, §4.2.2, §4.2.4 and §4.2.8.3
 
 [Version française](plan_gestion_donnees_fr.md)
 
