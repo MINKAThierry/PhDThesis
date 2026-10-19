@@ -1,6 +1,6 @@
 # Lean 4 formalisation of the Conditional CRO Trilemma
 
-> **Status: PROPOSAL — formalisation (submitted to the *Journal of Automated Reasoning*)** · Source: thesis, Chapter 3, §3.4, and Appendix B
+> **Status: PROPOSAL: formalisation (submitted to the *Journal of Automated Reasoning*)** · Source: thesis, Chapter 3, §3.4, and Appendix B
 
 [Version française](README_fr.md)
 
