@@ -1,4 +1,4 @@
-# ePrint 2025/1138 — ZK-NR (v1)
+# ePrint 2025/1138 - ZK-NR
 
 > **Statut : PRÉPRINT (non évalué par les pairs)** · Source : Cryptology ePrint Archive, rapport 2025/1138
 
