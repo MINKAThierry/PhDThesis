@@ -1,6 +1,6 @@
 # Published articles
 
-> **Status: PUBLISHED** (articles P1, P2, P3) · the documents in the `formulations_precisees/` subfolders have the status **PROPOSAL — submitted refined statements** · Source: thesis, general introduction, table `tab:contributions_these`, and Appendix C
+> **Status: PUBLISHED** (articles P1, P2, P3) · the documents in the `formulations_precisees/` subfolders have the status **PROPOSAL - submitted refined statements** · Source: thesis, general introduction, table `tab:contributions_these`, and Appendix C
 
 [Version française](README_fr.md)
 
