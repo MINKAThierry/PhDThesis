@@ -1,4 +1,4 @@
-# ePrint 2025/1662 — AOW
+# ePrint 2025/1662 - AOW
 
 > **Statut : PRÉPRINT (non évalué par les pairs)** · Source : Cryptology ePrint Archive, rapport 2025/1662
 
