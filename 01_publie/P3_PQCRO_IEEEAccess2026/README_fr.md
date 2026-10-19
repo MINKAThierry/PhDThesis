@@ -1,4 +1,4 @@
-# P3 — Extension post-quantique du Trilemme CRO conditionnel (IEEE Access, 2026)
+# P3: Extension post-quantique du Trilemme CRO conditionnel (IEEE Access, 2026)
 
 > **Statut : PUBLIÉ** · Source : *IEEE Access*, vol. 14, pp. 125130–125155, 2026, DOI [10.1109/ACCESS.2026.3722742](https://doi.org/10.1109/ACCESS.2026.3722742) · Thèse, chapitre 2, §2.4
 
