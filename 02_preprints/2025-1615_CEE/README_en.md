@@ -1,4 +1,4 @@
-# ePrint 2025/1615 — CEE
+# ePrint 2025/1615 - CEE
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1615
 
