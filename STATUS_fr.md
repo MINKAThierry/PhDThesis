@@ -7,7 +7,7 @@
 | P1, cadre CLO | 01_publie/P1_CLO_IEEEAccess2026 | PUBLIÉ | IEEE Access 14 (2026), DOI 10.1109/ACCESS.2026.3660105 |
 | P2, Trilemme CRO conditionnel | 01_publie/P2_CRO_IEEEAccess2026 | PUBLIÉ | DOI 10.1109/ACCESS.2026.3669065 |
 | P3, extension post-quantique | 01_publie/P3_PQCRO_IEEEAccess2026 | PUBLIÉ | DOI 10.1109/ACCESS.2026.3722742 |
-| Formulations précisées de P2 et P3 | 01_publie/P2…/formulations_precisees, P3…/formulations_precisees | PROPOSITION (formulations précisées soumises) | soumises à IEEE Access |
+| Formulations précisées de P2 et P3 | 01_publie/P2…/formulations_precisees, P3…/formulations_precisees | PROPOSITION (formulations précisées soumises) | à soumettre à  IEEE Access |
 | Neuf préprints ePrint | 02_preprints | PRÉPRINT | ePrint 2025/1138, 1348, 1380, 1422, 1529, 1590, 1615, 1662, 1708 |
 | Manuscrit de thèse, version finale | 00_these | PROPOSITION (thèse déposée) | soutenance à venir |
 | Apports et précisions de la thèse | 03_resultats_these | PROPOSITION (résultat de thèse) | chapitres 2 et 4 |
