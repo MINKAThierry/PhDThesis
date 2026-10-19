@@ -1,4 +1,4 @@
-# ePrint 2025/1615 — CEE
+# ePrint 2025/1615 - CEE
 
 > **Statut : PRÉPRINT (non évalué par les pairs)** · Source : Cryptology ePrint Archive, rapport 2025/1615
 
