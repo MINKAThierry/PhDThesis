@@ -1,4 +1,4 @@
-# ePrint 2025/1422 — Design ZK-NR (v2)
+# ePrint 2025/1422 - Design ZK-NR
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1422
 
