@@ -11,7 +11,7 @@
 | Neuf préprints ePrint | 02_preprints | PRÉPRINT | ePrint 2025/1138, 1348, 1380, 1422, 1529, 1590, 1615, 1662, 1708 |
 | Manuscrit de thèse, version finale | 00_these | PROPOSITION (thèse déposée) | soutenance à venir |
 | Apports et précisions de la thèse | 03_resultats_these | PROPOSITION (résultat de thèse) | chapitres 2 et 4 |
-| Famille SOTP | 04_sotp/specification | PROPOSITION (construction, soumise à IEEE TIT) | chapitre 3 |
+| Famille SOTP | 04_sotp/specification | PROPOSITION (construction, à soumettre à IEEE TIT) | chapitre 3 |
 | Optimalité universelle de SOTP | 04_sotp/specification | PROPOSITION (conjecture) | chapitre 3 |
 | Preuves game-based | 04_sotp/preuves_game_based | PROPOSITION (résultat de thèse) | annexe A |
 | SOTP-Low et SOTP-Base exécutables | 04_sotp/reference_low_base | PROPOSITION (implémentation de référence) | chapitre 3 |
