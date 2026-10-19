@@ -1,6 +1,6 @@
 # Dictionnaire des variables
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.4 et §4.2.2
+> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.4 et §4.2.2
 
 [English version](dictionnaire_variables_en.md)
 
