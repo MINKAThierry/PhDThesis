@@ -1,6 +1,6 @@
 # PDF de la thèse
 
-> **Statut : PROPOSITION — thèse déposée, soutenance à venir** · Source : compilation des sources de [`../manuscrit/`](../manuscrit/) (19 octobre 2026) et de la version déposée (28 septembre 2026)
+> **Statut : PROPOSITION: thèse déposée, soutenance à venir** · Source : compilation des sources de [`../manuscrit/`](../manuscrit/) (19 octobre 2026) et de la version déposée (28 septembre 2026)
 
 | Fichier | Contenu |
 |---|---|
