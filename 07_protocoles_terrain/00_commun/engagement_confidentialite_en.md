@@ -1,6 +1,6 @@
 # Confidentiality undertaking for interviewers and experts
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3 (phase 3, gold standard) and §4.2.4
+> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3 (phase 3, gold standard) and §4.2.4
 
 [Version française](engagement_confidentialite_fr.md)
 
