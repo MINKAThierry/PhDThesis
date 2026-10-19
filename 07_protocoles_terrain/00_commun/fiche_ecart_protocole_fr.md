@@ -1,6 +1,6 @@
 # Fiche de déclaration d'écart au protocole
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (reproductibilité du protocole standardisé) et §4.2.7.3 (critères fixés avant toute collecte)
+> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (reproductibilité du protocole standardisé) et §4.2.7.3 (critères fixés avant toute collecte)
 
 [English version](fiche_ecart_protocole_en.md)
 
