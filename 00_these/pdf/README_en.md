@@ -1,6 +1,6 @@
 # PDF of the thesis
 
-> **Status: PROPOSAL — thesis submitted, defence pending** · Source: build of the sources in [`../manuscrit/`](../manuscrit/) (19 October 2026) and of the submitted version (28 September 2026)
+> **Status: PROPOSAL: thesis submitted, defence pending** · Source: build of the sources in [`../manuscrit/`](../manuscrit/) (19 October 2026) and of the submitted version (28 September 2026)
 
 | File | Contents |
 |---|---|
