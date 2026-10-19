@@ -1,4 +1,4 @@
-# ePrint 2025/1590 — AIIP
+# ePrint 2025/1590 - AIIP
 
 > **Statut : PRÉPRINT (non évalué par les pairs)** · Source : Cryptology ePrint Archive, rapport 2025/1590
 
