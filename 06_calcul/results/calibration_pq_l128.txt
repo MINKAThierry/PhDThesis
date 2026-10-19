@@ -1,0 +1,17 @@
+CALIBRATION ILLUSTRATIVE — les systèmes ci-dessous ne sont pas des instances
+du Théorème du trilemme (fiabilité de vérification Rel_ver ≈ 1) ; aucune
+validation empirique n'est revendiquée.
+type=postquantum  λ=128  κ=1.0
+
+system                                     Dilithium-3                          Kyber-1024              SPHINCS+            Dilithium-3
+nature                           signature (ML-DSA-65)  KEM (ML-KEM-1024) - pas une preuve   signature (SLH-DSA)  signature (ML-DSA-65)
+eta_q                                             0.08                                0.08                  0.08                   0.15
+product_clo                                       0.35                                0.42                   0.3                   0.35
+borne_affaiblie                                 0.2253                              0.3122                0.2009                 0.2311
+borne_these                                      0.225                               0.312                 0.201                  0.231
+gamma_q                                            9.5                                12.2                   7.1                    9.5
+borne_serree                                   0.02321                             0.02517               0.02773                0.02321
+rapport_produit_borne_affaiblie                   1.55                                1.35                  1.49                   1.51
+statut                            hors champ (Rel_ver)                hors champ (Rel_ver)  hors champ (Rel_ver)   hors champ (Rel_ver)
+
+→ results/calibration_pq_l128.csv

@@ -1,0 +1,4 @@
+system,product_clo,Delta_implicite,Delta,Delta_sur_lambda,gamma_domaine,borne_explicite,borne_raffinee,borne_fano,H_diese,regime,gamma_espece,H_V_C_espece,hyp2_espece,rapport_produit_terme_dominant,sotp_variant,sotp_heuristique,statut
+ECDSA,0.273,34.9,35,0.2734,19.0,0.01451,0.00787,0.00787,36.01,contexte rare (Fano liant),19.0,20,oui,19.0,SOTP-Low,0.2051,hors champ (Rel_ver)
+Helios,0.437,55.9,56,0.4375,47.0,0.00938,0.00787,0.00787,47.51,contexte rare (Fano liant),8.6,2,NON,8.6,SOTP-Base,0.05,hors champ (Rel_ver)
+zkSNARK,0.572,73.2,73,0.5703,104.0,0.00553,0.00553,0.00787,49.34,contexte riche (Δ liant),15.5,3,NON,15.5,SOTP-High,0.0369,hors champ (Rel_ver)

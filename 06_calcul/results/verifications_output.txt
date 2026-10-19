@@ -1,0 +1,52 @@
+== V1. Opp ≡ 1 quand V est fonction déterministe de (Σ,C)
+  2000 protocoles aléatoires : max |Opp − 1| = 1.55e-15
+== V2. Composante fonction de C seul : I(V;g(C)|C) = 0
+  1000 essais : max I(V;σ3|C) = 8.88e-16
+== V3. Borne explicite vs Fano seul (Δ ≥ γ ⇒ borne ≥ (x+1)/λ)
+  Helios        γ=   8.6  Δ/γ= 6.51  borne thm=0.0513  Fano seul=0.0079  -> Δ inactif
+  zk            γ=  15.5  Δ/γ= 4.71  borne thm=0.0371  Fano seul=0.0079  -> Δ inactif
+  ECDSA         γ=  19.0  Δ/γ= 1.84  borne thm=0.0145  Fano seul=0.0079  -> Δ inactif
+  Helios(ch.2)  γ=  47.0  Δ/γ= 1.19  borne thm=0.0094  Fano seul=0.0079  -> Δ inactif
+  zk(ch.2)      γ= 104.0  Δ/γ= 0.70  borne thm=0.0055  Fano seul=0.0079  -> Δ actif
+== V4. Produits CLO vs borne Δ/(γλ) (valeurs de la thèse)
+  Helios  Δ/λ=0.438  Δ/(γλ)=0.0509  produit=0.437  facteur=8.6  Hyp2 (H(V|C)≥γ)?
+  zk      Δ/λ=0.570  Δ/(γλ)=0.0368  produit=0.572  facteur=15.5  Hyp2 (H(V|C)≥γ)?
+  ECDSA   Δ/λ=0.273  Δ/(γλ)=0.0144  produit=0.273  facteur=19.0  Hyp2 (H(V|C)≥γ)?
+  H(V|C) dérivés : Helios 2 bits (γ=8,6) ; zk 3 bits (γ=15,5) ; ECDSA 20 bits (γ=19)
+== V5. Triplets de clo.tex (exemples d'instanciation) vs produits annoncés
+  Helios     produit réel=0.3847  annoncé=0.437
+  zk         produit réel=0.3332  annoncé=0.572
+  ECDSA      produit réel=0.0451  annoncé=0.273
+  Helios P1  produit réel=0.4370  annoncé=0.437
+  zk P1      produit réel=0.5724  annoncé=0.572
+  ECDSA P1   produit réel=0.2734  annoncé=0.273
+== V6. Cas limite du régime (Remark scope), version conforme à l'Hyp.2' (H(C)=2, V = 1er bit)
+  λ=64: Conf=0.500 Rel=0.50000 Opp=1 I=31.00 β=1.0323 produit=0.2500  (γ=1, H(V|C)=1)
+  λ=128: Conf=0.500 Rel=0.50000 Opp=1 I=63.00 β=1.0159 produit=0.2500  (γ=1, H(V|C)=1)
+  λ=256: Conf=0.500 Rel=0.50000 Opp=1 I=127.00 β=1.0079 produit=0.2500  (γ=1, H(V|C)=1)
+== V7. Composition : Fréchet et composition parallèle
+  a+b−1 = 0.70 < ab = 0.72  ⇒ la borne additive NE donne PAS le produit
+  Conf1=0.60 Conf2=0.80 Conf(P1||P2)=0.600 (< min ; thèse : ≥ max)
+== V8. Bootstrap : CV 20 % sur Δ ⇒ IC95 de Δ/λ
+  ECDSA  IC95=[0.166; 0.381]  (thèse : ±1,8 %)
+  Helios IC95=[0.266; 0.609]  (thèse : ±1,8 %)
+  zk     IC95=[0.346; 0.793]  (thèse : ±1,8 %)
+== V9. Stabilité en λ si produit prédit = Δ/λ
+  ECDSA λ=112: 0.312  λ=128: 0.273  λ=192: 0.182  λ=256: 0.137
+  Helios λ=112: 0.500  λ=128: 0.438  λ=192: 0.292  λ=256: 0.219
+  zk λ=112: 0.652  λ=128: 0.570  λ=192: 0.380  λ=256: 0.285
+== V10. p-valeur de permutation minimale pour n = 3 points
+  3! = 6 permutations ⇒ p_min = 0.167 (thèse : p < 1e-6)
+== V11. SOTP : prédictions calculées dans le texte vs valeurs CLO
+  SOTP-Low ECDSA 0,75·35/128 = 0.205 (CLO 0,273)
+  SOTP-Base Helios 0,5·min(56/560, 56/(1,4·log2 560)) = 0.050 (CLO 0,437)
+  SOTP-High zk 0,45·1,5·log2(128)/128 = 0.0369 (CLO 0,572)
+  d = ⌈4ΔH(C)/ε²⌉ (Δ=56, H=40, ε=0,1) = 896000 ; ε=0,2 : 224000
+== V12. Pedersen sur int(s) mod q : collision triviale (λ = 8, q = 251)
+  s0=00000011, s1=11111110 (< 2^8=256), int(s) mod q : 3 = 3 ⇒ même σ2 avec ρ0=ρ1, graines distinctes
+== V13. Proposition (option A) : interprétation admissible (V ⊥ M | Σ,C) + I(V;Σ|M,C) ≤ Δ ⇒ Hyp.1 ; Opp < 1 possible
+  3000 lois aléatoires : max[I(V;Σ|C) − (I(M;Σ|C)+Δ)] avec Δ = I(V;Σ|M,C) = -6.48e-03 (≤ 0 attendu) ; Opp ∈ [0.028; 0.489]
+== V14. Borne raffinée proposée : produit ≤ (1+κ/λ)/λ · min{1,(κ/λ+Δ)/γ}
+  Δ=35,γ=19: 0.00787  (forme publiée Δ/λ = 0.273)
+  Δ=10,γ=19: 0.00415  (forme publiée Δ/λ = 0.078)
+  Δ=5,γ=19: 0.00208  (forme publiée Δ/λ = 0.039)

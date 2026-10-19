@@ -1,0 +1,5 @@
+system,nature,eta_q,product_clo,borne_affaiblie,borne_these,gamma_q,borne_serree,rapport_produit_borne_affaiblie,statut
+Dilithium-3,signature (ML-DSA-65),0.08,0.35,0.2253,0.225,9.5,0.02321,1.55,hors champ (Rel_ver)
+Kyber-1024,KEM (ML-KEM-1024) - pas une preuve,0.08,0.42,0.3122,0.312,12.2,0.02517,1.35,hors champ (Rel_ver)
+SPHINCS+,signature (SLH-DSA),0.08,0.3,0.2009,0.201,7.1,0.02773,1.49,hors champ (Rel_ver)
+Dilithium-3,signature (ML-DSA-65),0.15,0.35,0.2311,0.231,9.5,0.02321,1.51,hors champ (Rel_ver)

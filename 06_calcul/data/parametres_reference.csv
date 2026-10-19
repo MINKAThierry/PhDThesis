@@ -1,0 +1,4 @@
+system,usage,H_C_domaine,H_C_espece,H_V_C_espece,alpha,beta,Delta,lambda,Conf_clo,Rel_ver_clo,Opp_clo,product_clo,sotp_variant,sotp_d
+ECDSA,signature contractuelle,20,20,20,1.0,1.0,35,128,0.31,0.98,0.90,0.273,SOTP-Low,
+Helios,vote electronique,40,8,2,1.2,1.4,56,128,0.92,0.95,0.50,0.437,SOTP-Base,560
+zkSNARK,conformite financiere (AML),70,11,3,1.5,1.5,73,128,0.89,0.96,0.67,0.572,SOTP-High,

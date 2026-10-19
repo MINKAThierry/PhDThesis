@@ -1,0 +1,25 @@
+CALIBRATION ILLUSTRATIVE — les systèmes ci-dessous ne sont pas des instances
+du Théorème du trilemme (fiabilité de vérification Rel_ver ≈ 1) ; aucune
+validation empirique n'est revendiquée.
+type=classical  λ=128  κ=1.0
+
+system                                               ECDSA                      Helios                   zkSNARK
+product_clo                                          0.273                       0.437                     0.572
+Delta_implicite                                       34.9                        55.9                      73.2
+Delta                                                   35                          56                        73
+Delta_sur_lambda                                    0.2734                      0.4375                    0.5703
+gamma_domaine                                         19.0                        47.0                     104.0
+borne_explicite                                    0.01451                     0.00938                   0.00553
+borne_raffinee                                     0.00787                     0.00787                   0.00553
+borne_fano                                         0.00787                     0.00787                   0.00787
+H_diese                                              36.01                       47.51                     49.34
+regime                          contexte rare (Fano liant)  contexte rare (Fano liant)  contexte riche (Δ liant)
+gamma_espece                                          19.0                         8.6                      15.5
+H_V_C_espece                                            20                           2                         3
+hyp2_espece                                            oui                         NON                       NON
+rapport_produit_terme_dominant                        19.0                         8.6                      15.5
+sotp_variant                                      SOTP-Low                   SOTP-Base                 SOTP-High
+sotp_heuristique                                    0.2051                        0.05                    0.0369
+statut                                hors champ (Rel_ver)        hors champ (Rel_ver)      hors champ (Rel_ver)
+
+→ results/calibration_classique_l128.csv
