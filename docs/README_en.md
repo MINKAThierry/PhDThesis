@@ -1,6 +1,6 @@
-# docs — repository-wide documentation
+# docs: repository-wide documentation
 
-> **Status: PROPOSAL — repository documentation** · Source: thesis, deposited version ([`../00_these/`](../00_these/README_en.md)) and register [`../STATUS_en.md`](../STATUS_en.md)
+> **Status: PROPOSAL: repository documentation** · Source: thesis, deposited version ([`../00_these/`](../00_these/README_en.md)) and register [`../STATUS_en.md`](../STATUS_en.md)
 
 [Version française](README_fr.md) · [Back to home](../README_en.md)
 
