@@ -1,4 +1,4 @@
-# ePrint 2025/1590 — AIIP
+# ePrint 2025/1590 - AIIP
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1590
 
