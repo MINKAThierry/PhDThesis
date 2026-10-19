@@ -1,6 +1,6 @@
 # Formulations précisées proposées pour P2
 
-> **Statut : PROPOSITION — formulations précisées soumises (non publiées)** · Source : document soumis à *IEEE Access* pour l'article DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thèse, chapitre 2, §2.3 et chapitre 3, §3.4.9
+> **Statut : PROPOSITION: formulations précisées soumises (non publiées)** · Source : document soumis à *IEEE Access* pour l'article DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thèse, chapitre 2, §2.3 et chapitre 3, §3.4.9
 
 [English version](README_en.md)
 
