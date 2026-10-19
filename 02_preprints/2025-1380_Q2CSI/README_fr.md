@@ -1,4 +1,4 @@
-# ePrint 2025/1380 — Q2CSI
+# ePrint 2025/1380 - Q2CSI
 
 > **Statut : PRÉPRINT (non évalué par les pairs)** · Source : Cryptology ePrint Archive, rapport 2025/1380
 
