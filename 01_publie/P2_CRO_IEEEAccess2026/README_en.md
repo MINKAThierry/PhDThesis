@@ -1,4 +1,4 @@
-# P2 — Conditional CRO trilemma (IEEE Access, 2026)
+# P2: Conditional CRO trilemma (IEEE Access, 2026)
 
 > **Status: PUBLISHED** · Source: *IEEE Access*, vol. 14, pp. 33263–33274, 2026, DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thesis, Chapter 2, §2.3
 
