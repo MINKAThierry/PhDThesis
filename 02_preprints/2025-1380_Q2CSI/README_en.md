@@ -1,4 +1,4 @@
-# ePrint 2025/1380 — Q2CSI
+# ePrint 2025/1380 - Q2CSI
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1380
 
