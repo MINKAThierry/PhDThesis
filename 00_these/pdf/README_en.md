@@ -5,7 +5,6 @@
 | File | Contents |
 |---|---|
 | `MaThèse.pdf` | Final version (247 pages), built with LuaLaTeX on 19 October 2026 from the sources in [`../manuscrit/`](../manuscrit/) |
-| `these_version_depot.pdf` | Version submitted on 28 September 2026 (262 pages), kept for reference |
 
 [Version française](README_fr.md)
 
