@@ -1,4 +1,4 @@
-# ePrint 2025/1529 — ZK-NR UC (v3)
+# ePrint 2025/1529 - ZK-NR UC
 
 > **Status: PREPRINT (not peer-reviewed)** · Source: Cryptology ePrint Archive, Report 2025/1529
 
