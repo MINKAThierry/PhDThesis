@@ -1,6 +1,6 @@
 # Test-retest form (P5, phase 3)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 3 (“re-presentation of scenarios after 2 weeks”, 1 h); §4.2.5.4 (repeat the measurement at constant noise before varying $p$)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 3 (“re-presentation of scenarios after 2 weeks”, 1 h); §4.2.5.4 (repeat the measurement at constant noise before varying $p$)
 
 [Version française](fiche_test_retest_pqc_fr.md) · [P5 protocol](protocole_en.md) · [P1 test-retest form](../P1_delta/fiche_test_retest_en.md)
 
