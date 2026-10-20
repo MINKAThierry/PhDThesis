@@ -1,6 +1,6 @@
 # Modèle de convention de collaboration avec une institution partenaire
 
-> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (prérequis d'accord institutionnel) et §4.2.8.3
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (prérequis d'accord institutionnel) et §4.2.8.3
 
 [English version](convention_institution_partenaire_en.md)
 
