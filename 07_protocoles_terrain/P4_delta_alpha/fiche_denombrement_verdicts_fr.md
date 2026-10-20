@@ -1,6 +1,6 @@
 # Fiche de dénombrement de l'espace des verdicts $\mathcal{V}$ (P4, étape 5)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.4, étape 5 ($\hat\alpha \leftarrow \log_2|\mathcal{V}|/H(C)$) ; dérivations du §4.3 ($|\mathcal{V}| = 4$ pour Helios, 8 pour le régulateur financier)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.4, étape 5 ($\hat\alpha \leftarrow \log_2|\mathcal{V}|/H(C)$) ; dérivations du §4.3 ($|\mathcal{V}| = 4$ pour Helios, 8 pour le régulateur financier)
 
 [English version](fiche_denombrement_verdicts_en.md) · [Protocole P4](protocole_fr.md) · [Gabarit](gabarit_denombrement_verdicts_fr.csv)
 
