@@ -1,6 +1,6 @@
 # Form for counting the verdict space $\mathcal{V}$ (P4, step 5)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.4, step 5 ($\hat\alpha \leftarrow \log_2|\mathcal{V}|/H(C)$); derivations of §4.3 ($|\mathcal{V}| = 4$ for Helios, 8 for the financial regulator)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.4, step 5 ($\hat\alpha \leftarrow \log_2|\mathcal{V}|/H(C)$); derivations of §4.3 ($|\mathcal{V}| = 4$ for Helios, 8 for the financial regulator)
 
 [Version française](fiche_denombrement_verdicts_fr.md) · [P4 protocol](protocole_en.md) · [Template](gabarit_denombrement_verdicts_en.csv)
 
