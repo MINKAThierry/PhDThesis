@@ -1,6 +1,6 @@
-# P2_entropie_contexte — Measuring contextual entropy $H(\mathcal{C})$
+# Measuring contextual entropy $H(\mathcal{C})$
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.2
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.2
 
 [Version française](README_fr.md) · [Back to the field protocols](../README_en.md)
 
