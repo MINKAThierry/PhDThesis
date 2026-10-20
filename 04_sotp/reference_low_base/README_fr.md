@@ -1,6 +1,6 @@
-> **Statut : PROPOSITION — implémentation de référence** · Source : thèse, chapitre 3, Algorithmes `alg:sotp_low` et `alg:sotp_base` ; annexe A, §A.5 et §A.6
+> **Statut : PROPOSITION. implémentation de référence** · Source : thèse, chapitre 3, Algorithmes `alg:sotp_low` et `alg:sotp_base` ; annexe A, §A.5 et §A.6
 
-# reference_low_base — Implémentation de référence de SOTP-Low et SOTP-Base
+# Implémentation de référence de SOTP-Low et SOTP-Base
 
 *English version: [README_en.md](README_en.md)*
 
