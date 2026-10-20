@@ -1,6 +1,6 @@
 # Questionnaire de profil du participant
 
-> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.2 (stratification) et §4.2.5.2 (formation PQC)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.2 (stratification) et §4.2.5.2 (formation PQC)
 
 [English version](questionnaire_profil_participant_en.md)
 
