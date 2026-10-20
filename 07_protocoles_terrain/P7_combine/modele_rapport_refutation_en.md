@@ -1,6 +1,6 @@
 # Refutation report template (P7, programme synthesis)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.7.3 (table `tab:criteres_refutation`) and §4.2.7.2, part D
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.7.3 (table `tab:criteres_refutation`) and §4.2.7.2, part D
 
 [Version française](modele_rapport_refutation_fr.md) · [P7 protocol](protocole_en.md)
 
