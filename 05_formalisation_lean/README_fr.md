@@ -1,6 +1,6 @@
 # Formalisation Lean 4 du Trilemme CRO conditionnel
 
-> **Statut : PROPOSITION: formalisation (soumise au *Journal of Automated Reasoning*)** · Source : thèse, chapitre 3 (§3.4) et annexe B
+> **Statut : PROPOSITION. formalisation** · Source : thèse, chapitre 3 (§3.4) et annexe B
 
 [English version](README_en.md)
 
