@@ -1,6 +1,6 @@
 # Modèle de convention avec l'instance électorale (P3)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.3 (système cible et procédure) et §4.2.8.3 (accord institutionnel préalable)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.3 (système cible et procédure) et §4.2.8.3 (accord institutionnel préalable)
 
 [English version](modele_convention_scrutin_en.md) · [Protocole P3](protocole_fr.md) · [Convention institutionnelle générale](../00_commun/convention_institution_partenaire_fr.md)
 
