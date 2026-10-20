@@ -1,6 +1,6 @@
-> **Status: PROPOSAL — construction (submitted to IEEE Transactions on Information Theory)** · Source: thesis, Annex A
+> **Status: PROPOSAL. construction (submitted to IEEE Transactions on Information Theory)** · Source: thesis, Annex A
 
-# preuves_game_based — Game-based security of the SOTP family
+# Game-based security of the SOTP family
 
 *Version française : [README_fr.md](README_fr.md)*
 
