@@ -1,6 +1,6 @@
 # Fiche des conditions de bruit (P5, phase 2)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 2 (conditions A à D, 2 h)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 2 (conditions A à D, 2 h)
 
 [English version](fiche_conditions_bruit_en.md) · [Protocole P5](protocole_fr.md) · [Interface](specification_interface_verification_fr.md)
 
