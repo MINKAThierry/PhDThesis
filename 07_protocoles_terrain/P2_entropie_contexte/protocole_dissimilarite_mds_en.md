@@ -1,6 +1,6 @@
 # Dissimilarity judgement protocol (P2, MDS approach)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.3 (100 contexts, panel of 5 to 10 experts, pairwise similarity ratings, MDS, $V_{\text{eff}} = \det(\hat\Sigma)^{1/2}$)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.3 (100 contexts, panel of 5 to 10 experts, pairwise similarity ratings, MDS, $V_{\text{eff}} = \det(\hat\Sigma)^{1/2}$)
 
 [Version française](protocole_dissimilarite_mds_fr.md) · [P2 protocol](protocole_en.md) · [Corpus of the 100 contexts](corpus_contextes_en.md)
 
