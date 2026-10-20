@@ -1,6 +1,6 @@
 # Questionnaire d'extraction de verdict (P1)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.2 (« questionnaires de 30 items par contexte ») et §4.2.1.3, phase 1, étapes (c) et (d)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.2 (« questionnaires de 30 items par contexte ») et §4.2.1.3, phase 1, étapes (c) et (d)
 
 [English version](questionnaire_extraction_verdict_en.md) · [Protocole P1](protocole_fr.md) · [Dictionnaire des variables](../00_commun/dictionnaire_variables_fr.md)
 
