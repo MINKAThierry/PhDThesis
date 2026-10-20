@@ -1,6 +1,6 @@
 # PQC gold-standard grid (P5, phase 4)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 4 (“post-quantum cryptography experts establish the correct verdicts”)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 4 (“post-quantum cryptography experts establish the correct verdicts”)
 
 [Version française](grille_gold_standard_pqc_fr.md) · [P5 protocol](protocole_en.md) · [P1 grid](../P1_delta/grille_gold_standard_en.md)
 
