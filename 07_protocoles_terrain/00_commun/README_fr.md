@@ -1,6 +1,6 @@
-# 00_commun: pièces partagées par tous les protocoles
+# Pièces partagées par tous les protocoles
 
-> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1 à §4.2.8
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1 à §4.2.8
 
 [English version](README_en.md) · [Retour au dossier parent](../README_fr.md)
 
