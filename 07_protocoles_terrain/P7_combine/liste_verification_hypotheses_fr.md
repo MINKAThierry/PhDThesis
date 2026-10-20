@@ -1,6 +1,6 @@
 # Liste de vérification des hypothèses du théorème CRO$^q$ (P7, partie C)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 2, hypothèses `ass:extraction_quantique`, `ass:verdict_quantique`, `ass:regularite_quantique`, `ass:regime_quantique`, définition de l'interprète admissible ; remarque `rem:portee_cas_etude` ; chapitre 4, §4.2.7.2, partie C
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 2, hypothèses `ass:extraction_quantique`, `ass:verdict_quantique`, `ass:regularite_quantique`, `ass:regime_quantique`, définition de l'interprète admissible ; remarque `rem:portee_cas_etude` ; chapitre 4, §4.2.7.2, partie C
 
 [English version](liste_verification_hypotheses_en.md) · [Protocole P7](protocole_fr.md)
 
