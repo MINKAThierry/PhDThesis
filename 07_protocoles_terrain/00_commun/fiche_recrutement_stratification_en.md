@@ -1,6 +1,6 @@
 # Recruitment and quota tracking sheet
 
-> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.2 (table `tab:stratification_delta`) and §4.2.2.4
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.2 (table `tab:stratification_delta`) and §4.2.2.4
 
 [Version française](fiche_recrutement_stratification_fr.md)
 
