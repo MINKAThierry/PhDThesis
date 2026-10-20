@@ -1,6 +1,6 @@
-# P1 — Protocol for measuring $\Delta$, the institutional extraction capacity
+# P1: Protocol for measuring $\Delta$, the institutional extraction capacity
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1 (and §4.2.4 for validation thresholds)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1 (and §4.2.4 for validation thresholds)
 
 [Version française](protocole_fr.md) · [Folder README](README_en.md)
 
