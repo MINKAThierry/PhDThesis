@@ -1,6 +1,6 @@
-# P3_opp_helios — Mesure de l'opposabilité sur Helios (ENSP)
+# Mesure de l'opposabilité sur Helios (ENSP)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.3
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.3
 
 [English version](README_en.md) · [Retour aux protocoles de terrain](../README_fr.md)
 
