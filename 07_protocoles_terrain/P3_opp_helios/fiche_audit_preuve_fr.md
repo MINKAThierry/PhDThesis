@@ -1,6 +1,6 @@
 # Fiche d'audit d'une preuve (P3, phase 3)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.3.3, phase 3 (« chaque trustee examine indépendamment la preuve, rend un verdict $v \in \mathcal{V}$, note sa confiance sur 10 »)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.3.3, phase 3 (« chaque trustee examine indépendamment la preuve, rend un verdict $v \in \mathcal{V}$, note sa confiance sur 10 »)
 
 [English version](fiche_audit_preuve_en.md) · [Protocole P3](protocole_fr.md)
 
