@@ -1,6 +1,6 @@
 # Spécification de l'interface de vérification post-quantique (P5)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.2 (« interface de vérification post-quantique avec métriques de performance », « simulateur d'environnement quantique avec bruit de dépolarisation paramétrable $p \in [0{,}001 ; 0{,}1]$ »)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.2 (« interface de vérification post-quantique avec métriques de performance », « simulateur d'environnement quantique avec bruit de dépolarisation paramétrable $p \in [0{,}001 ; 0{,}1]$ »)
 
 [English version](specification_interface_verification_en.md) · [Protocole P5](protocole_fr.md)
 
