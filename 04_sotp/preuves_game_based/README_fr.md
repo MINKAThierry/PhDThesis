@@ -1,6 +1,6 @@
-> **Statut : PROPOSITION — construction (soumise à IEEE Transactions on Information Theory)** · Source : thèse, annexe A
+> **Statut : PROPOSITION. construction (soumise à IEEE Transactions on Information Theory)** · Source : thèse, annexe A
 
-# preuves_game_based — Sécurité game-based de la famille SOTP
+# Sécurité game-based de la famille SOTP
 
 *English version: [README_en.md](README_en.md)*
 
