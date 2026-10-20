@@ -1,6 +1,6 @@
-# P6_eta_q — Measuring the quantum interpretability loss $\eta_q$
+# Measuring the quantum interpretability loss $\eta_q$
 
-> **Status: PROPOSAL — protocol not deployed, hypothetical scenario** · Source: thesis, Chapter 4, §4.2.6
+> **Status: PROPOSAL. protocol not deployed, hypothetical scenario** · Source: thesis, Chapter 4, §4.2.6
 
 [Version française](README_fr.md) · [Back to the field protocols](../README_en.md)
 
