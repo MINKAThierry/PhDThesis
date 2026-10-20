@@ -1,6 +1,6 @@
 # Support de formation des trustees (P3, phase 1)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.3.3, phase 1 (« formation structurée sur Helios et les preuves zéro-connaissance », 4 h) ; dérivation Helios, §4.3
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.3.3, phase 1 (« formation structurée sur Helios et les preuves zéro-connaissance », 4 h) ; dérivation Helios, §4.3
 
 [English version](support_formation_trustees_en.md) · [Protocole P3](protocole_fr.md) · [Bulletins d'exercice](formation/bulletins_exercice.json)
 
