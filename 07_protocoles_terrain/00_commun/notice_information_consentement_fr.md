@@ -1,6 +1,6 @@
 # Notice d'information et formulaire de consentement libre et éclairé
 
-> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1, §4.2.2 et §4.2.4 (prérequis éthique)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1, §4.2.2 et §4.2.4 (prérequis éthique)
 
 [English version](notice_information_consentement_en.md)
 
