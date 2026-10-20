@@ -1,6 +1,6 @@
 # Fiche de débriefing (P5, phase 5)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 5 (débriefing, 30 min)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 5 (débriefing, 30 min)
 
 [English version](fiche_debriefing_pqc_en.md) · [Protocole P5](protocole_fr.md) · [Fiche de débriefing de P1](../P1_delta/fiche_debriefing_fr.md)
 
