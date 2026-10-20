@@ -1,6 +1,6 @@
 # Pre-registration template (OSF)
 
-> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1, §4.2.2, §4.2.4 and §4.2.7.3 (table `tab:criteres_refutation`)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1, §4.2.2, §4.2.4 and §4.2.7.3 (table `tab:criteres_refutation`)
 
 [Version française](preenregistrement_fr.md)
 
