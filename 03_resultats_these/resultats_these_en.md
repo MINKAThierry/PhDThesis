@@ -1,6 +1,6 @@
 # Contributions of the thesis with respect to the published articles
 
-> **Status: PROPOSAL: thesis result** · Source: thesis, Chapters 2, 3 and 4 (sources in [`../00_these/manuscrit/`](../00_these/manuscrit/))
+> **Status: PROPOSAL. thesis result** · Source: thesis, Chapters 2, 3 and 4 (sources in [`../00_these/manuscrit/`](../00_these/manuscrit/))
 
 [Version française](resultats_these_fr.md)
 
