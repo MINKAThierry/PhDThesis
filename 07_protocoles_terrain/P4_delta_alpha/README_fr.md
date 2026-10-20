@@ -1,6 +1,6 @@
-# P4_delta_alpha — Estimation conjointe standardisée de $\Delta$ et $\alpha$
+# Estimation conjointe standardisée de $\Delta$ et $\alpha$
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (algorithme `alg:estimation_conjointe`)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (algorithme `alg:estimation_conjointe`)
 
 [English version](README_en.md) · [Retour aux protocoles de terrain](../README_fr.md)
 
