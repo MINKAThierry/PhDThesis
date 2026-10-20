@@ -1,6 +1,6 @@
 # Thèse de doctorat - version de dépôt
 
-> **Statut : PROPOSITION: thèse déposée, soutenance à venir** · Source : manuscrit de thèse, version de dépôt (branche `style` des sources LaTeX)
+> **Statut : PROPOSITION. thèse déposée, soutenance à venir** · Source : manuscrit de thèse, version de dépôt (branche `style` des sources LaTeX)
 
 [English version](README_en.md)
 
