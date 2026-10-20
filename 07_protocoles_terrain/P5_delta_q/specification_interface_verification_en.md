@@ -1,6 +1,6 @@
 # Specification of the post-quantum verification interface (P5)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.2 (“post-quantum verification interface with performance metrics”, “quantum environment simulator with adjustable depolarising noise $p \in [0.001, 0.1]$”)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.2 (“post-quantum verification interface with performance metrics”, “quantum environment simulator with adjustable depolarising noise $p \in [0.001, 0.1]$”)
 
 [Version française](specification_interface_verification_fr.md) · [P5 protocol](protocole_en.md)
 
