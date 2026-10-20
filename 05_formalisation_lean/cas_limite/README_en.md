@@ -1,6 +1,6 @@
 # Limiting case of Theorem 1 of P2 in its initial formulation
 
-> **Status: PROPOSAL — submitted refined statements** · Source: refined statements submitted for P2 ([`../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)); thesis, `rem:scope_trilemme_classique` (Remark 2.17, §2.3.2) and §3.4.9
+> **Status: PROPOSAL. submitted refined statements** · Source: refined statements submitted for P2 ([`../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)); thesis, `rem:scope_trilemme_classique` (Remark 2.17, §2.3.2) and §3.4.9
 
 [Version française](README_fr.md)
 
