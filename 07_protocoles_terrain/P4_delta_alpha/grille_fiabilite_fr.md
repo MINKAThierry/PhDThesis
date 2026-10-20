@@ -1,6 +1,6 @@
 # Grille de fiabilité (P4, étape 6)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.4, étape 6 (« validation, ICC $\geq 0{,}8$, $\kappa \geq 0{,}7$ »)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.4, étape 6 (« validation, ICC $\geq 0{,}8$, $\kappa \geq 0{,}7$ »)
 
 [English version](grille_fiabilite_en.md) · [Protocole P4](protocole_fr.md) · [Plan d'analyse, section 7](../00_commun/plan_analyse_statistique_fr.md#7-fiabilité)
 
