@@ -1,6 +1,6 @@
 # Interviewer session log
 
-> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3 (phases 0 to 4) and §4.2.1.4 (recording of times and confidence)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3 (phases 0 to 4) and §4.2.1.4 (recording of times and confidence)
 
 [Version française](journal_session_fr.md)
 
