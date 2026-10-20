@@ -1,6 +1,6 @@
 # Delphi questionnaire, round 1 (P2, approach 3)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.4 (“20 experts estimate $H(\mathcal{C})$ independently, then revise after anonymised feedback”, stop when the IQR is below 5 bits)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.4 (“20 experts estimate $H(\mathcal{C})$ independently, then revise after anonymised feedback”, stop when the IQR is below 5 bits)
 
 [Version française](delphi_questionnaire_tour1_fr.md) · [P2 protocol](protocole_en.md) · [Rounds 2 to 4](delphi_retour_tours_2_4_en.md)
 
