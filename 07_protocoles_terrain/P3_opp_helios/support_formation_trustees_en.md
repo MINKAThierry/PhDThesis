@@ -1,6 +1,6 @@
 # Trustee training material (P3, phase 1)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.3.3, phase 1 (“structured training on Helios and zero-knowledge proofs”, 4 h); Helios derivation, §4.3
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.3.3, phase 1 (“structured training on Helios and zero-knowledge proofs”, 4 h); Helios derivation, §4.3
 
 [Version française](support_formation_trustees_fr.md) · [P3 protocol](protocole_en.md) · [Exercise ballots](formation/bulletins_exercice.json)
 
