@@ -1,6 +1,6 @@
-# P7_combine — Protocole combiné de validation post-quantique
+# Protocole combiné de validation post-quantique
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.7 (algorithme `alg:protocole_combine`)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.7 (algorithme `alg:protocole_combine`)
 
 [English version](README_en.md) · [Retour aux protocoles de terrain](../README_fr.md)
 
