@@ -1,6 +1,6 @@
 # Checklist of the hypotheses of the CRO$^q$ theorem (P7, part C)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 2, hypotheses `ass:extraction_quantique`, `ass:verdict_quantique`, `ass:regularite_quantique`, `ass:regime_quantique`, definition of the admissible interpreter; remark `rem:portee_cas_etude`; Chapter 4, §4.2.7.2, part C
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 2, hypotheses `ass:extraction_quantique`, `ass:verdict_quantique`, `ass:regularite_quantique`, `ass:regime_quantique`, definition of the admissible interpreter; remark `rem:portee_cas_etude`; Chapter 4, §4.2.7.2, part C
 
 [Version française](liste_verification_hypotheses_fr.md) · [P7 protocol](protocole_en.md)
 
