@@ -1,6 +1,6 @@
-# 00_commun: documents shared by all protocols
+# Documents shared by all protocols
 
-> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1 to §4.2.8
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1 to §4.2.8
 
 [Version française](README_fr.md) · [Back to parent folder](../README_en.md)
 
