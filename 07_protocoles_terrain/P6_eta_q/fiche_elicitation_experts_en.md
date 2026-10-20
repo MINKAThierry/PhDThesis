@@ -1,6 +1,6 @@
 # Expert elicitation form (P6)
 
-> **Status: PROPOSAL — role of the experts to be decided** · Source: thesis, Chapter 4, §4.2.6 (“40 experts and simulation”); criterion on $\eta_q$ in table `tab:criteres_refutation` (“the 95 % CI of $\hat\eta_q$ excludes the interval predicted before the experiment”)
+> **Status: PROPOSAL. role of the experts to be decided** · Source: thesis, Chapter 4, §4.2.6 (“40 experts and simulation”); criterion on $\eta_q$ in table `tab:criteres_refutation` (“the 95 % CI of $\hat\eta_q$ excludes the interval predicted before the experiment”)
 
 [Version française](fiche_elicitation_experts_fr.md) · [P6 protocol](protocole_en.md)
 
