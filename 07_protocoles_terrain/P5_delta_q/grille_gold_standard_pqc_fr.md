@@ -1,6 +1,6 @@
 # Grille du gold standard PQC (P5, phase 4)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 4 (« experts en cryptographie post-quantique établissent les verdicts corrects »)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 4 (« experts en cryptographie post-quantique établissent les verdicts corrects »)
 
 [English version](grille_gold_standard_pqc_en.md) · [Protocole P5](protocole_fr.md) · [Grille de P1](../P1_delta/grille_gold_standard_fr.md)
 
