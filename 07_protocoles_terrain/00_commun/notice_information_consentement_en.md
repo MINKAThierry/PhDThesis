@@ -1,6 +1,6 @@
 # Information sheet and free and informed consent form
 
-> **Status: PROPOSAL: protocol not deployed** · Source: thesis, Chapter 4, §4.2.1, §4.2.2 and §4.2.4 (ethics prerequisite)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1, §4.2.2 and §4.2.4 (ethics prerequisite)
 
 [Version française](notice_information_consentement_fr.md)
 
