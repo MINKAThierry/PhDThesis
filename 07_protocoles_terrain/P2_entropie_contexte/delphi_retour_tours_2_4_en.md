@@ -1,6 +1,6 @@
 # Anonymised feedback and revision, rounds 2 to 4 (P2, approach 3)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.4 (revision after anonymised feedback, four-round procedure, stop when the IQR is below 5 bits)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.4 (revision after anonymised feedback, four-round procedure, stop when the IQR is below 5 bits)
 
 [Version française](delphi_retour_tours_2_4_fr.md) · [P2 protocol](protocole_en.md) · [Round 1](delphi_questionnaire_tour1_en.md) · [Synthesis](delphi_synthese_en.md)
 
