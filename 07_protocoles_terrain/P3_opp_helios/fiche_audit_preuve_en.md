@@ -1,6 +1,6 @@
 # Proof audit form (P3, phase 3)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.3.3, phase 3 (“each trustee independently examines the proof, gives a verdict $v \in \mathcal{V}$, rates confidence out of 10”)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.3.3, phase 3 (“each trustee independently examines the proof, gives a verdict $v \in \mathcal{V}$, rates confidence out of 10”)
 
 [Version française](fiche_audit_preuve_fr.md) · [P3 protocol](protocole_en.md)
 
