@@ -1,6 +1,6 @@
 # Simulation plan (P6)
 
-> **Status: PROPOSAL — hypothetical scenario, toy model** · Source: thesis, Chapter 4, §4.2.6.2 and §4.2.6.3 (table `tab:val_canaux_quantiques`)
+> **Status: PROPOSAL. hypothetical scenario, toy model** · Source: thesis, Chapter 4, §4.2.6.2 and §4.2.6.3 (table `tab:val_canaux_quantiques`)
 
 [Version française](plan_simulation_fr.md) · [P6 protocol](protocole_en.md)
 
