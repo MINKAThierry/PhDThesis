@@ -1,6 +1,6 @@
-# P2_entropie_contexte — Mesure de l'entropie contextuelle $H(\mathcal{C})$
+# Mesure de l'entropie contextuelle $H(\mathcal{C})$
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.2
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.2
 
 [English version](README_en.md) · [Retour aux protocoles de terrain](../README_fr.md)
 
