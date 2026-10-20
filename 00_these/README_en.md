@@ -1,6 +1,6 @@
 # Doctoral thesis - submitted version
 
-> **Status: PROPOSAL: thesis submitted, defence pending** · Source: thesis manuscript, submitted version (`style` branch of the LaTeX sources)
+> **Status: PROPOSAL. thesis submitted, defence pending** · Source: thesis manuscript, submitted version (`style` branch of the LaTeX sources)
 
 [Version française](README_fr.md)
 
