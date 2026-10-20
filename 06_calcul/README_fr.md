@@ -1,6 +1,6 @@
-> **Statut : PROPOSITION: calibration illustrative** · Source : thèse, chapitre 4 (tableau des paramètres de référence, calibration rétrospective)
+> **Statut : PROPOSITION. calibration illustrative** · Source : thèse, chapitre 4 (tableau des paramètres de référence, calibration rétrospective)
 
-# 06_calcul: Calibration illustrative et vérifications numériques
+# Calibration illustrative et vérifications numériques
 
 *English version: [README_en.md](README_en.md)*
 
