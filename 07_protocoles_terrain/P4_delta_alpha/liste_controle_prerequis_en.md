@@ -1,6 +1,6 @@
 # Prerequisite checklist (P4)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.4, `Require` line of algorithm `alg:estimation_conjointe` (“institutional agreement, IRB ethics, $n \geq 30$ participants”)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.4, `Require` line of algorithm `alg:estimation_conjointe` (“institutional agreement, IRB ethics, $n \geq 30$ participants”)
 
 [Version française](liste_controle_prerequis_fr.md) · [P4 protocol](protocole_en.md)
 
