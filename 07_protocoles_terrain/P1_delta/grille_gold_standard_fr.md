@@ -1,6 +1,6 @@
 # Grille du gold standard (P1, phase 3)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3, phase 3 (« deux cryptographes experts indépendants rendent les verdicts corrects, accord inter-juge requis ≥ 90 % »)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3, phase 3 (« deux cryptographes experts indépendants rendent les verdicts corrects, accord inter-juge requis ≥ 90 % »)
 
 [English version](grille_gold_standard_en.md) · [Protocole P1](protocole_fr.md) · [Catalogue des stimuli](stimuli/catalogue_stimuli_fr.md)
 
