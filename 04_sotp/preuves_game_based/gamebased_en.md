@@ -1,4 +1,4 @@
-> **Status: PROPOSAL — construction (submitted to IEEE Transactions on Information Theory)** · Source: thesis, Annex A (`chap:annexe_gamebased`), file [gamebased_source_fr.tex](gamebased_source_fr.tex) (French)
+> **Status: PROPOSAL. construction (submitted to IEEE Transactions on Information Theory)** · Source: thesis, Annex A (`chap:annexe_gamebased`), file [gamebased_source_fr.tex](gamebased_source_fr.tex) (French)
 
 # Game-based security and formal reductions for the SOTP family
 
