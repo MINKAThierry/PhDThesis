@@ -1,6 +1,6 @@
 # Verdict extraction questionnaire (P1)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.2 (“30-item questionnaires per context”) and §4.2.1.3, phase 1, steps (c) and (d)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.2 (“30-item questionnaires per context”) and §4.2.1.3, phase 1, steps (c) and (d)
 
 [Version française](questionnaire_extraction_verdict_fr.md) · [P1 protocol](protocole_en.md) · [Variable dictionary](../00_commun/dictionnaire_variables_en.md)
 
