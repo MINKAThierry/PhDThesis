@@ -1,6 +1,6 @@
 # Questionnaire Delphi, tour 1 (P2, approche 3)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.4 (« 20 experts estiment $H(\mathcal{C})$ indépendamment, puis révisent après feedback anonymisé », arrêt lorsque l'IQR est inférieur à 5 bits)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.4 (« 20 experts estiment $H(\mathcal{C})$ indépendamment, puis révisent après feedback anonymisé », arrêt lorsque l'IQR est inférieur à 5 bits)
 
 [English version](delphi_questionnaire_tour1_en.md) · [Protocole P2](protocole_fr.md) · [Tours 2 à 4](delphi_retour_tours_2_4_fr.md)
 
