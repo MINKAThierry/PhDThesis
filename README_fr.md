@@ -2,7 +2,7 @@
 
 *English version: [README_en.md](README_en.md)*
 
-Ce dépôt réunit l'ensemble des travaux de la thèse de doctorat de Thierry Emmanuel MINKA MI NGUIDJOÏ, préparée au LIMSI (École Nationale Supérieure Polytechnique, Université de Yaoundé I) sous la direction du Pr Thomas DJOTIO NDIÉ et du Dr Flavien Serge MANI ONANA. Chaque élément est présenté pour ce qu'il est. Le registre [STATUS_fr.md](STATUS_fr.md) en donne la liste complète.
+Ce dépôt réunit l'ensemble des travaux de la thèse de doctorat de Thierry Emmanuel MINKA MI NGUIDJOÏ, préparée au LIMSI (Laboratoire d'Ingénierie Mathématiques et des Système d'Information) de l'ENSPY (École Nationale Supérieure Polytechnique, Université de Yaoundé I) sous la direction du Pr Thomas DJOTIO NDIÉ et du Dr Flavien Serge MANI ONANA. Chaque élément est présenté pour ce qu'il est. Le registre [STATUS_fr.md](STATUS_fr.md) en donne la liste complète.
 
 ## Statuts
 
