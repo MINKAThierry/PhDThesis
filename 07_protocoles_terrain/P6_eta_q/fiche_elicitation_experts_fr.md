@@ -1,6 +1,6 @@
 # Fiche d'élicitation des experts (P6)
 
-> **Statut : PROPOSITION — rôle des experts à arrêter** · Source : thèse, chapitre 4, §4.2.6 (« 40 experts et simulation ») ; critère $\eta_q$ du tableau `tab:criteres_refutation` (« l'IC 95 % de $\hat\eta_q$ exclut l'intervalle prédit avant l'expérience »)
+> **Statut : PROPOSITION. rôle des experts à arrêter** · Source : thèse, chapitre 4, §4.2.6 (« 40 experts et simulation ») ; critère $\eta_q$ du tableau `tab:criteres_refutation` (« l'IC 95 % de $\hat\eta_q$ exclut l'intervalle prédit avant l'expérience »)
 
 [English version](fiche_elicitation_experts_en.md) · [Protocole P6](protocole_fr.md)
 
