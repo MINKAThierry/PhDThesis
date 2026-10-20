@@ -1,6 +1,6 @@
-# P2 — Protocole de mesure de $H(\mathcal{C})$, entropie contextuelle
+# Protocole de mesure de $H(\mathcal{C})$, entropie contextuelle
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.2 (tableau `tab:estimations_structurelles_HC`)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.2 (tableau `tab:estimations_structurelles_HC`)
 
 [English version](protocole_en.md) · [README du dossier](README_fr.md)
 
