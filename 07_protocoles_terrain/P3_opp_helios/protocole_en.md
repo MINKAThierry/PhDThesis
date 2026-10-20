@@ -1,6 +1,6 @@
-# P3 — Protocol for measuring $\mathsf{Opp}$ on a deployed system (Helios, ENSP)
+# Protocol for measuring $\mathsf{Opp}$ on a deployed system (Helios, ENSP)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.3; Helios derivation, §4.3 (`sec:derivation_helios`)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.3; Helios derivation, §4.3 (`sec:derivation_helios`)
 
 [Version française](protocole_fr.md) · [Folder README](README_en.md)
 
