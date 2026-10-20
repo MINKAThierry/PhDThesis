@@ -1,6 +1,6 @@
 # Debriefing form (P5, phase 5)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 5 (debriefing, 30 min)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 5 (debriefing, 30 min)
 
 [Version française](fiche_debriefing_pqc_fr.md) · [P5 protocol](protocole_en.md) · [P1 debriefing form](../P1_delta/fiche_debriefing_en.md)
 
