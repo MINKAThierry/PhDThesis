@@ -1,6 +1,6 @@
-# P6_eta_q — Mesure de la perte d'interprétabilité quantique $\eta_q$
+# Mesure de la perte d'interprétabilité quantique $\eta_q$
 
-> **Statut : PROPOSITION — protocole non déployé, scénario hypothétique** · Source : thèse, chapitre 4, §4.2.6
+> **Statut : PROPOSITION. protocole non déployé, scénario hypothétique** · Source : thèse, chapitre 4, §4.2.6
 
 [English version](README_en.md) · [Retour aux protocoles de terrain](../README_fr.md)
 
