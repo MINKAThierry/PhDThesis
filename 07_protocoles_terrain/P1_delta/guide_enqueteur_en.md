@@ -1,6 +1,6 @@
 # Interviewer guide (P1)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3 (phases 0 to 4) and §4.2.1.4 (decision times and confidence)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3 (phases 0 to 4) and §4.2.1.4 (decision times and confidence)
 
 [Version française](guide_enqueteur_fr.md) · [P1 protocol](protocole_en.md) · [Folder README](README_en.md)
 
