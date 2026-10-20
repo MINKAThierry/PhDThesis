@@ -1,6 +1,6 @@
 # Procédure de tirage de l'échantillon (P3)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.3.3, phase 3 (« échantillon aléatoire de 50 preuves (10 %) »)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.3.3, phase 3 (« échantillon aléatoire de 50 preuves (10 %) »)
 
 [English version](tirage_echantillon_en.md) · [Protocole P3](protocole_fr.md)
 
