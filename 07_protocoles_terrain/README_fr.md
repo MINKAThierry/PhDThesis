@@ -1,6 +1,6 @@
-# Protocoles de terrain — mesure des paramètres institutionnels
+# Protocoles de terrain - mesure des paramètres institutionnels
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.1.2, §4.2 et §4.2.8
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.1.2, §4.2 et §4.2.8
 
 [English version](README_en.md)
 
