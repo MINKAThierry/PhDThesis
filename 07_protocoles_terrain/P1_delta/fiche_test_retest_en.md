@@ -1,6 +1,6 @@
 # Test-retest form (P1, phase 2)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3, phase 2 (“re-presentation of 3 contexts already seen after a 2-week delay”, 1 h); thresholds ICC $\geq 0.8$ and $\kappa \geq 0.7$ (§4.2.4)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3, phase 2 (“re-presentation of 3 contexts already seen after a 2-week delay”, 1 h); thresholds ICC $\geq 0.8$ and $\kappa \geq 0.7$ (§4.2.4)
 
 [Version française](fiche_test_retest_fr.md) · [P1 protocol](protocole_en.md) · [Analysis plan, section 7](../00_commun/plan_analyse_statistique_en.md#7-reliability)
 
