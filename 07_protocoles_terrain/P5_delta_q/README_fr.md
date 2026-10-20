@@ -1,6 +1,6 @@
-# P5_delta_q — Mesure de la capacité d'extraction quantique $\Delta_q$
+# Mesure de la capacité d'extraction quantique $\Delta_q$
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.5
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.5
 
 [English version](README_en.md) · [Retour aux protocoles de terrain](../README_fr.md)
 
