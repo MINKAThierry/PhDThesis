@@ -1,6 +1,6 @@
-# P6 — Protocol for measuring $\eta_q$, quantum interpretability loss
+# Protocol for measuring $\eta_q$, quantum interpretability loss
 
-> **Status: PROPOSAL — protocol not deployed, hypothetical scenario** · Source: thesis, Chapter 4, §4.2.6 (table `tab:val_canaux_quantiques`)
+> **Status: PROPOSAL. protocol not deployed, hypothetical scenario** · Source: thesis, Chapter 4, §4.2.6 (table `tab:val_canaux_quantiques`)
 
 [Version française](protocole_fr.md) · [Folder README](README_en.md)
 
