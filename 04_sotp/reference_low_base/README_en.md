@@ -1,6 +1,6 @@
-> **Status: PROPOSAL — reference implementation** · Source: thesis, Chapter 3, Algorithms `alg:sotp_low` and `alg:sotp_base`; Appendix A, §A.5 and §A.6
+> **Status: PROPOSAL. reference implementation** · Source: thesis, Chapter 3, Algorithms `alg:sotp_low` and `alg:sotp_base`; Appendix A, §A.5 and §A.6
 
-# reference_low_base — Reference implementation of SOTP-Low and SOTP-Base
+# Reference implementation of SOTP-Low and SOTP-Base
 
 *Version française : [README_fr.md](README_fr.md)*
 
