@@ -1,6 +1,6 @@
 # Debriefing and feedback form (P1, phase 4)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3, phase 4 (“debriefing and feedback”, 30 min)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3, phase 4 (“debriefing and feedback”, 30 min)
 
 [Version française](fiche_debriefing_fr.md) · [P1 protocol](protocole_en.md) · [Information sheet](../00_commun/notice_information_consentement_en.md)
 
