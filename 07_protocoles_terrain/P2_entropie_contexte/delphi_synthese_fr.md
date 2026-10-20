@@ -1,6 +1,6 @@
 # Synthèse finale du Delphi et confrontation des trois approches (P2)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.2 à §4.2.2.4 ; tableau `tab:estimations_structurelles_HC`
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.2 à §4.2.2.4 ; tableau `tab:estimations_structurelles_HC`
 
 [English version](delphi_synthese_en.md) · [Protocole P2](protocole_fr.md) · [Plan d'analyse, section 8](../00_commun/plan_analyse_statistique_fr.md#8-analyses-de-p2)
 
