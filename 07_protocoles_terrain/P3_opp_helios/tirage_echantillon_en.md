@@ -1,6 +1,6 @@
 # Sampling procedure (P3)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.3.3, phase 3 (“random sample of 50 proofs (10 %)”)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.3.3, phase 3 (“random sample of 50 proofs (10 %)”)
 
 [Version française](tirage_echantillon_fr.md) · [P3 protocol](protocole_en.md)
 
