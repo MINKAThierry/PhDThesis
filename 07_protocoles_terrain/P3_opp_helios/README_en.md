@@ -1,6 +1,6 @@
-# P3_opp_helios — Measuring opposability on Helios (ENSP)
+# Measuring opposability on Helios (ENSP)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.3
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.3
 
 [Version française](README_fr.md) · [Back to the field protocols](../README_en.md)
 
