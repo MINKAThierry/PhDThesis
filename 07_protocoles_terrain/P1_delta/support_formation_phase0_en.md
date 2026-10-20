@@ -1,6 +1,6 @@
 # Phase 0 training material (P1)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3, phase 0 (“introduction to basic cryptographic concepts without revealing internal mechanisms, in order to harmonise the minimum vocabulary”, 2 h)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3, phase 0 (“introduction to basic cryptographic concepts without revealing internal mechanisms, in order to harmonise the minimum vocabulary”, 2 h)
 
 [Version française](support_formation_phase0_fr.md) · [P1 protocol](protocole_en.md) · [Interviewer guide](guide_enqueteur_en.md)
 
