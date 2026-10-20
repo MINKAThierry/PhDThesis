@@ -1,6 +1,6 @@
 # Plan de simulation (P6)
 
-> **Statut : PROPOSITION — scénario hypothétique, modèle jouet** · Source : thèse, chapitre 4, §4.2.6.2 et §4.2.6.3 (tableau `tab:val_canaux_quantiques`)
+> **Statut : PROPOSITION. scénario hypothétique, modèle jouet** · Source : thèse, chapitre 4, §4.2.6.2 et §4.2.6.3 (tableau `tab:val_canaux_quantiques`)
 
 [English version](plan_simulation_en.md) · [Protocole P6](protocole_fr.md)
 
