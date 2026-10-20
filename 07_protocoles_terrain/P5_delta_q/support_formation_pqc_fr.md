@@ -1,6 +1,6 @@
 # Support de formation PQC (P5, phase 0)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 0 (« introduction aux standards NIST PQC portant sur la structure des clés, le processus de signature et les différences avec RSA/ECDSA ; formation sur les implications institutionnelles de la transition post-quantique », 3 h)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 0 (« introduction aux standards NIST PQC portant sur la structure des clés, le processus de signature et les différences avec RSA/ECDSA ; formation sur les implications institutionnelles de la transition post-quantique », 3 h)
 
 [English version](support_formation_pqc_en.md) · [Protocole P5](protocole_fr.md) · [Formation de P1](../P1_delta/support_formation_phase0_fr.md)
 
