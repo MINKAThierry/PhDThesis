@@ -1,6 +1,6 @@
 # Questionnaire d'extraction de verdict, contexte PQC (P5)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.2 (« questionnaires adaptés au contexte NIST PQC ») et §4.2.5.3, phases 1 et 2
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.2 (« questionnaires adaptés au contexte NIST PQC ») et §4.2.5.3, phases 1 et 2
 
 [English version](questionnaire_pqc_en.md) · [Protocole P5](protocole_fr.md) · [Questionnaire de P1](../P1_delta/questionnaire_extraction_verdict_fr.md)
 
