@@ -1,6 +1,6 @@
 # Modèle de rapport d'estimation conjointe (P4)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (algorithme `alg:estimation_conjointe`) et §4.2.7.3 (tableau `tab:criteres_refutation`)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (algorithme `alg:estimation_conjointe`) et §4.2.7.3 (tableau `tab:criteres_refutation`)
 
 [English version](rapport_estimation_en.md) · [Protocole P4](protocole_fr.md)
 
