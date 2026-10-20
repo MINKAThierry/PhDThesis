@@ -1,6 +1,6 @@
 # Retour anonymisé et révision, tours 2 à 4 (P2, approche 3)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.4 (révision après feedback anonymisé, procédure en quatre rounds, arrêt lorsque l'IQR est inférieur à 5 bits)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.4 (révision après feedback anonymisé, procédure en quatre rounds, arrêt lorsque l'IQR est inférieur à 5 bits)
 
 [English version](delphi_retour_tours_2_4_en.md) · [Protocole P2](protocole_fr.md) · [Tour 1](delphi_questionnaire_tour1_fr.md) · [Synthèse](delphi_synthese_fr.md)
 
