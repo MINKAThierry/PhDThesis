@@ -1,6 +1,6 @@
 # Cas limite du Théorème 1 de P2 dans sa formulation initiale
 
-> **Statut : PROPOSITION — formulations précisées soumises** · Source : formulations précisées soumises pour P2 ([`../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)) ; thèse, `rem:scope_trilemme_classique` (Remarque 2.17, §2.3.2) et §3.4.9
+> **Statut : PROPOSITION. formulations précisées soumises** · Source : formulations précisées soumises pour P2 ([`../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)) ; thèse, `rem:scope_trilemme_classique` (Remarque 2.17, §2.3.2) et §3.4.9
 
 [English version](README_en.md)
 
