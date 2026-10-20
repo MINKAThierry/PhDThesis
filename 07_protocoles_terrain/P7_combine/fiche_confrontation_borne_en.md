@@ -1,6 +1,6 @@
 # Bound comparison form (P7, part C)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 2, remark `rem:forme_raffinee_pq` (equation `eq:trilemme_pq_raffine`, threshold $H^\sharp_q$); Chapter 4, §4.2.7.2, part C; “bound” criterion of table `tab:criteres_refutation`
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 2, remark `rem:forme_raffinee_pq` (equation `eq:trilemme_pq_raffine`, threshold $H^\sharp_q$); Chapter 4, §4.2.7.2, part C; “bound” criterion of table `tab:criteres_refutation`
 
 [Version française](fiche_confrontation_borne_fr.md) · [P7 protocol](protocole_en.md) · [Checklist](liste_verification_hypotheses_en.md)
 
