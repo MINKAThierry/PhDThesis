@@ -1,6 +1,6 @@
-# P4_delta_alpha — Standardised joint estimation of $\Delta$ and $\alpha$
+# Standardised joint estimation of $\Delta$ and $\alpha$
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (algorithm `alg:estimation_conjointe`)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (algorithm `alg:estimation_conjointe`)
 
 [Version française](README_fr.md) · [Back to the field protocols](../README_en.md)
 
