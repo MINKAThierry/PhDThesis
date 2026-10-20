@@ -1,6 +1,6 @@
 # Fiche de débriefing et de restitution (P1, phase 4)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3, phase 4 (« débriefing et restitution », 30 min)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3, phase 4 (« débriefing et restitution », 30 min)
 
 [English version](fiche_debriefing_en.md) · [Protocole P1](protocole_fr.md) · [Notice d'information](../00_commun/notice_information_consentement_fr.md)
 
