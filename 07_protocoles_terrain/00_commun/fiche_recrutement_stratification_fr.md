@@ -1,6 +1,6 @@
 # Fiche de recrutement et de suivi des quotas
 
-> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.2 (tableau `tab:stratification_delta`) et §4.2.2.4
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.2 (tableau `tab:stratification_delta`) et §4.2.2.4
 
 [English version](fiche_recrutement_stratification_en.md)
 
