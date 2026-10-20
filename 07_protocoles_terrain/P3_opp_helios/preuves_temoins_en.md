@@ -1,6 +1,6 @@
 # Control-proof procedure (P3)
 
-> **Status: PROPOSAL — addition to the thesis protocol, not deployed** · Source: thesis, Chapter 4, §4.2.3.5 (measuring $H_{\text{emp}}(V\mid C)$ instead of postulating it)
+> **Status: PROPOSAL. addition to the thesis protocol, not deployed** · Source: thesis, Chapter 4, §4.2.3.5 (measuring $H_{\text{emp}}(V\mid C)$ instead of postulating it)
 
 [Version française](preuves_temoins_fr.md) · [P3 protocol](protocole_en.md)
 
