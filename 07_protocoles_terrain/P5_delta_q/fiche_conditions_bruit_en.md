@@ -1,6 +1,6 @@
 # Noise conditions form (P5, phase 2)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 2 (conditions A to D, 2 h)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 2 (conditions A to D, 2 h)
 
 [Version française](fiche_conditions_bruit_fr.md) · [P5 protocol](protocole_en.md) · [Interface](specification_interface_verification_en.md)
 
