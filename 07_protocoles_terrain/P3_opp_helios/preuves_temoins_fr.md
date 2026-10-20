@@ -1,6 +1,6 @@
 # Procédure des preuves témoins (P3)
 
-> **Statut : PROPOSITION — ajout au protocole de la thèse, non déployé** · Source : thèse, chapitre 4, §4.2.3.5 (mesure de $H_{\text{emp}}(V\mid C)$ au lieu de la postuler)
+> **Statut : PROPOSITION. ajout au protocole de la thèse, non déployé** · Source : thèse, chapitre 4, §4.2.3.5 (mesure de $H_{\text{emp}}(V\mid C)$ au lieu de la postuler)
 
 [English version](preuves_temoins_en.md) · [Protocole P3](protocole_fr.md)
 
