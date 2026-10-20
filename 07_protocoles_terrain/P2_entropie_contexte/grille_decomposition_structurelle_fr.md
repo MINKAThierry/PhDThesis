@@ -1,6 +1,6 @@
 # Grille de décomposition structurelle (P2, approche 1)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.2 (équation `eq:decomposition_HC`) ; glossaire des notations, $H(C) = H(L) + H(T\mid L) + H(R\mid L,T)$
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.2 (équation `eq:decomposition_HC`) ; glossaire des notations, $H(C) = H(L) + H(T\mid L) + H(R\mid L,T)$
 
 [English version](grille_decomposition_structurelle_en.md) · [Protocole P2](protocole_fr.md)
 
