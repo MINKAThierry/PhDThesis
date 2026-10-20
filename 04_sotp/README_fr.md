@@ -1,6 +1,6 @@
 > **Statut : PROPOSITION: construction (soumise à IEEE Transactions on Information Theory)** · Source : thèse, chapitre 3 (§3.2 et §3.3) et annexe A
 
-# 04_sotp: La famille SOTP (Semantic One-Time Pad)
+# La famille SOTP (Semantic One-Time Pad)
 
 *English version: [README_en.md](README_en.md)*
 
