@@ -1,6 +1,6 @@
 # Fiche des paramètres de canaux (P6)
 
-> **Statut : PROPOSITION — scénario hypothétique** · Source : thèse, chapitre 4, §4.2.6.2 (« paramètres de bruit calibrés sur les spécifications de matériel quantique actuel (IBM Quantum, IonQ, etc.) »)
+> **Statut : PROPOSITION. scénario hypothétique** · Source : thèse, chapitre 4, §4.2.6.2 (« paramètres de bruit calibrés sur les spécifications de matériel quantique actuel (IBM Quantum, IonQ, etc.) »)
 
 [English version](fiche_parametres_canaux_en.md) · [Protocole P6](protocole_fr.md) · [Plan de simulation](plan_simulation_fr.md)
 
