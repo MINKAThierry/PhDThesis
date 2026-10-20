@@ -1,6 +1,6 @@
 # PQC training material (P5, phase 0)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 0 (“introduction to the NIST PQC standards covering key structure, signing process and differences with RSA/ECDSA; training on the institutional implications of the post-quantum transition”, 3 h)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.3, phase 0 (“introduction to the NIST PQC standards covering key structure, signing process and differences with RSA/ECDSA; training on the institutional implications of the post-quantum transition”, 3 h)
 
 [Version française](support_formation_pqc_fr.md) · [P5 protocol](protocole_en.md) · [P1 training](../P1_delta/support_formation_phase0_en.md)
 
