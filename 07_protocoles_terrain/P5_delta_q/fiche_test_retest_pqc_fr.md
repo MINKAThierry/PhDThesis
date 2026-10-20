@@ -1,6 +1,6 @@
 # Fiche test-retest (P5, phase 3)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 3 (« re-présentation de scénarios après 2 semaines », 1 h) ; §4.2.5.4 (répéter la mesure à bruit constant avant de faire varier $p$)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.5.3, phase 3 (« re-présentation de scénarios après 2 semaines », 1 h) ; §4.2.5.4 (répéter la mesure à bruit constant avant de faire varier $p$)
 
 [English version](fiche_test_retest_pqc_en.md) · [Protocole P5](protocole_fr.md) · [Fiche test-retest de P1](../P1_delta/fiche_test_retest_fr.md)
 
