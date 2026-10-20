@@ -1,6 +1,6 @@
-# Field protocols — measuring the institutional parameters
+# Field protocols - measuring the institutional parameters
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.1.2, §4.2 and §4.2.8
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.1.2, §4.2 and §4.2.8
 
 [Version française](README_fr.md)
 
