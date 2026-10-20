@@ -1,6 +1,6 @@
 # Corpus des 100 contextes (P2, approche MDS)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.3 (« un ensemble de $n_{\text{ctx}} = 100$ contextes variés »)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.2.3 (« un ensemble de $n_{\text{ctx}} = 100$ contextes variés »)
 
 [English version](corpus_contextes_en.md) · [Protocole de dissimilarité](protocole_dissimilarite_mds_fr.md)
 
