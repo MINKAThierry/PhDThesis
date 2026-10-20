@@ -1,6 +1,6 @@
 # Guide de l'enquêteur (P1)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3 (phases 0 à 4) et §4.2.1.4 (temps de décision et confiance)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3 (phases 0 à 4) et §4.2.1.4 (temps de décision et confiance)
 
 [English version](guide_enqueteur_en.md) · [Protocole P1](protocole_fr.md) · [README du dossier](README_fr.md)
 
