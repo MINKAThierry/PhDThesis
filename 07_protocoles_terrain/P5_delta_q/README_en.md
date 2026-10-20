@@ -1,6 +1,6 @@
-# P5_delta_q — Measuring the quantum extraction capacity $\Delta_q$
+# Measuring the quantum extraction capacity $\Delta_q$
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5
 
 [Version française](README_fr.md) · [Back to the field protocols](../README_en.md)
 
