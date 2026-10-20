@@ -1,6 +1,6 @@
 # Modèle de demande d'avis au comité d'éthique de la recherche
 
-> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (prérequis éthique) et §4.2.8.3
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.4 (prérequis éthique) et §4.2.8.3
 
 [English version](dossier_comite_ethique_en.md)
 
