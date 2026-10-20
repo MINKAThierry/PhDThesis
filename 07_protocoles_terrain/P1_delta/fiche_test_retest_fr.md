@@ -1,6 +1,6 @@
 # Fiche test-retest (P1, phase 2)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3, phase 2 (« re-présentation de 3 contextes déjà vus après un délai de 2 semaines », 1 h) ; seuils ICC $\geq 0{,}8$ et $\kappa \geq 0{,}7$ (§4.2.4)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3, phase 2 (« re-présentation de 3 contextes déjà vus après un délai de 2 semaines », 1 h) ; seuils ICC $\geq 0{,}8$ et $\kappa \geq 0{,}7$ (§4.2.4)
 
 [English version](fiche_test_retest_en.md) · [Protocole P1](protocole_fr.md) · [Plan d'analyse, section 7](../00_commun/plan_analyse_statistique_fr.md#7-fiabilité)
 
