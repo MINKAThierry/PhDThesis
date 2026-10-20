@@ -1,6 +1,6 @@
 # Modèle de pré-enregistrement (OSF)
 
-> **Statut : PROPOSITION: protocole non déployé** · Source : thèse, chapitre 4, §4.2.1, §4.2.2, §4.2.4 et §4.2.7.3 (tableau `tab:criteres_refutation`)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1, §4.2.2, §4.2.4 et §4.2.7.3 (tableau `tab:criteres_refutation`)
 
 [English version](preenregistrement_en.md)
 
