@@ -1,6 +1,6 @@
-# P1 — Protocole de mesure de $\Delta$, capacité d'extraction institutionnelle
+# P1: Protocole de mesure de $\Delta$, capacité d'extraction institutionnelle
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1 (et §4.2.4 pour les seuils de validation)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1 (et §4.2.4 pour les seuils de validation)
 
 [English version](protocole_en.md) · [README du dossier](README_fr.md)
 
