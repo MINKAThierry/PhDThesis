@@ -1,6 +1,6 @@
 # Joint estimation report template (P4)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (algorithm `alg:estimation_conjointe`) and §4.2.7.3 (table `tab:criteres_refutation`)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.4 (algorithm `alg:estimation_conjointe`) and §4.2.7.3 (table `tab:criteres_refutation`)
 
 [Version française](rapport_estimation_fr.md) · [P4 protocol](protocole_en.md)
 
