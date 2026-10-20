@@ -1,6 +1,6 @@
-# P5 — Protocol for measuring $\Delta_q$, quantum extraction capacity
+# Protocol for measuring $\Delta_q$, quantum extraction capacity
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5 (algorithm `alg:estimation_delta_q`, table `tab:stratification_delta_q`)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5 (algorithm `alg:estimation_delta_q`, table `tab:stratification_delta_q`)
 
 [Version française](protocole_fr.md) · [Folder README](README_en.md)
 
