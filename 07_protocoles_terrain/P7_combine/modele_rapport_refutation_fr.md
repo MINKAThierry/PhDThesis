@@ -1,6 +1,6 @@
 # Modèle de rapport de réfutation (P7, synthèse du programme)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.7.3 (tableau `tab:criteres_refutation`) et §4.2.7.2, partie D
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.7.3 (tableau `tab:criteres_refutation`) et §4.2.7.2, partie D
 
 [English version](modele_rapport_refutation_en.md) · [Protocole P7](protocole_fr.md)
 
