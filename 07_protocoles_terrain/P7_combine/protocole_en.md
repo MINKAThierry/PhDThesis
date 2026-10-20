@@ -1,6 +1,6 @@
-# P7 — Combined post-quantum validation protocol
+# Combined post-quantum validation protocol
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.7 (algorithm `alg:protocole_combine`, table `tab:criteres_refutation`)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.7 (algorithm `alg:protocole_combine`, table `tab:criteres_refutation`)
 
 [Version française](protocole_fr.md) · [Folder README](README_en.md)
 
