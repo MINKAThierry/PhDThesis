@@ -1,6 +1,6 @@
 # Channel parameter form (P6)
 
-> **Status: PROPOSAL — hypothetical scenario** · Source: thesis, Chapter 4, §4.2.6.2 (“noise parameters calibrated on the specifications of current quantum hardware (IBM Quantum, IonQ, etc.)”)
+> **Status: PROPOSAL. hypothetical scenario** · Source: thesis, Chapter 4, §4.2.6.2 (“noise parameters calibrated on the specifications of current quantum hardware (IBM Quantum, IonQ, etc.)”)
 
 [Version française](fiche_parametres_canaux_fr.md) · [P6 protocol](protocole_en.md) · [Simulation plan](plan_simulation_en.md)
 
