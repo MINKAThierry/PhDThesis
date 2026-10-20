@@ -1,6 +1,6 @@
 # Verdict extraction questionnaire, PQC context (P5)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.2 (“questionnaires adapted to the NIST PQC context”) and §4.2.5.3, phases 1 and 2
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.5.2 (“questionnaires adapted to the NIST PQC context”) and §4.2.5.3, phases 1 and 2
 
 [Version française](questionnaire_pqc_fr.md) · [P5 protocol](protocole_en.md) · [P1 questionnaire](../P1_delta/questionnaire_extraction_verdict_en.md)
 
