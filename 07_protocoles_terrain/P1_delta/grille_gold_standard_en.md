@@ -1,6 +1,6 @@
 # Gold standard grid (P1, phase 3)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3, phase 3 (“two independent expert cryptographers give the correct verdicts, inter-rater agreement required ≥ 90 %”)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.1.3, phase 3 (“two independent expert cryptographers give the correct verdicts, inter-rater agreement required ≥ 90 %”)
 
 [Version française](grille_gold_standard_fr.md) · [P1 protocol](protocole_en.md) · [Stimulus catalogue](stimuli/catalogue_stimuli_en.md)
 
