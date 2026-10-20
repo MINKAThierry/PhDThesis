@@ -1,6 +1,6 @@
 # Procès-verbal de la session d'audit (P3, phase 3)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.3.3, phase 3 (session d'audit post-élection, 3 h)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.3.3, phase 3 (session d'audit post-élection, 3 h)
 
 [English version](proces_verbal_audit_en.md) · [Protocole P3](protocole_fr.md)
 
