@@ -1,6 +1,6 @@
 # Fiche de confrontation à la borne (P7, partie C)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 2, remarque `rem:forme_raffinee_pq` (équation `eq:trilemme_pq_raffine`, seuil $H^\sharp_q$) ; chapitre 4, §4.2.7.2, partie C ; critère « borne » du tableau `tab:criteres_refutation`
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 2, remarque `rem:forme_raffinee_pq` (équation `eq:trilemme_pq_raffine`, seuil $H^\sharp_q$) ; chapitre 4, §4.2.7.2, partie C ; critère « borne » du tableau `tab:criteres_refutation`
 
 [English version](fiche_confrontation_borne_en.md) · [Protocole P7](protocole_fr.md) · [Liste de vérification](liste_verification_hypotheses_fr.md)
 
