@@ -1,6 +1,6 @@
 # Liste de contrôle des prérequis (P4)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.4, ligne `Require` de l'algorithme `alg:estimation_conjointe` (« accord institutionnel, éthique IRB, $n \geq 30$ participants »)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.4, ligne `Require` de l'algorithme `alg:estimation_conjointe` (« accord institutionnel, éthique IRB, $n \geq 30$ participants »)
 
 [English version](liste_controle_prerequis_en.md) · [Protocole P4](protocole_fr.md)
 
