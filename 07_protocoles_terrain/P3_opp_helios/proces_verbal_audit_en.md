@@ -1,6 +1,6 @@
 # Audit session report (P3, phase 3)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.3.3, phase 3 (post-election audit session, 3 h)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.3.3, phase 3 (post-election audit session, 3 h)
 
 [Version française](proces_verbal_audit_fr.md) · [P3 protocol](protocole_en.md)
 
