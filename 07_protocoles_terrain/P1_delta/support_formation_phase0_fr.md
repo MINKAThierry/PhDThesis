@@ -1,6 +1,6 @@
 # Support de formation de la phase 0 (P1)
 
-> **Statut : PROPOSITION — protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3, phase 0 (« introduction aux concepts cryptographiques de base sans révéler les mécanismes internes, afin d'homogénéiser le vocabulaire minimum », 2 h)
+> **Statut : PROPOSITION. protocole non déployé** · Source : thèse, chapitre 4, §4.2.1.3, phase 0 (« introduction aux concepts cryptographiques de base sans révéler les mécanismes internes, afin d'homogénéiser le vocabulaire minimum », 2 h)
 
 [English version](support_formation_phase0_en.md) · [Protocole P1](protocole_fr.md) · [Guide de l'enquêteur](guide_enqueteur_fr.md)
 
