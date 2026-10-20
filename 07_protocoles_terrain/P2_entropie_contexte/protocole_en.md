@@ -1,6 +1,6 @@
-# P2 — Protocol for measuring $H(\mathcal{C})$, contextual entropy
+# Protocol for measuring $H(\mathcal{C})$, contextual entropy
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.2 (table `tab:estimations_structurelles_HC`)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.2 (table `tab:estimations_structurelles_HC`)
 
 [Version française](protocole_fr.md) · [Folder README](README_en.md)
 
