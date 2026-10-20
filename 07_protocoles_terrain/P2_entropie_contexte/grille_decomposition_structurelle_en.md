@@ -1,6 +1,6 @@
 # Structural decomposition grid (P2, approach 1)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.2 (equation `eq:decomposition_HC`); glossary of notation, $H(C) = H(L) + H(T\mid L) + H(R\mid L,T)$
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.2 (equation `eq:decomposition_HC`); glossary of notation, $H(C) = H(L) + H(T\mid L) + H(R\mid L,T)$
 
 [Version française](grille_decomposition_structurelle_fr.md) · [P2 protocol](protocole_en.md)
 
