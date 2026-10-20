@@ -1,6 +1,6 @@
 # Agreement template with the electoral body (P3)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.3 (target system and procedure) and §4.2.8.3 (prior institutional agreement)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.3 (target system and procedure) and §4.2.8.3 (prior institutional agreement)
 
 [Version française](modele_convention_scrutin_fr.md) · [P3 protocol](protocole_en.md) · [General institutional agreement](../00_commun/convention_institution_partenaire_en.md)
 
