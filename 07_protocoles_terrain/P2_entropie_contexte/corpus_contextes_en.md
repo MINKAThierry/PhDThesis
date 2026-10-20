@@ -1,6 +1,6 @@
 # Corpus of the 100 contexts (P2, MDS approach)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.3 (“a set of $n_{\text{ctx}} = 100$ varied contexts”)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.2.3 (“a set of $n_{\text{ctx}} = 100$ varied contexts”)
 
 [Version française](corpus_contextes_fr.md) · [Dissimilarity protocol](protocole_dissimilarite_mds_en.md)
 
