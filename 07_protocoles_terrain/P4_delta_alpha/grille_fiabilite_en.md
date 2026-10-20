@@ -1,6 +1,6 @@
 # Reliability grid (P4, step 6)
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.4, step 6 (“validation, ICC $\geq 0.8$, $\kappa \geq 0.7$”)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.4, step 6 (“validation, ICC $\geq 0.8$, $\kappa \geq 0.7$”)
 
 [Version française](grille_fiabilite_fr.md) · [P4 protocol](protocole_en.md) · [Analysis plan, section 7](../00_commun/plan_analyse_statistique_en.md#7-reliability)
 
