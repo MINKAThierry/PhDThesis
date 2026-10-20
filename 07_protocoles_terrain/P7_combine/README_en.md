@@ -1,6 +1,6 @@
-# P7_combine — Combined post-quantum validation protocol
+# Combined post-quantum validation protocol
 
-> **Status: PROPOSAL — protocol not deployed** · Source: thesis, Chapter 4, §4.2.7 (algorithm `alg:protocole_combine`)
+> **Status: PROPOSAL. protocol not deployed** · Source: thesis, Chapter 4, §4.2.7 (algorithm `alg:protocole_combine`)
 
 [Version française](README_fr.md) · [Back to the field protocols](../README_en.md)
 
