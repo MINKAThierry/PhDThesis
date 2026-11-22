@@ -15,7 +15,7 @@ sections~\ref{sec:validation_retrospective} \`a~\ref{sec:reproductibilite}
 manipulent trois produits CLO de r\'ef\'erence ($0{,}273$ pour ECDSA,
 $0{,}437$ pour Helios, $0{,}572$ pour les zk-SNARK), calcul\'es avec la
 fiabilit\'e de v\'erification $\Relver$. Encore
-faut-il savoir d'o\`u ils viennent. La pr\'esente section les d\'erive,
+faut-il savoir d'o\`u ils viennent. La pr\'esente section les calcule,
 syst\`eme par syst\`eme, \`a partir de la d\'efinition m\^eme de l'opposabilit\'e
 \'etablie au chapitre~\ref{chap:cadre_formel}.
 
@@ -33,7 +33,7 @@ section~\ref{subsubsec:statut_deploiement}.
 \begin{boiteArbitre}
 L'arbitre remonte \`a la source. Trois chiffres circulent depuis le d\'ebut de
 ce chapitre ($0{,}273$, $0{,}437$, $0{,}572$) et il veut savoir d'o\`u ils
-sortent. On lui annonce d'embl\'ee qu'il s'agit de d\'erivations, c'est-\`a-dire
+sortent. On lui annonce d'embl\'ee qu'il s'agit de calculs, c'est-\`a-dire
 d'estimations analytiques, sans relev\'e aupr\`es de juges r\'eels. Il note cette
 distinction, qui tiendra pour tout ce qui suit.
 \end{boiteArbitre}
@@ -52,7 +52,7 @@ fraction d'incertitude institutionnelle r\'esolue par la preuve~:
 o\`u $V = \mathsf{Interpret}(\Sigma, C)$ d\'esigne le verdict institutionnel,
 $\Sigma$ la preuve cryptographique et $C$ le contexte. Le th\'eor\`eme du goulot
 d'\'etranglement contextuel, \'etabli au m\^eme endroit, borne le num\'erateur
-par $\min\{H(\Sigma|C), H(V|C)\}$ et garantit donc $\Opp \leq 1$, contrainte que chacune des trois d\'erivations ci-dessous doit respecter.
+par $\min\{H(\Sigma|C), H(V|C)\}$ et garantit donc $\Opp \leq 1$, contrainte que chacun des trois calculs ci-dessous doit respecter.
 Chaque estimation suit trois \'etapes, appliqu\'ees identiquement aux trois
 syst\`emes.
 
@@ -79,7 +79,7 @@ les m\'etriques $\Conf$ et $\Relver$ pour obtenir le produit CRO.
 
 \noindent\textbf{Deux \'echelles d'entropie contextuelle.} Une pr\'ecaution de
 notation s'impose avant de calculer. Les valeurs employ\'ees dans les trois
-d\'erivations qui suivent ($8$, $11$ et $20$ bits) d\'esignent l'entropie
+calculs qui suivent ($8$, $11$ et $20$ bits) d\'esignent l'entropie
 du \emph{contexte d'esp\`ece}, c'est-\`a-dire la richesse informationnelle effectivement
 mobilis\'ee par l'institution consid\'er\'ee face \`a un litige donn\'e. Elles ne
 doivent pas \^etre confondues avec les plages du
@@ -151,7 +151,7 @@ les anomalies de comportement des trustees \`a partir des preuves seules.
 = \frac{1 \text{ bit}}{2 \text{ bits}} = 0{,}50
 \label{eq:opp_helios}
 \end{equation}
-Sous les hypoth\`eses de cette d\'erivation, les preuves cryptographiques r\'esolvent la
+Sous les hypoth\`eses de ce calcul, les preuves cryptographiques r\'esolvent la
 moiti\'e de l'incertitude institutionnelle. Le bit r\'esiduel rel\`eve du raisonnement
 juridique sur la conformit\'e proc\'edurale, l'interpr\'etation de l'intention
 des \'electeurs et le droit \'electoral de la juridiction. La r\'ealit\'e
@@ -458,7 +458,7 @@ sans pr\'etendre v\'erifier la borne.
 \end{boiteArbitre}
 
 % -----------------------------------------------------------------------
-\subsection{Synth\`ese des d\'erivations}
+\subsection{Synth\`ese des calculs}
 \label{sec:synthese_derivations}
 % -----------------------------------------------------------------------
 
@@ -514,7 +514,7 @@ retenus sont mutuellement coh\'erents, ce qui est le r\^ole d'une calibration
 illustrative.
 
 % -----------------------------------------------------------------------
-\subsection{Limites propres \`a ces d\'erivations}
+\subsection{Limites propres \`a ces calculs}
 \label{sec:limites_derivations}
 % -----------------------------------------------------------------------
 
@@ -545,7 +545,7 @@ longitudinale pr\'evue au calendrier (tableau~\ref{tab:calendrier_experimental})
 sur trois \`a cinq ans.
 
 \begin{boiteArbitre}
-L'arbitre referme la d\'erivation. Il a vu trois syst\`emes occupant chacun un r\'egime
+L'arbitre referme ces calculs. Il a vu trois syst\`emes occupant chacun un r\'egime
 propre, avec des chiffres d\'efendus dimension par dimension. Il a vu aussi, \`a la fin,
 deux limites nomm\'ees sans d\'etour, \`a savoir l'uniformit\'e des verdicts dont
 d\'ependent les valeurs ainsi que le caract\`ere statique d'un mod\`ele qui ignore

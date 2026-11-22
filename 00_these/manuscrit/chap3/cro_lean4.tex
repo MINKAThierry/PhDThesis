@@ -98,7 +98,7 @@ n'est pas inclus dans cette version v\'erifi\'ee.
 alg\'ebrique.} Ils y sont int\'egr\'es comme
 propri\'et\'es des instances de protocole. La couche concr\`ete les d\'emontre pour des
 lois de probabilit\'e finies (sous-section~\ref{subsec:lean4_concret})~; seule leur
-d\'erivation pour des lois quelconques, qui demanderait la th\'eorie de la mesure de
+d\'emonstration pour des lois quelconques, qui demanderait la th\'eorie de la mesure de
 Mathlib, reste un travail futur.
 
 \textbf{Les constructions SOTP ne sont pas encore couvertes par Lean4.}
@@ -358,7 +358,7 @@ $\negl(\lambda)$). Pour formaliser cela, nous
 introduisons la notion de \textbf{famille de protocoles}, que d\'efinit la
 structure suivante.
 
-\begin{leancode}[caption={Famille de protocoles -- structure ProtocolFamily en Lean4}, label={lst:lean4_protocol_family}]
+\begin{leancode}[caption={Structure ProtocolFamily des familles de protocoles en Lean4}, label={lst:lean4_protocol_family}]
 -- Famille de protocoles indexee par le parametre de securite
 structure ProtocolFamily where
   params  : InstitutionalParams                -- Parametres institutionnels fixes
@@ -455,7 +455,7 @@ de Mathlib) et un argument de filtre~; elle ne fournit pas de seuil explicite.
 Les param\`etres institutionnels sont des constantes fixes pour une
 institution donn\'ee, ind\'ependantes de $\lambda$.
 
-\begin{leancode}[caption={Structure InstitutionalParams -- param\`etres institutionnels en Lean4}, label={lst:lean4_institutional_params}]
+\begin{leancode}[caption={Structure InstitutionalParams des param\`etres institutionnels en Lean4}, label={lst:lean4_institutional_params}]
 -- Parametres institutionnels : capacites cognitives et procedurales
 structure InstitutionalParams where
   H : ℝ      -- H(C) : entropie contextuelle (bits)
@@ -471,7 +471,7 @@ structure InstitutionalParams where
 Cette structure capture les trois familles canoniques~\cite{Adida08,Groth16,Johnson01},
 instanci\'ees ci-dessous.
 
-\begin{leancode}[caption={Instances canoniques -- Helios, zk-SNARKs, audit traditionnel}, label={lst:lean4_instances_canoniques}]
+\begin{leancode}[caption={Instances canoniques Helios, zk-SNARKs et audit traditionnel}, label={lst:lean4_instances_canoniques}]
 noncomputable def HeliosParams : InstitutionalParams :=
   { H := 40, Δ := 56, α := 1.2, β := 1.4, ... }
 
@@ -530,7 +530,7 @@ structure InstitutionalAssumptions {lam : ℕ} (P : ProtocolInstance lam) : Prop
 \subsubsection{La constante de Pinsker}
 \label{subsubsec:constante_pinsker}
 
-\begin{leancode}[caption={Constante $c_0 = 1/(2\ln 2)$ -- d\'efinition et propri\'et\'es}, label={lst:lean4_c0}]
+\begin{leancode}[caption={D\'efinition et propri\'et\'es de la constante $c_0 = 1/(2\ln 2)$}, label={lst:lean4_c0}]
 noncomputable def c0 : ℝ := 1 / (2 * Real.log 2)
 
 lemma c0_pos : 0 < c0 := by
@@ -578,7 +578,7 @@ theorem negligible_eps0 : Negligible ε₀ := by
 \subsubsection{Lemme~4 de garantie de confidentialit\'e}
 \label{subsubsec:lemme4_lean4}
 
-\begin{leancode}[caption={Lemme~4 -- garantie de confidentialit\'e en Lean4}, label={lst:lean4_lemma4}]
+\begin{leancode}[caption={Garantie de confidentialit\'e du Lemme~4 en Lean4}, label={lst:lean4_lemma4}]
 theorem lemma4_confidentiality_guarantee {lam : ℕ} (P : ProtocolInstance lam)
     (hA3 : P.KLmax ≤ P.params.β * P.I) :
     1 - Real.sqrt (c0 * P.params.β * P.I) ≤ P.Conf := by
