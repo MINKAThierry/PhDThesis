@@ -165,6 +165,12 @@
 \RequirePackage{float}
 \RequirePackage{subcaption}
 \captionsetup[subfigure]{labelformat=simple}
+% Légendes : « Tableau » au lieu de « Table », deux-points au lieu du tiret long
+\frenchsetup{SmallCapsFigTabCaptions=false,CustomiseFigTabCaptions=false}
+\addto\captionsfrench{\def\tablename{Tableau}\def\figurename{Figure}}
+\DeclareCaptionLabelSeparator{thesecolon}{{\NoAutoSpacing:}\space}
+\captionsetup{labelsep=thesecolon}
+\AtBeginDocument{\captionsetup{labelsep=thesecolon}}
 \renewcommand\thesubfigure{(\alph{subfigure})}
 \graphicspath{{./figures/}{./images/}{./preambule/}}
 
