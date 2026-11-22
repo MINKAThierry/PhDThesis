@@ -91,7 +91,7 @@ une lacune fr\'equente dans les expositions informelles.
 \subsubsection{Ce que la formalisation ne couvre pas}
 \label{subsubsec:ce_que_ne_couvre_pas}
 
-Nous explicitons ci-dessous ce qui
+Nous pr\'ecisons ci-dessous ce qui
 n'est pas inclus dans cette version v\'erifi\'ee.
 
 \textbf{Fano et Pinsker ne sont pas prouv\'es dans le noyau
@@ -302,14 +302,14 @@ traitement rigoureux.
 L'information mutuelle $I(M;\Sigma|C)$ n'est pas une variable libre, puisqu'elle
 est d\'etermin\'ee par le protocole. Le r\'egime de pr\'eservation de la
 confidentialit\'e $I(\lambda) \le \kappa/\lambda$ (Hypoth\`ese~\ref{ass:regime})
-est rendu explicite comme condition du th\'eor\`eme.
+est pos\'e comme condition du th\'eor\`eme.
 
 \paragraph{Nature asymptotique exacte.}
 Nous rempla\c{c}ons le $O(\lambda^{-2})$ informel par une in\'egalit\'e
 exacte faisant appara\^itre une constante $K$, une fonction
 n\'egligeable $\varepsilon$ et un seuil $N$ explicites. Notre analyse
 alg\'ebrique produit la constante $\kappa(\Delta+1) + \kappa^2$,
-rendant explicite la d\'ependance en $\kappa$.
+faisant appara\^itre la d\'ependance en $\kappa$.
 
 \paragraph{Constantes implicites.}
 La notation $O(\lambda^{-2})$ dissimule la d\'ependance en
@@ -333,7 +333,7 @@ propri\'et\'es falsifiables et v\'erifiables instance par instance. La couche co
 (sous-section~\ref{subsec:lean4_concret}) les v\'erifie pour toute loi finie.
 
 \textbf{Simplification~2. R\'egime de confidentialit\'e explicite.} Le r\'egime
-$I \le \kappa/\lambda$ est pos\'e explicitement comme condition du
+$I \le \kappa/\lambda$ est pos\'e comme condition du
 th\'eor\`eme, garantissant la confidentialit\'e via le
 Lemme~\ref{lem:confidentiality_guarantee}.
 \end{sloppypar}
@@ -409,10 +409,10 @@ structure ProtocolInstance (lam : ℕ) where
   fano    : I ≥ Rel * lam - 1                   -- Lemme 2 (Fano), etape 1
 \end{leancode}
 
-\subsubsection{D\'efi~3, expliciter le r\'egime de confidentialit\'e}
+\subsubsection{D\'efi~3, poser le r\'egime de confidentialit\'e}
 \label{subsubsec:defi_optimisation}
 
-Le r\'egime $I = O(1/\lambda)$ est rendu explicite comme condition du
+Le r\'egime $I = O(1/\lambda)$ est pos\'e comme condition du
 th\'eor\`eme (Hypoth\`ese~\ref{ass:regime}). La preuve du
 Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}
 utilise directement cette hypoth\`ese sans n\'ecessiter d'optimisation
@@ -955,7 +955,7 @@ $H(V|C) \geq \alpha H(C) - 1$ (borne inf\'erieure). La formalisation a
 montr\'e que ces deux \'enonc\'es sont logiquement ind\'ependants. La borne
 inf\'erieure exprime une propri\'et\'e d'\emph{efficacit\'e} du verdict, que
 la borne sup\'erieure ne suffit pas \`a \'etablir. La formulation alternative
-retenue s\'epare explicitement les deux \'enonc\'es
+retenue s\'epare les deux \'enonc\'es
 (Hypoth\`ese~\ref{ass:verdicts_efficace}).
 
 \paragraph{R\'esolution de l'optimisation.}
@@ -965,7 +965,7 @@ $f'(x) = 2x - \frac{5}{2}ax^{3/2}$, en retenant $\sqrt{x^*} =
 alternative, $\sqrt{x^*} = \frac{4}{5a}$. Elle a montr\'e que ce point
 est un \emph{maximiseur} de $f$. Le r\'egime $I = O(1/\lambda)$ ne
 s'obtient donc pas par cette optimisation. La formulation alternative
-pose ce r\'egime comme hypoth\`ese explicite (Hypoth\`ese~\ref{ass:regime}).
+pose ce r\'egime comme hypoth\`ese (Hypoth\`ese~\ref{ass:regime}).
 
 \paragraph{Un cas limite qui \'etablit la n\'ecessit\'e du r\'egime.}
 En formalisant la preuve, on obtient un cas limite qui \'etablit la
@@ -1026,7 +1026,7 @@ qui h\'eritait de la m\^eme structure. Le Lemme~6 et la borne sup\'erieure
 du Lemme~7 ont fait l'objet de formulations plus pr\'ecises. Pour le
 Lemme~6, la formalisation a conduit \`a examiner deux
 \'etats orthogonaux. Les Hypoth\`eses~\ref{ass:verdict_quantique} et~\ref{ass:regime_quantique} sont d\'esormais pos\'ees
-explicitement au lieu d'\^etre d\'eduites. Les formulations correspondantes
+au lieu d'\^etre d\'eduites. Les formulations correspondantes
 sont document\'ees aux
 sections~\ref{subsec:enonce_preuve_pq} et~\ref{subsec:hypotheses_quantiques}.
 
@@ -1041,7 +1041,7 @@ de preuve formelle ne tranche pas \`a lui seul~; l'examen qui l'a suivi a
 alg\'ebrique a montr\'e que l'optimisation publi\'ee ne pouvait pas \^etre
 reproduite. Le cas limite ci-dessus a \'emerg\'e de l'effort pour pr\'eserver
 la coh\'erence de la preuve formelle. Il est alors devenu n\'ecessaire
-d'inscrire explicitement le r\'egime de confidentialit\'e dans l'\'enonc\'e du
+d'inscrire le r\'egime de confidentialit\'e dans l'\'enonc\'e du
 th\'eor\`eme.
 
 \paragraph{Statut des formulations alternatives.}
@@ -1157,7 +1157,7 @@ fixes), puis l'int\'egration des propri\'et\'es informationnelles comme champs d
 structure (Fano, Pinsker) et le noyau alg\'ebrique certifi\'e sans aucune
 admission tacite. S'y ajoutent la preuve de n\'egligeabilit\'e, l\`a o\`u l'expos\'e
 informel \'ecrivait simplement \og n\'egligeable\fg, le r\'egime de confidentialit\'e
-rendu explicite comme condition du th\'eor\`eme ainsi que les constantes explicites
+pos\'e comme condition du th\'eor\`eme ainsi que les constantes explicites
 ($\kappa(\Delta+1)$ et $\kappa^2$ au lieu d'un $O(\lambda^{-2})$ non chiffr\'e). La
 forme raffin\'ee compl\`ete l'ensemble en lui indiquant exactement quand sa capacit\'e
 d'extraction devient la contrainte liante. La couche concr\`ete compl\`ete le tout en

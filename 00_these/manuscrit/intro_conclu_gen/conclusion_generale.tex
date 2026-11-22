@@ -62,7 +62,7 @@ $\Delta/(\gamma\lambda)$~; les autres sont en $O(\lambda^{-2})$. La forme raffin
 \eqref{eq:trilemme_cro_raffine} identifie le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la
 capacit\'e d'extraction institutionnelle est la contrainte liante, la puissance
 de calcul de l'adversaire passant au second plan. La formulation
-publi\'ee~\cite{MINKA2026CRO} s'en d\'eduit comme corollaire sous l'Hypoth\`ese~\ref{ass:regime} explicit\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue en conservant le terme entropique de l'in\'egalit\'e de Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}). Les contributions C2.1 \`a C2.7 y r\'epondent. L'objectif est atteint, sous des hypoth\`eses institutionnelles explicites.
+publi\'ee~\cite{MINKA2026CRO} s'en d\'eduit comme corollaire sous l'Hypoth\`ese~\ref{ass:regime} pos\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue en conservant le terme entropique de l'in\'egalit\'e de Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}). Les contributions C2.1 \`a C2.7 y r\'epondent. L'objectif est atteint, sous des hypoth\`eses institutionnelles \'enonc\'ees.
 
 \textbf{Obj~\ref{obj:obj3_postquantique}. Extension quantique.} Les bornes CRO
 se pr\'eservent-elles face aux adversaires quantiques~? Nous avons \'etabli
@@ -97,10 +97,10 @@ certifi\'e m\'ecaniquement le noyau alg\'ebrique du th\'eor\`eme
 (section~\ref{sec:lean4}), ainsi que la forme raffin\'ee de la borne. Fano et
 Pinsker y sont pos\'es comme propri\'et\'es des instances de protocole, puis
 d\'emontr\'es pour des lois de probabilit\'e finies dans une couche concr\`ete~; les
-hypoth\`eses institutionnelles y sont aussi explicit\'ees. La formalisation a produit
+hypoth\`eses institutionnelles y sont aussi pos\'ees. La formalisation a produit
 deux t\'emoins, l'un de coh\'erence (un point du mod\`ele abstrait o\`u la
 borne est atteinte, non r\'ealisable par un protocole), l'autre de port\'ee
-(une instance hors r\'egime atteint $1/4$). Le d\'etail de ce que la certification a rendu explicite, hypoth\`eses,
+(une instance hors r\'egime atteint $1/4$). Le d\'etail de ce que la certification a mis au jour, hypoth\`eses,
 constantes et r\'egime de validit\'e, est pr\'esent\'e \`a la
 sous-section~\ref{subsec:lean4_erreurs}. Les contributions C5.1 \`a C5.6 y r\'epondent.
 L'objectif est atteint pour le trilemme classique, jusqu'aux lois finies~; l'extension
@@ -131,8 +131,8 @@ Le tableau~\ref{tab:synthese_contributions} r\'esume ces verdicts.
 \textbf{Objectif} & \textbf{Production} & \textbf{R\'esultat cl\'e} & \textbf{Contrib.} & \textbf{Verdict} \\
 \midrule
 Obj1 Formalisation (F) & C1 Cadre CLO & M\'etriques $\Conf$, $\Relrec$/$\Relver$, $\Opp$~; goulot contextuel & C1.1--C1.7 & Atteint \\
-Obj2 Bornes (B) & C2 Trilemme CRO & Borne $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$, forme raffin\'ee, borne aigu\"e & C2.1--C2.7 & Atteint, sous hypoth\`eses explicites \\
-Obj3 Quantique (E) & C3 Trilemme PQ & Borne avec $\Delta_q$, $\gamma_q$~; $\eta_q$ unique & C3.1--C3.4 & Atteint, sous hypoth\`eses explicites \\
+Obj2 Bornes (B) & C2 Trilemme CRO & Borne $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$, forme raffin\'ee, borne aigu\"e & C2.1--C2.7 & Atteint, sous hypoth\`eses \'enonc\'ees \\
+Obj3 Quantique (E) & C3 Trilemme PQ & Borne avec $\Delta_q$, $\gamma_q$~; $\eta_q$ unique & C3.1--C3.4 & Atteint, sous hypoth\`eses \'enonc\'ees \\
 Obj4 Constructions (S) & C4 Famille SOTP & Paradigme Gold-Iron-Clay~; $\Conf$, $\Relver$ prouv\'ees~; optimalit\'e conjectur\'ee & C4.1--C4.5 & Partiellement atteint \\
 Obj5 Certification (C) & C5 Lean4 & Noyau certifi\'e~; Fano et Pinsker sur lois finies~; t\'emoins & C5.1--C5.6 & Atteint pour le cas classique \\
 Obj6 Exp\'erimentation (X) & C6 Programme & Protocoles sp\'ecifi\'es et r\'efutables~; calibration & C6.1--C6.3 & Partiellement atteint (non d\'eploy\'e) \\
@@ -224,7 +224,7 @@ conjectur\'ee. Introduction du paradigme Gold-Iron-Clay.
 \textbf{C5. Formalisation Lean4, du noyau alg\'ebrique aux lois finies}. Certification m\'ecanis\'ee
 du noyau alg\'ebrique et de la forme raffin\'ee. Fano et Pinsker, pos\'es comme
 propri\'et\'es d'instance dans le noyau, d\'emontr\'es pour des lois de probabilit\'e finies
-dans la couche concr\`ete, explicitation des hypoth\`eses institutionnelles
+dans la couche concr\`ete, mise au jour des hypoth\`eses institutionnelles
 et production de deux t\'emoins, l'un de coh\'erence (mod\`ele abstrait), l'autre de
 port\'ee. Les formulations alternatives issues de
 la certification sont pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.

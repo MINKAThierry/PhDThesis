@@ -70,7 +70,7 @@ d'identifier.
 \label{subsubsec:hypothese_quasi_optimalite}
 
 La preuve originale~\cite{MINKA2026CRO} utilise les propri\'et\'es
-informationnelles (Fano, Pinsker) sans les expliciter comme conditions
+informationnelles (Fano, Pinsker) sans les poser comme conditions
 v\'erifiables du th\'eor\`eme. La formalisation Lean4 les rend
 explicites en les int\'egrant comme champs de la structure
 \texttt{ProtocolInstance}, puis la couche concr\`ete les d\'emontre pour des lois
@@ -80,7 +80,7 @@ finies~:
 \texttt{fano} : I \geq \Relrec \cdot \lambda - 1.
 \label{eq:hypothese_quasi_optimalite}
 \end{equation}
-Cette explicitation s'aligne avec la rationalit\'e
+Cette mise au jour s'aligne avec la rationalit\'e
 born\'ee~\cite{Simon82,Miller56,Ericsson95}, puisque les institutions ne peuvent
 extraire qu'une information limit\'ee d'une preuve cryptographique, ce qui
 force les protocoles \`a op\'erer dans des r\'egimes de faible information
@@ -296,7 +296,7 @@ indique leur couverture en Lean4.
 
 
 
-Distinguer explicitement ces niveaux est une contribution
+Distinguer ces niveaux est une contribution
 m\'ethodologique propre~\cite{Nosek2015,IOC2019}, puisqu'elle prot\`ege contre
 la sur\'evaluation des r\'esultats conditionnels et ouvre pr\'ecis\'ement
 le programme exp\'erimental futur. La fronti\`ere entre \og th\'eor\`eme
@@ -331,7 +331,7 @@ douce~\cite{Winter1999,Ozawa2000}).
 \label{subsubsec:decomposition_capacite_quantique}
 
 La formule $\Delta_q = \Delta + \delta_{\text{enh}} - \delta_{\text{degr}}$
-d\'ecompose explicitement les effets quantiques sur la capacit\'e
+d\'ecompose les effets quantiques sur la capacit\'e
 institutionnelle~:
 \begin{equation}
 \Delta_q = \Delta + \delta_{\text{enh}} - \delta_{\text{degr}}
@@ -1073,7 +1073,7 @@ reproduire, de critiquer ou d'\'etendre le programme.
 les valeurs d'opposabilit\'e des trois syst\`emes de r\'ef\'erence et
 \'etablit la coh\'erence interne du cadre. Il fournit une premi\`ere
 \textbf{calibration analytique} en attente de validation
-exp\'erimentale tout en documentant explicitement ce qui reste \`a mesurer.
+exp\'erimentale tout en documentant ce qui reste \`a mesurer.
 
 \subsubsection{Parall\`eles avec d'autres disciplines}
 

@@ -19,7 +19,7 @@ Ce r\'esultat, \`a notre connaissance la premi\`ere caract\'erisation quantitati
 de la cryptographie institutionnelle sous adversaires quantiques~\cite{NISTPQC,Zhandry},
 \'etablit une borne explicite de m\^eme forme que dans le cas classique, en
 $\Delta_q$ et $\gamma_q$ (Th\'eor\`eme~\ref{thm:trilemme_pq}), dont d\'ecoule, sous
-l'Hypoth\`ese~\ref{ass:regime_quantique} explicit\'ee, la majoration affaiblie publi\'ee
+l'Hypoth\`ese~\ref{ass:regime_quantique} pos\'ee, la majoration affaiblie publi\'ee
 (Remarque~\ref{rem:corollaire_publie_pq})~:
 \begin{equation}
 \Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda}
@@ -556,7 +556,7 @@ prenant en compte les r\'ealit\'es du quantique. Chacune repose sur des
 justifications multidisciplinaires. Aucune n'a toutefois \'et\'e valid\'ee \`a ce
 stade par protocoles exp\'erimentaux contr\^ol\'es mesurant directement
 $\Delta_q$, $\eta_q$, $\beta_q$, $\zeta_q$ aupr\`es d'acteurs institutionnels
-r\'eels, limitation reconnue explicitement
+r\'eels, limitation reconnue
 (sous-section~\ref{subsec:note_methodo}).
 
 \begin{remark}[Version de la preuve]
@@ -597,7 +597,7 @@ La version publi\'ee~\cite{MINKA2026PQCRO} \'enon\c{c}ait $H(V|C) \geq \theta_q 
 k_\lambda$. La premi\`ere partie de l'Hypoth\`ese~\ref{ass:verdict_quantique} donne
 $\log_2 k_\lambda \leq \alpha_q H(C)$, qui est une borne \textbf{sup\'erieure}.
 La borne inf\'erieure ne peut donc pas s'en d\'eduire. Elle est maintenant
-postul\'ee explicitement comme propri\'et\'e d'efficacit\'e.
+postul\'ee comme propri\'et\'e d'efficacit\'e.
 \end{remark}
 
 \begin{Preuve}[Remarque~\ref{rem:statut_verdict_quantique}]
@@ -839,7 +839,7 @@ l'Hypoth\`ese~\ref{ass:regime_quantique}, puis on d\'eveloppe le produit
 La derni\`ere in\'egalit\'e de~\eqref{eq:trilemme_pq} s'obtient en
 observant que $\gamma_q \geq 1$ et que $\eta_q H(C) \geq 0$. La borne
 \'enonc\'ee sous la forme $(\Delta_q + \eta_q H(C))/\lambda$ est donc plus
-faible, mais elle fait appara\^itre explicitement la p\'enalit\'e
+faible, mais elle fait appara\^itre la p\'enalit\'e
 s\'emantique quantique.
 \cmt{Lecture. Le terme $\eta_q H(C)$ n'appara\^it pas dans la borne explicite, qui ne d\'epend que de $\Delta_q$. Il figure dans la majoration affaiblie, o\`u il rend visible le co\^ut s\'emantique du canal quantique. L'effet du bruit sur les compromis r\'ealisables passe, lui, par deux autres voies, puisqu'il ampute la capacit\'e effective $\Delta_q$ et d\'egrade la garantie de confidentialit\'e du Lemme~\ref{lem:q_conf_mi_pq}.}
 \end{Preuve}
@@ -941,7 +941,7 @@ ensuite comme dans la preuve de la Remarque~\ref{rem:forme_raffinee_pq}.
 La majoration publi\'ee dans~\cite{MINKA2026PQCRO},
 $\Conf^q \cdot \Rel^q \cdot \Opp^q \leq (\Delta_q + \eta_q H(C))/\lambda + O(\lambda^{-2}) + \negl(\lambda)$,
 d\'ecoule de la borne explicite~\eqref{eq:trilemme_pq} sous
-l'Hypoth\`ese~\ref{ass:regime_quantique} explicit\'ee.
+l'Hypoth\`ese~\ref{ass:regime_quantique} pos\'ee.
 \end{remark}
 
 \begin{Preuve}[Remarque~\ref{rem:corollaire_publie_pq}]

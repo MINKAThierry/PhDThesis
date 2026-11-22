@@ -350,7 +350,7 @@ Le fait qu'aucune des estimations illustratives ne d\'epasse~$0{,}6$ pourrait
 n'\^etre qu'un artefact de l'ing\'enierie disponible ou de l'estimation. Il reste donc \`a d\'eterminer si cette barri\`ere
 est fondamentale. La r\'eponse requiert un th\'eor\`eme d'impossibilit\'e
 rigoureusement prouv\'e, conditionnant l'impossibilit\'e \`a des param\`etres
-institutionnels explicites, \`a l'image du th\'eor\`eme~CAP conditionn\'e
+institutionnels d\'eclar\'es, \`a l'image du th\'eor\`eme~CAP conditionn\'e
 aux partitions r\'eseau~\cite{GilbertLynch02,ChandraHadzilacos96}.
 
 \paragraph{Production~C2, le Trilemme CRO conditionnel.}
@@ -367,7 +367,7 @@ $\beta$ (r\'egularit\'e du protocole)~\cite{Tsybakov2009}, sous la forme
 o\`u $\lambda$ est le param\`etre de s\'ecurit\'e. La forme publi\'ee
 dans~\cite{MINKA2026CRO}, $\Conf \cdot \Rel \cdot \Opp \leq \Delta/\lambda +
 O(\lambda^{-2}) + \negl(\lambda)$, en est un corollaire affaibli sous l'Hypoth\`ese~\ref{ass:regime}
-explicit\'ee, puisque $\gamma \geq 1$ (Remarque~\ref{rem:corollaire_publie}).
+pos\'ee, puisque $\gamma \geq 1$ (Remarque~\ref{rem:corollaire_publie}).
 Une forme raffin\'ee identifie le r\'egime, $H(\mathcal{C}) > (\Delta + 1 +
 \kappa/\lambda)/\alpha$, dans lequel la capacit\'e institutionnelle $\Delta$
 devient la contrainte liante \`a la place de la seule in\'egalit\'e de Fano. Une
@@ -378,7 +378,7 @@ born\'ee~\cite{Simon82,Kahneman11}.
 \noindent\textit{Contributions.}
 \begin{itemize}
   \item[\textbf{C2.1}] Les param\`etres institutionnels, \`a savoir la capacit\'e d'extraction $\Delta$, la granularit\'e des verdicts $\alpha$, la r\'egularit\'e $\beta$ et la constante de r\'egime $\kappa$ (Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regime}).
-  \item[\textbf{C2.2}] La borne $\Conf\cdot\Rel\cdot\Opp \leq \Delta/(\gamma\lambda) + O(\lambda^{-2})$ sous hypoth\`eses explicites (Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}).
+  \item[\textbf{C2.2}] La borne $\Conf\cdot\Rel\cdot\Opp \leq \Delta/(\gamma\lambda) + O(\lambda^{-2})$ sous hypoth\`eses \'enonc\'ees (Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}).
   \item[\textbf{C2.3}] L'interpr\`ete admissible et le fondement informationnel de l'extraction born\'ee (D\'efinition~\ref{def:interp_admissible}, Proposition~\ref{prop:fondement_extraction}).
   \item[\textbf{C2.4}] La forme raffin\'ee et le seuil $H^\sharp$ qui s\'epare les r\'egimes (Remarque~\ref{rem:activite_delta}).
   \item[\textbf{C2.5}] La borne aigu\"e d'ordre $\kappa/\lambda^2$, dont l'ordre est optimal, et le t\'emoin r\'ealisable (Proposition~\ref{prop:borne_aigue}, Remarques~\ref{rem:temoin_realisable} et~\ref{rem:temoin_combine}).
@@ -423,7 +423,7 @@ $\Delta_q$ dans quelques dizaines de bits~\cite{Mayers1997,Lo1997,Unruh2016,Chat
 
 \noindent\textit{Contributions.}
 \begin{itemize}
-  \item[\textbf{C3.1}] Le trilemme quantique sous hypoth\`eses explicites (Th\'eor\`eme~\ref{thm:trilemme_pq}).
+  \item[\textbf{C3.1}] Le trilemme quantique sous hypoth\`eses \'enonc\'ees (Th\'eor\`eme~\ref{thm:trilemme_pq}).
   \item[\textbf{C3.2}] La d\'efinition unique de la perte d'interpr\'etabilit\'e $\eta_q$ (D\'efinition~\ref{def:perte_interp_quantique_pq}).
   \item[\textbf{C3.3}] La forme raffin\'ee quantique et le seuil $H^\sharp_q$ (Remarque~\ref{rem:forme_raffinee_pq}).
   \item[\textbf{C3.4}] Le traitement des signatures post-quantiques standardis\'ees par le lemme classique (Remarque~\ref{rem:interp_lemme7}).
@@ -491,10 +491,10 @@ dans l'assistant de preuve Lean4~\cite{Lean4,moura2015lean} (version~4.35.0,
 biblioth\`eque Mathlib~\cite{Mathlib} v4.35.0). La formalisation apporte
 quatre contributions. Elle fournit d'abord un mod\`ele formel de familles de protocoles,
 $\mathtt{ProtocolFamily}$, qui rend compte de la nature asymptotique du th\'eor\`eme.
-Elle s\'epare ensuite explicitement le noyau v\'erifi\'e des in\'egalit\'es de Pinsker
+Elle s\'epare ensuite le noyau v\'erifi\'e des in\'egalit\'es de Pinsker
 et de Fano, pos\'ees comme propri\'et\'es des instances~\cite{AbadiRogaway00,BanaComon12},
 puis d\'emontre ces deux in\'egalit\'es pour des lois de probabilit\'e finies.
-Elle a aussi conduit \`a expliciter l'Hypoth\`ese de r\'egime $I(M;\Sigma|C) \leq \kappa/\lambda$
+Elle a aussi conduit \`a poser l'Hypoth\`ese de r\'egime $I(M;\Sigma|C) \leq \kappa/\lambda$
 et \`a pr\'eciser trois \'enonc\'es publi\'es. Elle certifie enfin la
 forme raffin\'ee, qui d\'elimite le r\'egime o\`u la capacit\'e institutionnelle
 est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'eductions game-based de SOTP-Low sont en outre m\'ecanis\'ees en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}).
@@ -502,7 +502,7 @@ est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'educt
 \noindent\textit{Contributions.}
 \begin{itemize}
   \item[\textbf{C5.1}] Le noyau alg\'ebrique certifi\'e dans ses formes explicite, raffin\'ee et asymptotique (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}).
-  \item[\textbf{C5.2}] Les hypoth\`eses rendues explicites, \`a savoir l'efficacit\'e du verdict et le r\'egime de fuite (sous-section~\ref{subsec:lean4_erreurs}).
+  \item[\textbf{C5.2}] Les hypoth\`eses mises au jour, \`a savoir l'efficacit\'e du verdict et le r\'egime de fuite (sous-section~\ref{subsec:lean4_erreurs}).
   \item[\textbf{C5.3}] Pinsker, sous sa forme serr\'ee, et Fano d\'emontr\'es pour des lois de probabilit\'e finies (sous-section~\ref{subsec:lean4_concret}).
   \item[\textbf{C5.4}] Le constat que l'Hypoth\`ese~\ref{ass:regularite} ne sert qu'au Lemme~\ref{lem:confidentiality_guarantee} et non au trilemme (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}).
   \item[\textbf{C5.5}] Les t\'emoins de coh\'erence et de port\'ee et la famille de lois t\'emoins pour tout $\lambda$ (sous-sous-section~\ref{subsubsec:temoins_lean4}, sous-section~\ref{subsec:lean4_concret}).
@@ -547,7 +547,7 @@ institutionnels estim\'es par une seconde voie ind\'ependante. La
 convergence des deux voies \'etablit la coh\'erence interne du cadre sans
 en d\'emontrer la validit\'e empirique, puisque le programme n'a pas \'et\'e d\'eploy\'e dans le
 cadre de cette th\`ese. Les seuils \`a partir desquels il invaliderait
-le mod\`ele sont en revanche explicitement \'enonc\'es.
+le mod\`ele sont en revanche \'enonc\'es.
 
 \noindent\textit{Contributions.}
 \begin{itemize}
@@ -617,7 +617,7 @@ raisonnement justifie l'investissement dans la v\'erification formelle~Objectif~
 car la certification m\'ecanis\'ee s'impose pour des th\'eor\`emes aux implications
 soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. La formalisation Lean4~Objectif~5~(\ref{obj:obj5_verification}) agit en retour sur les \'etapes
 qui la pr\'ec\`edent. Elle a d\'egag\'e le verdict d\'eterministe, qui enrichit le cadre de
-l'Objectif~1~(\ref{obj:obj1_unification}). Elle a surtout impos\'e d'expliciter l'Hypoth\`ese de r\'egime
+l'Objectif~1~(\ref{obj:obj1_unification}). Elle a surtout impos\'e de poser l'Hypoth\`ese de r\'egime
 et de pr\'eciser trois \'enonc\'es publi\'es, ce qui a conduit \`a la forme raffin\'ee du trilemme
 de l'Objectif~2~(\ref{obj:obj2_impossibilite})~\cite{Zellagui2018}. La certification ne se contente donc pas
 de v\'erifier les bornes apr\`es coup. Elle peut en modifier l'\'enonc\'e et l'a d\'ej\`a fait.
@@ -712,7 +712,7 @@ sain peut \'echouer sur sa couche institutionnelle. La configuration
 exigeait en effet les parts de cl\'e des trois garants (partage 3-sur-3)~; la perte
 d'une seule part a donc impos\'e d'annuler le scrutin, avant qu'un seuil
 2-sur-3 soit adopt\'e. Ce d\'efaut de conception op\'erationnelle, qui touche \`a la gestion des
-cl\'es, rel\`eve de ce que le cadre CLO invite \`a expliciter sans constituer une mesure de $\Opp$.
+cl\'es, rel\`eve de ce que le cadre CLO invite \`a rendre visible sans constituer une mesure de $\Opp$.
 
 Le R\`eglement G\'en\'eral sur la Protection des Donn\'ees~\cite{GDPR2016,CCPA2018} exige
 simultan\'ement la protection des donn\'ees personnelles (Article~5) et la
