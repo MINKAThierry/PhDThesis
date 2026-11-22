@@ -482,16 +482,20 @@ Trilemme (forme raffin\'ee), Lemme~\ref{lem:confidentiality_guarantee}, Proposit
 Goulot, composition, bornes \'el\'ementaires (Sec.~\ref{sec:clo}) 
   & Prouv\'es (formulations pr\'ecis\'ees) 
   & 3 & Preuves papier 
-  & Non (verdict d\'eterministe~: oui) \\
+  & Verdict d\'eterministe seulement \\
 Trilemme PQ (Sec.~\ref{sec:cro_pq}) 
   & Sous Hypoth\`eses~\ref{ass:extraction_quantique}--\ref{ass:regime_quantique} 
   & 1 & Preuve papier & Non \\
 Propri\'et\'es SOTP ($\Conf$, $\Relver$) 
   & Prouv\'ees sous PRG et DLog (Groth16 pour High) 
-  & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Non \\
+  & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Partielle (SOTP-Low, situation r\'eduite) \\
 Minorations d'opposabilit\'e SOTP, optimalit\'e 
   & Heuristiques / conjecture 
   & --- & Non prouv\'ees & Non \\
+Fano, Pinsker et trilemme sur lois finies (sous-section~\ref{subsec:lean4_concret})
+  & Prouv\'es
+  & 4 & M\'ecaniquement certifi\'es
+  & \textbf{Oui} (couche concr\`ete) \\
 Valeurs num\'eriques des syst\`emes d\'eploy\'es 
   & Calibration illustrative 
   & --- & Non mesur\'ees & --- \\
@@ -503,9 +507,11 @@ Valeurs num\'eriques des syst\`emes d\'eploy\'es
 \label{rem:perimetre_lean4}
 La formalisation Lean4 (annexe~\ref{chap:annexe_lean4}) couvre le
 noyau alg\'ebrique du Trilemme CRO classique, y compris les
-t\'emoins de coh\'erence et de port\'ee. Les constructions SOTP et
-l'extension post-quantique constituent des directions de recherche
-futures. La colonne
+t\'emoins de coh\'erence et de port\'ee, ainsi qu'une couche concr\`ete o\`u Fano, Pinsker et
+le trilemme sont d\'emontr\'es pour des lois finies. Les r\'eductions de SOTP-Low sont
+m\'ecanis\'ees en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}). La
+m\'ecanisation compl\`ete de SOTP et l'extension post-quantique constituent des directions
+de recherche futures. La colonne
 \og Couverture Lean4 \fg{} rend ce p\'erim\`etre explicite.
 \end{remark}
 

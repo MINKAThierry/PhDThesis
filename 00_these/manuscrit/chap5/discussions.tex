@@ -291,35 +291,10 @@ traiter, passe au second plan.
 
 Les r\'esultats de cette th\`ese, qui ne sont pas de m\^eme nature, doivent
 \^etre distingu\'es selon leur niveau de
-certitude.
+certitude. Le tableau~\ref{tab:hierarchie_certitude} les classe selon ce niveau et
+indique leur couverture en Lean4.
 
-\begin{table}[htbp]
-\centering
-\caption{Hi\'erarchie de certitude des r\'esultats de la th\`ese}
-\label{tab:classification_epistemologique}
-\begin{tabular}{@{}p{3.8cm}p{3.2cm}p{4.5cm}@{}}
-\toprule
-\textbf{R\'esultat} & \textbf{Niveau de certitude} & \textbf{Statut} \\
-\midrule
-R\'esultats CLO (bornes, goulot, composition) & Prouv\'es (formulations pr\'ecis\'ees)
-  & Preuves papier~(section~\ref{sec:clo}) \\
-Trilemme classique (forme raffin\'ee) & Sous hypoth\`eses institutionnelles
-  & Noyau v\'erifi\'e Lean4~(\cite{MINKA2026CRO} et section~\ref{sec:lean4}) \\
-Trilemme PQ & Sous hypoth\`eses quantiques
-  & Preuve papier~(\cite{MINKA2026PQCRO} et section~\ref{sec:cro_pq}) \\
-Propri\'et\'es SOTP ($\Conf$, $\Relver$) & Sous PRG, DLog, Groth16
-  & R\'eductions~(annexe~\ref{chap:annexe_gamebased}) \\
-Opposabilit\'e SOTP, optimalit\'e & Heuristique / conjecture
-  & Non prouv\'ees~(Conjecture~\ref{conj:optimalite_universelle}) \\
-Formalisation Lean4 & M\'ecaniquement certifi\'ee
-  & D\'erivation v\'erifi\'ee, pr\'emisses pos\'ees~(section~\ref{sec:lean4}) \\
-\midrule
-\multicolumn{3}{l}{\textit{Falsifiables exp\'erimentalement~:}} \\
-Valeurs de $\Delta$, $\Delta_q$, $\eta_q$ & Empirique
-  & \`A valider par \'etudes contr\^ol\'ees~(chapitre~\ref{chap:experimentation}) \\
-\bottomrule
-\end{tabular}
-\end{table}
+
 
 Distinguer explicitement ces niveaux est une contribution
 m\'ethodologique propre~\cite{Nosek2015,IOC2019}, puisqu'elle prot\`ege contre

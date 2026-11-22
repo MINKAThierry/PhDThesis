@@ -9,7 +9,7 @@
 \label{chap:conclusion_generale}
 
 % ----------------------------------------------------------------------------
-\section{RETOUR SUR LES OBJECTIFS DE RECHERCHE}
+\section{RETOUR SUR LA PROBL\'EMATIQUE, LES QUESTIONS ET LES OBJECTIFS}
 \label{sec:cg_questions}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
@@ -25,17 +25,17 @@ situation et en faciliter la compr\'ehension. Ce paradoxe g\'en\`ere la
 probl\'ematique centrale formul\'ee ci-dessous.
 
 \begin{boiteProblematique}{Probl\'ematique centrale}
-\textit{Comment, d'une part, concilier la s\'ecurit\'e cryptographique qui
-requiert l'opacit\'e computationnelle avec l'interpr\'etabilit\'e
-institutionnelle qui requiert la transparence s\'emantique~? D'autre part,
-existe-t-il des limites fondamentales aux compromis r\'ealisables entre
-confidentialit\'e, fiabilit\'e et opposabilit\'e~?}
+\textit{Quelles limites fondamentales contraignent les compromis entre confidentialit\'e,
+fiabilit\'e et opposabilit\'e dans les syst\`emes cryptographiques soumis \`a des exigences
+d'interpr\'etabilit\'e institutionnelle~?}
 \end{boiteProblematique}
 
-Cette th\`ese y r\'epond en traitant les six objectifs qui en
-d\'ecoulent, avec le statut propre \`a chacun.
+Elle se d\'ecline en deux questions, la conciliation (Q1) et les limites (Q2), puis en six objectifs.
 
-\medskip
+Les sous-sections qui suivent examinent tour \`a tour si les objectifs ont \'et\'e
+atteints, si les questions ont trouv\'e r\'eponse et si la probl\'ematique a \'et\'e trait\'ee.
+
+\subsection*{Les objectifs ont-ils \'et\'e atteints~?}
 
 \textbf{Obj~\ref{obj:obj1_unification}. Formalisation.} Peut-on formaliser
 l'utilit\'e institutionnelle d'un protocole cryptographique~? Nous avons
@@ -46,7 +46,7 @@ fiabilit\'e distingu\'ee en $\Relrec$ (reconstruction) et $\Relver$
 $I(V;\Sigma|C) \leq \min\{H(\Sigma|C),H(V|C)\} \leq \alpha H(\mathcal{C})$ formalise
 le goulot contextuel.
 L'opposabilit\'e $\Opp$ \'etait absente de tout cadre cryptographique
-ant\'erieur.
+ant\'erieur. Les contributions C1.1 \`a C1.7 y r\'epondent. L'objectif est atteint.
 
 \textbf{Obj~\ref{obj:obj2_impossibilite}. Bornes.} Existent-ils des limites
 fondamentales sur les compromis r\'ealisables~? Sous quatre hypoth\`eses
@@ -62,7 +62,7 @@ $\Delta/(\gamma\lambda)$~; les autres sont en $O(\lambda^{-2})$. La forme raffin
 \eqref{eq:trilemme_cro_raffine} identifie le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la
 capacit\'e d'extraction institutionnelle est la contrainte liante, la puissance
 de calcul de l'adversaire passant au second plan. La formulation
-publi\'ee~\cite{MINKA2026CRO} s'en d\'eduit comme corollaire sous l'Hypoth\`ese~\ref{ass:regime} explicit\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue en conservant le terme entropique de l'in\'egalit\'e de Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}).
+publi\'ee~\cite{MINKA2026CRO} s'en d\'eduit comme corollaire sous l'Hypoth\`ese~\ref{ass:regime} explicit\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue en conservant le terme entropique de l'in\'egalit\'e de Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}). Les contributions C2.1 \`a C2.7 y r\'epondent. L'objectif est atteint, sous des hypoth\`eses institutionnelles explicites.
 
 \textbf{Obj~\ref{obj:obj3_postquantique}. Extension quantique.} Les bornes CRO
 se pr\'eservent-elles face aux adversaires quantiques~? Nous avons \'etabli
@@ -73,7 +73,8 @@ le Trilemme CRO post-quantique
 \end{equation}
 o\`u $\Delta_q$ est la capacit\'e d'extraction quantique et $\eta_q$ quantifie
 la perte d'interpr\'etabilit\'e, nulle pour les preuves qui sont des cha\^{\i}nes
-de bits classiques, dont les signatures ML-DSA et SLH-DSA.
+de bits classiques, dont les signatures ML-DSA et SLH-DSA. Les contributions C3.1 \`a C3.4
+y r\'epondent. L'objectif est atteint, sous des hypoth\`eses quantiques explicites.
 
 \textbf{Obj~\ref{obj:obj4_saturation}. Optimalit\'e.} Peut-on approcher ces
 bornes~? La famille SOTP propose une construction par r\'egime, SOTP-Low,
@@ -85,8 +86,10 @@ de conception, tandis que leur optimalit\'e demeure une conjecture
 pr\'esentation du contexte public et n'apporte aucune information au verdict
 (Remarque~\ref{rem:facteur_limitant_low}). Le t\'emoin de la
 Remarque~\ref{rem:temoin_realisable} montre en revanche qu'\`a confidentialit\'e parfaite
-l'opposabilit\'e peut atteindre le plafond $\Delta/\gamma$. Cet objectif est donc
-partiellement atteint.
+l'opposabilit\'e peut atteindre le plafond $\Delta/\gamma$. Les contributions C4.1 \`a C4.5
+y r\'epondent. L'objectif est partiellement atteint. Les garanties cryptographiques sont
+prouv\'ees et la d\'emarche de m\'ecanisation est engag\'ee~; l'opposabilit\'e reste guid\'ee par
+une heuristique et l'optimalit\'e reste une conjecture.
 
 \textbf{Obj~\ref{obj:obj5_verification}. V\'erification.} Comment certifier la
 correction d'un th\'eor\`eme complexe~? La formalisation Lean4 a
@@ -99,7 +102,10 @@ deux t\'emoins, l'un de coh\'erence (un point du mod\`ele abstrait o\`u la
 borne est atteinte, non r\'ealisable par un protocole), l'autre de port\'ee
 (une instance hors r\'egime atteint $1/4$). Le d\'etail de ce que la certification a rendu explicite, hypoth\`eses,
 constantes et r\'egime de validit\'e, est pr\'esent\'e \`a la
-sous-section~\ref{subsec:lean4_erreurs}.
+sous-section~\ref{subsec:lean4_erreurs}. Les contributions C5.1 \`a C5.6 y r\'epondent.
+L'objectif est atteint pour le trilemme classique, jusqu'aux lois finies~; l'extension
+quantique et la m\'ecanisation compl\`ete de SOTP restent \`a faire, au-del\`a de la
+m\'ecanisation r\'eduite de l'annexe~\ref{chap:annexe_gamebased}.
 
 \textbf{Obj~\ref{obj:obj6_experimentation}. Exp\'erimentation.} Comment rendre
 ces bornes testables~? Six protocoles op\'erationnels dotent chacun des
@@ -109,21 +115,67 @@ mod\`ele serait r\'efut\'e (tableau~\ref{tab:criteres_refutation}). Une
 calibration illustrative sur des syst\`emes d\'eploy\'es v\'erifie que les ordres de
 grandeur retenus sont mutuellement coh\'erents~; ces syst\`emes ne sont pas des
 instances du th\'eor\`eme. Le programme exp\'erimental lui-m\^eme n'a d'ailleurs pas \'et\'e
-d\'eploy\'e dans le cadre de cette th\`ese.
+d\'eploy\'e dans le cadre de cette th\`ese. Les contributions C6.1 \`a C6.3 y r\'epondent.
+L'objectif est partiellement atteint, puisque le programme est sp\'ecifi\'e et calibr\'e sans
+avoir \'et\'e d\'eploy\'e.
 
-\medskip
-\`A la question de savoir si confidentialit\'e, fiabilit\'e et opposabilit\'e
-peuvent \^etre simultan\'ement maximis\'ees, la th\`ese r\'epond par la n\'egative
-sous quatre hypoth\`eses institutionnelles explicites. Le produit y est born\'e
-par une quantit\'e dont le terme dominant est $\Delta/(\gamma\lambda)$, tandis que la
-forme raffin\'ee identifie exactement le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la
-capacit\'e d'extraction institutionnelle est la contrainte liante. Le noyau
-alg\'ebrique de ce r\'esultat est certifi\'e en Lean4 et sa port\'ee est
-d\'elimit\'ee, puisque les syst\`emes d\'eploy\'es \`a haute fiabilit\'e de
-v\'erification n'en sont pas des instances et servent \`a calibrer les
-ordres de grandeur. L'existence de constructions atteignant la borne est
-formul\'ee comme conjecture et constitue, avec la mesure exp\'erimentale de
-$\Delta$ par l'estimateur $\hat{I}(V;\Sigma|M,C)$, le programme ouvert par ce travail.
+Le tableau~\ref{tab:synthese_contributions} r\'esume ces verdicts.
+
+\begin{table}[htbp]
+\centering
+\caption{Objectifs, productions et verdicts}
+\label{tab:synthese_contributions}
+\small
+\begin{tabular}{@{}p{2.3cm}p{2.4cm}p{4.2cm}p{1.6cm}p{3.2cm}@{}}
+\toprule
+\textbf{Objectif} & \textbf{Production} & \textbf{R\'esultat cl\'e} & \textbf{Contrib.} & \textbf{Verdict} \\
+\midrule
+Obj1 Formalisation (F) & C1 Cadre CLO & M\'etriques $\Conf$, $\Relrec$/$\Relver$, $\Opp$~; goulot contextuel & C1.1--C1.7 & Atteint \\
+Obj2 Bornes (B) & C2 Trilemme CRO & Borne $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$, forme raffin\'ee, borne aigu\"e & C2.1--C2.7 & Atteint, sous hypoth\`eses explicites \\
+Obj3 Quantique (E) & C3 Trilemme PQ & Borne avec $\Delta_q$, $\gamma_q$~; $\eta_q$ unique & C3.1--C3.4 & Atteint, sous hypoth\`eses explicites \\
+Obj4 Constructions (S) & C4 Famille SOTP & Paradigme Gold-Iron-Clay~; $\Conf$, $\Relver$ prouv\'ees~; optimalit\'e conjectur\'ee & C4.1--C4.5 & Partiellement atteint \\
+Obj5 Certification (C) & C5 Lean4 & Noyau certifi\'e~; Fano et Pinsker sur lois finies~; t\'emoins & C5.1--C5.6 & Atteint pour le cas classique \\
+Obj6 Exp\'erimentation (X) & C6 Programme & Protocoles sp\'ecifi\'es et r\'efutables~; calibration & C6.1--C6.3 & Partiellement atteint (non d\'eploy\'e) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{Les questions ont-elles trouv\'e r\'eponse~?}
+
+\textbf{Q1. Conciliation} (Obj~\ref{obj:obj1_unification} et Obj~\ref{obj:obj4_saturation}).
+Oui, en partie. La conciliation est possible, mais elle est born\'ee. Le cadre CLO rend
+les trois exigences mesurables sur une m\^eme \'echelle (C1.1 et C1.2). Le paradigme
+Gold-Iron-Clay les confie \`a trois couches distinctes (C4.1), de sorte que les variantes
+SOTP obtiennent une confidentialit\'e et une fiabilit\'e de v\'erification prouv\'ees (C4.2 et
+C4.3). Cette conciliation a un prix. La fiabilit\'e de reconstruction tombe \`a l'ordre de
+$2^{-\lambda}$ et l'opposabilit\'e que la preuve peut porter reste plafonn\'ee par
+$\Delta/\gamma$. Qu'une construction atteigne ce plafond reste une conjecture (C4.4).
+
+\textbf{Q2. Limites} (Obj~\ref{obj:obj2_impossibilite}, Obj~\ref{obj:obj3_postquantique},
+Obj~\ref{obj:obj5_verification} et Obj~\ref{obj:obj6_experimentation}). Oui sur le plan
+th\'eorique, pas encore sur le plan empirique. Les limites d\'ependent de la capacit\'e
+d'extraction $\Delta$, de la granularit\'e des verdicts $\alpha$ \`a travers
+$\gamma = \alpha H(C) - 1$ et de la constante de r\'egime $\kappa$~; la r\'egularit\'e $\beta$ ne
+contraint que la confidentialit\'e (C2.1, C2.2 et C5.4). Elles restent valides face aux
+adversaires quantiques, avec $\Delta_q$ et $\gamma_q$, la perte $\eta_q$ n'intervenant que dans
+la forme affaiblie (C3.1 et C3.2). Elles sont certifi\'ees m\'ecaniquement, des propri\'et\'es
+d'instance jusqu'aux lois finies (C5.1 et C5.3). Leur mesure empirique est sp\'ecifi\'ee et
+r\'efutable (C6.1), mais elle n'a pas encore \'et\'e r\'ealis\'ee.
+
+\subsection*{La probl\'ematique a-t-elle \'et\'e trait\'ee~?}
+
+La probl\'ematique demandait quelles limites fondamentales contraignent les compromis entre
+confidentialit\'e, fiabilit\'e et opposabilit\'e. La th\`ese y r\'epond par une limite explicite
+et conditionnelle. Sous quatre hypoth\`eses institutionnelles, le produit
+$\Conf \cdot \Relrec \cdot \Opp$ est major\'e par une quantit\'e dont le terme dominant est
+$\Delta/(\gamma\lambda)$. La borne aigu\"e ram\`ene ce terme \`a l'ordre $\kappa/\lambda^2$, ordre
+qui ne peut pas \^etre am\'elior\'e. La forme raffin\'ee identifie le r\'egime
+($H(\mathcal{C}) > H^\sharp$) o\`u la capacit\'e de l'institution, et non la puissance de calcul
+de l'adversaire, est la contrainte liante. Cette limite est certifi\'ee m\'ecaniquement et sa
+port\'ee est d\'elimit\'ee, puisque les syst\`emes d\'eploy\'es \`a haute fiabilit\'e de v\'erification
+n'en sont pas des instances et servent \`a calibrer les ordres de grandeur. Les deux r\'eponses
+manquantes, l'optimalit\'e des constructions et la mesure de $\Delta$ par l'estimateur
+$\hat{I}(V;\Sigma|M,C)$, forment le programme ouvert par ce travail.
 
 \end{sloppypar}
 
@@ -140,24 +192,9 @@ techniques (C1--C6) et trois apports transversaux en \'emergent.
 
 \subsection*{Productions techniques (C1--C6)}
 
-\begin{table}[htbp]
-\centering
-\caption{Synth\`ese des six productions}
-\label{tab:synthese_contributions}
-\small
-\begin{tabular}{@{}llp{6cm}@{}}
-\toprule
-\textbf{\'Etape} & \textbf{Production} & \textbf{R\'esultat cl\'e} \\
-\midrule
-F (Formaliser) & C1~: Cadre CLO & M\'etriques $\Conf$, $\Relrec$/$\Relver$, $\Opp$~; goulot contextuel \\
-B (Borner) & C2~: Trilemme CRO classique & Borne $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$ et forme raffin\'ee \\
-E (\'Etendre) & C3~: Trilemme CRO post-quantique & Borne avec $\Delta_q$, $\eta_q$~; calibration NIST PQC \\
-S (Saturer) & C4~: Famille SOTP & Trois constructions ($\Conf$, $\Relver$ prouv\'ees)~; optimalit\'e conjectur\'ee \\
-C (Certifier) & C5~: Certification Lean4 & Noyau v\'erifi\'e, t\'emoins de coh\'erence et port\'ee \\
-X (eXp\'erimenter) & C6~: Programme de validation & Protocoles exp\'erimentaux sp\'ecifi\'es, falsifiables \\
-\bottomrule
-\end{tabular}
-\end{table}
+Le tableau~\ref{tab:synthese_contributions} les relie aux objectifs et le
+tableau~\ref{tab:contributions_these} de l'introduction en d\'etaille les contributions.
+
 
 \textbf{C1. Cadre CLO}~\cite{MINKA2026CLO}. Premier cadre unifi\'e, \`a notre connaissance,
 formalisant $\Conf$, $\Rel$ et $\Opp$ via la th\'eorie de l'information, avec

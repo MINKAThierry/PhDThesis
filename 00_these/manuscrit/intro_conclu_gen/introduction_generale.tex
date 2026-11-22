@@ -74,10 +74,22 @@ classique~\cite{GMR85,Goldreich01}.
 Ces constats conduisent \`a la probl\'ematique centrale de cette th\`ese, formul\'ee dans l'encadr\'e ci-dessous.
 
 \begin{boiteProblematique}{Probl\'ematique centrale}
-\textit{Comment concilier la s\'ecurit\'e cryptographique, qui requiert l'opacit\'e computationnelle, avec l'interpr\'etabilit\'e institutionnelle, qui requiert la transparence s\'emantique~? Existe-t-il des limites fondamentales aux compromis r\'ealisables entre confidentialit\'e, fiabilit\'e et opposabilit\'e~?}
+\textit{Quelles limites fondamentales contraignent les compromis entre confidentialit\'e, fiabilit\'e et opposabilit\'e dans les syst\`emes cryptographiques soumis \`a des exigences d'interpr\'etabilit\'e institutionnelle~?}
 \end{boiteProblematique}
 
-Cette th\`ese formalise ces propri\'et\'es ($\Conf$~\ref{def:confidentialite_clo}, $\Rel$~\ref{def:fiabilite_clo}, $\Opp$~\ref{def:opposabilite_clo}) et traite cette probl\'ematique au moyen de \textbf{six questions/objectifs de recherche}, qui structurent nos contributions.
+Cette th\`ese formalise ces propri\'et\'es ($\Conf$~\ref{def:confidentialite_clo}, $\Rel$~\ref{def:fiabilite_clo}, $\Opp$~\ref{def:opposabilite_clo}) et d\'ecline cette probl\'ematique en deux questions de recherche.
+
+\medskip
+\begin{boiteQuestion}{Q1. Conciliation}
+\textit{Comment concilier la s\'ecurit\'e cryptographique, qui requiert l'opacit\'e computationnelle, avec l'interpr\'etabilit\'e institutionnelle, qui requiert la transparence s\'emantique~?}
+\end{boiteQuestion}
+
+\medskip
+\begin{boiteQuestion}{Q2. Limites}
+\textit{De quels param\`etres institutionnels d\'ependent ces limites et restent-elles valides face aux adversaires quantiques, \`a la v\'erification m\'ecanique et \`a la mesure empirique~?}
+\end{boiteQuestion}
+
+Ces deux questions se d\'eclinent en six \textbf{objectifs} de recherche, qui correspondent aux six productions C1 \`a C6. La question Q1 appelle un cadre de mesure commun (Obj1) et des constructions qui approchent les bornes (Obj4). La question Q2 appelle l'\'etablissement des bornes (Obj2), leur extension au quantique (Obj3), leur certification m\'ecanique (Obj5) et la mesure des param\`etres institutionnels qui les conditionnent (Obj6).
 
 \medskip
 \begin{boiteQuestion}{Obj1. Formalisation}
@@ -111,13 +123,72 @@ Cette th\`ese formalise ces propri\'et\'es ($\Conf$~\ref{def:confidentialite_clo
 \end{boiteQuestion}
 
 \medskip
-La progression Obj1~$\to$~Obj6 organise la th\`ese en six \'etapes, qui
-consistent \`a \textbf{formaliser, borner, \'etendre, saturer, certifier et
-exp\'erimenter}. La probl\'ematique \'enonc\'ee plus haut demeure la question
-unique de ce travail, \`a laquelle la r\'ealisation successive de ces six
-objectifs apporte une r\'eponse.
+\label{par:progression_FBESCX}
+La progression Obj1~$\to$~Obj6 organise la th\`ese en six \'etapes, \textbf{F}ormaliser,
+\textbf{B}orner, \textbf{E}tendre, \textbf{S}aturer, \textbf{C}ertifier et
+e\textbf{X}p\'erimenter. Le chapitre~\ref{chap:contexte} pose les fondements en amont de~F.
+Le chapitre~\ref{chap:cadre_formel} r\'ealise F$\to$B$\to$E et le
+chapitre~\ref{chap:constructions} r\'ealise S$\to$C. Le
+chapitre~\ref{chap:experimentation} r\'ealise~X, tandis que le
+chapitre~\ref{chap:resultats_discussions} analyse les r\'esultats et ouvre les perspectives.
+La probl\'ematique demeure la question unique de ce travail, \`a laquelle la r\'ealisation
+successive des six objectifs apporte une r\'eponse.
 
 \end{sloppypar}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={
+        rectangle,
+        rounded corners,
+        draw=black!80,
+        fill=blue!10, % Couleur de fond des boîtes
+        text width=2.8cm,
+        align=center,
+        minimum height=1.3cm,
+        font=\small\sffamily
+    },
+    arrow/.style={
+        -{Stealth[scale=1.2]},
+        thick,
+        draw=black!80
+    }
+]
+
+    % --- Positionnement des 6 objectifs en cercle ---
+    % F en haut (90°)
+    \node[box] (F) at (90:3.8)  {\textbf{Objectif~1} \\ (CLO) \\ \textbf{F}};
+    % B en haut à droite (30°)
+    \node[box] (B) at (30:3.8)  {\textbf{Objectif~2} \\ (CRO) \\ \textbf{B}};
+    % E en bas à droite (-30°)
+    \node[box] (E) at (-30:3.8) {\textbf{Objectif~3} \\ (PQ-CRO) \\ \textbf{E}};
+    % S en bas (-90°)
+    \node[box] (S) at (270:3.8) {\textbf{Objectif~4} \\ (SOTP) \\ \textbf{S}};
+    % C en bas à gauche (210°)
+    \node[box] (C) at (210:3.8) {\textbf{Objectif~5} \\ (Lean4) \\ \textbf{C}};
+    % X en haut à gauche (150°)
+    \node[box] (X) at (150:3.8) {\textbf{Objectif~6} \\ (eXp\'erimentation) \\ \textbf{X}};
+
+    % --- Fl\`eches de transition principales ---
+    \draw[arrow] (F) to[bend left=20] node[above right, font=\footnotesize] {d\'efinitions du cadre} (B);
+    \draw[arrow] (B) to[bend left=20] node[right, font=\footnotesize] {borne classique} (E);
+    \draw[arrow] (E) to[bend left=20] node[below right, font=\footnotesize] {extension quantique} (S);
+    \draw[arrow] (S) to[bend left=20] node[below left, font=\footnotesize] {saturation par construction} (C);
+    \draw[arrow] (C) to[bend left=20] node[above left, font=\footnotesize] {certification m\'ecanique} (X);
+    
+    % --- Fl\`eche de retour vers B (la mesure) ---
+    % En pointill\'es pour montrer que c'est un cycle qui se referme sur B
+    \draw[arrow, dashed] (X) to[bend right=45] node[midway, above, font=\footnotesize] {mesure empirique} (B);
+
+    % --- Texte au centre du cercle (optionnel) ---
+    
+    %\node[font=\bfseries\small, text=gray, align=center] at (0,0) {Cycle \\ logique};
+
+\end{tikzpicture}
+\caption{Illustration des six objectifs et de leurs interd\'ependances.}
+\label{fig:cycle_recherche}
+\end{figure}
 
 % ----------------------------------------------------------------------------
 \section{POSITIONNEMENT \'EPIST\'EMOLOGIQUE}
@@ -348,72 +419,11 @@ sous-section~\ref{subsubsec:statut_deploiement}.
 \end{itemize}
 \medskip
 
-Ces six productions forment le cycle repr\'esent\'e par la figure~\ref{fig:cycle_recherche}.
-
-\paragraph{Progression canonique.}
-\label{par:progression_FBESCX}
-La th\`ese suit un fil conducteur en six actes, \textbf{F}ormaliser, \textbf{B}orner, \textbf{E}tendre, \textbf{S}aturer, \textbf{C}ertifier et e\textbf{X}p\'erimenter.
-Le chapitre~\ref{chap:contexte} pose les fondements en amont de~F. Le
-chapitre~\ref{chap:cadre_formel} r\'ealise F$\to$B$\to$E, puis le
-chapitre~\ref{chap:constructions} r\'ealise S$\to$C. Le
-chapitre~\ref{chap:experimentation} r\'ealise~X, tandis que le
-chapitre~\ref{chap:resultats_discussions} analyse les r\'esultats et ouvre les perspectives.
+Ces six productions r\'ealisent, dans l'ordre, les six objectifs de la section~\ref{sec:ig_problematique} (figure~\ref{fig:cycle_recherche}).
 
 \end{sloppypar}
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[
-    box/.style={
-        rectangle,
-        rounded corners,
-        draw=black!80,
-        fill=blue!10, % Couleur de fond des boîtes
-        text width=2.8cm,
-        align=center,
-        minimum height=1.3cm,
-        font=\small\sffamily
-    },
-    arrow/.style={
-        -{Stealth[scale=1.2]},
-        thick,
-        draw=black!80
-    }
-]
 
-    % --- Positionnement des 6 objectifs en cercle ---
-    % F en haut (90°)
-    \node[box] (F) at (90:3.8)  {\textbf{Objectif~1} \\ (CLO) \\ \textbf{F}};
-    % B en haut à droite (30°)
-    \node[box] (B) at (30:3.8)  {\textbf{Objectif~2} \\ (CRO) \\ \textbf{B}};
-    % E en bas à droite (-30°)
-    \node[box] (E) at (-30:3.8) {\textbf{Objectif~3} \\ (PQ-CRO) \\ \textbf{E}};
-    % S en bas (-90°)
-    \node[box] (S) at (270:3.8) {\textbf{Objectif~4} \\ (SOTP) \\ \textbf{S}};
-    % C en bas à gauche (210°)
-    \node[box] (C) at (210:3.8) {\textbf{Objectif~5} \\ (Lean4) \\ \textbf{C}};
-    % X en haut à gauche (150°)
-    \node[box] (X) at (150:3.8) {\textbf{Objectif~6} \\ (eXp\'erimentation) \\ \textbf{X}};
-
-    % --- Fl\`eches de transition principales ---
-    \draw[arrow] (F) to[bend left=20] node[above right, font=\footnotesize] {d\'efinitions du cadre} (B);
-    \draw[arrow] (B) to[bend left=20] node[right, font=\footnotesize] {borne classique} (E);
-    \draw[arrow] (E) to[bend left=20] node[below right, font=\footnotesize] {extension quantique} (S);
-    \draw[arrow] (S) to[bend left=20] node[below left, font=\footnotesize] {saturation par construction} (C);
-    \draw[arrow] (C) to[bend left=20] node[above left, font=\footnotesize] {certification m\'ecanique} (X);
-    
-    % --- Fl\`eche de retour vers B (la mesure) ---
-    % En pointill\'es pour montrer que c'est un cycle qui se referme sur B
-    \draw[arrow, dashed] (X) to[bend right=45] node[midway, above, font=\footnotesize] {mesure empirique} (B);
-
-    % --- Texte au centre du cercle (optionnel) ---
-    
-    %\node[font=\bfseries\small, text=gray, align=center] at (0,0) {Cycle \\ logique};
-
-\end{tikzpicture}
-\caption{Illustration cyclique des six productions et de leurs interd\'ependances.}
-\label{fig:cycle_recherche}
-\end{figure}
 % ----------------------------------------------------------------------------
 \section{PUBLICATIONS ET STATUT}
 \label{sec:ig_publications}
