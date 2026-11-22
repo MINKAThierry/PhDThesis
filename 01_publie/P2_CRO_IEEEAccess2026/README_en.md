@@ -15,7 +15,7 @@ T. E. MINKA MI NGUIDJOÏ, F. S. MANI ONANA, T. DJOTIO NDIÉ, "The Conditional CR
 | [`article.pdf`](article.pdf) | Version published by the publisher (12 pages) |
 | [`source/Final_Conditional_CRO_Trilemma.tex`](source/Final_Conditional_CRO_Trilemma.tex) | LaTeX source of the final submitted version |
 | [`CITATION.bib`](CITATION.bib) | Bibliographic reference |
-| [`formulations_precisees/`](formulations_precisees/) | Refined statements submitted to the publisher, not published (status PROPOSAL) |
+| [`formulations_precisees/`](formulations_precisees/) | Refined statements being finalised for submission to the publisher, not published (status PROPOSAL) |
 
 ## Licence
 
@@ -33,7 +33,7 @@ The article underpins contribution **C2** of the thesis (classical Conditional C
 
 The thesis keeps the institutional model, the role of $(\Delta,\alpha,\beta)$ and the form of the main bound within the regime in which it is established. The statement-by-statement detail is in [`../../03_resultats_these/resultats_these_en.md`](../../03_resultats_these/resultats_these_en.md).
 
-### Points shared with the submitted refined statements ([`formulations_precisees/`](formulations_precisees/))
+### Points shared with the refined statements being finalised ([`formulations_precisees/`](formulations_precisees/))
 
 | Item | In the article | In the thesis | Thesis reference |
 |---|---|---|---|
@@ -45,7 +45,7 @@ The thesis keeps the institutional model, the role of $(\Delta,\alpha,\beta)$ an
 | Constant $c_0$ | Described as tight | Valid but not tight | `rem:constante_c0`, §2.3.2 |
 | Table 2 | Implied capacities read as consequences of the theorem | Illustrative calibration on the CLO scale | `rem:portee_cas_etude`, `tab:validation_cro_classique`, §2.3.3 and §2.3.5 |
 
-### Contributions specific to the thesis, not in the submitted document
+### Contributions specific to the thesis, not in the document in preparation
 
 | Item | In the thesis | Thesis reference |
 |---|---|---|

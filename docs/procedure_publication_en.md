@@ -29,7 +29,7 @@ The repository `MINKAThierry/PhDThesis` remains **private until the defence**. T
 
 The register knows only three statuses (PUBLISHED, PREPRINT, PROPOSAL). Author's decision (13 October 2026) for the thesis results after the defence. They keep the status PROPOSAL with the sub-label “result of the defended thesis”. The other sub-labels (construction, conjecture, formalisation, illustrative calibration, undeployed protocol, reference implementation) remain unchanged. The repository may keep evolving until then.
 
-If submitted refined statements have been published in the meantime, their row moves from “PROPOSAL (submitted refined statements)” to PUBLISHED with their DOI, in the register and in the relevant [`formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_en.md) record. The same applies to SOTP (*IEEE TIT*) and to the Lean formalisation (*JAR*) if accepted.
+If refined statements have been submitted and published in the meantime, their row moves from “PROPOSAL (refined statements being finalised)” to PUBLISHED with their DOI, in the register and in the relevant [`formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_en.md) record. The same applies to SOTP (*IEEE TIT*) and to the Lean formalisation (*JAR*) if accepted.
 
 ## 3. Choosing how to obtain the DOI
 

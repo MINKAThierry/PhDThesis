@@ -1,10 +1,10 @@
 # Proposed refined statements for P2
 
-> **Status: PROPOSAL: submitted refined statements (not published)** · Source: document submitted to *IEEE Access* for the article DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thesis, Chapter 2, §2.3 and Chapter 3, §3.4.9
+> **Status: PROPOSAL: refined statements being finalised (not submitted)** · Source: document in preparation for *IEEE Access*, article DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thesis, Chapter 2, §2.3 and Chapter 3, §3.4.9
 
 [Version française](README_fr.md)
 
-This folder contains the document that the authors submitted to the publisher for the article "The Conditional CRO Trilemma". It presents more precise formulations of several statements. It has not been published to date. Until the publisher accepts it, the published version of the article remains the bibliographic reference and the text below only has the standing of a proposal by the authors.
+This folder contains the document that the authors are finalising in order to submit to the publisher the revisions, arising from the Lean4 formalisation, of the article "The Conditional CRO Trilemma". It presents more precise formulations of several statements. It has been neither submitted nor published to date. Until the publisher accepts it, the published version of the article remains the bibliographic reference and the text below only has the standing of a proposal by the authors.
 
 | File | Contents |
 |---|---|

@@ -1,10 +1,10 @@
 # Formulations précisées proposées pour P2
 
-> **Statut : PROPOSITION: formulations précisées soumises (non publiées)** · Source : document soumis à *IEEE Access* pour l'article DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thèse, chapitre 2, §2.3 et chapitre 3, §3.4.9
+> **Statut : PROPOSITION: formulations précisées en cours de finalisation (non soumises)** · Source : document en préparation pour *IEEE Access*, article DOI [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) · Thèse, chapitre 2, §2.3 et chapitre 3, §3.4.9
 
 [English version](README_en.md)
 
-Ce dossier contient le document que les auteurs ont soumis à l'éditeur pour l'article « The Conditional CRO Trilemma ». Il présente des formulations plus précises de plusieurs énoncés. Il n'a pas été publié à ce jour. Tant que l'éditeur ne l'a pas accepté, la version publiée de l'article reste la référence bibliographique et le texte ci-dessous n'a que la valeur d'une proposition des auteurs.
+Ce dossier contient le document que les auteurs finalisent pour soumettre à l'éditeur les révisions, issues de la formalisation Lean4, de l'article « The Conditional CRO Trilemma ». Il présente des formulations plus précises de plusieurs énoncés. Il n'a été ni soumis ni publié à ce jour. Tant que l'éditeur ne l'a pas accepté, la version publiée de l'article reste la référence bibliographique et le texte ci-dessous n'a que la valeur d'une proposition des auteurs.
 
 | Fichier | Contenu |
 |---|---|

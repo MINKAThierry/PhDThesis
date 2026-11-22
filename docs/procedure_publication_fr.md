@@ -29,7 +29,7 @@ Le dépôt `MINKAThierry/PhDThesis` reste **privé jusqu'à la soutenance**. Ce 
 
 Le registre ne connaît que trois statuts (PUBLIÉ, PRÉPRINT, PROPOSITION). Décision de l'auteur (13 octobre 2026) pour les résultats de thèse après soutenance. Ils gardent le statut PROPOSITION avec la sous-étiquette « résultat de thèse soutenue ». Les autres sous-étiquettes (construction, conjecture, formalisation, calibration illustrative, protocole non déployé, implémentation de référence) restent inchangées. Le dépôt peut continuer d'évoluer d'ici là.
 
-Si des formulations précisées soumises ont été publiées entre-temps, leur ligne passe de « PROPOSITION (formulations précisées soumises) » à PUBLIÉ avec leur DOI, dans le registre comme dans la fiche [`formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_fr.md) concernée. Il en va de même pour SOTP (*IEEE TIT*) et pour la formalisation Lean (*JAR*) en cas d'acceptation.
+Si des formulations précisées ont été soumises puis publiées entre-temps, leur ligne passe de « PROPOSITION (formulations précisées en cours de finalisation) » à PUBLIÉ avec leur DOI, dans le registre comme dans la fiche [`formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_fr.md) concernée. Il en va de même pour SOTP (*IEEE TIT*) et pour la formalisation Lean (*JAR*) en cas d'acceptation.
 
 ## 3. Choix du mode d'obtention du DOI
 

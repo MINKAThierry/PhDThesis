@@ -15,7 +15,7 @@ T. E. MINKA MI NGUIDJOÏ, F. S. MANI ONANA, T. DJOTIO NDIÉ, « Post-Quantum Ext
 | [`article.pdf`](article.pdf) | Version publiée par l'éditeur (26 pages) |
 | [`source/Final_PQ_Extension_CRO_Trilemma.tex`](source/Final_PQ_Extension_CRO_Trilemma.tex) | Source LaTeX de la version finale soumise |
 | [`CITATION.bib`](CITATION.bib) | Référence bibliographique |
-| [`formulations_precisees/`](formulations_precisees/) | Formulations précisées soumises à l'éditeur, non publiées (statut PROPOSITION) |
+| [`formulations_precisees/`](formulations_precisees/) | Formulations précisées en cours de finalisation pour soumission à l'éditeur, non publiées (statut PROPOSITION) |
 
 ## Licence
 
@@ -33,7 +33,7 @@ L'article fonde la contribution **C3** de la thèse (extension quantique du Tril
 
 La thèse conserve le modèle institutionnel quantique, les paramètres $(\Delta_q,\alpha_q,\beta_q,\eta_q)$ et la forme de la borne principale dans le régime où elle est établie. Le détail énoncé par énoncé figure dans [`../../03_resultats_these/resultats_these_fr.md`](../../03_resultats_these/resultats_these_fr.md).
 
-### Points communs avec les formulations précisées soumises ([`formulations_precisees/`](formulations_precisees/))
+### Points communs avec les formulations précisées en cours de finalisation ([`formulations_precisees/`](formulations_precisees/))
 
 | Point | Dans l'article | Dans la thèse | Référence thèse |
 |---|---|---|---|
@@ -54,4 +54,4 @@ La thèse conserve le modèle institutionnel quantique, les paramètres $(\Delta
 | Forme raffinée quantique et seuil $H^\sharp_q$ | $\frac{1+\kappa/\lambda}{\lambda}\min\{1,\frac{\kappa/\lambda+\Delta_q}{\gamma_q}\}$, $H^\sharp_q=(\Delta_q+\kappa/\lambda)/(\theta_q\alpha_q)$, où $\eta_q$ n'intervient pas | `rem:forme_raffinee_pq`, §2.4.4 et §2.4.5 |
 | Paramètres de référence | ML-DSA-65 en contexte contractuel, $\Delta_q=28$ bits comme hypothèse de travail, $\eta_q=0$ | `tab:parametres_reference`, §4.1.3 |
 
-La remarque sur $D_{\max}$ va plus loin que le document soumis, qui pose encore $D_{\max}=\mathrm{negl}(\lambda)$ pour ces schémas et note $\eta_q$ la constante de régularité du Lemme 7.
+La remarque sur $D_{\max}$ va plus loin que le document en préparation, qui pose encore $D_{\max}=\mathrm{negl}(\lambda)$ pour ces schémas et note $\eta_q$ la constante de régularité du Lemme 7.

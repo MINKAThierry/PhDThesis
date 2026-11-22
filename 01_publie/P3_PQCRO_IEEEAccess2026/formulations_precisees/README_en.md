@@ -1,10 +1,10 @@
 # Proposed refined statements for P3
 
-> **Status: PROPOSAL: submitted refined statements (not published)** · Source: document submitted to *IEEE Access* for the article DOI [10.1109/ACCESS.2026.3722742](https://doi.org/10.1109/ACCESS.2026.3722742) · Thesis, Chapter 2, §2.4 and Chapter 3, §3.4.9
+> **Status: PROPOSAL: refined statements being finalised (not submitted)** · Source: document in preparation for *IEEE Access*, article DOI [10.1109/ACCESS.2026.3722742](https://doi.org/10.1109/ACCESS.2026.3722742) · Thesis, Chapter 2, §2.4 and Chapter 3, §3.4.9
 
 [Version française](README_fr.md)
 
-This folder contains the document that the authors submitted to the publisher for the article "Post-Quantum Extension of the Conditional CRO Trilemma". It presents more precise formulations of several statements. It has not been published to date. Until the publisher accepts it, the published version of the article remains the bibliographic reference and the text below only has the standing of a proposal by the authors.
+This folder contains the document that the authors are finalising in order to submit to the publisher the revisions, arising from the Lean4 formalisation, of the article "Post-Quantum Extension of the Conditional CRO Trilemma". It presents more precise formulations of several statements. It has been neither submitted nor published to date. Until the publisher accepts it, the published version of the article remains the bibliographic reference and the text below only has the standing of a proposal by the authors.
 
 | File | Contents |
 |---|---|
@@ -28,10 +28,10 @@ The quantum institutional model (Assumptions 1 to 3), the parameters $(\Delta_q,
 
 ## Link with the thesis
 
-The thesis incorporates these formulations in §2.4 and traces them in §3.4.9. On two points it goes further than the submitted document.
+The thesis incorporates these formulations in §2.4 and traces them in §3.4.9. On two points it goes further than the document in preparation.
 
-- It gives $\eta_q$ a single definition, as an interpretability loss, and renames $\zeta_q$ the regularity constant that the submitted document still writes $\eta_q$ in Lemma 7.
-- It establishes that $D_{\max}$ is not negligible for NIST PQC signatures (more than $2.6\cdot10^4$ bits for ML-DSA-65), whereas the submitted document sets $D_{\max}=\mathrm{negl}(\lambda)$ for these schemes.
+- It gives $\eta_q$ a single definition, as an interpretability loss, and renames $\zeta_q$ the regularity constant that the document in preparation still writes $\eta_q$ in Lemma 7.
+- It establishes that $D_{\max}$ is not negligible for NIST PQC signatures (more than $2.6\cdot10^4$ bits for ML-DSA-65), whereas the document in preparation sets $D_{\max}=\mathrm{negl}(\lambda)$ for these schemes.
 
 These differences are listed in [`../README_en.md`](../README_en.md) and [`../../../03_resultats_these/resultats_these_en.md`](../../../03_resultats_these/resultats_these_en.md).
 

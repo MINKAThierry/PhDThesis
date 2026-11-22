@@ -4,7 +4,7 @@
 
 [Version française](README_fr.md)
 
-This folder lists what the thesis adds or refines with respect to the three published articles of [`../01_publie/`](../01_publie/). The articles remain as the publisher published them. The statements listed here have not been published in a journal; they appear in the submitted manuscript and keep the status of proposals until the defence. Some of them also belong to the refined statements submitted for P2 and P3, which themselves have the status of proposals.
+This folder lists what the thesis adds or refines with respect to the three published articles of [`../01_publie/`](../01_publie/). The articles remain as the publisher published them. The statements listed here have not been published in a journal; they appear in the submitted manuscript and keep the status of proposals until the defence. Some of them also belong to the refined statements being finalised for P2 and P3, which themselves have the status of proposals.
 
 | Document | Contents |
 |---|---|
@@ -19,7 +19,7 @@ Each entry refers to the LaTeX label of the statement, which can be found by sea
 
 | Folder or document | Contents |
 |---|---|
-| [`../01_publie/`](../01_publie/) | Notes on the articles and submitted refined statements |
+| [`../01_publie/`](../01_publie/) | Notes on the articles and refined statements being finalised |
 | [`../05_formalisation_lean/`](../05_formalisation_lean/) | Lean formalisation of the algebraic core |
 | [`../06_calcul/`](../06_calcul/) | Numerical checks of the statements |
 | [`../docs/correspondance_these_depot_en.md`](../docs/correspondance_these_depot_en.md) | Thesis ↔ repository mapping |

@@ -44,12 +44,12 @@ Les énoncés de la version 2.1 sont repris à l'identique dans la version 2.2. 
 
 | Date | Événement | Emplacement |
 |---|---|---|
-| 2026 | Formulations précisées rédigées pour P2 (preuve du trilemme classique), à transmettre à *IEEE Access* après la soutenance | [`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
-| 2026 | Formulations précisées rédigées pour P3, parallèles à celles de P2, à transmettre à *IEEE Access* après la soutenance | [`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
+| 2026 | Formulations précisées rédigées pour P2 (preuve du trilemme classique), en cours de finalisation pour la soumission à *IEEE Access* des révisions issues de la formalisation Lean4 | [`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
+| 2026 | Formulations précisées rédigées pour P3, parallèles à celles de P2, en cours de finalisation pour la soumission à *IEEE Access* des révisions issues de la formalisation Lean4 | [`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
 | 28 septembre 2026 | Dépôt de la thèse (262 pages), après intégration des retours de l'expertise académique | [`../00_these/pdf/`](../00_these/pdf/README_fr.md) |
 | octobre 2026 | Version finale du manuscrit (formalisation Lean 2.2 vérifiée en ligne, adresse du dépôt) | [`../00_these/manuscrit/`](../00_these/manuscrit/README_fr.md) |
 
-Les formulations précisées ne sont ni transmises ni publiées au 22 novembre 2026. Elles gardent le statut PROPOSITION. Les énoncés précisés par la thèse sont recensés dans [`../03_resultats_these/`](../03_resultats_these/README_fr.md).
+Les formulations précisées sont en cours de finalisation pour la soumission des révisions issues de la formalisation Lean4. Elles ne sont ni soumises ni publiées au 22 novembre 2026. Elles gardent le statut PROPOSITION. Les énoncés précisés par la thèse sont recensés dans [`../03_resultats_these/`](../03_resultats_these/README_fr.md).
 
 ## 5. Soumissions en cours
 

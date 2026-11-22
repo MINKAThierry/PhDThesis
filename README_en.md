@@ -10,14 +10,14 @@ This repository gathers all the work of the doctoral thesis of Thierry Emmanuel 
 |---|---|
 | **PUBLISHED** | Peer-reviewed and published article (IEEE Access 2026) |
 | **PREPRINT** | IACR ePrint deposit, not peer reviewed |
-| **PROPOSAL** | Everything else, refined by a sub-label (submitted refined statements, thesis result, construction, formalisation, conjecture, illustrative calibration, protocol not deployed, reference implementation) |
+| **PROPOSAL** | Everything else, refined by a sub-label (refined statements being finalised, thesis result, construction, formalisation, conjecture, illustrative calibration, protocol not deployed, reference implementation) |
 
 ## Layout
 
 | Folder | Contents | Status |
 |---|---|---|
 | [00_these/](00_these/README_en.md) | LaTeX manuscript (final version), submitted PDF | PROPOSAL |
-| [01_publie/](01_publie/README_en.md) | Articles P1 (CLO), P2 (CRO Trilemma), P3 (post-quantum extension) and submitted refined statements | PUBLISHED (refined statements: PROPOSAL) |
+| [01_publie/](01_publie/README_en.md) | Articles P1 (CLO), P2 (CRO Trilemma), P3 (post-quantum extension) and refined statements being finalised | PUBLISHED (refined statements: PROPOSAL) |
 | [02_preprints/](02_preprints/README_en.md) | Records of the nine IACR ePrint preprints | PREPRINT |
 | [03_resultats_these/](03_resultats_these/README_en.md) | What the thesis adds to or refines in the articles | PROPOSAL |
 | [04_sotp/](04_sotp/README_en.md) | SOTP family, specification, game-based proofs, reference implementations (Low, Base, executable High in Circom/Groth16) | PROPOSAL |

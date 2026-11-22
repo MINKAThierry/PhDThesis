@@ -44,8 +44,8 @@ The statements of version 2.1 are carried over unchanged into version 2.2. Versi
 
 | Date | Event | Location |
 |---|---|---|
-| 2026 | Refined statements drafted for P2 (proof of the classical trilemma), to be sent to *IEEE Access* after the defence | [`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_en.md) |
-| 2026 | Refined statements drafted for P3, parallel to those of P2, to be sent to *IEEE Access* after the defence | [`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_en.md) |
+| 2026 | Refined statements drafted for P2 (proof of the classical trilemma), being finalised for submission to *IEEE Access* as revisions arising from the Lean4 formalisation | [`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_en.md) |
+| 2026 | Refined statements drafted for P3, parallel to those of P2, being finalised for submission to *IEEE Access* as revisions arising from the Lean4 formalisation | [`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_en.md) |
 | 28 September 2026 | Deposit of the thesis (262 pages), after incorporating the feedback from the academic expert review | [`../00_these/pdf/`](../00_these/pdf/README_en.md) |
 | October 2026 | Final version of the manuscript (Lean formalisation 2.2 verified online, repository address) | [`../00_these/manuscrit/`](../00_these/manuscrit/README_en.md) |
 

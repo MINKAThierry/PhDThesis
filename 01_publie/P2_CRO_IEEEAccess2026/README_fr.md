@@ -15,7 +15,7 @@ T. E. MINKA MI NGUIDJOÏ, F. S. MANI ONANA, T. DJOTIO NDIÉ, « The Conditional 
 | [`article.pdf`](article.pdf) | Version publiée par l'éditeur (12 pages) |
 | [`source/Final_Conditional_CRO_Trilemma.tex`](source/Final_Conditional_CRO_Trilemma.tex) | Source LaTeX de la version finale soumise |
 | [`CITATION.bib`](CITATION.bib) | Référence bibliographique |
-| [`formulations_precisees/`](formulations_precisees/) | Formulations précisées soumises à l'éditeur, non publiées (statut PROPOSITION) |
+| [`formulations_precisees/`](formulations_precisees/) | Formulations précisées en cours de finalisation pour soumission à l'éditeur, non publiées (statut PROPOSITION) |
 
 ## Licence
 
@@ -33,7 +33,7 @@ L'article fonde la contribution **C2** de la thèse (Trilemme CRO conditionnel c
 
 La thèse conserve le modèle institutionnel, le rôle de $(\Delta,\alpha,\beta)$ et la forme de la borne principale dans le régime où elle est établie. Le détail énoncé par énoncé figure dans [`../../03_resultats_these/resultats_these_fr.md`](../../03_resultats_these/resultats_these_fr.md).
 
-### Points communs avec les formulations précisées soumises ([`formulations_precisees/`](formulations_precisees/))
+### Points communs avec les formulations précisées en cours de finalisation ([`formulations_precisees/`](formulations_precisees/))
 
 | Point | Dans l'article | Dans la thèse | Référence thèse |
 |---|---|---|---|

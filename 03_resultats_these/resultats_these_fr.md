@@ -111,7 +111,7 @@ L'Hypothèse 1 est donc satisfaite dès que $I(V;\Sigma\mid M,C)\le\Delta$. La c
 - **Section** : §2.3.1.2 et §2.3.2, fichier `chap2/cro_classique.tex` ; formulations alternatives retracées au §3.4.9
 - **Article** : P2 (Lemme 4, Hypothèse 2, Théorème 1, Remarque 10)
 
-Ces formulations sont aussi le contenu du document soumis pour P2 ([`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)).
+Ces formulations sont aussi le contenu du document en préparation pour P2 ([`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)).
 
 - Le lemme de confidentialité devient une minoration, $\mathrm{Conf}(\mathcal P)\ge 1-\sqrt{c_0\beta\, I(M;\Sigma\mid C)}$, avec $c_0=1/(2\ln 2)$ valide mais non serrée.
 - L'efficacité du verdict est posée explicitement, $\lvert\mathcal V_\lambda\rvert\le 2^{\alpha H(C)}$ et $H(V\mid C)\ge\alpha H(C)-1=:\gamma\ge 1$.
@@ -172,7 +172,7 @@ C'est l'unique définition de $\eta_q$ employée dans la thèse. Par l'inégalit
 - **Section** : §2.4.3 et §2.4.4, fichier `chap2/cro_pq.tex`
 - **Article** : P3 (Lemmes 6 et 7, Hypothèses 4 et 5, Théorème 2, Remarque 17)
 
-La plupart de ces formulations sont aussi le contenu du document soumis pour P3 ([`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/)).
+La plupart de ces formulations sont aussi le contenu du document en préparation pour P3 ([`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/)).
 
 - La formulation se passe du Lemme 6 (cas limite des états orthogonaux) et de la majoration (72) du Lemme 7.
 - Le lemme de confidentialité quantique s'énonce avec l'information de Holevo, $\mathrm{Conf}^q(\mathcal P)\ge 1-\tfrac12\sqrt{2\beta_q\chi_{\max}+2\zeta_q D_{\max}}$.
@@ -183,7 +183,7 @@ Sous ces hypothèses, pour $\lambda\ge 64$, $H(M)=\lambda$ et $M\perp C$,
 
 $$\mathrm{Conf}^q\cdot\mathrm{Rel}^q\cdot\mathrm{Opp}^q\le\frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda}+\frac{\kappa(\Delta_q+1)}{\lambda^2}+\frac{\kappa^2}{\lambda^3}\right)\le\frac{\Delta_q+\eta_q H(C)}{\lambda}+O(\lambda^{-2})+\mathrm{negl}(\lambda).$$
 
-Le terme $\eta_q H(C)$ n'apparaît que dans la majoration affaiblie. La thèse va plus loin que le document soumis sur un point. Pour une preuve classique de $n$ bits, $D_{\max}=n-H(\Sigma\mid C=c)$ vaut plusieurs milliers de bits pour les signatures NIST PQC (plus de $2{,}6\cdot10^4$ bits pour ML-DSA-65, dont la signature compte 3 309 octets) ; leur confidentialité doit donc être établie par le lemme classique appliqué à l'issue classique. Le document soumis pose encore $D_{\max}=\mathrm{negl}(\lambda)$ pour ces schémas.
+Le terme $\eta_q H(C)$ n'apparaît que dans la majoration affaiblie. La thèse va plus loin que le document en préparation sur un point. Pour une preuve classique de $n$ bits, $D_{\max}=n-H(\Sigma\mid C=c)$ vaut plusieurs milliers de bits pour les signatures NIST PQC (plus de $2{,}6\cdot10^4$ bits pour ML-DSA-65, dont la signature compte 3 309 octets) ; leur confidentialité doit donc être établie par le lemme classique appliqué à l'issue classique. Le document soumis pose encore $D_{\max}=\mathrm{negl}(\lambda)$ pour ces schémas.
 
 ## R12. Forme raffinée quantique et seuil $H^\sharp_q$
 

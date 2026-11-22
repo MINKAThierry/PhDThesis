@@ -1,10 +1,10 @@
 # Formulations précisées proposées pour P3
 
-> **Statut : PROPOSITION: formulations précisées soumises (non publiées)** · Source : document soumis à *IEEE Access* pour l'article DOI [10.1109/ACCESS.2026.3722742](https://doi.org/10.1109/ACCESS.2026.3722742) · Thèse, chapitre 2, §2.4 et chapitre 3, §3.4.9
+> **Statut : PROPOSITION: formulations précisées en cours de finalisation (non soumises)** · Source : document en préparation pour *IEEE Access*, article DOI [10.1109/ACCESS.2026.3722742](https://doi.org/10.1109/ACCESS.2026.3722742) · Thèse, chapitre 2, §2.4 et chapitre 3, §3.4.9
 
 [English version](README_en.md)
 
-Ce dossier contient le document que les auteurs ont soumis à l'éditeur pour l'article « Post-Quantum Extension of the Conditional CRO Trilemma ». Il présente des formulations plus précises de plusieurs énoncés. Il n'a pas été publié à ce jour. Tant que l'éditeur ne l'a pas accepté, la version publiée de l'article reste la référence bibliographique et le texte ci-dessous n'a que la valeur d'une proposition des auteurs.
+Ce dossier contient le document que les auteurs finalisent pour soumettre à l'éditeur les révisions, issues de la formalisation Lean4, de l'article « Post-Quantum Extension of the Conditional CRO Trilemma ». Il présente des formulations plus précises de plusieurs énoncés. Il n'a été ni soumis ni publié à ce jour. Tant que l'éditeur ne l'a pas accepté, la version publiée de l'article reste la référence bibliographique et le texte ci-dessous n'a que la valeur d'une proposition des auteurs.
 
 | Fichier | Contenu |
 |---|---|
@@ -28,10 +28,10 @@ Le modèle institutionnel quantique (Hypothèses 1 à 3), les paramètres $(\Del
 
 ## Lien avec la thèse
 
-La thèse intègre ces formulations au §2.4 et les retrace au §3.4.9. Sur deux points, elle va plus loin que le document soumis.
+La thèse intègre ces formulations au §2.4 et les retrace au §3.4.9. Sur deux points, elle va plus loin que le document en préparation.
 
-- Elle donne à $\eta_q$ une définition unique de perte d'interprétabilité. Elle renomme $\zeta_q$ la constante de régularité que le document soumis note encore $\eta_q$ dans le Lemme 7.
-- Elle établit que $D_{\max}$ n'est pas négligeable pour les signatures NIST PQC (plus de $2{,}6\cdot10^4$ bits pour ML-DSA-65), alors que le document soumis pose $D_{\max}=\mathrm{negl}(\lambda)$ pour ces schémas.
+- Elle donne à $\eta_q$ une définition unique de perte d'interprétabilité. Elle renomme $\zeta_q$ la constante de régularité que le document en préparation note encore $\eta_q$ dans le Lemme 7.
+- Elle établit que $D_{\max}$ n'est pas négligeable pour les signatures NIST PQC (plus de $2{,}6\cdot10^4$ bits pour ML-DSA-65), alors que le document en préparation pose $D_{\max}=\mathrm{negl}(\lambda)$ pour ces schémas.
 
 Ces écarts sont recensés dans [`../README_fr.md`](../README_fr.md) et [`../../../03_resultats_these/resultats_these_fr.md`](../../../03_resultats_these/resultats_these_fr.md).
 

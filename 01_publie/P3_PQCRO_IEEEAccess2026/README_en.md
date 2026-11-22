@@ -15,7 +15,7 @@ T. E. MINKA MI NGUIDJOÏ, F. S. MANI ONANA, T. DJOTIO NDIÉ, "Post-Quantum Exten
 | [`article.pdf`](article.pdf) | Version published by the publisher (26 pages) |
 | [`source/Final_PQ_Extension_CRO_Trilemma.tex`](source/Final_PQ_Extension_CRO_Trilemma.tex) | LaTeX source of the final submitted version |
 | [`CITATION.bib`](CITATION.bib) | Bibliographic reference |
-| [`formulations_precisees/`](formulations_precisees/) | Refined statements submitted to the publisher, not published (status PROPOSAL) |
+| [`formulations_precisees/`](formulations_precisees/) | Refined statements being finalised for submission to the publisher, not published (status PROPOSAL) |
 
 ## Licence
 
@@ -33,7 +33,7 @@ The article underpins contribution **C3** of the thesis (quantum extension of th
 
 The thesis keeps the quantum institutional model, the parameters $(\Delta_q,\alpha_q,\beta_q,\eta_q)$ and the form of the main bound within the regime in which it is established. The statement-by-statement detail is in [`../../03_resultats_these/resultats_these_en.md`](../../03_resultats_these/resultats_these_en.md).
 
-### Points shared with the submitted refined statements ([`formulations_precisees/`](formulations_precisees/))
+### Points shared with the refined statements being finalised ([`formulations_precisees/`](formulations_precisees/))
 
 | Item | In the article | In the thesis | Thesis reference |
 |---|---|---|---|
@@ -44,7 +44,7 @@ The thesis keeps the quantum institutional model, the parameters $(\Delta_q,\alp
 | Theorem 2 | Assumption 5 and constant $C(\beta_q,\alpha_q)$ | Complete proof with explicit constants, Assumption 5 dropped | `thm:trilemme_pq`, §2.4.4 |
 | Tables 8 to 10, Dilithium-3 study | Implied capacities read as consequences of the theorem | Illustrative calibration on the CLO scale | `subsec:analyse_coherence_pq`, §2.4.6 |
 
-### Contributions specific to the thesis, not in the submitted document
+### Contributions specific to the thesis, not in the document in preparation
 
 | Item | In the thesis | Thesis reference |
 |---|---|---|
@@ -54,4 +54,4 @@ The thesis keeps the quantum institutional model, the parameters $(\Delta_q,\alp
 | Refined quantum form and threshold $H^\sharp_q$ | $\frac{1+\kappa/\lambda}{\lambda}\min\{1,\frac{\kappa/\lambda+\Delta_q}{\gamma_q}\}$, $H^\sharp_q=(\Delta_q+\kappa/\lambda)/(\theta_q\alpha_q)$, in which $\eta_q$ does not appear | `rem:forme_raffinee_pq`, §2.4.4 and §2.4.5 |
 | Reference parameters | ML-DSA-65 in a contractual context, $\Delta_q=28$ bits as a working hypothesis, $\eta_q=0$ | `tab:parametres_reference`, §4.1.3 |
 
-The remark on $D_{\max}$ goes further than the submitted document, which still sets $D_{\max}=\mathrm{negl}(\lambda)$ for these schemes and writes $\eta_q$ for the regularity constant of Lemma 7.
+The remark on $D_{\max}$ goes further than the document in preparation, which still sets $D_{\max}=\mathrm{negl}(\lambda)$ for these schemes and writes $\eta_q$ for the regularity constant of Lemma 7.

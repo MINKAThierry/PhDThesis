@@ -1,10 +1,10 @@
 # Cas limite du Théorème 1 de P2 dans sa formulation initiale
 
-> **Statut : PROPOSITION. formulations précisées soumises** · Source : formulations précisées soumises pour P2 ([`../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)) ; thèse, `rem:scope_trilemme_classique` (Remarque 2.17, §2.3.2) et §3.4.9
+> **Statut : PROPOSITION. formulations précisées en cours de finalisation** · Source : formulations précisées en cours de finalisation pour P2 ([`../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)) ; thèse, `rem:scope_trilemme_classique` (Remarque 2.17, §2.3.2) et §3.4.9
 
 [English version](README_en.md)
 
-Le script [`cas_limite.py`](cas_limite.py) calcule en haute précision (bibliothèque `mpmath`, 60 chiffres) les quantités d'un protocole qui constitue un cas limite pour deux énoncés de l'article P2 dans leur formulation initiale. Il a servi à établir les formulations précisées soumises. Les énoncés de la thèse couvrent ce protocole, qui s'écarte du régime de l'Hypothèse 4.
+Le script [`cas_limite.py`](cas_limite.py) calcule en haute précision (bibliothèque `mpmath`, 60 chiffres) les quantités d'un protocole qui constitue un cas limite pour deux énoncés de l'article P2 dans leur formulation initiale. Il a servi à établir les formulations précisées en cours de finalisation. Les énoncés de la thèse couvrent ce protocole, qui s'écarte du régime de l'Hypothèse 4.
 
 ## Protocole étudié
 

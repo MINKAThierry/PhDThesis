@@ -4,7 +4,7 @@
 
 [English version](README_en.md)
 
-Ce dossier recense ce que la thèse ajoute ou précise par rapport aux trois articles publiés de [`../01_publie/`](../01_publie/). Les articles restent tels que l'éditeur les a publiés. Les énoncés recensés ici n'ont pas été publiés dans une revue ; ils figurent dans le manuscrit déposé et gardent le statut de proposition jusqu'à la soutenance. Certains relèvent aussi des formulations précisées soumises pour P2 et P3, elles-mêmes au statut de proposition.
+Ce dossier recense ce que la thèse ajoute ou précise par rapport aux trois articles publiés de [`../01_publie/`](../01_publie/). Les articles restent tels que l'éditeur les a publiés. Les énoncés recensés ici n'ont pas été publiés dans une revue ; ils figurent dans le manuscrit déposé et gardent le statut de proposition jusqu'à la soutenance. Certains relèvent aussi des formulations précisées en cours de finalisation pour P2 et P3, elles-mêmes au statut de proposition.
 
 | Document | Contenu |
 |---|---|
@@ -19,7 +19,7 @@ Chaque entrée renvoie au label LaTeX de l'énoncé, que l'on retrouve par une r
 
 | Dossier ou document | Contenu |
 |---|---|
-| [`../01_publie/`](../01_publie/) | Fiches des articles et formulations précisées soumises |
+| [`../01_publie/`](../01_publie/) | Fiches des articles et formulations précisées en cours de finalisation |
 | [`../05_formalisation_lean/`](../05_formalisation_lean/) | Formalisation Lean du noyau algébrique |
 | [`../06_calcul/`](../06_calcul/) | Contrôles numériques des énoncés |
 | [`../docs/correspondance_these_depot_fr.md`](../docs/correspondance_these_depot_fr.md) | Correspondance thèse ↔ dépôt |

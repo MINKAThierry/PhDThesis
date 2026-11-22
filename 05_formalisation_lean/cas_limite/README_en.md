@@ -1,10 +1,10 @@
 # Limiting case of Theorem 1 of P2 in its initial formulation
 
-> **Status: PROPOSAL. submitted refined statements** · Source: refined statements submitted for P2 ([`../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)); thesis, `rem:scope_trilemme_classique` (Remark 2.17, §2.3.2) and §3.4.9
+> **Status: PROPOSAL. refined statements being finalised** · Source: refined statements being finalised for P2 ([`../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)); thesis, `rem:scope_trilemme_classique` (Remark 2.17, §2.3.2) and §3.4.9
 
 [Version française](README_fr.md)
 
-The script [`cas_limite.py`](cas_limite.py) computes in high precision (`mpmath` library, 60 digits) the quantities of a protocol that is a limiting case for two statements of article P2 in their initial formulation. It was used to establish the submitted refined statements. The statements of the thesis cover this protocol, which departs from the regime of Assumption 4.
+The script [`cas_limite.py`](cas_limite.py) computes in high precision (`mpmath` library, 60 digits) the quantities of a protocol that is a limiting case for two statements of article P2 in their initial formulation. It was used to establish the refined statements being finalised. The statements of the thesis cover this protocol, which departs from the regime of Assumption 4.
 
 ## Protocol studied
 

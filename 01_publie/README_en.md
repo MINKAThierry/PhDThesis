@@ -1,6 +1,6 @@
 # Published articles
 
-> **Status: PUBLISHED** (articles P1, P2, P3) · the documents in the `formulations_precisees/` subfolders have the status **PROPOSAL - submitted refined statements** · Source: thesis, general introduction, table `tab:contributions_these`, and Appendix C
+> **Status: PUBLISHED** (articles P1, P2, P3) · the documents in the `formulations_precisees/` subfolders have the status **PROPOSAL - refined statements being finalised** · Source: thesis, general introduction, table `tab:contributions_these`, and Appendix C
 
 [Version française](README_fr.md)
 
@@ -12,6 +12,6 @@ This folder gathers the three articles published in *IEEE Access* on which the t
 | [`P2_CRO_IEEEAccess2026/`](P2_CRO_IEEEAccess2026/) | Conditional CRO trilemma, vol. 14, pp. 33263–33274 | [10.1109/ACCESS.2026.3669065](https://doi.org/10.1109/ACCESS.2026.3669065) | C2, §2.3 |
 | [`P3_PQCRO_IEEEAccess2026/`](P3_PQCRO_IEEEAccess2026/) | Post-quantum extension of the trilemma, vol. 14, pp. 125130–125155 | [10.1109/ACCESS.2026.3722742](https://doi.org/10.1109/ACCESS.2026.3722742) | C3, §2.4 |
 
-Each subfolder contains the published PDF (`article.pdf`), the LaTeX source of the final version (`source/`), a BibTeX entry (`CITATION.bib`) and a note that places the article within the thesis and states what the thesis refines. The P2 and P3 folders also contain a document of refined statements submitted to the publisher and not published (`formulations_precisees/`).
+Each subfolder contains the published PDF (`article.pdf`), the LaTeX source of the final version (`source/`), a BibTeX entry (`CITATION.bib`) and a note that places the article within the thesis and states what the thesis refines. The P2 and P3 folders also contain a document of refined statements being finalised, neither submitted nor published (`formulations_precisees/`).
 
 PDFs and sources are reproduced unchanged. The refinements made by the thesis leave the articles unchanged. They are listed in [`../03_resultats_these/`](../03_resultats_these/).

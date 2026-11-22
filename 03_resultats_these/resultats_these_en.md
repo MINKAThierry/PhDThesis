@@ -111,7 +111,7 @@ Assumption 1 therefore holds as soon as $I(V;\Sigma\mid M,C)\le\Delta$. The capa
 - **Section**: §2.3.1.2 and §2.3.2, file `chap2/cro_classique.tex`; alternative formulations traced in §3.4.9
 - **Article**: P2 (Lemma 4, Assumption 2, Theorem 1, Remark 10)
 
-These formulations are also the content of the document submitted for P2 ([`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)).
+These formulations are also the content of the document in preparation for P2 ([`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/)).
 
 - The confidentiality lemma becomes a lower bound, $\mathrm{Conf}(\mathcal P)\ge 1-\sqrt{c_0\beta\, I(M;\Sigma\mid C)}$, with $c_0=1/(2\ln 2)$ valid but not tight.
 - Verdict efficiency is stated explicitly, $\lvert\mathcal V_\lambda\rvert\le 2^{\alpha H(C)}$ and $H(V\mid C)\ge\alpha H(C)-1=:\gamma\ge 1$.
@@ -172,7 +172,7 @@ This is the only definition of $\eta_q$ used in the thesis. By the data-processi
 - **Section**: §2.4.3 and §2.4.4, file `chap2/cro_pq.tex`
 - **Article**: P3 (Lemmas 6 and 7, Assumptions 4 and 5, Theorem 2, Remark 17)
 
-Most of these formulations are also the content of the document submitted for P3 ([`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/)).
+Most of these formulations are also the content of the document in preparation for P3 ([`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/)).
 
 - The formulation dispenses with Lemma 6 (orthogonal-state limiting case) and with the upper bound (72) of Lemma 7.
 - The quantum confidentiality lemma is stated with the Holevo information, $\mathrm{Conf}^q(\mathcal P)\ge 1-\tfrac12\sqrt{2\beta_q\chi_{\max}+2\zeta_q D_{\max}}$.
@@ -183,7 +183,7 @@ Under these assumptions, for $\lambda\ge 64$, $H(M)=\lambda$ and $M\perp C$,
 
 $$\mathrm{Conf}^q\cdot\mathrm{Rel}^q\cdot\mathrm{Opp}^q\le\frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda}+\frac{\kappa(\Delta_q+1)}{\lambda^2}+\frac{\kappa^2}{\lambda^3}\right)\le\frac{\Delta_q+\eta_q H(C)}{\lambda}+O(\lambda^{-2})+\mathrm{negl}(\lambda).$$
 
-The term $\eta_q H(C)$ appears only in the weakened upper bound. The thesis goes further than the submitted document on one point. For a classical proof of $n$ bits, $D_{\max}=n-H(\Sigma\mid C=c)$ amounts to several thousand bits for NIST PQC signatures (more than $2.6\cdot10^4$ bits for ML-DSA-65, whose signature is 3,309 bytes long); their confidentiality must therefore be established by the classical lemma applied to the classical outcome. The submitted document still sets $D_{\max}=\mathrm{negl}(\lambda)$ for these schemes.
+The term $\eta_q H(C)$ appears only in the weakened upper bound. The thesis goes further than the document in preparation on one point. For a classical proof of $n$ bits, $D_{\max}=n-H(\Sigma\mid C=c)$ amounts to several thousand bits for NIST PQC signatures (more than $2.6\cdot10^4$ bits for ML-DSA-65, whose signature is 3,309 bytes long); their confidentiality must therefore be established by the classical lemma applied to the classical outcome. The submitted document still sets $D_{\max}=\mathrm{negl}(\lambda)$ for these schemes.
 
 ## R12. Refined quantum form and threshold $H^\sharp_q$
 
