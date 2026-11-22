@@ -22,7 +22,7 @@ lake exe cache get && lake build
 lake env lean ConditionalCRO.lean    # prints the #check and #print axioms outputs
 ```
 
-`lake exe cache get` downloads the precompiled Mathlib, which avoids several hours of compilation. The expected result is a build with no error, no warning and no `sorry`. Each of the eighteen `#print axioms` in the file must print exactly `[propext, Classical.choice, Quot.sound]`, the three standard axioms of Lean and Mathlib. The file can also be checked by pasting it into <https://live.lean-lang.org> (Mathlib project); version 3.2 was checked there on 22 November 2026.
+`lake exe cache get` downloads the precompiled Mathlib, which avoids several hours of compilation. The expected result is a build with no error, no warning and no `sorry`. Each of the twenty `#print axioms` in the file must print exactly `[propext, Classical.choice, Quot.sound]`, the three standard axioms of Lean and Mathlib. The file can also be checked by pasting it into <https://live.lean-lang.org> (Mathlib project); version 3.2 was checked there on 22 November 2026.
 
 ## What is certified
 
