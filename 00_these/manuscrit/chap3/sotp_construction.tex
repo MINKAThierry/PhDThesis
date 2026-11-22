@@ -105,7 +105,8 @@ via la capacit\'e d'extraction institutionnelle~$\Delta$ (D\'efinition~\ref{def:
 Cette traduction rend le cycle des preuves explicite, car les garanties de confidentialit\'e
 et de fiabilit\'e de v\'erification r\'esultent de r\'eductions formelles \`a des hypoth\`eses
 cryptographiques standard (PRG~\cite{BlumMicali84,Yao82}, DLog~\cite{DiffieHellman76},
-q-SDH/q-PKE~\cite{BonehBoyen08})~; l'opposabilit\'e, elle, d\'epend de l'interpr\'etation
+solidit\'e de connaissance de Groth16 dans le mod\`ele du groupe g\'en\'erique ou
+alg\'ebrique~\cite{Groth16,FKL18})~; l'opposabilit\'e, elle, d\'epend de l'interpr\'etation
 institutionnelle et n'est pas minor\'ee par ces r\'eductions.
 
 \subsubsection{Architecture de la couche Clay et budget entropique}
@@ -657,8 +658,9 @@ l'assertion certifi\'ee ($\mathsf{Conforme}(m,c) = 1$), non au condens\'e.
 \label{subsubsec:saturation_high}
 
 \begin{proposition}[Propri\'et\'es cryptographiques de SOTP-High]\label{thm:saturation_sotp_high}
-Sous les hypoth\`eses q-SDH et q-PKE (\emph{knowledge soundness} de
-Groth16~\cite{BonehBoyen08,BCTV14}), la difficult\'e DLog et une c\'er\'emonie de mise en
+Sous la \emph{knowledge soundness} de Groth16, \'etablie dans le mod\`ele du groupe
+g\'en\'erique~\cite{Groth16} et dans le mod\`ele du groupe alg\'ebrique sous
+q-DLog~\cite{FKL18}, la difficult\'e DLog et une c\'er\'emonie de mise en
 place de confiance honn\^ete~\cite{Bowe2017}~:
 \begin{enumerate}
 \item la preuve $\pi$ est \`a divulgation nulle de connaissance parfaite et
@@ -666,8 +668,8 @@ place de confiance honn\^ete~\cite{Bowe2017}~:
       au-del\`a des entr\'ees publiques~;
 \item la compl\'etude est parfaite et, par la \emph{knowledge soundness}, pour
       tout prouveur PPT qui fait accepter $\sigma$, il existe un
-      \emph{extracteur} (qui rembobine le prouveur ou exploite la trappe de
-      l'hypoth\`ese q-PKE, contrairement au v\'erificateur) produisant un t\'emoin
+      \emph{extracteur} (qui exploite la repr\'esentation alg\'ebrique des \'el\'ements
+      produits par le prouveur, contrairement au v\'erificateur) produisant un t\'emoin
       $(m, c, \rho)$ satisfaisant la relation~; d'o\`u $\Relver = 1 - \negl(\lambda)$.
 \end{enumerate}
 \end{proposition}
@@ -681,7 +683,8 @@ d\`es que l'al\'ea l'est. Le couple $(\pi, c_m)$ a donc la m\^eme loi que le cou
 form\'e d'un engagement uniforme et d'une preuve simul\'ee \`a partir des seules
 entr\'ees publiques, loi qui ne d\'epend pas de $m$. (2)~La compl\'etude de Groth16 est
 parfaite, de sorte qu'une preuve honn\^ete est toujours accept\'ee. La
-\emph{knowledge soundness}, sous q-SDH et q-PKE, fournit pour tout prouveur PPT
+\emph{knowledge soundness}, dans le mod\`ele du groupe g\'en\'erique ou alg\'ebrique,
+fournit pour tout prouveur PPT
 qui fait accepter $\sigma$ un extracteur qui produit un t\'emoin de la relation, sauf
 avec probabilit\'e n\'egligeable. Le liant de $c_m$, sous DLog, interdit que deux
 t\'emoins extraits portent sur des messages distincts. La fiabilit\'e de v\'erification

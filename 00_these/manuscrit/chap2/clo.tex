@@ -847,9 +847,10 @@ Pour un protocole $\mathcal{P}$ avec $\mathsf{Open}$ et adversaire
 $\mathcal{A}$~:
 \begin{enumerate}
 \item $\mathcal{A}$ re\c{c}oit $pp \leftarrow \mathsf{Setup}(1^\lambda)$
-\item $\mathcal{A}$ produit $(c, \sigma, s_0, s_1)$
-      \cmt{L'adversaire forge une preuve et deux t\'emoins.}
-\item Calculer $m_i = \mathsf{Open}(pp, \sigma, s_i)$ pour $i \in \{0,1\}$
+\item $\mathcal{A}$ produit $(c, \sigma, o_0, o_1)$, o\`u chaque ouverture
+      $o_i = (m_i, s_i, \rho_i)$
+      \cmt{L'adversaire forge une preuve et deux ouvertures.}
+\item Calculer $m_i = \mathsf{Open}(pp, \sigma, o_i)$ pour $i \in \{0,1\}$
 \item $\mathcal{A}$ \emph{gagne} si et seulement si
   $\mathsf{Verify}(pp,\sigma,c)=1$,
   $m_0 \neq m_1$,
@@ -905,7 +906,8 @@ de capacit\'e $\Delta$ et une distribution $\mathcal{D}_C$ fix\'ee \`a l'avance~
       $m \leftarrow \mathcal{M}_\lambda$
       \cmt{Le contexte est tir\'e selon la distribution du domaine.}
 \item Le challenger calcule $\sigma \leftarrow \mathsf{Prove}(pp,m,c)$
-\item L'interpr\`ete re\c{c}oit $(\sigma,c)$ et produit
+\item L'interpr\`ete re\c{c}oit $(\sigma,c)$, peut consulter ses ressources
+      institutionnelles $K$ (D\'efinition~\ref{def:interp_admissible}) et produit
       $v \leftarrow \mathsf{Interpret}(pp,\sigma,c,\Delta)$
       \cmt{L'interpr\`ete rend un verdict \`a partir de la preuve et du contexte.}
 \item Soit $v^*$ le verdict de r\'ef\'erence, r\'ealisation de la variable $V$
@@ -926,34 +928,42 @@ de capacit\'e $\Delta$ et une distribution $\mathcal{D}_C$ fix\'ee \`a l'avance~
 \begin{remark}[Pont EXT-OPP $\leftrightarrow$ $\Opp$]
 \label{rem:jeu_ext_opp_link}
 Par l'in\'egalit\'e de Fano appliqu\'ee \`a l'estimation de $V$ \`a partir de
-$(\Sigma,C)$, $H(V|\Sigma,C) \leq h(\varepsilon_{\mathsf{ext}}) +
-\varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)$, d'o\`u
+$(\Sigma,C,K)$, $H(V|\Sigma,C,K) \leq h(\varepsilon_{\mathsf{ext}}) +
+\varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)$. Comme
+$H(V|\Sigma,C) = H(V|\Sigma,C,K) + I(V;K|\Sigma,C)$, il vient
 \begin{equation}
 \Opp = 1 - \frac{H(V|\Sigma,C)}{H(V|C)}
 \geq 1 - \frac{h(\varepsilon_{\mathsf{ext}})
-  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)}
+  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)
+  + I(V;K|\Sigma,C)}
   {H(V|C)}
 \label{eq:jeu_fano_opp}
 \end{equation}
-\cmtFormule{L'opposabilit\'e est born\'ee inf\'erieurement par $1 - \varepsilon_{\mathsf{ext}}$.}
+\cmtFormule{L'opposabilit\'e est minor\'ee par une fonction d\'ecroissante de $\varepsilon_{\mathsf{ext}}$.}
 o\`u $\varepsilon_{\mathsf{ext}} = \mathsf{Err}^{\mathsf{EXT\text{-}OPP}}$
-et $h(\cdot)$ est l'entropie binaire.
-Un interpr\`ete avec faible erreur d'extraction implique une forte
-opposabilit\'e.
+et $h(\cdot)$ est l'entropie binaire. Le terme $I(V;K|\Sigma,C)$ mesure ce que
+l'interpr\`ete tire de ses ressources propres $K$ et non de la preuve~; il est nul
+lorsque l'interpr\`ete ne lit que $(\Sigma,C)$.
+Un interpr\`ete avec faible erreur d'extraction, qui doit peu \`a ses ressources propres,
+implique une forte opposabilit\'e.
 \cmt{Moins l'interpr\`ete se trompe, plus l'opposabilit\'e est grande.}
 \end{remark}
 
 \begin{Preuve}[Remarque~\ref{rem:jeu_ext_opp_link}]
 L'identit\'e $I(V;\Sigma|C) = H(V|C) - H(V|\Sigma,C)$ donne la premi\`ere
 \'egalit\'e de~\eqref{eq:jeu_fano_opp}. Le verdict $v$ rendu par l'interpr\`ete est
-une fonction de $(\Sigma,C)$ et d'un al\'ea propre, ind\'ependant de $V$
-conditionnellement \`a $(\Sigma,C)$. L'in\'egalit\'e de Fano (Lemme~\ref{lem:fano})
-s'applique donc \`a cet estimateur de $V$, de probabilit\'e d'erreur
-$\varepsilon_{\mathsf{ext}}$, et majore $H(V|\Sigma,C)$ comme indiqu\'e. En
-reportant cette majoration dans l'identit\'e on obtient le minorant. Comme $h$ est
-croissante sur $[0,1/2]$ et que le second terme cro\^it avec
-$\varepsilon_{\mathsf{ext}}$, le minorant d\'ecro\^it lorsque l'erreur augmente et
-tend vers $1$ lorsqu'elle tend vers $0$.
+une fonction de $(\Sigma,C,K)$ et d'un al\'ea propre $R$, ind\'ependant de
+$(V,\Sigma,C,K)$. L'in\'egalit\'e de Fano (Lemme~\ref{lem:fano}), appliqu\'ee \`a cet
+estimateur de $V$ de probabilit\'e d'erreur $\varepsilon_{\mathsf{ext}}$, donne
+$H(V|v) \leq h(\varepsilon_{\mathsf{ext}}) +
+\varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)$. Comme $R$ est
+ind\'ependant de $(V,\Sigma,C,K)$ et que conditionner davantage ne fait pas cro\^itre
+l'entropie, $H(V|\Sigma,C,K) = H(V|\Sigma,C,K,R) \leq H(V|v)$. La r\`egle de cha\^ine
+$H(V|\Sigma,C) = H(V|\Sigma,C,K) + I(V;K|\Sigma,C)$, report\'ee dans l'identit\'e,
+donne le minorant. Comme $h$ est croissante sur $[0,1/2]$ et que le second terme
+cro\^it avec $\varepsilon_{\mathsf{ext}}$, le minorant d\'ecro\^it lorsque l'erreur
+augmente. Il tend vers $1 - I(V;K|\Sigma,C)/H(V|C)$ lorsqu'elle tend vers $0$, et
+vers $1$ si de plus l'interpr\`ete ne lit que $(\Sigma,C)$.
 \end{Preuve}
 
 \end{sloppypar}

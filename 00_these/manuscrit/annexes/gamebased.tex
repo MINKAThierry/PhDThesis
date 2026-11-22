@@ -105,19 +105,28 @@ aucun adversaire PPT ne peut r\'ecup\'erer $m$ depuis $m \oplus G(s)$.
 \cmt{Sans la graine, le pad est indiscernable d'un al\'ea v\'eritable.}
 
 \begin{definition}[Sécurité PRG~\cite{GoldreichKrawczyk99}]\label{def:ann_prg}
+Soit $\mathcal{S}_\lambda$ un ensemble fini de graines, par exemple
+$\{0,1\}^\lambda$ ou $\mathbb{Z}_q$, avec $\log_2|\mathcal{S}_\lambda| < L(\lambda)$.
 Une fonction calculable en temps polynomial
-$G\colon \{0,1\}^\lambda \to \{0,1\}^{L(\lambda)}$ avec $L(\lambda) > \lambda$
+$G\colon \mathcal{S}_\lambda \to \{0,1\}^{L(\lambda)}$
 est un PRG sûr si, pour tout adversaire PPT $\mathcal{A}$, 
 \begin{equation}
 \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{A}}(\lambda) =
 \left|
-\Pr_{s \leftarrow \{0,1\}^\lambda}\!\big[\mathcal{A}(G(s)) = 1\big]
+\Pr_{s \leftarrow \mathcal{S}_\lambda}\!\big[\mathcal{A}(G(s)) = 1\big]
 - \Pr_{y \leftarrow \{0,1\}^{L(\lambda)}}\!\big[\mathcal{A}(y) = 1\big]
 \right| \leq \negl(\lambda)
 \end{equation}
 \cmtFormule{L'avantage mesure la capacit\'e \`a distinguer $G(s)$ d'un al\'ea pur.}
 \cmt{L'avantage doit \^etre n\'egligeable pour tout adversaire PPT.}
 \end{definition}
+
+\noindent\textbf{Loi de la graine.} SOTP-Low tire sa graine uniform\'ement dans
+$\mathbb{Z}_q$ (Algorithme~\ref{alg:sotp_low}), condition n\'ecessaire \`a la r\'eduction
+au logarithme discret. C'est donc la loi $\mathcal{S}_\lambda = \mathbb{Z}_q$ qui
+figure dans les r\'eductions de cette annexe. Pour IND-CONF, l'avantage est
+$|\Pr[b' = b] - 1/2|$~; pour le PRG, c'est la diff\'erence des deux probabilit\'es
+ci-dessus.
 
 \noindent\textbf{Impl\'ementations pratiques.} SOTP-Low utilise
 ChaCha20/AES-CTR, deux PRG standardis\'es atteignant cette d\'efinition.
@@ -367,7 +376,7 @@ puis \'etablit son lien avec la m\'etrique $\Relver$.
 \noindent\textbf{Intuition.} Le jeu capture la \emph{non-\'equivocit\'e},
 selon laquelle un adversaire ne doit pas pouvoir produire une preuve $\sigma$ ouvrable
 sur deux messages distincts $m_0 \neq m_1$. Contrairement \`a IND-CONF,
-l'adversaire choisit librement $(c, \sigma, s_0, s_1)$, mod\'elisant
+l'adversaire choisit librement $(c, \sigma, o_0, o_1)$, mod\'elisant
 un agent qui forge d\'elib\'er\'ement une preuve ambiguë.
 \cmt{L'adversaire essaie d'ouvrir une m\^eme preuve sur deux messages diff\'erents.}
 
@@ -376,9 +385,10 @@ Pour un protocole $\mathcal{P}$ avec $\mathsf{Open}$ et un adversaire
 $\mathcal{A}$, le jeu se d\'eroule comme suit.
 \begin{enumerate}
 \item $\mathcal{A}$ reçoit $pp \leftarrow \mathsf{Setup}(1^\lambda)$
-\item $\mathcal{A}$ produit $(c, \sigma, s_0, s_1)$
+\item $\mathcal{A}$ produit $(c, \sigma, o_0, o_1)$, o\`u chaque ouverture
+      $o_i = (m_i, s_i, \rho_i)$
       \cmt{L'adversaire forge une preuve et deux t\'emoins.}
-\item Calculer $m_i = \mathsf{Open}(pp, \sigma, s_i)$ pour $i \in \{0,1\}$
+\item Calculer $m_i = \mathsf{Open}(pp, \sigma, o_i)$ pour $i \in \{0,1\}$
 \item $\mathcal{A}$ \emph{gagne} si et seulement si
   $\mathsf{Verify}(pp,\sigma,c)=1$,
   $m_0 \neq m_1$,
@@ -451,7 +461,8 @@ de capacité $\Delta$ et une distribution $\mathcal{D}_C$ fixée à l'avance, le
       $m \leftarrow \mathcal{M}_\lambda$
       \cmt{Le contexte est tir\'e selon la distribution du domaine.}
 \item Le challenger calcule $\sigma \leftarrow \mathsf{Prove}(pp,m,c)$
-\item L'interprète reçoit $(\sigma,c)$ et produit
+\item L'interprète reçoit $(\sigma,c)$, peut consulter ses ressources
+      institutionnelles $K$ (D\'efinition~\ref{def:interp_admissible}) et produit
       $v \leftarrow \mathsf{Interpret}(pp,\sigma,c,\Delta)$
       \cmt{L'interpr\`ete rend un verdict \`a partir de la preuve et du contexte.}
 \item Soit $v^*$ le verdict de r\'ef\'erence, r\'ealisation de la variable $V$
@@ -481,19 +492,24 @@ jeu par le domaine.
 \begin{remark}[Pont EXT-OPP $\leftrightarrow$ $\Opp$]
 \label{rem:ann_ext_opp_link}
 Par Fano (Lemme~\ref{lem:ann_g_fano}) appliqu\'e \`a l'estimation de $V$ \`a
-partir de $(\Sigma,C)$, on obtient
+partir de $(\Sigma,C,K)$, puis par la r\`egle de cha\^ine
+$H(V|\Sigma,C) = H(V|\Sigma,C,K) + I(V;K|\Sigma,C)$
+(Remarque~\ref{rem:jeu_ext_opp_link}), on obtient
 \begin{equation}
 \Opp = 1 - \frac{H(V|\Sigma,C)}{H(V|C)}
 \geq 1 - \frac{h(\varepsilon_{\mathsf{ext}})
-  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)}
+  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)
+  + I(V;K|\Sigma,C)}
   {H(V|C)}
 \label{eq:ann_fano_opp}
 \end{equation}
-\cmtFormule{L'opposabilit\'e est born\'ee inf\'erieurement par $1 - \varepsilon_{\mathsf{ext}}$.}
-où $\varepsilon_{\mathsf{ext}} = \mathsf{Err}^{\mathsf{EXT\text{-}OPP}}$
-et $h(\cdot)$ est l'entropie binaire.
-Un interprète avec faible erreur d'extraction implique une forte
-opposabilité.
+\cmtFormule{L'opposabilit\'e est minor\'ee par une fonction d\'ecroissante de $\varepsilon_{\mathsf{ext}}$.}
+o\`u $\varepsilon_{\mathsf{ext}} = \mathsf{Err}^{\mathsf{EXT\text{-}OPP}}$
+et $h(\cdot)$ est l'entropie binaire. Le terme $I(V;K|\Sigma,C)$ mesure ce que
+l'interpr\`ete tire de ses ressources propres $K$ et non de la preuve~; il est nul
+lorsque l'interpr\`ete ne lit que $(\Sigma,C)$.
+Un interpr\`ete avec faible erreur d'extraction, qui doit peu \`a ses ressources propres,
+implique une forte opposabilit\'e.
 \cmt{Moins l'interpr\`ete se trompe, plus l'opposabilit\'e est grande.}
 \end{remark}
 \end{sloppypar}
@@ -520,12 +536,13 @@ Si $\mathcal{A}$ distingue les preuves de $m_0$ vs $m_1$, il distingue
 n\'ecessairement $G(s)$ d'une cha\^ine al\'eatoire, contredisant la s\'ecurit\'e PRG.
 \cmt{Toute attaque contre la confidentialit\'e devient une attaque contre le PRG.}
 
-\begin{theorem*}[Réduction de SOTP-Low au PRG (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_low_conf}
+\begin{theorem}[Réduction de SOTP-Low au PRG (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_low_conf}
 Soit $\mathcal{A}$ adversaire PPT contre IND-CONF de SOTP-Low avec
-avantage $\varepsilon$. Alors $\exists$ adversaire PPT $\mathcal{B}$
-contre le PRG $G$ avec avantage $\geq \varepsilon/2 - \negl(\lambda)$.
-\cmt{L'avantage contre le PRG est au moins la moiti\'e de l'avantage contre IND-CONF.}
-\end{theorem*}
+avantage $\varepsilon$. Alors il existe un adversaire PPT $\mathcal{B}$ contre le
+PRG $G$, de m\^eme temps d'ex\'ecution que $\mathcal{A}$ \`a un terme polynomial pr\`es,
+tel que $\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) \geq \varepsilon - 1/q$.
+\cmt{L'avantage contre le PRG est au moins celui contre IND-CONF, au terme $1/q$ pr\`es.}
+\end{theorem}
 
 \begin{Preuve}
 
@@ -560,17 +577,19 @@ Si $\mathcal{A}$ \'emet $b'=b$, $\mathcal{B}$ retourne 1 ; sinon 0.
 
 \textbf{Analyse.}
 \begin{itemize}
-\item \emph{Cas $y = G(s)$.} $\mathcal{A}$ voit une vraie preuve SOTP-Low,
-      gagne avec probabilit\'e $1/2 + \varepsilon$.
-      $\mathcal{B}$ retourne 1 avec probabilit\'e $1/2+\varepsilon$.
+\item \emph{Cas $y = G(s)$.} Lorsque $h \neq 1$, $h$ engendre $\mathbb{G}$ et
+      $\sigma_2 = g^{s'}h^\rho$ est uniforme et ind\'ependant de $s$, comme
+      $g^{s}h^\rho$ dans le vrai jeu. $\mathcal{A}$ voit alors exactement une vraie
+      preuve SOTP-Low. L'\'ev\'enement $h = 1$ a probabilit\'e $1/q$. $\mathcal{B}$
+      retourne donc 1 avec une probabilit\'e qui diff\`ere de
+      $\Pr[b' = b] = 1/2 \pm \varepsilon$ d'au plus $1/q$.
       \cmt{Dans ce cas, $\mathcal{B}$ a bien simul\'e le vrai jeu.}
 \item \emph{Cas $y$ uniforme.} $\sigma_1 = m_b \oplus U_{|m|}$ est un
       one-time pad parfait, $\mathcal{A}$ n'a aucune information sur $b$.
       $\mathcal{B}$ retourne 1 avec probabilit\'e $1/2$.
       \cmt{Dans ce cas, $\mathcal{A}$ ne peut pas mieux faire que 1/2.}
 \end{itemize}
-Donc $\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) \geq
-\varepsilon/2 - \negl(\lambda)$.
+Donc $\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) \geq \varepsilon - 1/q$.
 %\cmtFormule{Conclusion de la r\'eduction.}
 \end{Preuve}
 
@@ -691,6 +710,27 @@ un choix de conception.
 \noindent\textbf{Interpr\'etation.} SOTP-Base choisit la dimension
 $d$ garantissant la pr\'eservation des distances avec la probabilit\'e voulue~;
 le lien avec l'extraction du verdict reste une hypoth\`ese de conception.
+
+\begin{corollary}[R\'eductions pour SOTP-Base]\label{cor:ann_sotp_base_reductions}
+Sous PRG et DLOG dans $\mathbb{G}$ d'ordre $q$, pour tout PPT $\mathcal{A}$,
+\begin{equation}
+\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Base}}(\lambda)
+\leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + \frac{1}{q},
+\qquad
+\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Base}}(\lambda)
+\leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda).
+\end{equation}
+\end{corollary}
+
+\begin{Preuve}[Corollaire~\ref{cor:ann_sotp_base_reductions}]
+SOTP-Base partage avec SOTP-Low les couches Gold et Iron
+(Algorithme~\ref{alg:sotp_base}), et sa couche Clay, la projection JL du contexte, est
+une fonction publique de $c$ et du tirage public de $\Phi$. Les r\'educteurs
+$\mathcal{B}$ et $\mathcal{B}'$ des Th\'eor\`emes~\ref{thm:ann_sotp_low_conf}
+et~\ref{thm:ann_sotp_low_rel} calculent cette couche \`a partir de $c$, comme ils
+calculaient la couche Clay de SOTP-Low. Leurs simulations et leurs analyses restent
+inchang\'ees, ce qui donne les deux bornes.
+\end{Preuve}
 \cmt{Le choix de $d$ est un compromis entre taille de preuve et qualit\'e d'extraction.}
 \end{sloppypar}
 
@@ -717,8 +757,9 @@ Pour la relation $\mathcal{R} = \{((h_c, c_m), (m, c, \rho)) : h_c = \mathsf{Pos
 \item \textbf{Confidentialité.} Le caract\`ere \`a divulgation nulle parfait
       de Groth16 et le masquage parfait de $c_m$ donnent $\Conf = 1$.
       \cmt{La preuve et l'engagement sont ind\'ependants de $m$ sachant $c$.}
-\item \textbf{Fiabilité de v\'erification.} La solidité connaissance de
-      Groth16 donne $\Relver \geq 1 - \negl(\lambda)$.
+\item \textbf{Fiabilité de v\'erification.} La solidité de connaissance de
+      Groth16 et le caract\`ere liant de l'engagement de Pedersen sous DLOG donnent
+      $\Relver \geq 1 - \negl(\lambda)$.
       \cmt{Un prouveur qui fait accepter conna\^it un t\'emoin valide.}
 \end{enumerate}
 \end{theorem}
@@ -734,15 +775,17 @@ pas de $m$, d'o\`u $\Conf = 1$.
 \cmtFormule{La ZK parfaite implique l'indistinguabilit\'e inconditionnelle.}
 
 \textbf{Fiabilit\'e de v\'erification.} Pour tout $\mathcal{A}$ PPT produisant une
-preuve acceptante $\pi$, l'extracteur $\mathcal{E}$ de Groth16 (qui dispose du
-code de $\mathcal{A}$ et exploite l'hypoth\`ese q-PKE~; ce n'est pas le
-v\'erificateur) produit un t\'emoin $(m,c,\rho)$ avec $((h_c,c_m),(m,c,\rho)) \in
+preuve acceptante $\pi$, l'extracteur $\mathcal{E}$ de Groth16, dont l'existence
+est d\'emontr\'ee dans le mod\`ele du groupe g\'en\'erique~\cite{Groth16} et dans le
+mod\`ele du groupe alg\'ebrique sous l'hypoth\`ese q-DLog~\cite{FKL18} (ce n'est pas
+le v\'erificateur), produit un t\'emoin $(m,c,\rho)$ avec $((h_c,c_m),(m,c,\rho)) \in
 \mathcal{R}$, sauf avec probabilit\'e n\'egligeable. Ainsi
 \begin{equation}
 \Pr\!\left[\mathsf{Verify}=1 \land (m,c,\rho)\notin\mathcal{R}\right]
 \leq \mathsf{Adv}^{\mathsf{sound}}(\lambda) \leq \negl(\lambda)
-\;\Rightarrow\; \Relver \geq 1-\negl(\lambda).
 \end{equation}
+Le liant de $c_m$, sous DLOG, interdit en outre que deux t\'emoins extraits portent sur
+des messages distincts. Il vient $\Relver \geq 1-\negl(\lambda)$.
 \cmtFormule{La solidit\'e connaissance implique l'absence de forge.}
 
 \textbf{Opposabilit\'e.} Aucune borne n'est d\'eriv\'ee ici, car $h_c$ et les
@@ -790,7 +833,7 @@ directement au Trilemme CRO (Remarque~\ref{rem:ann_pas_de_contradiction}).
 Sous PRG et DLOG dans $\mathbb{G}$ d'ordre $q$, on a
 \begin{align}
 \mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda)
-&\leq 2\cdot\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda)
+&\leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda)
     + \frac{1}{q}
 \label{eq:ann_sotp_low_conf} \\[4pt]
 \mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda)
@@ -810,8 +853,8 @@ comme $g^{s'}h^{\rho}$ au lieu de $g^{s}h^{\rho}$. Lorsque $h \neq 1$, $h$ engen
 $\mathbb{G}$, d'ordre premier $q$, et $h^\rho$ est uniforme. Les deux \'el\'ements sont
 alors uniformes et ind\'ependants de la graine, si bien que la simulation est
 exacte. L'\'ev\'enement $h = 1$ a probabilit\'e $1/q$. On obtient
-$\varepsilon \leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + 1/q$, donc a
-fortiori~\eqref{eq:ann_sotp_low_conf}.
+$\varepsilon \leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + 1/q$, soit~\eqref{eq:ann_sotp_low_conf}
+(Th\'eor\`eme~\ref{thm:ann_sotp_low_conf}).
 
 \emph{Fiabilit\'e.} Le Th\'eor\`eme~\ref{thm:ann_sotp_low_rel} donne
 $\mathsf{Win}^{\mathsf{BIND\text{-}REL}} \leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda)$,
@@ -843,22 +886,22 @@ l'institution, ce qui rel\`eve de l'heuristique de conception
 \textbf{Hypoth\`ese} & \textbf{Borne} \\
 \midrule
 SOTP-Low & $\Conf_{\mathrm{calc}}$ & IND-CONF & PRG
-  & $\mathsf{Adv} \leq 2\varepsilon_{\mathsf{PRG}} + 1/q$ \\
+  & $\mathsf{Adv} \leq \varepsilon_{\mathsf{PRG}} + 1/q$ \\
 SOTP-Low & $\Relver$ & BIND-REL & DLOG
   & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}} + 1/q$ \\
 SOTP-Low & $\Opp$ & -- & --
   & aucune (Rem.~\ref{rem:ann_sotp_low_opp_statut}) \\
 \midrule
 SOTP-Base & $\Conf_{\mathrm{calc}}$ & IND-CONF & PRG
-  & $\mathsf{Adv} \leq 2\varepsilon_{\mathsf{PRG}} + \negl$ \\
+  & $\mathsf{Adv} \leq \varepsilon_{\mathsf{PRG}} + 1/q$ (Cor.~\ref{cor:ann_sotp_base_reductions}) \\
 SOTP-Base & $\Relver$ & BIND-REL & DLOG
-  & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}} + \negl$ \\
+  & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}}$ (Cor.~\ref{cor:ann_sotp_base_reductions}) \\
 SOTP-Base & -- & -- & Lemme JL
   & dimensionnement de $d$ (Th.~\ref{thm:ann_sotp_base_opp}) \\
 \midrule
 SOTP-High & $\Conf$ & IND-CONF & Groth16 ZK parfaite
   & $\Conf = 1$ \\
-SOTP-High & $\Relver$ & BIND-REL & Groth16 (q-PKE)
+SOTP-High & $\Relver$ & BIND-REL & Groth16 (GGM ou AGM), DLOG
   & $\geq 1-\negl(\lambda)$ \\
 SOTP-High & $\Opp$ & -- & --
   & aucune (Rem.~\ref{rem:heuristique_sotp_high}) \\
@@ -877,7 +920,8 @@ $\varepsilon_{\mathsf{ind}}$, $\varepsilon_{\mathsf{bind}}$, $\varepsilon_{\math
 \geq \!\left(1-2\varepsilon_{\mathsf{ind}}\right)\!
 \left(1-\varepsilon_{\mathsf{bind}}\right)\!
 \left(1 - \frac{h(\varepsilon_{\mathsf{ext}})
-  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)}
+  + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)
+  + I(V;K|\Sigma,C)}
   {H(V|C)}\right)
 \label{eq:ann_cro_product_games}
 \end{equation}
@@ -889,7 +933,8 @@ calculatoire. Pour $\varepsilon_{\mathsf{ind}},\varepsilon_{\mathsf{bind}},
 \Conf_{\mathrm{calc}} \cdot \Relver \cdot \Opp
 \geq 1 - O\!\left(\varepsilon_{\mathsf{ind}}
   + \varepsilon_{\mathsf{bind}}
-  + \varepsilon_{\mathsf{ext}}\log_2|\mathcal{V}_\lambda| + h(\varepsilon_{\mathsf{ext}})\right)
+  + \varepsilon_{\mathsf{ext}}\log_2|\mathcal{V}_\lambda| + h(\varepsilon_{\mathsf{ext}})
+  + \frac{I(V;K|\Sigma,C)}{H(V|C)}\right)
 \label{eq:ann_cro_approx}
 \end{equation}
 \cmtFormule{Approximation au premier ordre pour petits $\varepsilon$.}
