@@ -31,7 +31,7 @@ permet de retrouver $m$ avec probabilit\'e $1 - \negl(\lambda)$~?\guillemotright
 \paragraph{Couche Clay (opposabilit\'e).}
 Encodage pr\'eservant le contexte institutionnel pour l'extraction
 d'information par des interpr\`etes aux ressources born\'ees~\cite{Miller56,Simon82}, par encodage
-d\'eterministe, compression Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03} ou hachage d\'eterministe. La couche
+d\'eterministe, projection Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03} ou hachage d\'eterministe. La couche
 Clay r\'epond \`a la question \emph{\guillemotleft~Comment permettre \`a $\mathsf{Interpret}$ d'extraire
 un maximum d'information sur $V$ depuis $(c, \sigma)$~?\guillemotright}
 
@@ -180,7 +180,7 @@ L'ind\'ependance modulaire des couches est n\'ecessaire, car Gold, Iron et Clay
 doivent pouvoir \^etre substitu\'es sans refonte compl\`ete~\cite{canetti2001,Goldreich02}. Remplacer le PRG
 par AES-GCM n'affecte pas Iron ni Clay~; remplacer Pedersen par un
 accumulateur RSA laisse Gold et Clay intacts~; remplacer le hachage
-contextuel par une compression JL ne modifie pas les deux premi\`eres
+contextuel par une repr\'esentation JL ne modifie pas les deux premi\`eres
 couches. Cette modularit\'e facilite l'adaptation aux \'evolutions
 cryptographiques (post-quantique, homomorphe) et r\'eglementaires~\cite{NISTPQC,Kyber2022,Dilithium2022}.
 \end{sloppypar}
@@ -196,15 +196,16 @@ dans la classe des protocoles fond\'es sur le XOR. La construction
 \`a la famille SOTP \'etendue \`a la section~\ref{sec:sotp_construction}.
 
 \begin{theorem}[Propri\'et\'es de s\'ecurit\'e S-OTP]\label{thm:proprietes_sotp}
-Sous hypoth\`eses PRG (g\'en\'erateur pseudo-al\'eatoire) et difficult\'e du
-logarithme discret (DLog) dans $\mathbb{G}$~\cite{BlumMicali84,Yao82}, on a
+Sous difficult\'e du logarithme discret (DLog) dans $\mathbb{G}$ et, lorsque le masque est
+pseudo-al\'eatoire, sous hypoth\`ese PRG~\cite{BlumMicali84,Yao82}, on a
 \begin{align}
 \Conf(\text{S-OTP}) &= 1 - \negl(\lambda) \\
 \Relver(\text{S-OTP}) &= 1 - \negl(\lambda) \\
 \Opp(\text{S-OTP}) &\leq \frac{H(h \mid C)}{H(V|C)}
 \end{align}
 o\`u $h$ est la composante auxiliaire de la preuve qui porte l'information
-contextuelle.
+contextuelle. Avec un masque uniforme, comme dans la preuve ci-dessous, $\Conf(\text{S-OTP}) = 1$
+sans hypoth\`ese calculatoire.
 \end{theorem}
 
 \begin{remark}[Port\'ee du Th\'eor\`eme~\ref{thm:proprietes_sotp}]\label{rem:portee_sotp}
@@ -287,7 +288,8 @@ composante auxiliaire $h$.
 \end{cmtEtape}
 
 L'information auxiliaire $h$ encode $\ell_{\text{aux}} = H(\mathcal{C})$
-bits de contexte. Par construction, on a
+bits de contexte. Si l'interpr\`ete ne lit la preuve qu'\`a travers $(h, C)$, soit la cha\^ine
+$V - (h, C) - \Sigma$, on a
 \begin{equation}
 I(V;\Sigma|C) \leq I(V;h|C) = H(h|C) - H(h|V,C) \leq H(h|C)
 \end{equation}
@@ -323,7 +325,7 @@ diff\'erentes, au-del\`a du paradigme OTP.
 \label{subsec:metriques_sotp}
 
 Pour les param\`etres typiques $\lambda = 128$, $\Delta = 50$ bits,
-$H(\mathcal{C}) = 30$ bits (r\'egime contexte rare), on obtient
+$H(\mathcal{C}) = 30$ bits, sous le seuil $H^\sharp \approx 51$ bits pour $\alpha = 1$, on obtient
 \begin{align}
 \Conf(\text{S-OTP}) &\approx 0{,}999 \label{eq:sotp_conf_numerique} \\
 \Relver(\text{S-OTP}) &\approx 0{,}999 \label{eq:sotp_rel_numerique} \\
@@ -338,18 +340,20 @@ contr\^ol\'ee. Le produit vaut alors
 \label{eq:sotp_produit}
 \end{equation}
 Cette valeur porte sur la fiabilit\'e de v\'erification et sur une
-opposabilit\'e calcul\'ee sous la convention $\Opp = \min\{1,\Delta/H(\mathcal{C})\}$,
-qui suppose que $h$ transmet un contexte d'esp\`ece inconnu de l'institution~;
-elle n'est pas comparable \`a la borne du
+opposabilit\'e calcul\'ee sous la convention $\Opp = \min\{1,\Delta/H(\mathcal{C})\}$
+de~\cite{MINKA2026CLO}. Cette convention ne se d\'eduit pas du th\'eor\`eme et suppose que $h$
+transmet un contexte d'esp\`ece inconnu de l'institution. La valeur obtenue
+n'est pas comparable \`a la borne du
 Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}. En fiabilit\'e de
 reconstruction, la confidentialit\'e statistique de S-OTP impose
 $\Relrec \leq (1+\kappa/\lambda)/\lambda$ (Remarque~\ref{rem:rel_ver}),
 tandis que~\cite{MINKA2026CLO} donne un produit de l'ordre de $H(\mathcal{C})/\lambda$.
-Ce produit \'elev\'e n'est r\'ealisable qu'en r\'egime contexte rare ($H(\mathcal{C}) \leq \Delta$).
-D\`es que le contexte s'enrichit ($H(\mathcal{C}) \gg \Delta$), l'opposabilit\'e
-est major\'ee par $(\kappa/\lambda + \Delta)/\gamma \approx \Delta/(\alpha H(\mathcal{C})) \ll 1$
+Ce produit \'elev\'e n'est r\'ealisable que sous le seuil, soit $H(\mathcal{C}) \leq H^\sharp$.
+Au-del\`a, l'opposabilit\'e
+est major\'ee par $(\kappa/\lambda + \Delta)/\gamma \approx \Delta/(\alpha H(\mathcal{C})) < 1$, quantit\'e qui d\'ecro\^it en $1/H(\mathcal{C})$
 (preuve de la Proposition~\ref{prop:borne_aigue}, \'etape~6), ce qui motive
-les variantes SOTP-Base et SOTP-High de la section~\ref{sec:sotp_construction}.
+la variante SOTP-High de la section~\ref{sec:sotp_construction}, SOTP-Base r\'epondant sous le seuil
+au besoin de proximit\'e entre contextes.
 
 \begin{boiteArbitre}
 L'arbitre note que $0{,}998$ correspond au meilleur cas. D\`es que le
@@ -360,8 +364,8 @@ deviennent n\'ecessaires.
 La remarque~\ref{thm:optimalite_sotp} indique que S-OTP serait optimal
 dans sa classe, sans le d\'emontrer. Cette optimalit\'e, m\^eme \'etablie,
 resterait restreinte, car les variantes SOTP-Base et SOTP-High utilisent
-des techniques au-del\`a des protocoles XOR (compression JL, zk-SNARKs)
-et surpassent S-OTP dans les r\'egimes appropri\'es.
+des techniques au-del\`a des protocoles XOR (projection JL, zk-SNARKs)
+et r\'epondent \`a d'autres besoins.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------

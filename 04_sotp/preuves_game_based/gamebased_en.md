@@ -8,15 +8,15 @@ English Markdown rendering of Annex A of the thesis, in its final version. State
 
 ## Introduction
 
-The CLO framework defines $\mathsf{Conf}$, $\mathsf{Rel}$ and $\mathsf{Opp}$ in information-theoretic terms, namely conditional entropies, mutual information and total variation distance [MINKA2026CLO]. This approach yields general results (Contextual Bottleneck Theorem, Conditional CRO Trilemma), but does not directly state *what a computationally bounded adversary can or cannot do*. In computational cryptography, security is classically expressed through *games* between a challenger and a probabilistic polynomial-time (PPT) adversary.
+The CLO framework defines $\mathsf{Conf}$, $\mathsf{Rel}$ and $\mathsf{Opp}$ in information-theoretic terms, namely conditional entropies, mutual information and total variation distance [MINKA2026CLO]. This approach yields general results (Contextual Bottleneck Theorem, Conditional CRO Trilemma), but does not directly state *what a computationally bounded adversary can or cannot do*. In computational cryptography, security is classically expressed by *games* between a challenger and a probabilistic polynomial-time (PPT) adversary.
 
-*Why this annex.* The CLO framework reasons in bits and entropies, whereas classical cryptography reasons in games and adversarial advantages. This annex builds the bridge between the two by capturing each CLO metric with a cryptographic game, then relating each game to a standard hardness assumption (PRG, DLOG, JL, Groth16).
+*Why this annex.* The CLO framework reasons in bits and entropies, whereas classical cryptography reasons in games and adversarial advantages. This annex builds the bridge between the two. It translates each CLO metric into a cryptographic game, then relates each game to a standard hardness assumption (PRG, DLOG, JL, Groth16).
 
 This annex establishes the **formal bridge** between the two worlds in three steps.
 
 1. Define cryptographic games (*IND-CONF*, *BIND-REL*, *EXT-OPP*) that operationally capture $\mathsf{Conf}$ (in its computational version), $\mathsf{Rel}_{\mathrm{ver}}$ and $\mathsf{Opp}$
 2. Prove formal *reductions* establishing that, if a PPT adversary wins one of these games, it solves a problem assumed to be hard (PRG, discrete logarithm, JL, Groth16)
-3. Derive a **game-based lower bound on the CLO product** (Corollary `cor:ann_cro_from_games`), on the operational scale (computational confidentiality, verification reliability), which is not directly comparable with the Trilemma (Remark `rem:ann_pas_de_contradiction`)
+3. Establish a **game-based lower bound on the CLO product** (Corollary `cor:ann_cro_from_games`), on the operational scale (computational confidentiality, verification reliability), which is not directly comparable with the Trilemma (Remark `rem:ann_pas_de_contradiction`)
 
 *Three games, three metrics.* **IND-CONF** captures confidentiality by requiring that the adversary cannot distinguish the proofs of two messages. **BIND-REL** captures reliability, since the adversary must not be able to open a proof to two distinct messages. Finally, **EXT-OPP** captures opposability, the institutional interpreter having to extract the right verdict from the proof.
 
@@ -34,7 +34,8 @@ This annex establishes the **formal bridge** between the two worlds in three ste
 | [A.6](#a6-jl-reduction-for-sotp-base) | SOTP-Base sizing | – | JL |
 | [A.7](#a7-reductions-for-sotp-high) | SOTP-High reductions | $\mathsf{Conf}$, $\mathsf{Rel}_{\mathrm{ver}}$ | Groth16 |
 | [A.8](#a8-complete-statements-and-game-based-cro-product) | Complete statements + CLO product | $\mathsf{Conf}_{\mathrm{calc}}\cdot\mathsf{Rel}_{\mathrm{ver}}\cdot\mathsf{Opp}$ | All |
-| [A.9](#a9-limitations-and-scope-of-the-reductions) | Limitations and scope | – | – |
+| [A.9](#a9-mechanisation-in-a-reduced-setting) | Mechanisation in a reduced setting | $\mathsf{Conf}_{\mathrm{calc}}$, $\mathsf{Rel}_{\mathrm{ver}}$ | PRG, DLOG |
+| [A.10](#a10-limitations-and-scope-of-the-reductions) | Limitations and scope | – | – |
 
 ---
 
@@ -46,13 +47,15 @@ This annex establishes the **formal bridge** between the two worlds in three ste
 
 **Intuition.** A PRG takes a short seed $s \in \lbrace 0,1\rbrace^\lambda$ and produces a long sequence $G(s) \in \lbrace 0,1\rbrace^{L(\lambda)}$, $L > \lambda$, indistinguishable from a truly random sequence. It underlies the Gold layer of SOTP-Low, in which the pad $G(s)$ masks the message so that, without $s$, no PPT adversary can recover $m$ from $m \oplus G(s)$.
 
-**Definition `def:ann_prg` (PRG security [GoldreichKrawczyk99]).** Let $\mathcal{S}_\lambda$ be a finite seed set, for instance $\lbrace 0,1\rbrace^\lambda$ or $\mathbb{Z}_q$, with $\log_2|\mathcal{S}_\lambda| < L(\lambda)$. A polynomial-time computable function $G : \mathcal{S}_\lambda \to \lbrace 0,1\rbrace^{L(\lambda)}$ is a secure PRG if, for every PPT adversary $\mathcal{A}$,
+**Definition `def:ann_prg` (PRG security [GoldreichKrawczyk99]).** Let $\mathcal{S}_\lambda$ be a finite seed set, for instance $\lbrace 0,1\rbrace^\lambda$ or $\mathbb{Z}_q$. A polynomial-time computable function $G : \mathcal{S}_\lambda \to \lbrace 0,1\rbrace^{L(\lambda)}$ is secure if, for every PPT adversary $\mathcal{A}$,
 
 $$\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{A}}(\lambda) = \left| \Pr_{s \leftarrow \mathcal{S}_\lambda}\big[\mathcal{A}(G(s)) = 1\big] - \Pr_{y \leftarrow \lbrace 0,1\rbrace^{L(\lambda)}}\big[\mathcal{A}(y) = 1\big] \right| \leq \mathrm{negl}(\lambda)$$
 
 **Seed distribution.** SOTP-Low draws its seed uniformly in $\mathbb{Z}_q$ (Algorithm `alg:sotp_low`), a condition required by the discrete-logarithm reduction. The reductions of this annex therefore use $\mathcal{S}_\lambda = \mathbb{Z}_q$. For IND-CONF, the advantage is $|\Pr[b' = b] - 1/2|$; for the PRG, it is the difference of the two probabilities above.
 
-**Practical implementations.** SOTP-Low uses ChaCha20/AES-CTR, two standardised PRGs meeting this definition.
+**Seed longer than the output.** The definition does not require $G$ to stretch the seed. When $L(\lambda) > \log_2|\mathcal{S}_\lambda|$, $G$ is a pseudorandom generator in the usual sense and its security is a computational assumption. When the seed is longer than the output, $G$ is a mask-derivation function and the condition can be met in the statistical sense. This is the case of SOTP-Low, where $s \in \mathbb{Z}_q$ with $|q| \geq 2\lambda$ and $L(\lambda) = \lambda$. The truncation $s \bmod 2^\lambda$ is then at statistical distance at most $2^{-\lambda-1}$ from uniform (Remark `rem:masque_troncature`).
+
+**Practical implementations.** For a longer message, SOTP-Low derives a key from the seed and then uses ChaCha20 or AES-CTR, two standardised PRGs meeting this definition.
 
 ### Pedersen commitment
 
@@ -71,7 +74,7 @@ $$\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{A}}(\lambda) = \left| \Pr_{s \leftarrow 
 
 ### Groth16 zk-SNARK
 
-**Intuition.** A zk-SNARK for a relation $\mathcal{R}$ allows proving knowledge of a witness $w$ such that $(x,w) \in \mathcal{R}$, without revealing $w$, in a constant-size proof. A Groth16 proof consists of three group elements, that is 128 bytes (compressed points) on BN254 or 192 bytes on BLS12-381; it is verified with $O(1)$ pairings.
+**Intuition.** A zk-SNARK for a relation $\mathcal{R}$ allows proving knowledge of a witness $w$ such that $(x,w) \in \mathcal{R}$, without revealing $w$, in a constant-size proof. A Groth16 proof consists of three group elements, that is 128 bytes (compressed points) on BN254 [BarretoNaehrig2006]; it is verified with $O(1)$ pairings.
 
 **Definition `def:ann_groth16` (Groth16 zk-SNARK [Groth16]).** $(\mathsf{Setup}, \mathsf{Prove}, \mathsf{Verify})$ satisfies the following properties.
 
@@ -89,15 +92,15 @@ $$\lbrace\pi :  \pi \leftarrow \mathsf{Prove}(\sigma_p,x,w)\rbrace \equiv \lbrac
 
 ### Johnson-Lindenstrauss (JL) transform
 
-**Intuition.** The JL transform projects $N$ points of $\mathbb{R}^n$ into $\mathbb{R}^d$ ($d \ll n$) while approximately preserving all pairwise distances. In SOTP-Base, contexts $c \in \mathbb{R}^n$ are compressed into $\Phi c \in \mathbb{R}^d$, keeping the structure that enables institutional extraction.
+**Intuition.** The JL transform projects $N$ points of $\mathbb{R}^d$ into $\mathbb{R}^k$ ($k \ll d$) while approximately preserving all pairwise distances. In SOTP-Base, the context embeddings $\mathsf{embed}(c) \in \mathbb{R}^d$ are projected to $\Phi\,\mathsf{embed}(c) \in \mathbb{R}^k$, which preserves their proximity.
 
-**Definition `def:ann_jl` (JL transform [JohnsonLindenstrauss84, DasguptaGupta03]).** For $0 < \varepsilon < 1$, $N > 0$, $S \subset \mathbb{R}^n$ with $|S| = N$, there exists $\Phi : \mathbb{R}^n \to \mathbb{R}^d$ with $d = O(\varepsilon^{-2} \log N)$ such that, for all $x,y \in S$,
+**Definition `def:ann_jl` (JL transform [JohnsonLindenstrauss84, DasguptaGupta03]).** For $0 < \varepsilon < 1$, $N > 0$, $S \subset \mathbb{R}^d$ with $|S| = N$, there exists $\Phi : \mathbb{R}^d \to \mathbb{R}^k$ with $k = O(\varepsilon^{-2} \log N)$ such that, for all $x,y \in S$,
 
 $$(1-\varepsilon)\|x-y\|^2 \leq \|\Phi x-\Phi y\|^2 \leq (1+\varepsilon)\|x-y\|^2$$
 
-**Dimension lemma for SOTP-Base.** The minimal dimension $d$ preserving $\Delta$ bits of extraction with tolerance $\varepsilon^2$ is given by the condition
+**Design rule for SOTP-Base.** The embedding dimension chosen by design is
 
-$$d \geq \frac{4\Delta H(\mathcal{C})}{\varepsilon^2} \qquad \text{(eq:ann\_jl\_dim)}$$
+$$d = \left\lceil \frac{4\Delta H(\mathcal{C})}{\varepsilon^2} \right\rceil \qquad \text{(eq:ann\_jl\_dim)}$$
 
 ### Fundamental theoretical tools
 
@@ -192,7 +195,7 @@ where $\varepsilon_{\mathsf{ext}} = \mathsf{Err}^{\mathsf{EXT\text{-}OPP}}$ and 
 
 ## A.5 Formal reductions for SOTP-Low
 
-SOTP-Low operates in the context-scarce regime ($H(\mathcal{C}) < H^*(\lambda)$). Its two main reductions target PRG (confidentiality) and discrete logarithm (reliability).
+SOTP-Low serves below the threshold $H^\sharp$ when the institution needs the exact context. Its two main reductions target PRG (confidentiality) and discrete logarithm (reliability).
 
 *Purpose of this section.* Establish the two formal reductions relating SOTP-Low to the standard PRG (Gold layer) and DLOG (Iron layer) assumptions.
 
@@ -251,25 +254,25 @@ Sampling the seed in $\mathbb{Z}_q$ is indispensable at step 3, because with a s
 
 ## A.6 JL reduction for SOTP-Base
 
-SOTP-Base operates in the transition regime ($H^*(\lambda) \leq H(\mathcal{C}) \leq \lambda/\log_2\lambda$). Its Clay layer applies a JL projection $\Phi : \mathbb{R}^n \to \mathbb{R}^d$ with $d = \lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$.
+SOTP-Base serves below the threshold $H^\sharp$ when the institution needs proximity between contexts. Its Clay layer applies a JL projection $\Phi : \mathbb{R}^d \to \mathbb{R}^k$, where $d = \lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$ is the embedding dimension chosen by design and $k$ the target dimension (Algorithm `alg:sotp_base`).
 
 *Purpose of this section.* Show that the extraction error of the interpreter is directly related to the quality of JL preservation. If the projection distorts distances too much, extraction becomes erroneous.
 
-**Intuition.** If $\Phi$ distorts some distances too much, neighbouring contexts become indistinguishable in the compressed space, causing extraction errors. The reduction below quantifies this relation precisely.
+**Intuition.** If $\Phi$ distorts some distances too much, neighbouring contexts become indistinguishable in the target space, causing extraction errors. The reduction below quantifies this relation precisely.
 
-**Theorem `thm:ann_sotp_base_opp` (SOTP-Base, JL sizing).** Let $\mathcal{C} = \lbrace c_1,\ldots,c_N\rbrace$ be the set of embedded contexts, $N = 2^{H(\mathcal{C})}$, and $\delta, \varepsilon' \in (0,1)$. If the projection dimension satisfies
+**Theorem `thm:ann_sotp_base_opp` (SOTP-Base, JL sizing).** Let $\mathcal{C} = \lbrace c_1,\ldots,c_N\rbrace$ be the set of embedded contexts, $N = 2^{H(\mathcal{C})}$, and $\delta, \varepsilon' \in (0,1)$. If the target dimension $k$ satisfies
 
-$$d \;\geq\; \frac{8}{\delta^2}\,\ln\left(\frac{N^2}{\varepsilon'}\right) = O\left(\delta^{-2}\bigl(H(\mathcal{C}) + \log(1/\varepsilon')\bigr)\right),$$
+$$k \;\geq\; \frac{12}{\delta^2}\,\ln\left(\frac{N^2}{\varepsilon'}\right) = O\left(\delta^{-2}\bigl(H(\mathcal{C}) + \log(1/\varepsilon')\bigr)\right),$$
 
 then, with probability at least $1 - \varepsilon'$ over the choice of $\Phi$, $\Phi$ preserves all pairwise distances of $\mathcal{C}$ up to a factor $(1 \pm \delta)$.
 
 **Proof.** By the JL lemma, for each pair $(i,j)$,
 
-$$\Pr\left[\,\left|\frac{\|\Phi c_i-\Phi c_j\|^2}{\|c_i-c_j\|^2} - 1\right| > \delta\,\right] \leq 2e^{-d\delta^2/8};$$
+$$\Pr\left[\,\left|\frac{\|\Phi c_i-\Phi c_j\|^2}{\|c_i-c_j\|^2} - 1\right| > \delta\,\right] \leq 2e^{-k\delta^2/12} \quad \text{for } 0 < \delta < 1$$
 
-a union bound over the $N^2/2$ pairs gives a failure probability at most $N^2 e^{-d\delta^2/8}$, below $\varepsilon'$ as soon as $d \geq (8/\delta^2)\ln(N^2/\varepsilon')$. Distance preservation is a *necessary* condition for a distance-based extraction function to distinguish contexts; it is not sufficient to guarantee extractable information about the verdict. It therefore provides no lower bound on $\mathsf{Opp}$. This dimension, of order $O(H(\mathcal{C}))$, is distinct from the sizing rule $\lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$ of the main text, which is a design choice. $\square$
+(proof of Lemma `lem:johnson_lindenstrauss`). A union bound over the $N^2/2$ pairs gives a failure probability of at most $N^2 e^{-k\delta^2/12}$. This probability is below $\varepsilon'$ as soon as $k \geq (12/\delta^2)\ln(N^2/\varepsilon')$. Distance preservation is a *necessary* condition for a distance-based extraction function to distinguish contexts; it is not sufficient to guarantee extractable information about the verdict. It therefore provides no lower bound on $\mathsf{Opp}$. This dimension, of order $O(H(\mathcal{C}))$, is distinct from the sizing rule $\lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$ of the main text, which is a design choice. $\square$
 
-**Interpretation.** SOTP-Base chooses the dimension $d$ guaranteeing distance preservation with the desired probability; the link with verdict extraction remains a design assumption.
+**Interpretation.** SOTP-Base chooses the target dimension $k$ guaranteeing distance preservation with the desired probability; the link with verdict extraction remains a design assumption.
 
 **Corollary `cor:ann_sotp_base_reductions` (Reductions for SOTP-Base).** Under PRG and DLOG in $\mathbb{G}$ of order $q$, for every PPT $\mathcal{A}$, $\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Base}}(\lambda) \leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + 1/q$ and $\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Base}}(\lambda) \leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda)$.
 
@@ -277,14 +280,14 @@ a union bound over the $N^2/2$ pairs gives a failure probability at most $N^2 e^
 
 ## A.7 Reductions for SOTP-High
 
-SOTP-High operates in the context-rich regime ($H(\mathcal{C}) > \lambda/\log_2\lambda$) and relies on Groth16 for its Gold layer. Its Clay layer encodes $h_c = \mathsf{Poseidon}(c)$.
+SOTP-High serves beyond the threshold $H^\sharp$ and relies on Groth16 for its Gold layer. Its Clay layer encodes $h_c = \mathsf{Poseidon}(c)$.
 
 *Purpose of this section.* Show that $\mathsf{Conf}$ and $\mathsf{Rel}_{\mathrm{ver}}$ of SOTP-High inherit the properties of Groth16 (perfect zero-knowledge, knowledge soundness); opposability is not covered by a reduction.
 
 **Theorem `thm:ann_sotp_high` (SOTP-High, security inherited from Groth16).** For the relation $\mathcal{R} = \lbrace((h_c, c_m), (m, c, \rho)) : h_c = \mathsf{Poseidon}(c) \wedge c_m = g^m h^\rho \wedge \mathsf{Conforme}(m,c) = 1\rbrace$, the following two properties hold.
 
 1. **Confidentiality.** The perfect zero-knowledge of Groth16 and the perfect hiding of $c_m$ give $\mathsf{Conf} = 1$.
-2. **Verification reliability.** The knowledge soundness of Groth16 and the binding property of the Pedersen commitment under DLOG give $\mathsf{Rel}_{\mathrm{ver}} \geq 1 - \mathrm{negl}(\lambda)$.
+2. **Verification reliability.** The knowledge soundness of Groth16, the collision resistance of $\mathsf{Poseidon}$ and the binding property of the Pedersen commitment under DLOG give $\mathsf{Rel}_{\mathrm{ver}} \geq 1 - \mathrm{negl}(\lambda)$.
 
 **Proof.**
 
@@ -294,7 +297,7 @@ SOTP-High operates in the context-rich regime ($H(\mathcal{C}) > \lambda/\log_2\
 
 $$\Pr\left[\mathsf{Verify}=1 \land (m,c,\rho)\notin\mathcal{R}\right] \leq \mathsf{Adv}^{\mathsf{sound}}(\lambda) \leq \mathrm{negl}(\lambda) \;\Rightarrow\; \mathsf{Rel}_{\mathrm{ver}} \geq 1-\mathrm{negl}(\lambda).$$
 
-**Opposability.** No bound is derived here, because $h_c$ and the metadata are functions of the public context, hence $I(V;h_c|C) = 0$; what the proof contributes to the verdict lies in the certified statement $\mathsf{Conforme}(m,c) = 1$ (Remark `rem:heuristique_sotp_high`). $\square$
+**Opposability.** No bound is established here, because $h_c$ and the metadata are functions of the public context, hence $I(V;h_c|C) = 0$; what the proof contributes to the verdict lies in the certified statement $\mathsf{Conforme}(m,c) = 1$ (Remark `rem:heuristique_sotp_high`). $\square$
 
 **Remark (Perfect ZK).** The *perfect* ZK of Groth16 means that even a computationally unbounded adversary cannot distinguish real proofs from simulated ones. It is an unconditional guarantee once the CRS is fixed, a remarkably strong property that makes SOTP-High the most protective variant for high-entropy contexts.
 
@@ -323,7 +326,7 @@ $$\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}
 | SOTP-Low | $\mathsf{Opp}$ | – | – | none (Rem. `rem:ann_sotp_low_opp_statut`) |
 | SOTP-Base | $\mathsf{Conf}_{\mathrm{calc}}$ | IND-CONF | PRG | $\mathsf{Adv} \leq \varepsilon_{\mathsf{PRG}} + 1/q$ (Cor. `cor:ann_sotp_base_reductions`) |
 | SOTP-Base | $\mathsf{Rel}_{\mathrm{ver}}$ | BIND-REL | DLOG | $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}}$ (Cor. `cor:ann_sotp_base_reductions`) |
-| SOTP-Base | – | – | JL lemma | sizing of $d$ (Th. `thm:ann_sotp_base_opp`) |
+| SOTP-Base | – | – | JL lemma | sizing of $k$ (Th. `thm:ann_sotp_base_opp`) |
 | SOTP-High | $\mathsf{Conf}$ | IND-CONF | Groth16 perfect ZK | $\mathsf{Conf} = 1$ |
 | SOTP-High | $\mathsf{Rel}_{\mathrm{ver}}$ | BIND-REL | Groth16 (GGM or AGM), DLOG | $\geq 1-\mathrm{negl}(\lambda)$ |
 | SOTP-High | $\mathsf{Opp}$ | – | – | none (Rem. `rem:heuristique_sotp_high`) |
@@ -648,7 +651,7 @@ end GameBasedSOTP
 1. **Conditionality on computational assumptions.** The security of SOTP-Low is proven under PRG and DLOG. SOTP-High via Groth16 relies on the hardness of pairings on BN254, which is not post-quantum. An extension to quantum-resistant primitives (STARKs, Euclidean lattices) is an open research direction (section `sec:sotp_construction`).
 2. **Honest-interpreter model in EXT-OPP.** The game assumes that the interpreter sincerely tries to extract the right verdict. An *adversarial* interpreter (corrupt judge) is not modelled. Game-theoretic extensions (regulator vs audited entity) are identified as a future direction (section `sec:sotp_construction`).
 3. **One-way SOTP-Base reduction.** Theorem `thm:ann_sotp_base_opp` only guarantees the implication *sufficient dimension $\Rightarrow$ JL preservation*. It does not guarantee that distance preservation allows the verdict to be extracted, because that depends on the function $f_\Delta$ chosen by the institution, whose existence and efficient computability are not established.
-4. **$1/q$ term in the SOTP-Low bounds.** Equations (`eq:ann_sotp_low_conf`) and (`eq:ann_sotp_low_rel`) contain $1/q$ (probability of guessing the exponent). It is negligible in $\lambda$ in the strict sense as soon as the group order satisfies $\log_2 q \geq \lambda$, which holds for the parameters used ($q \approx 2^{252}$, i.e. $1/q \approx 10^{-76}$). The term is kept so that the bounds remain exact for fixed $\lambda$.
+4. **$1/q$ term in the SOTP-Low bounds.** Equations (`eq:ann_sotp_low_conf`) and (`eq:ann_sotp_low_rel`) contain $1/q$. It is negligible in $\lambda$ in the strict sense as soon as the group order satisfies $\log_2 q \geq \lambda$, which holds for the parameters used ($q \approx 2^{252}$, i.e. $1/q \approx 10^{-76}$). The term is kept so that the bounds remain exact for fixed $\lambda$. In the confidentiality bound, it corresponds to the event $h = 1$, where the commitment is no longer hiding. In the binding bound, it is added only for symmetry.
 5. **Relation with the Lean4 formalisation (Annex `chap:annexe_lean4`).** The two annexes complement each other as follows.
    - **Lean4 (Annex `chap:annexe_lean4`)** mechanically certifies the algebraic derivation of the bound $\mathsf{Conf}\cdot\mathsf{Rel}_{\mathrm{rec}}\cdot\mathsf{Opp} \leq \Delta/\lambda + K/\lambda^2 + \varepsilon(\lambda)$ (Theorem `thm:conditional_CRO_trilemma`), taking Fano and Pinsker as properties of each instance and bounded extraction as an assumption
    - **Annex `chap:annexe_gamebased` (here)** establishes the cryptographic properties of the SOTP family (computational confidentiality, verification reliability) under PRG, DLOG and Groth16; it does not instantiate the assumptions of the Trilemma, which concern statistical $\mathsf{Conf}$ and $\mathsf{Rel}_{\mathrm{rec}}$
@@ -657,4 +660,4 @@ end GameBasedSOTP
 
 ## Transcription notes
 
-- In this annex, $d$ denotes the output dimension of the projection; in Algorithm `alg:sotp_base`, the output dimension is written $k$ and $d$ is the embedding dimension (note T4 of the specification).
+- The dimension notation is now that of Algorithm `alg:sotp_base`. The embedding dimension is $d$ and the target dimension of the projection is $k$, in the annex as in the main text (note T4 of the specification, resolved).

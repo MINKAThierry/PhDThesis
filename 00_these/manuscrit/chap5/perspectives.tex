@@ -191,9 +191,9 @@ th\'eorique du toolkit.
 \subsubsection{Q2CSI comme traduction architecturale de l'esprit SOTP}
 \label{subsubsec:q2csi}
 
-La famille SOTP propose des constructions de r\'ef\'erence par r\'egime,
-param\'etr\'ees par $H(\mathcal{C})$ (section~\ref{sec:sotp_construction}), dont
-l'optimalit\'e reste conjecturale. La question qui
+La famille SOTP propose des constructions de r\'ef\'erence pour les deux r\'egimes que s\'epare
+le seuil $H^\sharp$, fonction de $\Delta$ et de $\alpha$ (section~\ref{sec:sotp_construction}). Leur
+optimalit\'e reste conjecturale. La question qui
 s'ouvre naturellement est celle de l'\emph{instanciation concr\`ete}. Comment
 traduire cette philosophie en architectures d\'eployables dans des
 environnements cryptographiques composables~\cite{Canetti01,Canetti2000}~?
@@ -449,11 +449,11 @@ classique, y compris les t\'emoins de coh\'erence et de port\'ee. Deux
 extensions restent \`a d\'evelopper.
 
 \begin{itemize}
-    \item \textbf{Extension SOTP.} La formalisation des constructions
-          SOTP-Low, SOTP-Base et SOTP-High n\'ecessiterait la
-          formalisation des r\'eductions cryptographiques (PRG, DLog,
-          solidit\'e de connaissance de Groth16) et des algorithmes de compression
-          Johnson-Lindenstrauss. L'effort est estim\'e \`a 1000--1500 lignes
+    \item \textbf{Extension SOTP.} Les r\'eductions de SOTP-Low sont m\'ecanis\'ees en situation
+          r\'eduite (section~\ref{sec:gamebased_mecanisation}). La formalisation compl\`ete des trois
+          variantes demanderait d'abord celle de la distance statistique du masque tronqu\'e et des
+          r\'eductions \`a PRG et DLog. Elle demanderait aussi celle de la solidit\'e de connaissance
+          de Groth16 et de la projection de Johnson-Lindenstrauss. L'effort est estim\'e \`a 1000--1500 lignes
           additionnelles.
     \item \textbf{Extension post-quantique.} La formalisation du
           Trilemme CRO PQ n\'ecessiterait l'int\'egration des

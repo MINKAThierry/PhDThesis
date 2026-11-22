@@ -12,15 +12,15 @@ mutuelle et la distance de variation totale~\cite{MINKA2026CLO}. Cette approche
 permet des r\'esultats g\'en\'eraux (th\'eor\`eme du goulot d'\'etranglement
 contextuel, Trilemme CRO conditionnel), mais ne pr\'ecise pas directement
 \emph{ce qu'un adversaire calculatoirement born\'e peut ou ne peut pas
-faire}. En cryptographie computationnelle, la s\'ecurit\'e s'exprime
-classiquement via des \emph{jeux} (games) entre un challenger et un
-adversaire probabiliste polynomial-time (PPT).
+faire}. En cryptographie calculatoire, la s\'ecurit\'e s'exprime
+classiquement par des \emph{jeux} (games) entre un challenger et un
+adversaire probabiliste en temps polynomial (PPT).
 
 %\begin{cmtEtape}{Pourquoi cette annexe.}
 Le cadre CLO raisonne en bits et en entropies, alors que la cryptographie classique
 raisonne en jeux et en avantages d'adversaires. Cette annexe construit
-le pont entre les deux en capturant chaque m\'etrique du cadre CLO
-par un jeu cryptographique, puis en reliant chaque jeu \`a une hypoth\`ese
+le pont entre les deux. Elle traduit chaque m\'etrique du cadre CLO
+en un jeu cryptographique puis relie chaque jeu \`a une hypoth\`ese
 de duret\'e standard (PRG, DLOG, JL, Groth16).
 %\end{cmtEtape}
 
@@ -32,7 +32,7 @@ Cette annexe \'etablit le pont formel entre les deux mondes en trois \'etapes.
 \item Prouver des \emph{r\'eductions} formelles \'etablissant que, si un adversaire PPT
       gagne l'un de ces jeux, il r\'esout un probl\`eme suppos\'e difficile
       (PRG, logarithme discret, JL, Groth16)
-\item D\'eriver une minoration game-based du produit CLO
+\item \'Etablir une minoration game-based du produit CLO
       (Corollaire~\ref{cor:ann_cro_from_games}), \`a l'\'echelle op\'erationnelle
       (confidentialit\'e calculatoire, fiabilit\'e de v\'erification), qui ne se
       compare pas directement au Trilemme
@@ -74,6 +74,7 @@ r\'esoudre un probl\`eme difficile.
 \ref{sec:gamebased_SOTP-base} & Dimensionnement SOTP-Base & -- & JL \\
 \ref{sec:gamebased_SOTP-High} & R\'eductions SOTP-High & $\Conf$, $\Relver$ & Groth16 \\
 \ref{sec:gamebased_produitCRO} & \'enonc\'es complets + produit CLO & $\Conf_{\mathrm{calc}}\cdot\Relver\cdot\Opp$ & Tous \\
+\ref{sec:gamebased_mecanisation} & M\'ecanisation en situation r\'eduite & $\Conf_{\mathrm{calc}}$, $\Relver$ & PRG, DLOG \\
 \ref{sec:gamebased_limitations} & Limitations et port\'ee & -- & -- \\
 \bottomrule
 \end{tabular}
@@ -106,10 +107,10 @@ aucun adversaire PPT ne peut r\'ecup\'erer $m$ depuis $m \oplus G(s)$.
 
 \begin{definition}[Sécurité PRG~\cite{GoldreichKrawczyk99}]\label{def:ann_prg}
 Soit $\mathcal{S}_\lambda$ un ensemble fini de graines, par exemple
-$\{0,1\}^\lambda$ ou $\mathbb{Z}_q$, avec $\log_2|\mathcal{S}_\lambda| < L(\lambda)$.
+$\{0,1\}^\lambda$ ou $\mathbb{Z}_q$.
 Une fonction calculable en temps polynomial
 $G\colon \mathcal{S}_\lambda \to \{0,1\}^{L(\lambda)}$
-est un PRG sûr si, pour tout adversaire PPT $\mathcal{A}$, 
+est sûre si, pour tout adversaire PPT $\mathcal{A}$, 
 \begin{equation}
 \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{A}}(\lambda) =
 \left|
@@ -128,8 +129,16 @@ figure dans les r\'eductions de cette annexe. Pour IND-CONF, l'avantage est
 $|\Pr[b' = b] - 1/2|$~; pour le PRG, c'est la diff\'erence des deux probabilit\'es
 ci-dessus.
 
-\noindent\textbf{Impl\'ementations pratiques.} SOTP-Low utilise
-ChaCha20/AES-CTR, deux PRG standardis\'es atteignant cette d\'efinition.
+\noindent\textbf{Graine plus longue que la sortie.} La d\'efinition ne demande pas que $G$ \'etire
+la graine. Lorsque $L(\lambda) > \log_2|\mathcal{S}_\lambda|$, $G$ est un g\'en\'erateur pseudo-al\'eatoire
+au sens usuel et sa s\^uret\'e est une hypoth\`ese calculatoire. Lorsque la graine est plus longue que
+la sortie, $G$ est une fonction de d\'erivation de masque et la condition peut \^etre satisfaite au
+sens statistique. C'est le cas de SOTP-Low, o\`u $s \in \mathbb{Z}_q$ avec $|q| \geq 2\lambda$ et
+$L(\lambda) = \lambda$. La troncature $s \bmod 2^\lambda$ y est \`a distance statistique au plus
+$2^{-\lambda-1}$ de l'uniforme (Remarque~\ref{rem:masque_troncature}).
+
+\noindent\textbf{Impl\'ementations pratiques.} Pour un message plus long, SOTP-Low d\'erive une cl\'e
+de la graine puis utilise ChaCha20 ou AES-CTR, deux PRG standardis\'es atteignant cette d\'efinition.
 \cmt{ChaCha20 et AES-CTR sont des PRG concrets, utilis\'es en pratique.}
 
 \subsection{Engagement de Pedersen}
@@ -141,7 +150,7 @@ La construction $\mathsf{Com}(m, r) = g^m h^r$ exploite l'alg\`ebre des
 groupes cycliques, de sorte que toute collision d'engagements permettrait de calculer
 $\log_g h$, r\'esolvant le logarithme discret.
 \cmt{Le hiding parfait signifie que le message est cach\'e inconditionnellement.}
-\cmt{Par le binding computationnel, ouvrir sur deux messages casserait DLOG.}
+\cmt{Par le binding calculatoire, ouvrir sur deux messages casserait DLOG.}
 
 \begin{definition}[Engagement~de~Pedersen~\cite{Pedersen91}]\label{def:ann_pedersen}
 Soit $\mathbb{G}$ un groupe cyclique d'ordre premier $q$,
@@ -172,8 +181,8 @@ distincts.
 \noindent\textbf{Intuition.} Un zk-SNARK pour une relation $\mathcal{R}$
 permet de prouver qu'on conna\^it un t\'emoin $w$ tel que $(x,w) \in
 \mathcal{R}$, sans r\'ev\'eler $w$, en une preuve de taille constante.
-Une preuve Groth16 compte trois \'el\'ements de groupe, soit 128 octets (points compress\'es) sur BN254
-ou 192 octets sur BLS12-381~; elle se v\'erifie en $O(1)$ couplages.
+Une preuve Groth16 compte trois \'el\'ements de groupe, soit 128 octets (points compress\'es) sur
+BN254~\cite{BarretoNaehrig2006}~; elle se v\'erifie en $O(1)$ couplages.
 \cmt{Preuve de taille constante quel que soit le circuit.}
 \cmt{La v\'erification se fait en temps constant via des couplages.}
 
@@ -219,34 +228,32 @@ reconstruction, qui vaut $2^{-\lambda}$ lorsque $\Conf = 1$
 \subsection{Transformation Johnson-Lindenstrauss (JL)}
 
 \noindent\textbf{Intuition.} La JL-transform projette $N$ points de
-$\mathbb{R}^n$ dans $\mathbb{R}^d$ ($d \ll n$) en pr\'eservant
+$\mathbb{R}^d$ dans $\mathbb{R}^k$ ($k \ll d$) en pr\'eservant
 approximativement toutes les distances par paires. Dans SOTP-Base,
-les contextes $c \in \mathbb{R}^n$ sont compress\'es en $\Phi c \in
-\mathbb{R}^d$, conservant la structure permettant l'extraction
-institutionnelle.
-\cmt{On compresse un espace de grande dimension en pr\'eservant les distances.}
-\cmt{Cela permet de r\'eduire la taille de la preuve sans perdre l'information utile.}
+les plongements de contextes $\mathsf{embed}(c) \in \mathbb{R}^d$ sont projet\'es en
+$\Phi\,\mathsf{embed}(c) \in \mathbb{R}^k$, conservant leur proximit\'e.
+\cmt{On projette un espace de grande dimension en pr\'eservant les distances.}
+\cmt{La repr\'esentation conserve la proximit\'e entre contextes~; elle ne raccourcit pas l'encodage exact.}
 
 \begin{definition}[Transformation~JL~\cite{JohnsonLindenstrauss84,DasguptaGupta03}]\label{def:ann_jl}
-Pour $0 < \varepsilon < 1$, $N > 0$, $S \subset \mathbb{R}^n$ avec
-$|S| = N$, il existe $\Phi\colon \mathbb{R}^n \to \mathbb{R}^d$ avec
-$d = O(\varepsilon^{-2} \log N)$ telle que, pour tout $x,y \in S$,
+Pour $0 < \varepsilon < 1$, $N > 0$, $S \subset \mathbb{R}^d$ avec
+$|S| = N$, il existe $\Phi\colon \mathbb{R}^d \to \mathbb{R}^k$ avec
+$k = O(\varepsilon^{-2} \log N)$ telle que, pour tout $x,y \in S$,
 \begin{equation}
 (1-\varepsilon)\|x-y\|^2 \leq \|\Phi x-\Phi y\|^2 \leq (1+\varepsilon)\|x-y\|^2
 \end{equation}
 \cmtFormule{Les distances sont pr\'eserv\'ees \`a $\varepsilon$ pr\`es.}
-\cmt{$d$ d\'epend logarithmiquement de $N$, pas lin\'eairement.}
+\cmt{$k$ d\'epend logarithmiquement de $N$, pas lin\'eairement.}
 \end{definition}
 
-\noindent\textbf{Lemme de dimension pour SOTP-Base.}
-La dimension minimale $d$ pour pr\'eserver $\Delta$ bits d'extraction
-avec tol\'erance $\varepsilon^2$ est donn\'ee par la condition
+\noindent\textbf{R\`egle de conception pour SOTP-Base.}
+La dimension de plongement retenue par conception est
 \begin{equation}
-d \geq \frac{4\Delta H(\mathcal{C})}{\varepsilon^2}
+d = \left\lceil \frac{4\Delta H(\mathcal{C})}{\varepsilon^2} \right\rceil
 \label{eq:ann_jl_dim}
 \end{equation}
-\cmtFormule{La dimension cro\^it lin\'eairement en $\Delta H(C)$.}
-\cmt{C'est le co\^ut de la compression pr\'eservant l'extraction.}
+\cmtFormule{La dimension de plongement cro\^it lin\'eairement en $\Delta H(C)$.}
+\cmt{C'est un choix de conception, distinct de la dimension d'arriv\'ee $k$ que fixe le lemme JL.}
 
 \subsection{Outils th\'eoriques fondamentaux}
 
@@ -423,9 +430,8 @@ $\Relrec = 2^{-\lambda}$.
 \begin{Preuve}[Remarque~\ref{rem:ann_bind_rel_link}]
 La d\'emonstration est celle de la Remarque~\ref{rem:jeu_bind_rel_link}. Un gain
 BIND-REL est exactement l'\'ev\'enement o\`u une preuve accept\'ee s'ouvre sur deux
-messages distincts, et un engagement parfaitement masquant a une loi
-ind\'ependante de $M$, ce qui laisse au meilleur d\'ecodeur une probabilit\'e de
-succ\`es $2^{-\lambda}$.
+messages distincts. Comme l'engagement est parfaitement masquant, sa loi ne d\'epend
+pas de $M$ et le meilleur d\'ecodeur r\'eussit avec probabilit\'e $2^{-\lambda}$.
 \end{Preuve}
 \end{sloppypar}
 
@@ -448,7 +454,7 @@ institutionnel \`a extraire le bon verdict depuis une preuve. L'\guillemotleft~a
 ici est l'interpr\`ete lui-m\^eme (juge, r\'egulateur), dont on mesure la probabilit\'e
 d'\emph{erreur}. Le verdict de r\'ef\'erence $v^*$ est celui que l'institution rendrait en
 pleine connaissance de cause (D\'efinition~\ref{def:interp_admissible})~;
-l'institution doit rendre une d\'ecision align\'ee sur le contexte l\'egal, au-del\`a
+l'institution doit rendre une d\'ecision align\'ee sur le contexte juridique, au-del\`a
 de la seule v\'erification de la preuve.
 \cmt{Contrairement aux autres jeux, l'adversaire est ici l'interpr\`ete, qui n'est pas malveillant.}
 \cmt{On mesure sa probabilit\'e de se tromper sur le verdict.}
@@ -520,7 +526,7 @@ implique une forte opposabilit\'e.
 \label{sec:gamebased_SOTP-Low}
 % ============================================================================
 \begin{sloppypar}
-SOTP-Low op\`ere dans le r\'egime \`a contexte rare ($H(\mathcal{C}) < H^*(\lambda)$).
+SOTP-Low sert sous le seuil $H^\sharp$ lorsque l'institution a besoin du contexte exact.
 Ses deux r\'eductions principales ciblent PRG (confidentialit\'e) et
 logarithme discret (fiabilit\'e).
 
@@ -659,11 +665,10 @@ que r\'esoudre le DLP sur les courbes elliptiques.
 \label{sec:gamebased_SOTP-base}
 % ============================================================================
 \begin{sloppypar}
-SOTP-Base op\`ere dans le r\'egime de transition
-($H^*(\lambda) \leq H(\mathcal{C}) \leq \lambda/\log_2\lambda$).
-Sa couche Clay applique une projection JL $\Phi\colon \mathbb{R}^n \to
-\mathbb{R}^d$ avec $d = \lceil 4\Delta H(\mathcal{C})/\varepsilon^2
-\rceil$.
+SOTP-Base sert sous le seuil $H^\sharp$ lorsque l'institution a besoin de la proximit\'e entre
+contextes. Sa couche Clay applique une projection JL $\Phi\colon \mathbb{R}^d \to
+\mathbb{R}^k$, o\`u $d = \lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$ est la dimension de
+plongement retenue par conception et $k$ la dimension d'arriv\'ee (Algorithme~\ref{alg:sotp_base}).
 
 %\begin{cmtEtape}{Objectif de cette section.}
 Cette section montre que l'erreur d'extraction de l'interpr\`ete est directement
@@ -672,17 +677,17 @@ d\'eforme trop les distances, l'extraction devient erron\'ee.
 %\end{cmtEtape}
 
 \noindent\textbf{Intuition.} Si $\Phi$ d\'eforme trop certaines distances,
-les contextes voisins deviennent indiscernables dans l'espace compress\'e,
+les contextes voisins deviennent indiscernables dans l'espace d'arriv\'ee,
 causant des erreurs d'extraction. La r\'eduction ci-dessous quantifie
 pr\'ecis\'ement cette relation.
-\cmt{La compression JL est le seul point de perte en SOTP-Base.}
+\cmt{La projection JL est le seul point de perte en SOTP-Base.}
 
 \begin{theorem}[Dimensionnement JL de SOTP-Base (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_base_opp}
 Soit $\mathcal{C} = \{c_1,\ldots,c_N\}$ l'ensemble des contextes plong\'es, $N =
-2^{H(\mathcal{C})}$ et $\delta, \varepsilon' \in (0,1)$. Si la dimension de
-projection v\'erifie
+2^{H(\mathcal{C})}$ et $\delta, \varepsilon' \in (0,1)$. Si la dimension d'arriv\'ee
+$k$ v\'erifie
 \begin{equation}
-d \;\geq\; \frac{8}{\delta^2}\,\ln\!\left(\frac{N^2}{\varepsilon'}\right)
+k \;\geq\; \frac{12}{\delta^2}\,\ln\!\left(\frac{N^2}{\varepsilon'}\right)
 = O\!\left(\delta^{-2}\bigl(H(\mathcal{C}) + \log(1/\varepsilon')\bigr)\right),
 \end{equation}
 alors, avec probabilit\'e au moins $1 - \varepsilon'$ sur le tirage de $\Phi$,
@@ -694,9 +699,9 @@ $(1 \pm \delta)$ pr\`es.
 \begin{Preuve}
 Par le lemme JL, pour chaque paire $(i,j)$,
 $\Pr\bigl[\,\bigl|\|\Phi c_i-\Phi c_j\|^2/\|c_i-c_j\|^2 - 1\bigr| > \delta\,\bigr]
-\leq 2e^{-d\delta^2/8}$~; une borne de l'union sur les $N^2/2$ paires donne une
-probabilit\'e d'\'echec au plus $N^2 e^{-d\delta^2/8}$, inf\'erieure \`a $\varepsilon'$
-d\`es que $d \geq (8/\delta^2)\ln(N^2/\varepsilon')$.
+\leq 2e^{-k\delta^2/12}$ pour $0 < \delta < 1$ (preuve du Lemme~\ref{lem:johnson_lindenstrauss}). Une borne de l'union sur les $N^2/2$ paires donne une
+probabilit\'e d'\'echec d'au plus $N^2 e^{-k\delta^2/12}$. Cette probabilit\'e est inf\'erieure \`a $\varepsilon'$
+d\`es que $k \geq (12/\delta^2)\ln(N^2/\varepsilon')$.
 \cmtFormule{Borne de l'union sur les paires de contextes.}
 La pr\'eservation des distances est une condition \emph{n\'ecessaire} pour qu'une
 fonction d'extraction fond\'ee sur les distances distingue les contextes~; elle
@@ -707,8 +712,8 @@ $\lceil 4\Delta H(\mathcal{C})/\varepsilon^2 \rceil$ du texte principal, qui est
 un choix de conception.
 \end{Preuve}
 
-\noindent\textbf{Interpr\'etation.} SOTP-Base choisit la dimension
-$d$ garantissant la pr\'eservation des distances avec la probabilit\'e voulue~;
+\noindent\textbf{Interpr\'etation.} SOTP-Base choisit la dimension d'arriv\'ee
+$k$ garantissant la pr\'eservation des distances avec la probabilit\'e voulue~;
 le lien avec l'extraction du verdict reste une hypoth\`ese de conception.
 
 \begin{corollary}[R\'eductions pour SOTP-Base]\label{cor:ann_sotp_base_reductions}
@@ -731,7 +736,7 @@ et~\ref{thm:ann_sotp_low_rel} calculent cette couche \`a partir de $c$, comme il
 calculaient la couche Clay de SOTP-Low. Leurs simulations et leurs analyses restent
 inchang\'ees, ce qui donne les deux bornes.
 \end{Preuve}
-\cmt{Le choix de $d$ est un compromis entre taille de preuve et qualit\'e d'extraction.}
+\cmt{Le choix de $k$ est un compromis entre taille de preuve et qualit\'e d'extraction.}
 \end{sloppypar}
 
 % ============================================================================
@@ -740,8 +745,7 @@ inchang\'ees, ce qui donne les deux bornes.
 \label{sec:gamebased_SOTP-High}
 % ============================================================================
 \begin{sloppypar}
-SOTP-High op\`ere dans le r\'egime \`a contexte riche
-($H(\mathcal{C}) > \lambda/\log_2\lambda$) et s'appuie sur Groth16
+SOTP-High sert au-del\`a du seuil $H^\sharp$ et s'appuie sur Groth16
 pour sa couche Gold. Sa couche Clay encode $h_c = \mathsf{Poseidon}(c)$.
 
 %\begin{cmtEtape}{Objectif de cette section.}
@@ -758,7 +762,8 @@ Pour la relation $\mathcal{R} = \{((h_c, c_m), (m, c, \rho)) : h_c = \mathsf{Pos
       de Groth16 et le masquage parfait de $c_m$ donnent $\Conf = 1$.
       \cmt{La preuve et l'engagement sont ind\'ependants de $m$ sachant $c$.}
 \item \textbf{Fiabilité de v\'erification.} La solidité de connaissance de
-      Groth16 et le caract\`ere liant de l'engagement de Pedersen sous DLOG donnent
+      Groth16, la r\'esistance aux collisions de $\mathsf{Poseidon}$ et le caract\`ere liant de
+      l'engagement de Pedersen sous DLOG donnent
       $\Relver \geq 1 - \negl(\lambda)$.
       \cmt{Un prouveur qui fait accepter conna\^it un t\'emoin valide.}
 \end{enumerate}
@@ -788,7 +793,7 @@ Le liant de $c_m$, sous DLOG, interdit en outre que deux t\'emoins extraits port
 des messages distincts. Il vient $\Relver \geq 1-\negl(\lambda)$.
 \cmtFormule{La solidit\'e connaissance implique l'absence de forge.}
 
-\textbf{Opposabilit\'e.} Aucune borne n'est d\'eriv\'ee ici, car $h_c$ et les
+\textbf{Opposabilit\'e.} Aucune borne n'est \'etablie ici, car $h_c$ et les
 m\'etadonn\'ees sont des fonctions du contexte public, donc $I(V;h_c|C) = 0$~; ce que
 la preuve apporte au verdict tient \`a l'assertion certifi\'ee
 $\mathsf{Conforme}(m,c) = 1$ (Remarque~\ref{rem:heuristique_sotp_high}).
@@ -805,7 +810,7 @@ la variante la plus protectrice pour les contextes \`a haute entropie.
 \begin{Preuve}[Remarque sur la ZK parfaite]
 La divulgation nulle parfaite signifie que, \`a CRS fix\'e, la loi des preuves
 honn\^etes et celle des preuves simul\'ees sans t\'emoin sont \'egales. Leur variation
-totale est nulle, et la preuve de la Remarque~\ref{rem:jeu_ind_conf_link} montre
+totale est nulle. La preuve de la Remarque~\ref{rem:jeu_ind_conf_link} montre alors
 qu'aucun distingueur, m\^eme non born\'e en calcul, n'obtient alors d'avantage. La
 garantie ne repose sur aucune hypoth\`ese calculatoire une fois le CRS fix\'e,
 alors que la confidentialit\'e de SOTP-Low repose sur la s\'ecurit\'e du PRG
@@ -897,7 +902,7 @@ SOTP-Base & $\Conf_{\mathrm{calc}}$ & IND-CONF & PRG
 SOTP-Base & $\Relver$ & BIND-REL & DLOG
   & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}}$ (Cor.~\ref{cor:ann_sotp_base_reductions}) \\
 SOTP-Base & -- & -- & Lemme JL
-  & dimensionnement de $d$ (Th.~\ref{thm:ann_sotp_base_opp}) \\
+  & dimensionnement de $k$ (Th.~\ref{thm:ann_sotp_base_opp}) \\
 \midrule
 SOTP-High & $\Conf$ & IND-CONF & Groth16 ZK parfaite
   & $\Conf = 1$ \\
@@ -1353,12 +1358,13 @@ et la relation avec Lean4.
 
 \item \textbf{Terme $1/q$ dans les bornes SOTP-Low.}
       Les \'equations~\eqref{eq:ann_sotp_low_conf}
-      et~\eqref{eq:ann_sotp_low_rel} contiennent $1/q$
-      (probabilit\'e de deviner l'exposant). Il est n\'egligeable en $\lambda$ au
+      et~\eqref{eq:ann_sotp_low_rel} contiennent $1/q$. Il est n\'egligeable en $\lambda$ au
       sens strict d\`es que l'ordre du groupe v\'erifie $\log_2 q \geq \lambda$, ce
       qui est le cas des param\`etres utilis\'es ($q \approx 2^{252}$, soit
       $1/q \approx 10^{-76}$). Le terme est conserv\'e pour que les bornes restent
-      exactes \`a $\lambda$ fix\'e.
+      exactes \`a $\lambda$ fix\'e. Dans la borne de confidentialit\'e, il correspond \`a
+      l'\'ev\'enement $h = 1$, o\`u l'engagement n'est plus masquant. Dans la borne de liaison,
+      il n'est ajout\'e que par sym\'etrie.
       \cmt{Le terme $1/q$ est n\'egligeable d\`es que $\log_2 q \geq \lambda$.}
 
 \item \textbf{Relation avec la formalisation Lean4 (Annexe~\ref{chap:annexe_lean4}).}

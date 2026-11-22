@@ -20,8 +20,9 @@ Ce chapitre r\'ealise les actes \textbf{S} et \textbf{C} du cycle
 canonique. La section~\ref{sec:sotp_base} construit le Semantic One-Time
 Pad, prototype qui montre que le paradigme Gold-Iron-Clay est
 instanciable. La section~\ref{sec:sotp_construction} g\'en\'eralise ce
-prototype en une famille de trois protocoles, chacun taill\'e pour un
-r\'egime d'entropie contextuelle, puis formule la conjecture de leur
+prototype en une famille de trois protocoles. Deux couvrent le r\'egime \`a contexte rare
+($H(\mathcal{C}) \leq H^\sharp$) selon le besoin fonctionnel de l'institution. Le troisi\`eme couvre le
+r\'egime \`a contexte riche. La section formule ensuite la conjecture de leur
 optimalit\'e universelle. La section~\ref{sec:lean4} soumet le noyau alg\'ebrique du
 trilemme \`a l'assistant de preuve Lean4. La
 section~\ref{sec:conclusion_constructions} dresse le bilan de ces deux
@@ -36,11 +37,11 @@ chapitre~\ref{chap:experimentation}.
 \paragraph{Saturer (\textbf{S}).}
 Une borne d'impossibilit\'e prend toute sa valeur op\'erationnelle
 lorsqu'on sait l'approcher. La m\'ethodologie vis\'ee est celle de la
-construction explicite, qui associe \`a chaque r\'egime d'entropie
-contextuelle un protocole de la famille SOTP (SOTP-Low, SOTP-Base, SOTP-High)
-propos\'e comme construction de r\'ef\'erence. Leurs propri\'et\'es
-cryptographiques sont prouv\'ees~; la saturation de la borne, qui porte sur
-la fiabilit\'e de reconstruction, reste une conjecture
+construction explicite. Le seuil $H^\sharp$ du th\'eor\`eme s\'epare deux r\'egimes. SOTP-Low et
+SOTP-Base servent de r\'ef\'erence en contexte rare, selon que l'institution a besoin du contexte exact
+ou d'une repr\'esentation qui pr\'eserve la proximit\'e entre contextes. SOTP-High sert de r\'ef\'erence
+en contexte riche. Leurs propri\'et\'es cryptographiques sont prouv\'ees~; leur optimalit\'e, qui porte sur
+l'opposabilit\'e des protocoles \`a fuite n\'egligeable, reste une conjecture
 (Remarque~\ref{rem:statut_sotp}).
 
 \paragraph{Certifier (\textbf{C}).}
@@ -60,15 +61,16 @@ sous des conventions d'interpr\'etation explicites. Ces m\'etriques ne sont
 pas compar\'ees \`a la borne du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel},
 qui porte sur $\Relrec$ et \'enonce que, pour tout protocole \`a confidentialit\'e
 statistique $1-\negl(\lambda)$, $\Relrec \leq (1+\kappa/\lambda)/\lambda$.
-L'existence de protocoles qui approchent la borne raffin\'ee~\eqref{eq:trilemme_cro_raffine}
-est formul\'ee comme conjecture (Conjecture~\ref{conj:optimalite_universelle}).
+Que les variantes SOTP atteignent, \`a une constante pr\`es, la meilleure opposabilit\'e
+permise aux protocoles \`a fuite n\'egligeable est formul\'e comme conjecture
+(Conjecture~\ref{conj:optimalite_universelle}).
 Les composantes de preuve qui ne d\'ependent que du contexte public $C$
 n'apportent aucune information conditionnelle, puisque
 $I(V; g(C) \mid C) = 0$ pour toute fonction $g$. La couche Clay est
 donc analys\'ee comme un \emph{format de pr\'esentation} qui facilite
 l'interpr\'etation (baisse du co\^ut cognitif) sans ajouter
-d'information au sens de $\Opp$. Les expressions num\'eriques de
-saturation (facteurs $0{,}75$, $0{,}5$, $0{,}45$) sont des heuristiques de
-conception, sans statut de minoration prouv\'ee.
+d'information au sens de $\Opp$. Les facteurs $0{,}75$, $0{,}5$ et $0{,}45$ des
+formulations initiales sont des heuristiques de conception, sans statut de minoration prouv\'ee.
+Ils n'interviennent pas dans l'\'enonc\'e de la conjecture.
 \end{remark}
 \end{sloppypar}

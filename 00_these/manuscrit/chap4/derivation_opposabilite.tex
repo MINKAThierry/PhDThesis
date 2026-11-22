@@ -21,7 +21,7 @@ syst\`eme par syst\`eme, \`a partir de la d\'efinition m\^eme de l'opposabilit\'
 
 Helios, les zk-SNARK de type Groth16 et ECDSA, trois syst\`emes cryptographiques
 r\'eellement d\'eploy\'es, servent de r\'ef\'erence. Ils ont \'et\'e
-retenus parce qu'ils occupent trois r\'egimes distincts du compromis
+retenus parce qu'ils occupent trois positions distinctes du compromis
 confidentialit\'e--opposabilit\'e et que leurs sp\'ecifications
 publi\'ees autorisent une analyse dimension par dimension. Les valeurs
 obtenues sont des estimations \emph{analytiques}, \'etablies \`a partir des
@@ -232,10 +232,9 @@ sp\'ecialis\'ee. Deux bits restent n\'eanmoins extractibles~:
       \'echoue les contr\^oles de couplage, ce qui fournit une information binaire accessible via
       un v\'erificateur certifi\'e sans comprendre la cryptographie sous-jacente.
 \item \textbf{Cat\'egorisation de conformit\'e} ($1$ bit). Il s'agit d'une classification
-      grossi\`ere lisible dans la structure de la preuve (\guillemotleft~satisfait toutes les contraintes~\guillemotright,
-      \guillemotleft~conformit\'e limite~\guillemotright,
-      \guillemotleft~violation claire~\guillemotright), accessible via les
-      m\'etadonn\'ees du circuit.
+      binaire port\'ee par les entr\'ees publiques et les m\'etadonn\'ees du circuit
+      (\guillemotleft~conformit\'e nette~\guillemotright{} ou \guillemotleft~conformit\'e limite~\guillemotright).
+      La preuve elle-m\^eme, \`a divulgation nulle, ne la r\'ev\`ele pas.
 \end{enumerate}
 \begin{equation}
 I(V;\Sigma|C) \approx 2 \text{ bits}.
@@ -263,10 +262,10 @@ risque syst\'emique et la priorit\'e d'application, dimensions inaccessibles
 \label{eq:produit_zksnark}
 \end{equation}
 Les valeurs $\Conf \approx 0{,}89$ et $\Relver \approx 0{,}96$ sont reprises de
-l'\'echelle op\'erationnelle de~\cite{MINKA2026CLO}. La premi\`ere traduit le caract\`ere \`a
-divulgation nulle calculatoire sous hypoth\`eses de couplage, la seconde les
+l'\'echelle op\'erationnelle de~\cite{MINKA2026CLO}. La premi\`ere ne remet pas en cause la divulgation
+nulle parfaite de Groth16 retenue au chapitre~\ref{chap:constructions}. La seconde traduit les
 exigences du trusted setup. Elles rel\`event de la calibration op\'erationnelle et ne
-d\'ecoulent pas de ces hypoth\`eses.
+d\'ecoulent d'aucune r\'eduction cryptographique.
 
 % -----------------------------------------------------------------------
 \subsection{ECDSA dans un litige contractuel avec infrastructure PKI}

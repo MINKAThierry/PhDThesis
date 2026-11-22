@@ -365,9 +365,12 @@ la confidentialit\'e quantique).
 \label{subsubsec:resultats_etape_S}
 
 Nous \'etablissons les propri\'et\'es cryptographiques des trois
-constructions, \`a savoir la confidentialit\'e calculatoire sous
-PRG~\cite{GoldreichKrawczyk99,BlumMicali84} et masquage parfait
-de l'engagement ainsi que la fiabilit\'e de v\'erification sous DLog~\cite{Pedersen91} et
+constructions. Pour SOTP-Low et SOTP-Base, la confidentialit\'e est statistique lorsque le masque est
+tronqu\'e, \`a distance au plus $2^{-\lambda-1}$ de l'uniforme
+(Remarque~\ref{rem:masque_troncature}). Elle est calculatoire
+sous PRG~\cite{GoldreichKrawczyk99,BlumMicali84} sinon. L'engagement est parfaitement masquant et
+SOTP-High est \`a divulgation nulle parfaite.
+La fiabilit\'e de v\'erification tient sous DLog~\cite{Pedersen91} et sous
 la solidit\'e de connaissance de Groth16~\cite{Groth16,FKL18} (Propositions du chapitre~\ref{chap:constructions}
 et annexe~\ref{chap:annexe_gamebased}). Les minorations d'opposabilit\'e et les
 fractions de la borne atteintes (\og $75\,\%$, $50\,\%$, $45\,\%$\fg{} dans la
@@ -377,8 +380,9 @@ garantit pas (Remarques~\ref{rem:facteur_limitant_low},
 \label{eq:saturation_resultat}
 
 L'optimalit\'e universelle de la famille SOTP est formul\'ee comme conjecture
-(Conjecture~\ref{conj:optimalite_universelle}). L'argument initial reposait sur
-ces heuristiques et ne distinguait pas fiabilit\'e de reconstruction et fiabilit\'e
+(Conjecture~\ref{conj:optimalite_universelle}). Elle compare l'opposabilit\'e d'une variante \`a celle de
+tout protocole du m\^eme r\'egime \`a fuite n\'egligeable, \`a une constante $C_R \geq 1$ pr\`es. L'argument initial reposait sur
+ces heuristiques sans distinguer fiabilit\'e de reconstruction et fiabilit\'e
 de v\'erification (Remarque~\ref{rem:statut_optimalite}).
 \label{eq:optimalite_resultat}
 
@@ -403,8 +407,8 @@ Trilemme, organis\'e en neuf sections, suivies d'un bloc de v\'erification des a
           coh\'erence et de port\'ee
     \item La classification par r\'egimes institutionnels
     \item Les extensions (section~\ref{subsec:lean4_extensions}), \`a savoir le verdict
-          d\'eterministe ($\Opp = 1$), la forme raffin\'ee de la borne et sa
-          co\"{\i}ncidence avec Fano lorsque $\Delta \geq \gamma$
+          d\'eterministe ($\Opp = 1$), la forme raffin\'ee de la borne, sa
+          co\"{\i}ncidence avec Fano lorsque $\Delta \geq \gamma$ et le seuil $H^\sharp$ certifi\'e dans les deux sens
 \end{itemize}
 
 La formalisation \'etablit la borne
@@ -487,7 +491,7 @@ Trilemme PQ (Sec.~\ref{sec:cro_pq})
   & Sous Hypoth\`eses~\ref{ass:extraction_quantique}--\ref{ass:regime_quantique} 
   & 1 & Preuve papier & Non \\
 Propri\'et\'es SOTP ($\Conf$, $\Relver$) 
-  & Prouv\'ees sous PRG et DLog (Groth16 pour High) 
+  & $\Conf$ statistique (masque tronqu\'e) ou sous PRG~; $\Relver$ sous DLog (Groth16 pour High) 
   & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Partielle (SOTP-Low, situation r\'eduite) \\
 Minorations d'opposabilit\'e SOTP, optimalit\'e 
   & Heuristiques / conjecture 

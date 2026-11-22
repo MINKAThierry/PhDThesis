@@ -77,8 +77,9 @@ de bits classiques, dont les signatures ML-DSA et SLH-DSA. Les contributions C3.
 y r\'epondent. L'objectif est atteint, sous des hypoth\`eses quantiques explicites.
 
 \textbf{Obj~\ref{obj:obj4_saturation}. Optimalit\'e.} Peut-on approcher ces
-bornes~? La famille SOTP propose une construction par r\'egime, SOTP-Low,
-SOTP-Base (projection Johnson-Lindenstrauss) et SOTP-High (Groth16). Leur
+bornes~? La famille SOTP propose trois constructions. SOTP-Low (encodage d\'eterministe) et
+SOTP-Base (projection Johnson-Lindenstrauss) couvrent le r\'egime \`a contexte rare. SOTP-High (Groth16)
+couvre le r\'egime \`a contexte riche. Leur
 confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees sous
 des hypoth\`eses standard~; leur opposabilit\'e est guid\'ee par une heuristique
 de conception, tandis que leur optimalit\'e demeure une conjecture
@@ -149,7 +150,7 @@ Gold-Iron-Clay les confie \`a trois couches distinctes (C4.1), de sorte que les 
 SOTP obtiennent une confidentialit\'e et une fiabilit\'e de v\'erification prouv\'ees (C4.2 et
 C4.3). Cette conciliation a un prix. La fiabilit\'e de reconstruction tombe \`a l'ordre de
 $2^{-\lambda}$ et l'opposabilit\'e que la preuve peut porter reste plafonn\'ee par
-$\Delta/\gamma$. Une loi explicite atteint ce plafond (C2.5). Qu'une construction SOTP l'atteigne reste une conjecture (C4.4).
+$\Delta/\gamma$. Une loi explicite atteint ce plafond (C2.5). Qu'une construction SOTP l'approche \`a un facteur constant pr\`es reste une conjecture (C4.4).
 
 \textbf{Q2. Limites} (Obj~\ref{obj:obj2_impossibilite}, Obj~\ref{obj:obj3_postquantique},
 Obj~\ref{obj:obj5_verification} et Obj~\ref{obj:obj6_experimentation}). Oui sur le plan
@@ -216,8 +217,8 @@ La finesse de la borne reste une question ouverte.
 aux adversaires quantiques avec param\`etres $\Delta_q$ et $\eta_q$.
 Calibration illustrative sur ML-DSA et SLH-DSA, pour lesquelles $\eta_q = 0$.
 
-\textbf{C4. Famille SOTP}. Trois constructions, une par r\'egime~;
-confidentialit\'e et fiabilit\'e de v\'erification prouv\'ees sous PRG, DLog et
+\textbf{C4. Famille SOTP}. Trois constructions pour les deux r\'egimes du th\'eor\`eme~;
+confidentialit\'e statistique avec masque tronqu\'e~; fiabilit\'e de v\'erification prouv\'ee sous DLog et
 la solidit\'e de connaissance de Groth16~; opposabilit\'e guid\'ee par une heuristique de conception~; optimalit\'e
 conjectur\'ee. Introduction du paradigme Gold-Iron-Clay.
 
@@ -237,8 +238,8 @@ op\'erationnel~(chapitre~\ref{chap:experimentation}).
 \subsection*{Apports transversaux}
 
 \textbf{Apport constructif (de la borne au guide).} La famille SOTP
-transforme le Trilemme CRO en guide de conception, sans \'etablir que la
-borne est atteinte, question qui fait l'objet de la
+transforme le Trilemme CRO en guide de conception. Elle n'\'etablit pas que ses variantes offrent
+la meilleure opposabilit\'e de leur r\'egime \`a un facteur constant pr\`es, question qui fait l'objet de la
 Conjecture~\ref{conj:optimalite_universelle}. Comme CAP trouve son sens dans
 les syst\`emes distribu\'es r\'eels et FLP dans les protocoles partiels, le
 Trilemme CRO trouve un prolongement dans les trois variantes
@@ -317,9 +318,9 @@ La port\'ee de cette th\`ese est quadruple.
 fondamentales conditionnelles \`a des param\`etres institutionnels
 mesurables.
 
-\textbf{Constructive.} La famille SOTP (C4) propose, pour chaque r\'egime, une
-construction aux propri\'et\'es cryptographiques prouv\'ees~; qu'elle approche
-les bornes \`a facteur constant est conjectur\'e.
+\textbf{Constructive.} La famille SOTP (C4) propose, pour chaque r\'egime, au moins une
+construction aux propri\'et\'es cryptographiques prouv\'ees. Que son opposabilit\'e soit
+la meilleure du r\'egime \`a un facteur constant pr\`es est conjectur\'e.
 
 \textbf{Certifi\'ee.} La formalisation Lean4 (C5) certifie
 m\'ecaniquement le noyau alg\'ebrique du Trilemme CRO classique.
@@ -343,8 +344,8 @@ encore valid\'ees par des \'etudes exp\'erimentales~; les valeurs retenues,
 de quelques dizaines de bits, sont une calibration illustrative rendue
 plausible par la litt\'erature sur la rationalit\'e born\'ee. L'opposabilit\'e
 des constructions SOTP est heuristique et leur optimalit\'e conjectur\'ee. La formalisation Lean4 couvre le noyau
-alg\'ebrique~; les constructions SOTP et l'extension post-quantique restent
-hors de son p\'erim\`etre. Les constructions SOTP disposent d'impl\'ementations
+alg\'ebrique~; l'extension post-quantique et les constructions SOTP restent
+hors de son p\'erim\`etre, \`a l'exception des r\'eductions de SOTP-Low en situation r\'eduite. Les constructions SOTP disposent d'impl\'ementations
 de r\'ef\'erence dans le d\'ep\^ot compagnon, sans d\'eploiement en conditions
 r\'eelles. Une
 analyse compl\`ete des limitations est pr\'esent\'ee \`a la

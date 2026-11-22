@@ -101,9 +101,9 @@ lois de probabilit\'e finies (sous-section~\ref{subsec:lean4_concret})~; seule l
 d\'emonstration pour des lois quelconques, qui demanderait la th\'eorie de la mesure de
 Mathlib, reste un travail futur.
 
-\textbf{Les constructions SOTP ne sont pas encore couvertes par Lean4.}
-La formalisation couvre le noyau alg\'ebrique du Trilemme, mais pas les
-r\'eductions cryptographiques des constructions SOTP. Ces extensions
+\textbf{Les constructions SOTP ne sont couvertes que partiellement par Lean4.}
+La formalisation couvre le noyau alg\'ebrique du Trilemme. Les r\'eductions de SOTP-Low sont m\'ecanis\'ees
+en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}). Celles de SOTP-Base et de SOTP-High
 constituent une direction de recherche future.
 
 \textbf{L'extension quantique du Trilemme CRO n'est pas couverte.}
@@ -839,6 +839,11 @@ theorem refined_bound_is_fano_when_delta_ge_gamma {lam : ℕ} (P : ProtocolInsta
   apply min_eq_left
   rw [le_div_iff₀ hγ0]; linarith
 \end{leancode}
+La version~3.4 certifie la r\'eciproque. Le th\'eor\`eme \texttt{factor\_lt\_one\_iff} \'etablit que le facteur
+institutionnel est strictement inf\'erieur \`a $1$ si et seulement si $\Delta < \gamma - \kappa/\lambda$.
+Le th\'eor\`eme \texttt{seuil\_Hsharp} r\'e\'ecrit cette condition sous la forme $H(\mathcal{C}) > H^\sharp$
+(annexe~\ref{chap:annexe_lean4}). Le seuil $H^\sharp$ est donc certifi\'e dans les deux sens. Il s\'epare
+les variantes SOTP-Low et SOTP-Base de la variante SOTP-High (section~\ref{sec:sotp_construction}).
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
@@ -1082,8 +1087,8 @@ disciplines constituantes ne contr\^ole l'int\'egralit\'e.
 
 La formalisation contient aussi une classification indicative des
 capacit\'es institutionnelles par le rapport $\Delta/\lambda$. Elle est distincte
-des r\'egimes du th\'eor\`eme (seuil $H^\sharp$, Remarque~\ref{rem:activite_delta})
-et des r\'egimes de construction SOTP (section~\ref{sec:sotp_construction})~; elle
+des r\'egimes du th\'eor\`eme (seuil $H^\sharp$, Remarque~\ref{rem:activite_delta}),
+qui sont aussi ceux des constructions SOTP (section~\ref{sec:sotp_construction})~; elle
 sert seulement \`a illustrer l'usage de d\'efinitions calculables dans Lean. Les
 param\`etres des familles canoniques cod\'ees en Lean sont ceux de la
 calibration illustrative, \`a l'exception de $H(C)$, qui n'intervient pas dans

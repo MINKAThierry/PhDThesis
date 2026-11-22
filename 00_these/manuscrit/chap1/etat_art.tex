@@ -421,10 +421,9 @@ est le message secret et $r$ un al\'ea. Le sch\'ema est parfaitement occultant a
 de la th\'eorie de l'information, puisque pour tout $m' \neq m$ il existe $r'$ tel que
 $\mathsf{Com}(m'; r') = \mathsf{Com}(m; r)$. Sa propri\'et\'e de liaison n'est en revanche
 que calculatoire, car produire $m' \neq m$ de m\^eme image revient \`a r\'esoudre le probl\`eme
-du logarithme discret~\cite{Schnorr91}. La famille SOTP confie \`a ces engagements un double r\^ole.
-Ils encodent le contexte institutionnel $C$ de mani\`ere v\'erifiable, au b\'en\'efice de $\Rel$,
-tout en pr\'eservant la confidentialit\'e des donn\'ees sous-jacentes, au b\'en\'efice
-de $\Conf$~\cite{ChaumPedersen92}.
+du logarithme discret~\cite{Schnorr91}. Dans la famille SOTP, ces engagements forment la couche Iron.
+Ils lient la preuve \`a la graine du masque (SOTP-Low, SOTP-Base) ou au message (SOTP-High), au
+b\'en\'efice de $\Relver$. Leur caract\`ere occultant pr\'eserve $\Conf$~\cite{ChaumPedersen92}.
 
 \subsubsection{Arguments succincts zero-knowledge (zk-SNARKs)}
 \label{subsubsec:zksnarks}
@@ -433,12 +432,13 @@ Pour un circuit $\mathcal{C}$, une entr\'ee publique $x$ et un t\'emoin secret $
 un zk-SNARK~\cite{Groth16,BCTV14,BenSasson2019} atteste que $\mathcal{C}(x, w)
 = 1$ au moyen d'une preuve $\pi$ de taille constante ($\approx 128$--$256$ octets).
 Le sch\'ema se d\'efinit par trois propri\'et\'es. La compl\'etude garantit qu'un prouveur
-honn\^ete convainc toujours le v\'erificateur. La solidit\'e (soundness) tient sous les
-hypoth\`eses q-SDH et q-PKE~\cite{Gennaro13,Parno13}. Enfin, avec le
+honn\^ete convainc toujours le v\'erificateur. La solidit\'e (soundness) des premiers sch\'emas tient sous des
+hypoth\`eses de type q-SDH et q-PKE~\cite{Gennaro13,Parno13}. Celle de Groth16 est \'etablie dans le
+mod\`ele du groupe g\'en\'erique ou alg\'ebrique~\cite{Groth16,FKL18}. Enfin, avec le
 zero-knowledge parfait, le v\'erificateur
 n'apprend rien sur $w$ au-del\`a de la validit\'e de l'assertion~\cite{GMR85}.
-SOTP-High recourt \`a ces preuves pour maximiser $\Opp$ dans le r\'egime \`a haute
-entropie contextuelle ($H(\mathcal{C}) > \lambda/\log\lambda$)~\cite{PLONK20,Wahby18,Campanelli2019}.
+SOTP-High recourt \`a ces preuves lorsque l'entropie contextuelle d\'epasse la capacit\'e
+de l'institution ($H(\mathcal{C}) > H^\sharp$)~\cite{PLONK20,Wahby18,Campanelli2019}.
 
 \subsubsection{Syst\`emes de preuves avanc\'es}
 \label{subsubsec:systemes_preuves}
@@ -458,9 +458,9 @@ La transformation de Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,Dasgupta
 garantit qu'une famille de $n$ vecteurs de $\mathbb{R}^d$
 peut \^etre projet\'ee dans $\mathbb{R}^k$ avec $k = O(\log n / \epsilon^2)$
 en pr\'eservant toutes les distances euclidiennes \`a un facteur $1 \pm \epsilon$
-pr\`es~\cite{Vempala05,Indyk98,Indyk06}. Dans SOTP-Base (r\'egime de transition), cette transformation compresse
-l'espace contextuel, r\'eduisant la complexit\'e des engagements sans
-sacrifier les distances s\'emantiques~\cite{DasguptaKumar14,Larsen17,Gionis99}.
+pr\`es~\cite{Vempala05,Indyk98,Indyk06}. Dans SOTP-Base, qui sert lorsque l'institution compare des contextes, cette transformation
+projette l'espace contextuel en pr\'eservant les distances
+s\'emantiques~\cite{DasguptaKumar14,Larsen17,Gionis99}.
 
 \subsubsection{Fonctions de hachage et filtres de Bloom}
 \label{subsubsec:hachage}

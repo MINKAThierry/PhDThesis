@@ -482,14 +482,14 @@ l'opacit\'e cryptographique ne se compense que partiellement par
 l'expertise pr\'ealable. Ce plafond est compatible avec le goulot
 contextuel, qui majore $I(V;\Sigma|C)$ par $H(V|C) = 2$~bits.
 
-\noindent\textbf{Observation 3. H\'et\'erog\'en\'eit\'e des r\'egimes.}
-Les trois syst\`emes appartiennent \`a des r\'egimes fondamentalement
+\noindent\textbf{Observation 3. H\'et\'erog\'en\'eit\'e des profils d'extraction.}
+Les trois syst\`emes pr\'esentent des profils fondamentalement
 diff\'erents selon le rapport $I(V;\Sigma|C)/H(V|C)$ avant l'apport de
-$\Delta$~:
+$\Delta$. Ces profils sont distincts des deux r\'egimes du th\'eor\`eme, que s\'epare le seuil $H^\sharp$.
 \begin{itemize}
-\item ECDSA rel\`eve d'un r\'egime riche en information ($I \approx H(V|C)$ m\^eme sans $\Delta$)~;
-\item Helios rel\`eve d'un r\'egime pauvre en information ($I \approx H(V|C)/2$ m\^eme avec $\Delta$ maximal)~;
-\item zk-SNARK rel\`eve d'un r\'egime interm\'ediaire, sensible \`a $\Delta$ mais born\'e.
+\item ECDSA pr\'esente une extraction \'elev\'ee ($I \approx H(V|C)$ m\^eme sans $\Delta$)~;
+\item Helios pr\'esente une extraction faible ($I \approx H(V|C)/2$ m\^eme avec $\Delta$ maximal)~;
+\item zk-SNARK pr\'esente une extraction moyenne, sensible \`a $\Delta$ mais born\'ee.
 \end{itemize}
 \end{sloppypar}
 
@@ -512,19 +512,17 @@ Les trois variantes SOTP sont compar\'ees au tableau~\ref{tab:comparaison_sotp_c
 et l'Algorithme~\ref{alg:selection_variante_sotp} en formalise le choix
 (chapitre~\ref{chap:constructions}).
 
-L'algorithme part des deux seuils qui d\'elimitent les r\'egimes d'entropie
-contextuelle, $H^*(\lambda) = \sqrt{\lambda}$ et $H^{**}(\lambda) =
-\lambda/\log_2\lambda$. Il traite d'abord le cas bloquant. Si le contexte
+L'algorithme part du seuil $H^\sharp = (\Delta + 1 + \kappa/\lambda)/\alpha$ du th\'eor\`eme,
+certifi\'e en Lean dans les deux sens. Il traite d'abord le cas bloquant. Si le contexte
 est assez riche pour exiger SOTP-High mais que l'institution ne dispose pas
 d'un trusted setup fiable, aucune recommandation optimale n'existe. La
 proc\'edure signale l'impasse sans la masquer~; elle rabat alors
-sur SOTP-Base, au prix d'une perte d'opposabilit\'e explicite. Dans les
-autres cas, elle compare $H(\mathcal{C})$ aux deux seuils et retourne la
-variante du r\'egime correspondant, soit SOTP-Low en contexte rare, SOTP-Base
-en r\'egime de transition (o\`u elle dimensionne au passage la projection
-al\'eatoire) ou SOTP-High en contexte riche, o\`u le circuit de preuve doit
-\^etre compil\'e. Le co\^ut de la d\'ecision se r\'eduit \`a deux
-comparaisons~; l'essentiel du travail reste l'estimation pr\'ealable de
+sur SOTP-Low ou SOTP-Base selon le besoin, au prix d'une perte d'opposabilit\'e explicite. Dans les
+autres cas, elle retourne SOTP-High au-del\`a du seuil, o\`u le circuit de preuve doit
+\^etre compil\'e. Sous le seuil, elle retourne SOTP-Low si l'institution a besoin du
+contexte exact et SOTP-Base si elle compare des contextes (elle dimensionne alors au
+passage la projection al\'eatoire). Le co\^ut de la d\'ecision se r\'eduit \`a une
+comparaison et \`a une question d'usage~; l'essentiel du travail reste l'estimation pr\'ealable de
 $H(\mathcal{C})$ et de $\Delta$.
 
 \subsubsection{M\'ethodologie de conception en six phases}
@@ -550,7 +548,7 @@ F$\to$B$\to$E$\to$S$\to$C$\to$X}
   & Triangulation cognitive ($\Delta$)~\cite{Miller56,Simon82,Ericsson95,Chi2006} \\
 \textbf{E} & \'Etendre au r\'egime~PQ
   & \'Evaluer $\Delta_q$, $\eta_q$~(section~\ref{sec:cro_pq}) \\
-\textbf{S} & Saturer~: retenir la variante SOTP du r\'egime
+\textbf{S} & Saturer~: retenir la variante SOTP du r\'egime et du besoin fonctionnel
   & Variante SOTP (Low/Base/High), heuristique~(section~\ref{sec:sotp_construction}) \\
 \textbf{C} & Certifier la faisabilit\'e
   & Exigences comparées \`a la borne raffin\'ee~\cite{MINKA2026CLO,GDPR2016,eIDAS14} \\
@@ -574,6 +572,10 @@ car le majorant d\'ecro\^it avec $\lambda$.
 
 \subsubsection{Strat\'egie de conception par r\'egime}
 \label{subsubsec:strategie_par_regime}
+
+Les trois classes qui suivent ordonnent les institutions par le rapport $\Delta/\lambda$. Elles sont
+indicatives. Elles ne remplacent pas les deux r\'egimes du th\'eor\`eme, que s\'epare le seuil $H^\sharp$
+et qui gouvernent le choix de la variante SOTP.
 
 \begin{definition}[R\'egime de basse capacit\'e]\label{def:regime_low}
 Une institution op\`ere en r\'egime de \textbf{basse capacit\'e} si
@@ -803,10 +805,10 @@ sur $(C, M, \Sigma, V)$ (sous-section~\ref{subsec:lean4_concret}). Une formalisa
 pour des lois quelconques n\'ecessiterait les biblioth\`eques de th\'eorie de la
 mesure de Mathlib.
 
-\textbf{Les constructions SOTP ne sont pas encore couvertes par Lean4.}
-La formalisation couvre le noyau alg\'ebrique du Trilemme, mais pas les
-r\'eductions cryptographiques des constructions SOTP ni l'extension
-post-quantique. Ces extensions constituent une direction de recherche
+\textbf{Les constructions SOTP ne sont couvertes que partiellement par Lean4.}
+La formalisation couvre le noyau alg\'ebrique du Trilemme et les r\'eductions de SOTP-Low en
+situation r\'eduite (section~\ref{sec:gamebased_mecanisation}). Les r\'eductions de SOTP-Base et de
+SOTP-High ainsi que l'extension post-quantique constituent une direction de recherche
 future.
 
 \subsubsection{Limitations m\'ethodologiques (L1--L6)}
@@ -890,14 +892,15 @@ $\beta$-r\'egularit\'e.} Le Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}
 requiert $\beta = O(1)$~; des constructions pathologiques pourraient la
 violer. \textbf{Port\'ee du t\'emoin.} Le t\'emoin de coh\'erence Lean4
 atteint la borne dans le mod\`ele abstrait (forme rel\^ach\'ee de Fano), mais il
-n'est pas r\'ealisable par un protocole, de sorte que la question d'un protocole concret
-qui approche la borne reste ouverte.
+n'est pas r\'ealisable par un protocole. La Remarque~\ref{rem:temoin_realisable} fournit une loi explicite
+qui atteint le plafond d'opposabilit\'e $\Delta/\gamma$ \`a fuite nulle. Qu'un protocole d\'eployable en
+fasse autant \`a un facteur constant pr\`es reste ouvert (Conjecture~\ref{conj:optimalite_universelle}).
 \end{sloppypar}
 
 \begin{boiteArbitre}
 L'arbitre dresse l'inventaire de ce qui manque. Certains axiomes sont admis sans
-\^etre d\'eriv\'es, tandis que la couverture Lean4 n'inclut encore ni SOTP ni
-l'extension post-quantique. Six limitations m\'ethodologiques sont
+\^etre d\'eriv\'es, tandis que la couverture Lean4 ne retient de SOTP que les r\'eductions de SOTP-Low
+en situation r\'eduite et laisse de c\^ot\'e l'extension post-quantique. Six limitations m\'ethodologiques sont
 nomm\'ees sans d\'etour, parmi lesquelles les estimations analytiques, l'entropie non
 standardis\'ee, le r\'ealisme calculatoire, le bruit quantique simplifi\'e
 et la restriction aux preuves non interactives. Quatre limitations conceptuelles touchent
@@ -921,8 +924,8 @@ constructions qui en montrent la port\'ee. CAP trouve son sens dans les
 syst\`emes distribu\'es r\'eels (Spanner, CockroachDB)~\cite{Brewer00,GilbertLynch02}.
 FLP trouve le sien dans les protocoles partiels (Paxos,
 Raft)~\cite{FLP85}. Le Trilemme CRO se prolonge dans la
-\textbf{famille SOTP}, qui r\'eunit trois constructions cryptographiques, une par r\'egime
-d'entropie contextuelle, dont les propri\'et\'es de confidentialit\'e et de
+\textbf{famille SOTP}, qui r\'eunit trois constructions cryptographiques r\'eparties sur les deux
+r\'egimes du th\'eor\`eme, dont les propri\'et\'es de confidentialit\'e et de
 fiabilit\'e de v\'erification sont prouv\'ees mais dont l'opposabilit\'e est
 guid\'ee par une heuristique de conception.
 
@@ -931,13 +934,13 @@ guid\'ee par une heuristique de conception.
 \textbf{La borne devient utilisable pour la conception.} Un ing\'enieur qui
 conna\^it la forme raffin\'ee de la borne sait quelles exigences sont
 incompatibles~; avec SOTP, il dispose aussi d'un point de d\'epart par
-r\'egime (contexte rare $\to$ SOTP-Low, transition $\to$ SOTP-Base, contexte
-riche $\to$ SOTP-High).
+cas (contexte exact sous $H^\sharp$ $\to$ SOTP-Low, proximit\'e sous $H^\sharp$ $\to$ SOTP-Base,
+au-del\`a de $H^\sharp$ $\to$ SOTP-High).
 
-\textbf{La finesse de la borne reste ouverte.} Les fractions de la borne
-atteintes ($0{,}45$--$0{,}75$) rel\`event d'heuristiques et le t\'emoin de
-coh\'erence Lean n'est pas r\'ealisable. Qu'un protocole concret approche la borne \`a facteur
-constant est une question ouverte (Conjecture~\ref{conj:optimalite_universelle}).
+\textbf{L'optimalit\'e des constructions reste ouverte.} Les facteurs $0{,}45$--$0{,}75$ rel\`event
+d'heuristiques. Une loi explicite atteint l'opposabilit\'e $\Delta/\gamma$
+(Remarque~\ref{rem:temoin_realisable}). Qu'une construction SOTP l'atteigne \`a
+facteur constant est une question ouverte (Conjecture~\ref{conj:optimalite_universelle}).
 
 \textbf{La borne devient un guide.} Elle dit
 quel compromis est exclu~; les constructions indiquent comment s'en
@@ -945,22 +948,21 @@ approcher, sans garantie d'optimalit\'e.
 
 \subsubsection{Port\'ee de la contribution SOTP}
 
-\textbf{SOTP-Low} couvre le r\'egime des contextes rares
-($H(C) < \sqrt{\lambda}$). Elle utilise un encodage d\'eterministe du contexte,
-avec confidentialit\'e calculatoire sous PRG~\cite{BlumMicali84} et fiabilit\'e
-de v\'erification sous DLog~\cite{DiffieHellman76}.
+\textbf{SOTP-Low} sert sous le seuil $H^\sharp$ lorsque l'institution a besoin du contexte
+exact. Elle utilise un encodage d\'eterministe du contexte. Sa confidentialit\'e est
+statistique par troncature ou calculatoire sous PRG~\cite{BlumMicali84}. Sa fiabilit\'e
+de v\'erification tient sous DLog~\cite{DiffieHellman76}.
 
-\textbf{SOTP-Base} couvre le r\'egime de transition. Elle utilise la projection
+\textbf{SOTP-Base} sert sous le m\^eme seuil lorsque l'institution compare des contextes. Elle utilise la projection
 Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03}, dimensionn\'ee
 pour pr\'eserver les distances entre contextes \`a $\varepsilon$ pr\`es.
 
-\textbf{SOTP-High} couvre le r\'egime des contextes riches
-($H(C) > \lambda/\log\lambda$). Elle utilise des zk-SNARKs
+\textbf{SOTP-High} sert au-del\`a du seuil ($H(C) > H^\sharp$). Elle utilise des zk-SNARKs
 Groth16~\cite{Groth16,BCTV14} et un hachage Poseidon~\cite{Poseidon2019} pour
 engager un contexte arbitrairement riche dans un condens\'e de 256 bits.
 
 L'optimalit\'e universelle de la famille, qui interdirait toute am\'elioration
-super-constante du produit par rapport \`a la meilleure variante, est une
+super-constante de l'opposabilit\'e par rapport \`a la meilleure variante, est une
 conjecture (Conjecture~\ref{conj:optimalite_universelle}).
 
 \begin{boiteArbitre}

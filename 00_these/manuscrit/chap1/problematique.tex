@@ -440,29 +440,29 @@ $\Delta_q$ dans quelques dizaines de bits~\cite{Mayers1997,Lo1997,Unruh2016,Chat
 \end{objectif}
 
 \paragraph{Motivations.}
-Tant qu'une borne sup\'erieure n'est pas montr\'ee serr\'ee, elle garde le statut d'une
-conjecture de m\'ethode. Sa saturation par des constructions explicites permet de faire du Trilemme~CRO
-une caract\'erisation fondamentale des limites de la cryptographie
-institutionnelle~\cite{Gennaro13,Parno13,BCTV14}.
+Une borne sup\'erieure ne guide la conception que si des constructions explicites s'en approchent.
+La Remarque~\ref{rem:temoin_realisable} montre qu'une loi explicite atteint le plafond d'opposabilit\'e
+$\Delta/\gamma$. Il reste \`a savoir si un protocole d\'eployable fait aussi bien \`a un facteur constant pr\`es.
+Une r\'eponse positive ferait du Trilemme~CRO un guide complet de conception~\cite{Gennaro13,Parno13,BCTV14}.
 
 \paragraph{Production~C4, la famille SOTP.}
-Nous proposons trois constructions de r\'ef\'erence, chacune adapt\'ee \`a un
-r\'egime de richesse contextuelle. Sous des conventions explicites, elles r\'ealisent
+Nous proposons trois constructions de r\'ef\'erence, choisies selon le seuil $H^\sharp$
+du th\'eor\`eme et selon l'usage que l'institution fait du contexte. Sous des conventions explicites, elles r\'ealisent
 des compromis \'elev\'es sur l'\'echelle op\'erationnelle CLO
-($\Conf$, $\Relver$, $\Opp$). SOTP-Low, destin\'ee aux contextes rares, repose sur un
-encodage d\'eterministe du contexte. SOTP-Base exploite la compression
-Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03,Vempala05},
-tandis que SOTP-High, pr\'evue pour les contextes riches, s'appuie sur les zk-SNARKs de
+($\Conf$, $\Relver$, $\Opp$). Sous ce seuil, SOTP-Low transmet le contexte exact par un encodage d\'eterministe et
+SOTP-Base sa proximit\'e avec d'autres contextes par la projection
+Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03,Vempala05}.
+Au-del\`a, SOTP-High s'appuie sur les zk-SNARKs de
 Groth16~\cite{Groth16,BenSasson2019,PLONK20}. Ces trois constructions instancient le paradigme Gold-Iron-Clay, qui confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte \`a trois couches distinctes. Leurs propri\'et\'es
 cryptographiques sont d\'emontr\'ees sous les hypoth\`eses PRG et DLog et la solidit\'e de connaissance de Groth16.
-L'existence de constructions approchant la borne du Trilemme, laquelle porte sur la fiabilit\'e
-de reconstruction, demeure en revanche formul\'ee comme conjecture~\cite{Campanelli2019,Wahby18}.
+Qu'elles atteignent, \`a une constante pr\`es, la meilleure opposabilit\'e permise aux protocoles
+\`a fuite n\'egligeable demeure en revanche une conjecture~\cite{Campanelli2019,Wahby18}.
 
 \noindent\textit{Contributions.}
 \begin{itemize}
   \item[\textbf{C4.1}] Le paradigme Gold-Iron-Clay, principe de conception des protocoles institutionnels qui confie la confidentialit\'e \`a la couche Gold, la fiabilit\'e de v\'erification \`a la couche Iron et la pr\'esentation du contexte institutionnel \`a la couche Clay (sous-section~\ref{subsec:gold_iron_clay}).
-  \item[\textbf{C4.2}] Les trois variantes SOTP-Low, SOTP-Base et SOTP-High, qui instancient ce paradigme selon l'entropie du contexte (section~\ref{sec:sotp_construction}).
-  \item[\textbf{C4.3}] Les r\'eductions game-based aux hypoth\`eses PRG et DLOG, au lemme JL et \`a la solidit\'e de connaissance de Groth16 (Tableau~\ref{tab:ann_g_reductions}).
+  \item[\textbf{C4.2}] Les trois variantes SOTP-Low, SOTP-Base et SOTP-High, qui instancient ce paradigme selon le r\'egime du contexte (seuil $H^\sharp$) et le besoin fonctionnel de l'institution (section~\ref{sec:sotp_construction}).
+  \item[\textbf{C4.3}] Les r\'eductions game-based aux hypoth\`eses PRG et DLOG, au lemme JL et \`a la solidit\'e de connaissance de Groth16 (Tableau~\ref{tab:ann_g_reductions}). La confidentialit\'e devient statistique lorsque le masque est tronqu\'e (Remarque~\ref{rem:masque_troncature}).
   \item[\textbf{C4.4}] La conjecture d'optimalit\'e universelle (Conjecture~\ref{conj:optimalite_universelle}).
   \item[\textbf{C4.5}] La m\'ecanisation en Lean~4 des r\'eductions de SOTP-Low en situation r\'eduite, qui \'etablit la faisabilit\'e de la d\'emarche (section~\ref{sec:gamebased_mecanisation}).
 \end{itemize}
@@ -611,8 +611,8 @@ les param\`etres $\Delta_q$ et $\eta_q$~\cite{NielsenChuang2010,Wilde2017}. Les 
 et quantiques~Objectif 3~(\ref{obj:obj3_postquantique}) fournissent les cibles asymptotiques que les
 constructions SOTP~Objectif~4~(\ref{obj:obj4_saturation}) visent. Sans ces bornes, SOTP ne serait qu'une
 collection de protocoles ad~hoc~\cite{JohnsonLindenstrauss84,Groth16}. La
-question de savoir si la borne~CRO est asymptotiquement serr\'ee reste
-ouverte. Elle est formul\'ee comme conjecture au chapitre~\ref{chap:constructions}. La complexit\'e de la cha\^ine de
+question de savoir si une variante SOTP offre, \`a un facteur constant pr\`es, la meilleure
+opposabilit\'e de son r\'egime reste ouverte. Elle est formul\'ee comme conjecture au chapitre~\ref{chap:constructions}. La complexit\'e de la cha\^ine de
 raisonnement justifie l'investissement dans la v\'erification formelle~Objectif~5~(\ref{obj:obj5_verification}),
 car la certification m\'ecanis\'ee s'impose pour des th\'eor\`emes aux implications
 soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. La formalisation Lean4~Objectif~5~(\ref{obj:obj5_verification}) agit en retour sur les \'etapes
@@ -779,8 +779,8 @@ tient (Obj~\ref{obj:obj5_verification}, Lean4) puis \`a dire comment le soumettr
 
 Il est surtout sensible \`a la coh\'erence du cycle, dans lequel chaque r\'eponse appelle
 la suivante. Les d\'efinitions permettent d'\'enoncer les bornes
-classiques, qui fournissent \`a leur tour leur cible aux constructions SOTP. Ces constructions
-mettent \`a l'\'epreuve la finesse de la borne, qui reste une conjecture, tandis que la formalisation met au jour ce que
+classiques, qui fournissent \`a leur tour leur cible aux constructions SOTP. L'optimalit\'e de ces
+constructions dans leur r\'egime reste une conjecture, tandis que la formalisation met au jour ce que
 les preuves papier laissaient dans l'ombre, \`a savoir une hypoth\`ese implicite
 et un \'ecart entre deux ordres de grandeur.
 

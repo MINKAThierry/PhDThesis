@@ -7,10 +7,11 @@
 
 \begin{sloppypar}
 La famille SOTP (section~\ref{sec:sotp_construction}) propose trois
-constructions de r\'ef\'erence, SOTP-Low, SOTP-Base et SOTP-High, adapt\'ees
-chacune \`a un r\'egime de richesse contextuelle. Leurs propri\'et\'es
-cryptographiques, \`a savoir la confidentialit\'e (calculatoire pour les
-variantes \`a PRG, divulgation nulle de connaissance pour SOTP-High) et la
+constructions de r\'ef\'erence. Sous le seuil $H^\sharp$, SOTP-Low transmet le contexte exact
+et SOTP-Base sa proximit\'e avec d'autres contextes~; au-del\`a, SOTP-High certifie une
+assertion sur le contexte. Leurs propri\'et\'es
+cryptographiques, \`a savoir la confidentialit\'e (statistique par troncature ou
+calculatoire pour les variantes \`a masque, divulgation nulle de connaissance pour SOTP-High) et la
 fiabilit\'e de v\'erification, sont prouv\'ees sous PRG, DLog et la solidit\'e de
 connaissance de Groth16 (mod\`ele du groupe g\'en\'erique ou alg\'ebrique). Les facteurs
 $0{,}75$, $0{,}5$ et $0{,}45$ des formulations initiales sont conserv\'es comme
@@ -40,8 +41,8 @@ chapitre~\ref{chap:experimentation}. Les m\'etriques CLO
 des syst\`emes de r\'ef\'erence ont \'et\'e fix\'ees par calibration param\'etrique
 r\'etrospective, sans exp\'erimentation directe et ne valident pas les
 heuristiques SOTP. La formalisation Lean4 couvre le noyau
-alg\'ebrique. Les fondements probabilistes et les r\'eductions de s\'ecurit\'e
-des constructions SOTP restent hors de son p\'erim\`etre. Le mod\`ele quantique utilise
+alg\'ebrique et les lois finies. Les r\'eductions de s\'ecurit\'e des constructions SOTP n'y figurent que
+pour SOTP-Low, en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}). Le mod\`ele quantique utilise
 principalement le canal d\'epolarisant, qui peut ne pas capturer toutes les
 nuances des syst\`emes quantiques r\'eels.
 

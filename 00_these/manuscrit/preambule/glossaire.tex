@@ -43,11 +43,11 @@
 \begin{description}[style=nextline,leftmargin=2cm,font=\normalfont\bfseries]
 \item[GDPR] General Data Protection Regulation (R\`eglement g\'en\'eral sur la protection des donn\'ees), RGPD, R\`eglement EU 2016/679
 \item[GMR] Goldwasser-Micali-Rackoff (auteurs originaux des preuves \`a divulgation nulle)
-\item[Groth16] Sch\'ema zk-SNARK de Groth (2016), preuves succinctes de 128 octets (BN254, forme compress\'ee) ou 192 octets (BLS12-381)
+\item[Groth16] Sch\'ema zk-SNARK de Groth (2016), preuves succinctes de 128 octets (BN254, forme compress\'ee)
 \item[IACR] International Association for Cryptologic Research
 \item[IND-CCA2] Indistinguishability under Adaptive Chosen Ciphertext Attack (Indistinguabilit\'e sous attaque adaptative \`a texte chiffr\'e choisi)
 \item[IND-CPA] Indistinguishability under Chosen Plaintext Attack (Indistinguabilit\'e sous attaque \`a texte clair choisi)
-\item[JL] Johnson-Lindenstrauss (transformation de compression dimensionnelle)
+\item[JL] Johnson-Lindenstrauss (projection al\'eatoire qui pr\'eserve les distances)
 \item[KEM] Key Encapsulation Mechanism (M\'ecanisme d'encapsulation de cl\'e)
 \item[KL] Kullback-Leibler (divergence de), $D_{\mathrm{KL}}(P\|Q) = \sum_x P(x)\log\frac{P(x)}{Q(x)}$
 \item[LIMSI] Laboratoire d'Ing\'enierie Math\'ematique et Syst\`emes d'Information, laboratoire de th\`ese
@@ -87,9 +87,9 @@
 \item[SLH-DSA] Stateless Hash-Based Digital Signature Algorithm, FIPS 205, bas\'e sur SPHINCS+
 \item[SNARK] Succinct Non-interactive ARgument of Knowledge (Argument succinct non-interactif de connaissance)
 \item[SOTP] Semantic One-Time Pad (Masque jetable s\'emantique), famille de protocoles de cette th\`ese
-\item[SOTP-Base] SOTP pour r\'egime de transition ($H^*(\lambda) \leq H(C) \leq \lambda/\log\lambda$)
-\item[SOTP-High] SOTP pour r\'egime \`a contexte riche ($H(C) > \lambda/\log\lambda$)
-\item[SOTP-Low] SOTP pour r\'egime \`a contexte rare ($H(C) < H^*(\lambda)$)
+\item[SOTP-Base] SOTP sous le seuil $H^\sharp$, lorsque l'institution compare des contextes
+\item[SOTP-High] SOTP au-del\`a du seuil $H^\sharp$
+\item[SOTP-Low] SOTP sous le seuil $H^\sharp$, lorsque l'institution a besoin du contexte exact
 \item[STARK] Scalable Transparent ARgument of Knowledge (Argument transparent \'evolutif de connaissance)
 \end{description}
 
@@ -126,7 +126,6 @@
 \item[$\lambda$] Param\`etre de s\'ecurit\'e cryptographique, typiquement $\lambda \in \{128, 192, 256\}$
 \item[$\mathsf{negl}(\lambda)$] Fonction n\'egligeable en $\lambda$, $\forall c>0, \exists \lambda_0, \forall \lambda > \lambda_0: |f(\lambda)| < \lambda^{-c}$
 \item[$c_0$] Constante de Pinsker, $c_0 = 1/(2\ln 2) \approx 0{,}721$ (classique) ou $c_0 \approx 0{,}3466$ (forme alternative)
-\item[$H^*(\lambda)$] Crit\`ere de construction SOTP, $H^*(\lambda) = \sqrt{\lambda}$ (taille de l'encodage direct du contexte)
 \item[$H^\sharp$] Seuil de la forme raffin\'ee, $H^\sharp = (\Delta + 1 + \kappa/\lambda)/\alpha$~; au-del\`a de ce seuil, la capacit\'e institutionnelle est contraignante (Remarque~\ref{rem:activite_delta})
 \item[$H^\sharp_q$] Seuil quantique, $H^\sharp_q = (\Delta_q + \kappa/\lambda)/(\theta_q\alpha_q)$ (Remarque~\ref{rem:forme_raffinee_pq})
 \end{description}
@@ -201,9 +200,9 @@
 \subsection*{Paradigme architectural}
 
 \begin{description}[style=nextline,leftmargin=2.5cm,font=\normalfont\bfseries]
-\item[Gold Layer] Couche de confidentialit\'e, masquage cryptographique via PRG ou ZK-proofs
+\item[Gold Layer] Couche de confidentialit\'e, masque jetable (tronqu\'e ou pseudo-al\'eatoire) ou preuve \`a divulgation nulle
 \item[Iron Layer] Couche de fiabilit\'e, commitments assurant le binding
-\item[Clay Layer] Couche d'opposabilit\'e, encodage pr\'eservant le contexte pour l'extraction institutionnelle
+\item[Clay Layer] Couche de pr\'esentation du contexte institutionnel, format qui facilite l'interpr\'etation sans ajouter d'information au sens de $\Opp$
 \end{description}
 
 \subsection*{Th\'eor\`emes fondamentaux}

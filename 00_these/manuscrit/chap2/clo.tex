@@ -548,43 +548,42 @@ renseigner sur ce que co\^ute une fiabilit\'e \'elev\'ee.
 \end{Preuve}
 
 \begin{lemma}[Lemme de Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84}]\label{lem:johnson_lindenstrauss}
-Pour tout $0 < \varepsilon < 1$, tout entier $n > 0$ et tout ensemble 
- $S \subset \mathbb{R}^n$ avec $|S| = N$, il existe une application lin\'eaire 
- $\Phi: \mathbb{R}^n \to \mathbb{R}^d$ avec $d = O(\varepsilon^{-2} \log N)$ 
+Pour tout $0 < \varepsilon < 1$, tout entier $d > 0$ et tout ensemble 
+ $S \subset \mathbb{R}^d$ avec $|S| = N$, il existe une application lin\'eaire 
+ $\Phi: \mathbb{R}^d \to \mathbb{R}^k$ avec $k = O(\varepsilon^{-2} \log N)$ 
 telle que pour tous $x, y \in S$ :
 \begin{equation}
 (1-\varepsilon)\|x-y\|^2 \leq \|\Phi x - \Phi y\|^2 \leq (1+\varepsilon)\|x-y\|^2
 \label{eq:jl_preservation}
 \end{equation}
 avec haute probabilit\'e lorsque $\Phi$ est une matrice al\'eatoire avec des 
-entr\'ees $\Phi_{ij} \sim \mathcal{N}(0, 1/d)$ ou sous-gaussiennes.
+entr\'ees $\Phi_{ij} \sim \mathcal{N}(0, 1/k)$ ou sous-gaussiennes.
 \end{lemma}
 
 \begin{Preuve}[Lemme~\ref{lem:johnson_lindenstrauss}, esquisse]
 On suit~\cite{DasguptaGupta03} pour le cas gaussien. Pour un vecteur
 $u \neq 0$ fix\'e, les coordonn\'ees de $\Phi u$ sont ind\'ependantes de loi
-$\mathcal{N}(0, \|u\|^2/d)$, si bien que $d\|\Phi u\|^2/\|u\|^2$ suit une loi du
-$\chi^2$ \`a $d$ degr\'es de libert\'e. La borne de Chernoff sur cette loi donne
+$\mathcal{N}(0, \|u\|^2/k)$, si bien que $k\|\Phi u\|^2/\|u\|^2$ suit une loi du
+$\chi^2$ \`a $k$ degr\'es de libert\'e. La borne de Chernoff sur cette loi donne
 $\Pr\bigl[\,\bigl|\|\Phi u\|^2 - \|u\|^2\bigr| > \varepsilon\|u\|^2\bigr]
-\leq 2\exp\bigl(-\tfrac{d}{2}(\tfrac{\varepsilon^2}{2} - \tfrac{\varepsilon^3}{3})\bigr)
-\leq 2\exp(-d\varepsilon^2/12)$ pour $0 < \varepsilon < 1$. On applique cette
+\leq 2\exp\bigl(-\tfrac{k}{2}(\tfrac{\varepsilon^2}{2} - \tfrac{\varepsilon^3}{3})\bigr)
+\leq 2\exp(-k\varepsilon^2/12)$ pour $0 < \varepsilon < 1$. On applique cette
 borne aux $N(N-1)/2$ vecteurs $u = x - y$ et on somme. La probabilit\'e qu'une
 paire au moins viole~\eqref{eq:jl_preservation} est inf\'erieure \`a
-$N^2\exp(-d\varepsilon^2/12)$, qui est strictement inf\'erieure \`a $1$ d\`es que
-$d > 24\ln N/\varepsilon^2$. Une application convenable existe donc avec
-$d = O(\varepsilon^{-2}\log N)$, et la matrice al\'eatoire convient avec une
+$N^2\exp(-k\varepsilon^2/12)$, qui est strictement inf\'erieure \`a $1$ d\`es que
+$k > 24\ln N/\varepsilon^2$. Une application convenable existe donc avec
+$k = O(\varepsilon^{-2}\log N)$. La matrice al\'eatoire convient avec une
 probabilit\'e qui tend vers $1$ lorsque la constante cro\^it. Le cas
 sous-gaussien se traite de m\^eme~\cite{Achlioptas2003}.
 \end{Preuve}
 
-Ce lemme garantit la pr\'eservation des distances euclidiennes sous compression
+Ce lemme garantit la pr\'eservation des distances euclidiennes sous projection
 al\'eatoire, propri\'et\'e sur laquelle repose la construction SOTP-Base
 (section~\ref{sec:sotp_construction}, sous-section~\ref{subsec:sotp_base}),
 puisque les distances entre repr\'esentations de contextes sont pr\'eserv\'ees \`a un
-facteur $1 \pm \varepsilon$ pr\`es apr\`es compression. Que l'interpr\`ete
+facteur $1 \pm \varepsilon$ pr\`es apr\`es projection. Que l'interpr\`ete
 institutionnel puisse en extraire autant d'information d\'ecisionnelle
-qu'avant compression est une hypoth\`ese de conception, non une cons\'equence
-du lemme.
+qu'avant projection est une hypoth\`ese de conception, que le lemme n'\'etablit pas.
 
 \begin{theorem}[Goulot d'\'etranglement contextuel]\label{thm:goulot_contexte}
 Pour tout protocole CLO~:
