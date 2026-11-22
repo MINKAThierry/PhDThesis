@@ -31,7 +31,7 @@ Le modèle institutionnel quantique (Hypothèses 1 à 3), les paramètres $(\Del
 La thèse intègre ces formulations au §2.4 et les retrace au §3.4.9. Sur deux points, elle va plus loin que le document en préparation.
 
 - Elle donne à $\eta_q$ une définition unique de perte d'interprétabilité. Elle renomme $\zeta_q$ la constante de régularité que le document en préparation note encore $\eta_q$ dans le Lemme 7.
-- Elle établit que $D_{\max}$ n'est pas négligeable pour les signatures NIST PQC (plus de $2{,}6\cdot10^4$ bits pour ML-DSA-65), alors que le document en préparation pose $D_{\max}=\mathrm{negl}(\lambda)$ pour ces schémas.
+- Elle établit que $D_{\max}$ n'est pas négligeable pour les signatures NIST PQC (plus de $2{,}5\cdot10^4$ bits pour ML-DSA-65), alors que le document en préparation pose $D_{\max}=\mathrm{negl}(\lambda)$ pour ces schémas.
 
 Ces écarts sont recensés dans [`../README_fr.md`](../README_fr.md) et [`../../../03_resultats_these/resultats_these_fr.md`](../../../03_resultats_these/resultats_these_fr.md).
 

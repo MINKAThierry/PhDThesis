@@ -59,7 +59,7 @@ La question centrale de cette th\`ese proc\`ede donc moins d'une r\'eflexion men
 
 Le paradoxe tient \`a la conception m\^eme des protocoles cryptographiques actuels, qui ne prennent pas en compte la capacit\'e cognitive de leurs interpr\`etes~\cite{Simon82,Miller56,Herley09}, bien davantage qu'\`a un d\'efaut d'acculturation ou de formation des acteurs institutionnels.
 
-Afin de d\'epasser le seul cadre national dans lequel ces constats avaient \'et\'e faits, nous avons retenu trois cas d'\'etude de port\'ee internationale (Helios pour le vote, les zk-SNARKs pour la conformit\'e, ECDSA pour la signature), dont les enseignements valent au-del\`a de leur contexte d'origine pour les questions de confiance num\'erique~\cite{DeFilippi16,Garay15}.
+Ces constats avaient \'et\'e faits dans un cadre national. Pour le d\'epasser, nous avons retenu trois cas d'\'etude de port\'ee internationale, Helios pour le vote, les zk-SNARKs pour la conformit\'e et ECDSA pour la signature. Leurs enseignements valent au-del\`a de leur contexte d'origine pour les questions de confiance num\'erique~\cite{DeFilippi16,Garay15}.
 
 \end{sloppypar}
 
@@ -162,14 +162,13 @@ contraintes concr\`etes d'un d\'eploiement institutionnel.
 \paragraph{Profil CLO estim\'e.}
 \label{par:helios_clo}
 
-Sous les hypoth\`eses institutionnelles d\'etaill\'ees \`a la
-section~\ref{sec:derivation_helios} et \`a la section~\ref{subsubsec:parametres_institutionnels},
-les estimations param\'etriques analytiques retenues pour Helios sont
-$\Conf \approx 0{,}92$ (confidentialit\'e op\'erationnelle du bulletin chiffr\'e ElGamal~\cite{TsiounisYung}, estim\'ee sur l'\'echelle CLO),
-$\Relver \approx 0{,}95$ (compl\'etude et solidit\'e de la v\'erification des preuves de bien-formation),
-$\Opp \approx 0{,}50$ (d\'ependance structurelle aux experts pour
-l'interpr\'etation, avec capacit\'e d'extraction $\Delta \approx 56$ bits~\cite{MINKA2026CRO}),
-ce qui donne le produit
+Les estimations param\'etriques analytiques retenues pour Helios reposent sur les
+hypoth\`eses institutionnelles d\'etaill\'ees \`a la
+section~\ref{sec:derivation_helios} et \`a la section~\ref{subsubsec:parametres_institutionnels}.
+La confidentialit\'e op\'erationnelle du bulletin chiffr\'e ElGamal~\cite{TsiounisYung}, estim\'ee sur l'\'echelle CLO, vaut $\Conf \approx 0{,}92$.
+La v\'erification des preuves de bien-formation, compl\`ete et solide, donne $\Relver \approx 0{,}95$.
+L'interpr\'etation d\'epend structurellement des experts, avec une capacit\'e d'extraction $\Delta \approx 56$ bits~\cite{MINKA2026CRO}, d'o\`u $\Opp \approx 0{,}50$.
+Le produit vaut donc
 \begin{equation}
 \Conf \cdot \Rel \cdot \Opp \;\approx\; 0{,}437.
 \label{eq:helios_cro}

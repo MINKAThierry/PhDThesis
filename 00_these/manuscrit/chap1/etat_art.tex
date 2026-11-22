@@ -40,9 +40,9 @@ s\'ecurit\'e~\cite{GoldwasserMicali84,GMR88}, sont trait\'es \`a la section~\ref
 
 \begin{boiteArbitre}
 L'arbitre ne dispose pas encore d'un langage pour décrire ce qu'il vit. Ce chapitre
-lui en fournit les éléments, avec l'entropie pour mesurer ce qu'une preuve révèle,
-l'inégalité de Fano pour borner ce qu'un interprète peut
-récupérer d'un signal bruité, ou encore les trilemmes CAP et FLP qui lui montrent que son incapacité s'apparente à
+lui en fournit les éléments. L'entropie mesure ce qu'une preuve révèle et
+l'inégalité de Fano borne ce qu'un interprète peut
+récupérer d'un signal bruité. Les trilemmes CAP et FLP lui montrent que son incapacité s'apparente à
 d'autres impossibilités déjà connues. Il ignore encore que son cas admet une borne quantitative,
 ce que le chapitre suivant lui apprendra.
 \end{boiteArbitre}
@@ -432,10 +432,10 @@ de $\Conf$~\cite{ChaumPedersen92}.
 Pour un circuit $\mathcal{C}$, une entr\'ee publique $x$ et un t\'emoin secret $w$,
 un zk-SNARK~\cite{Groth16,BCTV14,BenSasson2019} atteste que $\mathcal{C}(x, w)
 = 1$ au moyen d'une preuve $\pi$ de taille constante ($\approx 128$--$256$ octets).
-Le sch\'ema se d\'efinit par sa compl\'etude, qui garantit qu'un prouveur
-honn\^ete convainc toujours le v\'erificateur, par sa solidit\'e (soundness) sous les
-hypoth\`eses q-SDH et q-PKE~\cite{Gennaro13,Parno13} ainsi que par la propri\'et\'e de
-zero-knowledge parfait, en vertu de laquelle le v\'erificateur
+Le sch\'ema se d\'efinit par trois propri\'et\'es. La compl\'etude garantit qu'un prouveur
+honn\^ete convainc toujours le v\'erificateur. La solidit\'e (soundness) tient sous les
+hypoth\`eses q-SDH et q-PKE~\cite{Gennaro13,Parno13}. Enfin, avec le
+zero-knowledge parfait, le v\'erificateur
 n'apprend rien sur $w$ au-del\`a de la validit\'e de l'assertion~\cite{GMR85}.
 SOTP-High recourt \`a ces preuves pour maximiser $\Opp$ dans le r\'egime \`a haute
 entropie contextuelle ($H(\mathcal{C}) > \lambda/\log\lambda$)~\cite{PLONK20,Wahby18,Campanelli2019}.
@@ -570,7 +570,7 @@ fond\'ee par la Proposition~\ref{prop:fondement_extraction}.
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre comprend que $\Delta$ le d\'esigne, puisque ce param\`etre mesure ce qu'il tire
+Pour l'arbitre, $\Delta$ le d\'esigne, puisque ce param\`etre mesure ce qu'il tire
 de la preuve au-del\`a du message. Il s'agit peut-\^etre de quelques dizaines de bits, qu'il faudra mesurer.
 \end{boiteArbitre}
 
@@ -760,7 +760,7 @@ dans Coq et Isabelle respectivement.
 
 Lean4 a \'et\'e retenu \`a l'issue d'une comparaison syst\'ematique sur quatre crit\`eres.
 
-\textbf{Couverture math\'ematique.} Mathlib (v4.34.0) fournit l'analyse r\'eelle,
+\textbf{Couverture math\'ematique.} Mathlib (v4.35.0) fournit l'analyse r\'eelle,
 les probabilit\'es et la divergence de Kullback--Leibler
 (\texttt{InformationTheory.KullbackLeibler})~\cite{Mathlib}~; les in\'egalit\'es
 de Pinsker et de Fano n'y sont pas formalis\'ees. La formalisation les pose comme
@@ -773,7 +773,7 @@ math\'ematicien sans formation sp\'ecialis\'ee en v\'erification formelle~\cite{
 \textbf{Performance de compilation.} Lean4 compile vers C natif et
 la v\'erification du noyau alg\'ebrique du Trilemme CRO prend environ une
 minute et demie une fois Mathlib t\'el\'echarg\'ee. Le code fourni en
-Annexe~\ref{chap:annexe_lean4}, fig\'e sur Lean~v4.34.0 et Mathlib~v4.34.0 dans le
+Annexe~\ref{chap:annexe_lean4}, fig\'e sur Lean~v4.35.0 et Mathlib~v4.35.0 dans le
 d\'ep\^ot compagnon~\cite{CROTrilemmaDepot}, peut aussi \^etre coll\'e dans
 l'\'editeur en ligne \url{https://live.lean-lang.org/}, qui utilise la version
 courante de Mathlib.

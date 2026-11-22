@@ -21,13 +21,13 @@ en un cadre unifi\'e.
 
 Nous d\'efinissons ici ce cadre. Le \textbf{cadre CLO (Cryptographic
 Legal Opposability)}~\cite{MINKA2026CLO} constitue, \`a notre connaissance, la premi\`ere formalisation
-math\'ematique rigoureuse de la cryptographie institutionnelle. L'
-Objectif~\ref{obj:obj1_unification}, comment \'etablir un cadre unifi\'e
-formalisant confidentialit\'e, fiabilit\'e et opposabilit\'e via des mesures
-issues de la th\'eorie de l'information permettant analyses quantitatives et comparaisons
-objectives~? re\c{c}oit une r\'eponse en cinq \'etapes, qui portent successivement sur le
-mod\`ele de protocole, les d\'efinitions des m\'etriques, les propri\'et\'es
-fondamentales, le paradigme de conception et une construction prototype.
+math\'ematique rigoureuse de la cryptographie institutionnelle.
+L'Objectif~\ref{obj:obj1_unification} demande comment \'etablir un cadre unifi\'e
+formalisant confidentialit\'e, fiabilit\'e et opposabilit\'e par des mesures
+issues de la th\'eorie de l'information, qui autorisent des analyses quantitatives et des
+comparaisons objectives. La r\'eponse tient en cinq \'etapes. Elles portent successivement sur le
+mod\`ele de protocole, les d\'efinitions des m\'etriques, leurs propri\'et\'es,
+le paradigme de conception et une construction prototype.
 
 Notre apport conceptuel central est l'opposabilit\'e $\Opp$. La
 litt\'erature cryptographique classique traite
@@ -221,7 +221,7 @@ $H(V|C) = 1$. On a donc $\mathsf{Verify}(\sigma) = 1$ et $\Opp = 0$.
 
 \end{figure}
 \begin{boiteArbitre}
-L'arbitre comprend que l'algorithme $\mathsf{Interpret}$ est le sien, car les trois
+L'arbitre reconna\^it dans l'algorithme $\mathsf{Interpret}$ le sien, car les trois
 autres prot\`egent le message alors que celui-ci le sert, lui.
 \end{boiteArbitre}
 
@@ -324,10 +324,10 @@ est la distance en variation totale.
 
 $\Conf = 1$ (confidentialit\'e parfaite au sens de Shannon~\cite{Shannon49,Shannon48})
 signifie que les distributions de preuves sont identiques pour tous
-messages et tout contexte~; m\^eme un adversaire calculatoirement
-illimit\'e ne peut distinguer~\cite{Wyner75,WynerZiv76}. \`A l'oppos\'e, $\Conf = 0$ trahit l'existence
+messages et tout contexte. M\^eme un adversaire calculatoirement
+illimit\'e ne peut alors distinguer~\cite{Wyner75,WynerZiv76}. \`A l'oppos\'e, $\Conf = 0$ trahit l'existence
 de messages $m_0, m_1$ et d'un contexte $c$ pour lesquels les supports
-sont disjoints, un observateur passif acquiert alors une certitude.
+sont disjoints. Un observateur passif acquiert alors une certitude.
 Le r\'egime pratique est interm\'ediaire.
 
 Du point de vue des jeux de s\'ecurit\'e, notre d\'efinition majore l'avantage
@@ -664,19 +664,17 @@ Ce fait est certifi\'e en Lean (\texttt{opp\_eq\_one\_of\_deterministic},
 section~\ref{sec:lean4}).
 \end{remark}
 
-Ce th\'eor\`eme \'etablit qu'aucune sophistication cryptographique ne saurait
-d\'epasser $\alpha H(\mathcal{C})$ bits d'information extractible par un interpr\`ete
-institutionnel~\cite{Smith09,Alvim12}. La granularit\'e des verdicts rapport\'ee \`a
-l'entropie contextuelle constitue un plafond sur
-l'opposabilit\'e, plafond qui pr\'efigure le Trilemme~CRO classique de la section~\ref{sec:cro_classique} et son extension quantique de la section~\ref{sec:cro_pq}. Les protocoles dans des contextes
-simples ($H(\mathcal{C}) \approx 20$ bits, comme ECDSA pour contrat
-standardis\'e) peuvent atteindre haute opposabilit\'e sans effort~; les
-contextes complexes ($H(\mathcal{C}) \approx 70$ bits, comme zk-SNARKs
-pour conformit\'e AML) imposent un plafond sauf si la capacit\'e
-institutionnelle $\Delta$ est exceptionnellement \'elev\'ee.
+Ce th\'eor\`eme plafonne \`a $\alpha H(\mathcal{C})$ bits l'information qu'un interpr\`ete
+institutionnel peut extraire~\cite{Smith09,Alvim12}. Le plafond qui p\`ese sur
+l'opposabilit\'e vient du rapport $(I(M;\Sigma|C)+\Delta)/\gamma$ des Hypoth\`eses~\ref{ass:extraction_bornee}
+et~\ref{ass:verdicts_efficace}, qui pr\'efigure le Trilemme~CRO classique de la section~\ref{sec:cro_classique} et son extension quantique de la section~\ref{sec:cro_pq}. Dans un contexte
+simple, comme un contrat ECDSA ($H(\mathcal{C}) \approx 20$ bits), $\gamma$ reste petit et
+$\Delta$ couvre le verdict. Dans un contexte complexe, comme une conformit\'e AML par
+zk-SNARK ($H(\mathcal{C}) \approx 70$ bits), $\gamma$ cro\^it et l'opposabilit\'e reste plafonn\'ee
+sauf si $\Delta$ est tr\`es \'elev\'e.
 
 \begin{boiteArbitre}
-L'arbitre comprend que le plafond tient moins \`a la cryptographie qu'\`a
+L'arbitre mesure que le plafond tient moins \`a la cryptographie qu'\`a
 la finesse de ses propres verdicts, rapport\'ee au contexte. Plus le contexte est simple, plus il peut
 d\'ecider, sans que la preuve y puisse quoi que ce soit.
 \end{boiteArbitre}

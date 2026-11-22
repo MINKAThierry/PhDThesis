@@ -102,12 +102,12 @@ probabilit\'e non n\'egligeable. Quant \`a l'\textbf{opposabilit\'e} $\Opp$, ell
 la fraction d'information extractible sur le verdict, soit $I(V;\Sigma|C)/H(V|C)$, quantifi\'ee
 via la capacit\'e d'extraction institutionnelle~$\Delta$ (D\'efinition~\ref{def:delta_extraction})~\cite{Simon82,Miller56,Ericsson95}.
 
-Cette traduction rend le cycle des preuves explicite, car les garanties de confidentialit\'e
+Cette traduction rend le cycle des preuves explicite. Les garanties de confidentialit\'e
 et de fiabilit\'e de v\'erification r\'esultent de r\'eductions formelles \`a des hypoth\`eses
 cryptographiques standard (PRG~\cite{BlumMicali84,Yao82}, DLog~\cite{DiffieHellman76},
 solidit\'e de connaissance de Groth16 dans le mod\`ele du groupe g\'en\'erique ou
-alg\'ebrique~\cite{Groth16,FKL18})~; l'opposabilit\'e, elle, d\'epend de l'interpr\'etation
-institutionnelle et n'est pas minor\'ee par ces r\'eductions.
+alg\'ebrique~\cite{Groth16,FKL18}). L'opposabilit\'e, elle, d\'epend de l'interpr\'etation
+institutionnelle et ces r\'eductions ne la minorent pas.
 
 \subsubsection{Architecture de la couche Clay et budget entropique}
 \label{subsubsec:couche_clay}
@@ -205,12 +205,12 @@ L'algorithme op\`ere en trois phases distinctes qui correspondent exactement
 aux trois couches du paradigme Gold-Iron-Clay.
 
 La phase \textsf{Setup} installe les param\`etres cryptographiques partag\'es.
-Elle g\'en\`ere un groupe cyclique $(\mathbb{G}, q)$ d'ordre premier $\lambda$
-bits dans lequel le logarithme discret est difficile, ce qui fonde
+Elle g\'en\`ere un groupe cyclique $(\mathbb{G}, q)$ d'ordre premier $q$, avec
+$|q| \geq 2\lambda$, dans lequel le logarithme discret est difficile, ce qui fonde
 la s\'ecurit\'e de la couche Iron. Elle tire al\'eatoirement deux g\'en\'erateurs
-$g$ et $h$ dont le rapport discret $\log_g h$ est inconnu de tous les
-participants~; cette inconnaissance rend l'engagement de Pedersen
-statistiquement cachant. Elle fixe enfin trois primitives fonctionnelles, \`a savoir
+$g$ et $h$ dont le logarithme discret $\log_g h$ n'est connu d'aucun
+participant. Cette ignorance rend l'engagement de Pedersen calculatoirement
+liant sous DLog. Son masquage est parfait quel que soit $\log_g h$. Elle fixe enfin trois primitives fonctionnelles, \`a savoir
 un PRG pour le masquage de message, une fonction de hachage r\'esistante
 aux collisions pour l'authentification du contexte et un encodage
 d\'eterministe $\phi$ qui serialise le contexte institutionnel $c$ sur
@@ -696,11 +696,11 @@ vaut donc $1 - \negl(\lambda)$.
 La formulation initiale de ce r\'esultat \'enon\c{c}ait
 $\Conf \cdot \Rel \cdot \Opp \geq 0{,}45 \cdot \beta\log_2\lambda/\lambda$, avec une
 constante $0{,}45$ \og calibr\'ee\fg{} sur les syst\`emes d\'eploy\'es. La formalisation a
-conduit \`a la remplacer. Le condens\'e $h_c = \mathsf{Poseidon}(c)$ et les
-m\'etadonn\'ees sont des fonctions du contexte public ($I(V;h_c|C) = 0$)~; trois
-\'el\'ements de groupe repr\'esentent $\Theta(\lambda)$ bits et non $O(\log\lambda)$~;
-le v\'erificateur ne peut extraire le t\'emoin, faute de quoi la preuve ne serait
-pas \`a divulgation nulle~; enfin une constante ajust\'ee sur des donn\'ees n'a pas sa place
+conduit \`a la remplacer, pour quatre raisons. Le condens\'e $h_c = \mathsf{Poseidon}(c)$ et les
+m\'etadonn\'ees sont des fonctions du contexte public ($I(V;h_c|C) = 0$). Trois
+\'el\'ements de groupe repr\'esentent $\Theta(\lambda)$ bits et non $O(\log\lambda)$. Le
+v\'erificateur ne peut extraire le t\'emoin, faute de quoi la preuve ne serait
+pas \`a divulgation nulle. Enfin une constante ajust\'ee sur des donn\'ees n'a pas sa place
 dans un \'enonc\'e de th\'eor\`eme. L'expression $0{,}45\,\beta\log_2\lambda/\lambda$ est
 conserv\'ee comme heuristique de conception~; $\beta$ y d\'esigne la constante de
 r\'egularit\'e du protocole (D\'efinition~\ref{def:beta_regularite}).
@@ -839,13 +839,12 @@ r\'egimes diff\'erents selon le niveau de s\'ecurit\'e cible.
 Les lignes~3--7 constituent la garde de s\'ecurit\'e op\'erationnelle, qui
 est la partie la plus importante de l'algorithme du point de vue du
 d\'eploiement. SOTP-High requiert une \'etape de configuration
-de confiance (\emph{trusted setup}) pour g\'en\'erer le CRS Groth16~;
-si cette \'etape n'a pas \'et\'e conduite~(parce que
-l'organisation n'a pas les ressources pour organiser un protocole
-multi-parties, ou parce que le contexte r\'eglementaire ne l'autorise
-pas) et que le contexte est n\'eanmoins riche ($H(\mathcal{C}) >
-H^{**}(\lambda)$), l'algorithme \'emet une alerte explicite et ne
-d\'egrade pas silencieusement la s\'ecurit\'e. Il recommande alors
+de confiance (\emph{trusted setup}) pour g\'en\'erer le CRS Groth16. Cette \'etape peut
+ne pas avoir \'et\'e conduite, faute de ressources pour organiser un protocole
+multi-parties ou parce que le contexte r\'eglementaire ne l'autorise pas. Si le
+contexte est n\'eanmoins riche ($H(\mathcal{C}) > H^{**}(\lambda)$), l'algorithme
+\'emet une alerte explicite et ne d\'egrade pas silencieusement la
+s\'ecurit\'e. Il recommande alors
 soit d'accepter SOTP-Base avec la perte d'opposabilit\'e
 associ\'ee au r\'egime pour lequel il n'est pas optimal, soit de d\'eployer
 un protocole MPC pour r\'ealiser le trusted setup de mani\`ere
@@ -922,18 +921,20 @@ protocoles du chapitre~\ref{chap:experimentation}.
 Sous les Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regime}, pour chaque
 r\'egime de richesse contextuelle, il existe une variante SOTP et une
 constante $C_R \geq 1$ ind\'ependante de $\lambda$ telles que, pour tout
-protocole CLO $\mathcal{P}'$ du m\^eme r\'egime,
+protocole CLO $\mathcal{P}'$ du m\^eme r\'egime v\'erifiant l'Hypoth\`ese~\ref{ass:regime}
+avec $\kappa = 0$,
 \begin{equation}
-\Conf(\mathcal{P}')\,\Relrec(\mathcal{P}')\,\Opp(\mathcal{P}')
-\;\leq\; C_R \cdot \Conf(\text{SOTP})\,\Relrec(\text{SOTP})\,\Opp(\text{SOTP}).
+\Opp(\mathcal{P}') \;\leq\; C_R \cdot \Opp(\text{SOTP}).
 \label{eq:optimalite_universelle}
 \end{equation}
+Pour ces protocoles, la fiabilit\'e de reconstruction vaut $2^{-\lambda}$ et le produit
+se ram\`ene \`a l'opposabilit\'e, major\'ee par $\Delta/\gamma$.
 \end{conjecture}
 
 \begin{remark}[Statut et argument heuristique]\label{rem:statut_optimalite}
-La formulation initiale de cet \'enonc\'e, pr\'esent\'ee comme th\'eor\`eme sous la forme
+La formulation initiale de cet \'enonc\'e \'etait pr\'esent\'ee comme th\'eor\`eme sous la forme
 $\text{produit}(\mathcal{P}') \leq c \cdot \text{produit}(\text{SOTP}) + o(1)$ avec
-$c \in [0{,}45;\,0{,}75]$, a \'et\'e remplac\'ee par une formulation plus pr\'ecise, pour
+$c \in [0{,}45;\,0{,}75]$. Elle a \'et\'e remplac\'ee par une formulation plus pr\'ecise, pour
 quatre raisons. (i)~Avec $c < 1$ et $\mathcal{P}' = \text{SOTP}$, elle donnerait
 $\text{produit} \leq 0{,}75 \times \text{produit}$, ce qui impose $C_R \geq 1$~;
 (ii)~le terme additif $o(1)$ domine des produits tous en $O(1/\lambda)$~;
@@ -962,7 +963,7 @@ d\'epasse cette quantit\'e pour $\lambda$ grand et rend l'in\'egalit\'e vide.
 \end{Preuve}
 
 \begin{boiteArbitre}
-L'arbitre comprend que la recherche du meilleur protocole peut
+Pour l'arbitre, la recherche du meilleur protocole peut
 continuer. La borne lui dit ce qui est interdit~; savoir jusqu'o\`u les
 constructions SOTP l'approchent reste une question ouverte, pos\'ee avec pr\'ecision.
 \end{boiteArbitre}
@@ -1043,11 +1044,11 @@ r\'ef\'erence elle devient une carte, dont une partie reste \`a lever.
 
 Quatre contributions structurent ce qu'il retient. L'architecture commune
 d'abord (Gold pour le masquage, Iron pour le liage, Clay pour lui), dont
-la couche Clay s'adapte au r\'egime contextuel. Les trois constructions
-ensuite, calibr\'ees chacune sur ce que son $\Delta$ lui permet d'extraire
-sans lui en demander davantage, avec SOTP-Low quand le contexte est rare et
-l'encodage d\'eterministe suffit, SOTP-Base quand la compression
-Johnson-Lindenstrauss absorbe la transition, SOTP-High quand les preuves
+la couche Clay s'adapte au r\'egime contextuel. Viennent ensuite les trois constructions,
+calibr\'ees chacune sur ce que son $\Delta$ lui permet d'extraire
+sans lui en demander davantage. SOTP-Low sert quand le contexte est rare et que
+l'encodage d\'eterministe suffit. SOTP-Base sert quand la compression
+Johnson-Lindenstrauss absorbe la transition. SOTP-High sert quand les preuves
 succinctes Groth16 compriment un contexte arbitrairement riche en quelques
 centaines d'octets. Viennent enfin la conjecture d'optimalit\'e universelle, qui
 dit ce qu'il reste \`a d\'emontrer, puis la m\'ethodologie de s\'election, qui

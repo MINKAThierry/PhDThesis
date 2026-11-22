@@ -36,10 +36,10 @@ l'information interpr\'etable.
 
 Deux contributions additionnelles compl\`etent cette section. Une calibration
 illustrative (sous-section~\ref{subsec:analyse_coherence_pq}) situe les ordres de
-grandeur des param\`etres quantiques \`a partir de six syst\`emes (trois classiques issus de la
-section~\ref{sec:cro_classique} et trois sch\'emas standardis\'es par le NIST ou
-associ\'es~\cite{Dilithium2022,Kyber2022,SPHINCS2022}), qui ne sont pas des
-instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}), conform\'ement
+grandeur des param\`etres quantiques \`a partir de six syst\`emes. Trois sont les syst\`emes classiques de la
+section~\ref{sec:cro_classique}, les trois autres des sch\'emas standardis\'es par le NIST ou
+associ\'es~\cite{Dilithium2022,Kyber2022,SPHINCS2022}. Aucun n'est une
+instance du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}), conform\'ement
 \`a la note de m\'ethodologie pr\'esent\'ee dans la sous-section~\ref{subsec:note_methodo}.
 Les implications pour les standards NIST PQC
 (sous-section~\ref{subsec:implications_standards}) fournissent des
@@ -748,10 +748,10 @@ de~\eqref{eq:conf_lower_pq} non informatif.
 \begin{theorem}[Trilemme CRO conditionnel quantique]
 \label{thm:trilemme_pq}
 Sous les Hypoth\`eses~\ref{ass:extraction_quantique},
-\ref{ass:verdict_quantique}, \ref{ass:regularite_quantique} et
+\ref{ass:verdict_quantique} et
 \ref{ass:regime_quantique}, pour tout protocole de preuve post-quantique
 $\mathcal{P}$ avec param\`etre de s\'ecurit\'e $\lambda \geq 64$,
-entropie de message $H(M) = \lambda$, $M$ ind\'ependant de $C$ et
+$M$ uniforme sur $\{0,1\}^\lambda$ et ind\'ependant de $C$ et
 param\`etres institutionnels quantiques $(\Delta_q, \alpha_q, \beta_q,
 \eta_q)$ :
 \begin{equation}
@@ -972,7 +972,7 @@ sens de $\lesssim$.
 \end{Preuve}
 
 \begin{boiteArbitre}
-L'arbitre comprend que ce terme $\eta_q H(C)/\lambda$ rel\^ache la borne
+Pour l'arbitre, ce terme $\eta_q H(C)/\lambda$ rel\^ache la borne
 au lieu de lui imposer un plancher. Si un jour ses preuves
 transitent par des canaux quantiques, le bruit lui prendra une partie de ce
 qu'elles disent. Pour les signatures qu'il recevra demain, qui sont

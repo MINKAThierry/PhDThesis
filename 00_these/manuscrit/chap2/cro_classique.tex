@@ -418,9 +418,9 @@ avec $c_0$ reste vraie.
 
 \begin{theorem}[Trilemme CRO conditionnel classique]
 \label{thm:trilemme_cro_conditionnel}
-Sous les Hypoth\`eses~\ref{ass:extraction_bornee},~\ref{ass:verdicts_efficace},
-\ref{ass:regularite} et~\ref{ass:regime}, pour tout protocole CLO avec
-$\lambda \geq 64$, $H(M) = \lambda$, $M \perp C$~:
+Sous les Hypoth\`eses~\ref{ass:extraction_bornee},~\ref{ass:verdicts_efficace}
+et~\ref{ass:regime}, pour tout protocole CLO avec
+$\lambda \geq 64$, $M$ uniforme sur $\{0,1\}^\lambda$ et ind\'ependant de $C$~:
 \begin{equation}
 \Conf \cdot \Rel \cdot \Opp \leq \frac{\Delta}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
 \label{eq:trilemme_cro_conditionnel}
@@ -437,7 +437,8 @@ et, sous la forme la plus pr\'ecise,
   \min\left\{1,\; \frac{\kappa/\lambda + \Delta}{\gamma}\right\}.
 \label{eq:trilemme_cro_raffine}
 \end{equation}
-De plus, $\Conf(\mathcal{P}) \geq 1 - \sqrt{c_0 \beta \kappa/\lambda}$
+Si de plus l'Hypoth\`ese~\ref{ass:regularite} est satisfaite,
+$\Conf(\mathcal{P}) \geq 1 - \sqrt{c_0 \beta \kappa/\lambda}$
 par le Lemme~\ref{lem:confidentiality_guarantee}.
 \end{theorem}
 
@@ -609,7 +610,7 @@ $\Opp$~; (4)~la borne sur les verdicts ach\`eve cette contrainte~;
     \cmt{Lecture finale. Tant que $\Delta < \gamma$, la contrainte qui plafonne le produit est la capacit\'e institutionnelle~; au-del\`a, c'est la borne de Fano (Remarque~\ref{rem:activite_delta}).}
 
     \textbf{Forme raffin\'ee.} Comme $\Opp \leq 1$
-    (Th\'eor\`eme~\ref{thm:bornes_mesures}), l'\'Etape~2 et l'Hypoth\`ese~\ref{ass:regime}
+    (Th\'eor\`eme~\ref{thm:bornes_mesures}), les \'Etapes~3 et~4 et l'Hypoth\`ese~\ref{ass:regime}
     donnent aussi $\Opp \leq \min\{1, (\kappa/\lambda+\Delta)/\gamma\}$~;
     combin\'ee \`a l'\'Etape~1 sous l'Hypoth\`ese~\ref{ass:regime},
     ($\Rel \leq (1+\kappa/\lambda)/\lambda$) ainsi qu'\`a $\Conf \leq 1$, elle
@@ -837,7 +838,7 @@ avec \'egalit\'e, de m\^eme que $\Opp \leq (\kappa/\lambda + \Delta)/\gamma$ ave
 \begin{remark}[T\'emoin combin\'e o\`u le facteur institutionnel est actif]
 \label{rem:temoin_combine}
 Pour tous entiers $1 \leq \Delta < \gamma$, tout $\kappa$ tel que
-$\lambda^2 2^{-\lambda} \leq \kappa \leq \lambda^2$ et tout $\lambda \geq 64$, il existe une loi
+$\lambda^2 2^{-\lambda} \leq \kappa \leq \lambda^2$ et $\kappa/\lambda + \Delta < \gamma$, et tout $\lambda \geq 64$, il existe une loi
 qui satisfait les Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regime} et dont le
 produit vaut $(1-\rho)\,\frac{\kappa}{\lambda^2}\,\frac{\Delta}{\gamma}$ avec
 $\rho \leq \kappa/\lambda^2$. Elle combine le protocole de la
@@ -994,7 +995,7 @@ l'institution peut exploiter. C'est l\`a que les limites de l'interpr\`ete, au-d
 de la seule puissance des adversaires, deviennent la contrainte liante.
 
 \begin{boiteArbitre}
-L'arbitre comprend que commander un algorithme plus fort ne changera rien,
+Commander un algorithme plus fort ne changera rien pour l'arbitre,
 puisque le goulot d'\'etranglement se situe en lui d\`es que ses verdicts
 sont plus fins que ce qu'il sait extraire.
 \end{boiteArbitre}
@@ -1112,7 +1113,10 @@ $\Delta \approx 35$ bits pour un juge g\'en\'eraliste~\cite{Mason07,Kerr04}, soi
 $H^\sharp \approx 36$) et un scrutin de taille moyenne ($H(\mathcal{C}) \approx 40$
 bits, $\alpha = 1{,}2$, $\Delta \approx 56$ bits pour un comit\'e de garants
 sp\'ecialis\'es~\cite{Goodman15}, soit $H^\sharp \approx 48$) rel\`event de ce
-r\'egime. La capacit\'e d'extraction n'y est pas la contrainte liante.
+r\'egime. La capacit\'e d'extraction n'y est pas la contrainte liante. Ces deux valeurs de
+$\Delta$ d\'epassent $\alpha H(\mathcal{C})$. Elles satisfont l'Hypoth\`ese~\ref{ass:extraction_bornee}
+sans la rendre contraignante et d\'ecrivent une capacit\'e d\'eclar\'ee, non la capacit\'e minimale
+$\Delta^*$ de la Remarque~\ref{rem:delta_capacite}.
 
 \subsubsection{R\'egime \`a contexte riche o\`u $H(\mathcal{C}) > H^\sharp$}
 \label{subsubsec:regime_haute_contexte}

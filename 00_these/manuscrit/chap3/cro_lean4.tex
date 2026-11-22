@@ -42,14 +42,14 @@ aux familles de protocoles canoniques
 
 Le code source v\'erifi\'e est disponible en acc\`es ouvert (licence MIT,
 \url{https://github.com/MINKAThierry/PhDThesis}~\cite{CROTrilemmaDepot}), avec une
-version de Lean et de Mathlib fig\'ee (v4.34.0) et une int\'egration continue qui le
+version de Lean et de Mathlib fig\'ee (v4.35.0) et une int\'egration continue qui le
 recompile \`a chaque modification.
 \end{sloppypar}
 
 \begin{boiteArbitre}
 L'arbitre croyait que la preuve du Trilemme \'etait compl\`ete. La machine a
 montr\'e que plusieurs \'etapes des preuves publi\'ees admettaient des formulations
-plus pr\'ecises, retenues dans les versions pr\'esent\'ees ici. L'arbitre comprend
+plus pr\'ecises, retenues dans les versions pr\'esent\'ees ici. Il en retient
 que la rigueur, comme l'opposabilit\'e, se v\'erifie, gr\^ace \`a la machine et \`a
 la relecture qui se compl\`etent.
 \end{boiteArbitre}
@@ -73,7 +73,7 @@ int\'egrons comme propri\'et\'es des instances de protocole les quatre pr\'emiss
 du th\'eor\`eme, \`a savoir l'in\'egalit\'e de
 Fano~\cite{Fano61,CoverThomas06}, l'in\'egalit\'e de Pinsker (sous-sous-section~\ref{subsubsec:pinsker_classique}) combin\'ee \`a la
 r\'egularit\'e~\cite{Pinsker1964,Tsybakov2009}, l'hypoth\`ese d'extraction
-institutionnelle~\cite{Simon82,Miller56} et la borne fiabilit\'e-information.
+institutionnelle~\cite{Simon82,Miller56} et l'hypoth\`ese de verdict efficace.
 Nous prouvons formellement que, pour tout $I \le \kappa/\lambda$ (r\'egime de
 pr\'eservation de la confidentialit\'e, Hypoth\`ese~\ref{ass:regime}), on a
 \begin{equation}
@@ -236,10 +236,12 @@ o\`u $\Delta \ge 0$ quantifie la connaissance pr\'ealable ou la capacit\'e de
 raisonnement au-del\`a du contexte formel $C$.
 \end{assumption}
 
-\begin{assumption}[Espace de verdict born\'e]\label{ass:pinsker_axiom}
-La taille de l'espace de verdict satisfait
+\begin{assumption}[Verdict efficace]\label{ass:pinsker_axiom}
+La taille de l'espace de verdict et l'entropie du verdict satisfont
 \begin{equation}
 |\mathcal{Y}_\lambda| \le 2^{\alpha H(C)}
+\quad\text{et}\quad
+H(V|C) \ge \alpha H(C) - 1 =: \gamma \ge 1
 \end{equation}
 pour une constante $\alpha > 0$ mesurant la granularit\'e de d\'ecision.
 \end{assumption}
@@ -1064,7 +1066,7 @@ alternatives que les auteurs ont retenues. La le\c{c}on qu'il en tire
 d\'epasse la substitution d'une formule \`a une autre, car ni la relecture
 humaine ni la machine ne suffisent seules. La machine v\'erifie les
 d\'eductions tandis que la relecture v\'erifie que les d\'efinitions disent ce
-qu'on croit. L'arbitre comprend que la formalisation est une n\'ecessit\'e
+qu'on croit. L'arbitre en conclut que la formalisation est une n\'ecessit\'e
 \'epist\'emologique pour tout r\'esultat interdisciplinaire dont aucune des
 disciplines constituantes ne contr\^ole l'int\'egralit\'e.
 \end{boiteArbitre}

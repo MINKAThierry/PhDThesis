@@ -31,7 +31,7 @@ The quantum institutional model (Assumptions 1 to 3), the parameters $(\Delta_q,
 The thesis incorporates these formulations in §2.4 and traces them in §3.4.9. On two points it goes further than the document in preparation.
 
 - It gives $\eta_q$ a single definition, as an interpretability loss, and renames $\zeta_q$ the regularity constant that the document in preparation still writes $\eta_q$ in Lemma 7.
-- It establishes that $D_{\max}$ is not negligible for NIST PQC signatures (more than $2.6\cdot10^4$ bits for ML-DSA-65), whereas the document in preparation sets $D_{\max}=\mathrm{negl}(\lambda)$ for these schemes.
+- It establishes that $D_{\max}$ is not negligible for NIST PQC signatures (more than $2.5\cdot10^4$ bits for ML-DSA-65), whereas the document in preparation sets $D_{\max}=\mathrm{negl}(\lambda)$ for these schemes.
 
 These differences are listed in [`../README_en.md`](../README_en.md) and [`../../../03_resultats_these/resultats_these_en.md`](../../../03_resultats_these/resultats_these_en.md).
 

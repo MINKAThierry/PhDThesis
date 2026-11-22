@@ -233,13 +233,13 @@ dans d'autres branches de l'informatique
 th\'eorique~\cite{Abadi2012,Attiya2004}. Le th\'eor\`eme
 FLP~\cite{FLP85} \'etablit qu'aucun protocole d\'eterministe
 ne garantit le consensus en pr\'esence d'une seule d\'efaillance
-asynchrone~; le th\'eor\`eme CAP~\cite{Brewer00,GilbertLynch02} \'etablit
-qu'un syst\`eme distribu\'e ne peut simultan\'ement garantir coh\'erence
-stricte, disponibilit\'e totale et tol\'erance aux partitions~; le
+asynchrone. Le th\'eor\`eme CAP~\cite{Brewer00,GilbertLynch02} \'etablit
+qu'un syst\`eme distribu\'e ne peut garantir \`a la fois la coh\'erence
+stricte, la disponibilit\'e totale et la tol\'erance aux partitions. Le
 Trilemme CRO \'etablit, sous ses hypoth\`eses, que le produit $\Conf\cdot\Relrec\cdot\Opp$ est
 born\'e par
 $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
-(classique) ou par son analogue quantique
+dans le cas classique et par son analogue quantique
 $\gamma_q^{-1}(\Delta_q/\lambda + \kappa(\Delta_q+1)/\lambda^2 + \kappa^2/\lambda^3)$
 (\cite{MINKA2026CRO} et section~\ref{sec:cro_pq}).
 
@@ -372,9 +372,10 @@ opposabilit\'e (ECDSA $\Opp = 0{,}90$) sacrifie la confidentialit\'e
 ($\Conf = 0{,}31$). Ce sch\'ema mat\'erialise la tension d\'ecrite par le
 paradoxe de l'authenticit\'e invisible~\cite{MINKA2026CLO}.
 
-\noindent\textit{Formalisation.} Ce sch\'ema est captur\'e par le Lemme
-Conf-MI (sous-section~\ref{subsec:proprietes_fondamentales}), selon lequel plus
-$I(M;\Sigma|C)$ est grand, plus $\Conf$ est faible. ECDSA op\`ere \`a une
+\noindent\textit{Formalisation.} Ce sch\'ema rel\`eve de l'in\'egalit\'e de Fano. Une
+fiabilit\'e de reconstruction \'elev\'ee exige une information $I(M;\Sigma|C)$ \'elev\'ee. Le Lemme
+Conf-MI (sous-section~\ref{subsec:proprietes_fondamentales}) garantit en sens inverse
+une confidentialit\'e proche de $1$ lorsque cette information est faible. ECDSA op\`ere \`a une
 extr\'emit\'e de ce compromis ($I$ grand, $\Conf$ faible). Helios est \`a
 l'autre extr\'emit\'e pour la confidentialit\'e, mais sa fiabilit\'e
 $\Rel = 0{,}95$ est une fiabilit\'e de \emph{v\'erification}, car sous $\Relrec$ Fano
@@ -567,9 +568,9 @@ F$\to$B$\to$E$\to$S$\to$C$\to$X}
 \end{equation}
 (forme raffin\'ee~\eqref{eq:trilemme_cro_raffine}, applicable aux protocoles qui
 satisfont les hypoth\`eses du th\'eor\`eme).
-Si l'in\'egalit\'e est viol\'ee, trois options s'offrent au concepteur, \`a savoir relaxer une exigence,
-augmenter $\Delta$ par investissement dans la formation institutionnelle
-ou augmenter $\lambda$ (impact marginal si $\Delta$ reste fixe).
+Si l'in\'egalit\'e est viol\'ee, deux options s'offrent au concepteur. Il peut rel\^acher une exigence
+ou augmenter $\Delta$ par la formation institutionnelle. Augmenter $\lambda$ n'aide pas,
+car le majorant d\'ecro\^it avec $\lambda$.
 
 \subsubsection{Strat\'egie de conception par r\'egime}
 \label{subsubsec:strategie_par_regime}
@@ -683,10 +684,10 @@ informatique en environnement institutionnel contraint. L'extraction et
 l'analyse exhaustive des donn\'ees de paiement d\'epassent la v\'erification
 comptable, car elles sont susceptibles de d\'evoiler
 des informations sensibles pour la s\'ecurit\'e de l'\'Etat. Le cadre
-CLO-CRO sugg\`ere une \emph{hypoth\`ese de travail} selon laquelle, dans les contextes o\`u
+CLO-CRO sugg\`ere ici une \emph{hypoth\`ese de travail}. Dans les contextes o\`u
 $\Delta \ll \gamma$, la forme raffin\'ee de la borne pr\'edit un plafond
-d'opposabilit\'e bas pour les protocoles tr\`es confidentiels, de sorte que
-l'auditeur pourrait devoir arbitrer entre la force probante de sa preuve et
+d'opposabilit\'e bas pour les protocoles tr\`es confidentiels. L'auditeur
+pourrait alors devoir arbitrer entre la force probante de sa preuve et
 la protection des donn\'ees. Cette hypoth\`ese ne d\'ecoule pas du cadre
 sans mesure de $\Delta$ et de $\gamma$ dans ce contexte~; elle est \`a
 \'evaluer empiriquement.
@@ -963,7 +964,7 @@ super-constante du produit par rapport \`a la meilleure variante, est une
 conjecture (Conjecture~\ref{conj:optimalite_universelle}).
 
 \begin{boiteArbitre}
-L'arbitre comprend que la borne seule ne suffit pas, puisqu'une limite
+Une borne seule ne suffit pas \`a l'arbitre, puisqu'une limite
 d\'epourvue de construction ressemble \`a une porte ferm\'ee dont on ignorerait le plan. La famille SOTP
 esquisse ce plan en indiquant par o\`u commencer dans chaque r\'egime, sans
 pr\'etendre avoir atteint la limite. L'impossibilit\'e devient ainsi un guide.
@@ -1026,9 +1027,7 @@ L'arbitre referme le dossier. Des formulations plus pr\'ecises sont issues de la
 machine ou d'une relecture attentive des d\'efinitions, puis retenues par les
 auteurs. Il en retient que ni la relecture seule ni la machine seule ne
 suffisent, car l'une produit des preuves plausibles tandis que l'autre certifie
-ce qu'on lui donne. L'arbitre comprend que la formalisation est une n\'ecessit\'e
-\'epist\'emologique pour tout r\'esultat interdisciplinaire dont aucune des
-disciplines constituantes ne contr\^ole l'int\'egralit\'e.
+ce qu'on lui donne. Il retrouve ici ce que la section~\ref{sec:lean4} lui avait appris.
 \end{boiteArbitre}
 
 \end{sloppypar}
@@ -1136,8 +1135,8 @@ testables (C6). Cette quadruple port\'ee structure la conclusion
 g\'en\'erale.
 
 \begin{boiteArbitre}
-L'arbitre comprend que sp\'ecifier comment tester une th\'eorie est
-aussi important que la th\'eorie elle-m\^eme. Une th\'eorie non testable
+L'arbitre tient pour aussi important de sp\'ecifier comment tester une
+th\'eorie que la th\'eorie elle-m\^eme. Une th\'eorie non testable
 est une sp\'eculation. Une th\'eorie testable, m\^eme non encore
 test\'ee, est une science. Le
 chapitre~\ref{chap:experimentation} est ce qui fait passer le

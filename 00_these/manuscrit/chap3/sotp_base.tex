@@ -307,10 +307,10 @@ En divisant par $H(V|C)$, on obtient
 \begin{remark}[Argument heuristique d'optimalit\'e de S-OTP dans la classe OTP]\label{thm:optimalite_sotp}
 Parmi les protocoles qui masquent le message par un one-time pad et
 n'encodent le contexte que dans une composante auxiliaire $h$, S-OTP
-semble r\'ealiser le meilleur compromis, puisque tout protocole de ce type
-consacre $|m| = \lambda$ bits d'al\'ea au masquage pour la s\'ecurit\'e
-parfaite et voit son opposabilit\'e born\'ee par $H(h|C)/H(V|C)$ (m\^eme argument
-que ci-dessus). Une preuve d'optimalit\'e demanderait de d\'efinir
+semble r\'ealiser le meilleur compromis. Tout protocole de ce type
+consacre en effet $|m| = \lambda$ bits d'al\'ea au masquage pour la s\'ecurit\'e
+parfaite. Son opposabilit\'e reste born\'ee par $H(h|C)/H(V|C)$, par le m\^eme argument
+que ci-dessus. Une preuve d'optimalit\'e demanderait de d\'efinir
 formellement la classe OTP et d'y d\'emontrer une borne sup\'erieure
 uniforme~; nous la laissons ouverte. Selon cet argument heuristique, une
 construction atteignant une opposabilit\'e sup\'erieure devrait soit (i) abandonner la confidentialit\'e
@@ -352,7 +352,7 @@ est major\'ee par $(\kappa/\lambda + \Delta)/\gamma \approx \Delta/(\alpha H(\ma
 les variantes SOTP-Base et SOTP-High de la section~\ref{sec:sotp_construction}.
 
 \begin{boiteArbitre}
-L'arbitre comprend que $0{,}998$ correspond au meilleur cas. D\`es que le
+L'arbitre note que $0{,}998$ correspond au meilleur cas. D\`es que le
 contexte s'enrichit, l'opposabilit\'e s'effondre et d'autres constructions
 deviennent n\'ecessaires.
 \end{boiteArbitre}
