@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.3 (22 novembre 2026).
+  Version 3.4 (22 novembre 2026).
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -17,7 +17,9 @@
   `import Mathlib` complet (dix-huit `#print axioms` standards). La version 3.3
   (précisions sur c₀, hypothèses du noyau abstrait, minoration de H(C)) a été
   vérifiée localement avec Lean 4.35.0 et Mathlib v4.35.0, sans erreur ni
-  avertissement.
+  avertissement. La version 3.4 ajoute deux théorèmes qui certifient le seuil
+  H♯ dans les deux sens (`factor_lt_one_iff`, `seuil_Hsharp`) ; elle a été
+  vérifiée localement de la même manière (vingt `#print axioms` standards).
 
   ARCHITECTURE
   • Noyau algébrique (sections 1 à 9) : les grandeurs d'un protocole sont des
@@ -451,6 +453,24 @@ theorem refined_bound_is_fano_when_delta_ge_gamma {lam : ℕ} (P : ProtocolInsta
   have hκl : 0 ≤ κ / lam := div_nonneg hκ hl0.le
   apply min_eq_left
   rw [le_div_iff₀ hγ0]; linarith
+
+/-- **T2 ter.** Le facteur institutionnel est strictement inférieur à 1 si et
+    seulement si Δ < γ − κ/λ : réciproque de T2 bis. -/
+theorem factor_lt_one_iff (Δ γ κ lam : ℝ) (hγ : 0 < γ) :
+    min 1 ((κ / lam + Δ) / γ) < 1 ↔ Δ < γ - κ / lam := by
+  rw [min_lt_iff]
+  constructor
+  · rintro (h | h)
+    · exact absurd h (lt_irrefl _)
+    · rw [div_lt_one hγ] at h; linarith
+  · intro h; right; rw [div_lt_one hγ]; linarith
+
+/-- **T2 quater.** Avec γ = αH(C) − 1, la condition Δ < γ − κ/λ s'écrit
+    H(C) > H♯ = (Δ + 1 + κ/λ)/α (Remarque activite_delta). -/
+theorem seuil_Hsharp (Δ α H κ lam : ℝ) (hα : 0 < α) :
+    Δ < (α * H - 1) - κ / lam ↔ (Δ + 1 + κ / lam) / α < H := by
+  rw [div_lt_iff₀ hα]
+  constructor <;> intro h <;> linarith
 
 
 /-! ## 10. Couche concrète : lois de probabilité finies
@@ -1543,6 +1563,8 @@ Chaque `#print axioms` doit afficher uniquement
 #print axioms ConditionalCRO.deterministic_forces_capacity
 #print axioms ConditionalCRO.trilemma_refined
 #print axioms ConditionalCRO.refined_bound_is_fano_when_delta_ge_gamma
+#print axioms ConditionalCRO.factor_lt_one_iff
+#print axioms ConditionalCRO.seuil_Hsharp
 #print axioms ConditionalCRO.pinsker_finite
 #print axioms ConditionalCRO.fano_finite
 #print axioms ConditionalCRO.trilemma_explicit_concrete

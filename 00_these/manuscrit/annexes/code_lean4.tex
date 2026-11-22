@@ -1,5 +1,5 @@
 % ============================================================================
-% CODE LEAN4 COMPLET ET ANNOTÉ — Version 3.3
+% CODE LEAN4 COMPLET ET ANNOTÉ — Version 3.4
 % Annexe de thèse — Formalisation du Trilemme CRO conditionnel
 % ============================================================================
 
@@ -8,16 +8,16 @@
 
 \begin{sloppypar}
 Cette annexe pr\'esente le code Lean4 complet de la formalisation du
-Trilemme CRO conditionnel, dans sa version 3.3 (22 novembre 2026). Elle prend en compte les extensions de la
+Trilemme CRO conditionnel, dans sa version 3.4 (22 novembre 2026). Elle prend en compte les extensions de la
 sous-section~\ref{subsec:lean4_extensions} et ajoute une couche concr\`ete o\`u les in\'egalit\'es de Pinsker et de Fano sont d\'emontr\'ees pour de vraies lois finies (sous-section~\ref{subsec:lean4_concret}).
 
 \medskip
 \noindent\textbf{Caract\'eristiques du code.} Le fichier compile sans erreur
-ni \texttt{sorry} et sans avertissement. La version 3.3 a \'et\'e v\'erifi\'ee le 22 novembre 2026 avec Lean~v4.35.0 et
+ni \texttt{sorry} et sans avertissement. La version 3.4 a \'et\'e v\'erifi\'ee le 22 novembre 2026 avec Lean~v4.35.0 et
 Mathlib~v4.35.0, compil\'es depuis les sources, en rempla\c{c}ant \texttt{import Mathlib} par les
-modules effectivement utilis\'es (journal \texttt{results/lean\_build\_v3.3.log} du d\'ep\^ot).
+modules effectivement utilis\'es (journal \texttt{results/lean\_build\_v3.4.log} du d\'ep\^ot).
 La version 2.2 avait \'et\'e v\'erifi\'ee sur \url{https://live.lean-lang.org} en octobre 2026.
-La version 3.2, avec \texttt{import Mathlib} complet, y a \'et\'e v\'erifi\'ee le 22 novembre 2026, les dix-huit \texttt{\#print axioms} n'affichant que les trois axiomes standards. La version 3.3 n'en diff\`ere que par des pr\'ecisions de documentation, l'affaiblissement de deux hypoth\`eses asymptotiques et le retrait d'un param\`etre libre du Lemme~4 concret. Le d\'ep\^ot
+La version 3.2, avec \texttt{import Mathlib} complet, y a \'et\'e v\'erifi\'ee le 22 novembre 2026, les dix-huit \texttt{\#print axioms} n'affichant que les trois axiomes standards. La version 3.3 n'en diff\`ere que par des pr\'ecisions de documentation, l'affaiblissement de deux hypoth\`eses asymptotiques et le retrait d'un param\`etre libre du Lemme~4 concret. La version 3.4 ajoute deux th\'eor\`emes qui certifient le seuil $H^\sharp$ dans les deux sens. Le d\'ep\^ot
 de la th\`ese~\cite{CROTrilemmaDepot} le fournit aussi dans un projet Lake, avec des
 versions de Lean et de Mathlib fig\'ees (r\'epertoire
 \texttt{05\_formalisation\_lean/}). Il ne contient aucun axiome ad
@@ -38,7 +38,7 @@ section~\ref{sec:lean4_reproduction}), on proc\`ede comme suit.
       courante de Mathlib.
 \item Localement, ex\'ecuter \texttt{lake exe cache get \&\& lake build} dans le
       r\'epertoire \texttt{05\_formalisation\_lean/} du d\'ep\^ot.
-\item Dans les deux cas, le r\'esultat attendu ne comporte ni erreur ni \texttt{sorry}. Chacun des dix-huit
+\item Dans les deux cas, le r\'esultat attendu ne comporte ni erreur ni \texttt{sorry}. Chacun des vingt
       \texttt{\#print axioms} du bloc final affiche uniquement
       \texttt{[propext, Classical.choice, Quot.sound]}.
 \end{enumerate}
@@ -129,11 +129,12 @@ d\'ep\^ot~\cite{CROTrilemmaDepot}, dont l'en-t\^ete porte en outre les noms des 
 \url{https://live.lean-lang.org} pour v\'erification.
 \end{sloppypar}
 
-\begin{lstlisting}[caption={Formalisation Lean4 du Trilemme CRO conditionnel (version 3.3)}, label={lst:lean4_complet}, language=Lean4]
+\begin{lstlisting}[caption={Formalisation Lean4 du Trilemme CRO conditionnel (version 3.4)}, label={lst:lean4_complet}, language=Lean4]
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.3 (22 novembre 2026).
+  Version 3.4 (22 novembre 2026).
+
 
   MODE D'EMPLOI POUR L'ÉVALUATEUR
   1. Ouvrir https://live.lean-lang.org (projet Mathlib, choix par défaut).
@@ -144,7 +145,9 @@ d\'ep\^ot~\cite{CROTrilemmaDepot}, dont l'en-t\^ete porte en outre les noms des 
   `import Mathlib` complet (dix-huit `#print axioms` standards). La version 3.3
   (précisions sur c₀, hypothèses du noyau abstrait, minoration de H(C)) a été
   vérifiée localement avec Lean 4.35.0 et Mathlib v4.35.0, sans erreur ni
-  avertissement.
+  avertissement. La version 3.4 ajoute deux théorèmes qui certifient le seuil
+  H♯ dans les deux sens (`factor_lt_one_iff`, `seuil_Hsharp`) ; elle a été
+  vérifiée localement de la même manière (vingt `#print axioms` standards).
 
   ARCHITECTURE
   • Noyau algébrique (sections 1 à 9) : les grandeurs d'un protocole sont des
@@ -578,6 +581,24 @@ theorem refined_bound_is_fano_when_delta_ge_gamma {lam : ℕ} (P : ProtocolInsta
   have hκl : 0 ≤ κ / lam := div_nonneg hκ hl0.le
   apply min_eq_left
   rw [le_div_iff₀ hγ0]; linarith
+
+/-- **T2 ter.** Le facteur institutionnel est strictement inférieur à 1 si et
+    seulement si Δ < γ − κ/λ : réciproque de T2 bis. -/
+theorem factor_lt_one_iff (Δ γ κ lam : ℝ) (hγ : 0 < γ) :
+    min 1 ((κ / lam + Δ) / γ) < 1 ↔ Δ < γ - κ / lam := by
+  rw [min_lt_iff]
+  constructor
+  · rintro (h | h)
+    · exact absurd h (lt_irrefl _)
+    · rw [div_lt_one hγ] at h; linarith
+  · intro h; right; rw [div_lt_one hγ]; linarith
+
+/-- **T2 quater.** Avec γ = αH(C) − 1, la condition Δ < γ − κ/λ s'écrit
+    H(C) > H♯ = (Δ + 1 + κ/λ)/α (Remarque activite_delta). -/
+theorem seuil_Hsharp (Δ α H κ lam : ℝ) (hα : 0 < α) :
+    Δ < (α * H - 1) - κ / lam ↔ (Δ + 1 + κ / lam) / α < H := by
+  rw [div_lt_iff₀ hα]
+  constructor <;> intro h <;> linarith
 
 
 /-! ## 10. Couche concrète : lois de probabilité finies
@@ -1670,6 +1691,8 @@ Chaque `#print axioms` doit afficher uniquement
 #print axioms ConditionalCRO.deterministic_forces_capacity
 #print axioms ConditionalCRO.trilemma_refined
 #print axioms ConditionalCRO.refined_bound_is_fano_when_delta_ge_gamma
+#print axioms ConditionalCRO.factor_lt_one_iff
+#print axioms ConditionalCRO.seuil_Hsharp
 #print axioms ConditionalCRO.pinsker_finite
 #print axioms ConditionalCRO.fano_finite
 #print axioms ConditionalCRO.trilemma_explicit_concrete
@@ -1688,14 +1711,14 @@ Chaque `#print axioms` doit afficher uniquement
 \begin{sloppypar}
 Le tableau~\ref{tab:lean4_status} r\'ecapitule le statut de v\'erification
 de chaque composant de la formalisation, tel qu'il ressort de la
-version~3.3 du fichier \texttt{ConditionalCRO.lean}~; la sortie de r\'ef\'erence est
-\texttt{05\_formalisation\_lean/results/lean\_build\_v3.3.log} du
+version~3.4 du fichier \texttt{ConditionalCRO.lean}~; la sortie de r\'ef\'erence est
+\texttt{05\_formalisation\_lean/results/lean\_build\_v3.4.log} du
 d\'ep\^ot~\cite{CROTrilemmaDepot}.
 \end{sloppypar}
 
 \begin{table}[htbp]
 \centering
-\caption{Statut de v\'erification des composants Lean4 (version~3.3)}
+\caption{Statut de v\'erification des composants Lean4 (version~3.4)}
 \label{tab:lean4_status}
 \begin{tabular}{@{}p{7.2cm}p{3cm}p{3cm}@{}}
 \toprule
@@ -1726,6 +1749,8 @@ T\'emoin de port\'ee
 Classification des r\'egimes (3 th\'eor\`emes)
   & $\checkmark$ V\'erifi\'e & \texttt{norm\_num} \\
 Extensions v2.2 (4 th\'eor\`emes)
+  & $\checkmark$ V\'erifi\'e & Entier \\
+Seuil $H^\sharp$ dans les deux sens (2 th\'eor\`emes, v3.4)
   & $\checkmark$ V\'erifi\'e & Entier \\
 Pinsker fini et Fano fini d\'emontr\'es (v3.2)
   & $\checkmark$ V\'erifi\'e & Lois finies \\
@@ -1793,7 +1818,7 @@ fichiers \texttt{lean-toolchain}, \texttt{lakefile.toml} et
 \item Aucune erreur de compilation.
 \item Aucun \texttt{sorry} (pas de \texttt{sorryAx} dans les listes d'axiomes).
 \item Aucun axiome \emph{ad hoc} d\'eclar\'e.
-\item Chacun des dix-huit \texttt{\#print axioms} affiche exactement
+\item Chacun des vingt \texttt{\#print axioms} affiche exactement
       \texttt{[propext, Classical.choice, Quot.sound]}.
 \end{itemize}
 

@@ -106,7 +106,7 @@ tableau~\ref{tab:stratification_delta}.
 \textbf{Cat\'egorie} & \textbf{Sous-groupe} & \textbf{$n$} & \textbf{$\Delta$ pr\'edit} \\
 \midrule
 Juges & G\'en\'eralistes (juridictions civiles) & 20 & $\approx 25$ bits \\
-      & Sp\'ecialis\'es (contrats, PKI, num\'erique) & 20 & $\approx 40$ bits \\
+      & Sp\'ecialis\'es (contrats, PKI, num\'erique) & 20 & $\approx 35$ bits \\
 \midrule
 R\'egulateurs & Juniors (< 5 ans d'exp\'erience) & 20 & $\approx 35$ bits \\
 financiers  & Seniors ($\geq 5$ ans, superviseurs) & 20 & $\approx 65$ bits \\
@@ -329,11 +329,11 @@ Les pr\'edictions suivantes sont directement
 falsifiables~\cite{MINKA2026CRO,MINKA2026SOTP}~:
 
 \begin{enumerate}
-\item $\hat\Delta_{\text{juge g\'en\'eral}} \approx 25$ bits
-\item $\hat\Delta_{\text{juge PKI}} \approx 40$ bits
+\item $\hat\Delta_{\text{juge g\'en\'eral}} \approx 25$ bits, minorant attendu de la capacit\'e de $35$ bits retenue par la calibration (Remarque~\ref{rem:delta_capacite})
+\item $\hat\Delta_{\text{juge PKI}} \approx 35$ bits
 \item $\hat\Delta_{\text{r\'egulateur senior}} \approx 65$ bits
 \item $\hat\Delta_{\text{ECDSA}} > \hat\Delta_{\text{Helios}}$ pour tout sous-groupe
-\item Facteur d'amplification institutionnelle $1{,}8$ \`a $3{,}7$ fois par
+\item Facteur d'amplification institutionnelle $1{,}25$ \`a $3{,}7$ fois par
       rapport \`a la capacit\'e individuelle Miller ($\approx 20$ bits)
 \end{enumerate}
 Les pr\'edictions~1, 2, 3 et~5 portent sur des valeurs absolues que le minorant par
@@ -811,7 +811,7 @@ s\'emantique.
 \begin{enumerate}
 \item $\hat\Delta_q < \hat\Delta$ pour les acteurs non form\'es (p\'enalit\'e d'adaptation)
 \item $\hat\Delta_q \to \hat\Delta$ pour les experts PQC (adaptation r\'eussie)
-\item $\hat\Delta_q \in [28, 67]$ bits pour les institutions bien pr\'epar\'ees
+\item $\hat\Delta_q \in [45, 67]$ bits pour les institutions bien pr\'epar\'ees
 \item D\'ecroissance de $\Delta_q$ avec le niveau de bruit quantique
 \item Corr\'elation positive entre formation PQC et $\Delta_q$
 \end{enumerate}
@@ -983,9 +983,11 @@ $\hat\Delta_q$ (capacit\'e d'extraction quantique), $\hat\eta_q$ (perte
 d'interpr\'etabilit\'e) et $\hat\beta_q$ (r\'egularit\'e du protocole en
 r\'egime quantique). Cette troisi\`eme sortie est nouvelle par rapport
 aux algorithmes pr\'ec\'edents, car elle correspond au param\`etre $\beta$
-de l'hypoth\`ese de r\'egularit\'e, transpos\'e au r\'egime quantique. Sa
-mesure est n\'ecessaire pour v\'erifier que la borne post-quantique
-s'applique bien aux protocoles test\'es.
+de l'hypoth\`ese de r\'egularit\'e, transpos\'e au r\'egime quantique. Il se
+calcule sur les lois de preuve. Dans le sc\'enario d'un support quantique bruit\'e, il
+s'estime par tomographie des \'etats de preuve. Pour une signature sur un message
+public, la $\beta$-r\'egularit\'e n'est pas satisfaite et la confrontation \`a la borne
+est sans objet.
 
 La \textbf{partie~A} (lignes~3--5) mesure $\Delta_q$ en l'absence de
 bruit. Elle \'evalue l'extraction institutionnelle sur les deux
@@ -1069,10 +1071,10 @@ Borne (hypoth\`eses v\'erifi\'ees) & le produit mesur\'e d\'epasse la forme raff
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre fait le point. Trois param\`etres classiques, trois param\`etres
-quantiques, soit six protocoles qui visent tous \`a transformer des hypoth\`eses
-en mesures. Il retient surtout leur sym\'etrie, puisque chaque quantit\'e
-admise plus haut dispose d\'esormais d'une proc\'edure pour \^etre test\'ee. La
+L'arbitre fait le point. Quatre protocoles classiques et deux protocoles
+quantiques transforment les hypoth\`eses en mesures. Le param\`etre $\beta$ n'en
+demande pas, puisqu'il se calcule sur les lois de preuve. Chaque quantit\'e
+mesurable admise plus haut dispose d\'esormais d'une proc\'edure pour \^etre test\'ee. La
 th\'eorie, d\'ej\`a coh\'erente, devient ainsi v\'erifiable.
 \end{boiteArbitre}
 

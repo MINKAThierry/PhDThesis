@@ -4,14 +4,14 @@
 
 [Version française](README_fr.md)
 
-`ConditionalCRO.lean`, version 3.3, is a single file that certifies the classical Conditional CRO Trilemma, from the algebraic core to finite probability distributions. It contains no `sorry` and declares no `axiom`. An article presenting the algebraic core has been submitted to the *Journal of Automated Reasoning*; it is not published. The concrete layer (Section 10 of the file) is specific to the thesis.
+`ConditionalCRO.lean`, version 3.4, is a single file that certifies the classical Conditional CRO Trilemma, from the algebraic core to finite probability distributions. It contains no `sorry` and declares no `axiom`. An article presenting the algebraic core has been submitted to the *Journal of Automated Reasoning*; it is not published. The concrete layer (Section 10 of the file) is specific to the thesis.
 
 | Item | Value |
 |---|---|
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lakefile.toml`](lakefile.toml), [`lake-manifest.json`](lake-manifest.json)) |
 | Licence | MIT |
-| Reference output | [`results/lean_build_v3.3.log`](results/lean_build_v3.3.log); earlier versions: `lean_build.log` (v2.2), `lean_build_v3.0.log` to `lean_build_v3.2.log` |
+| Reference output | [`results/lean_build_v3.4.log`](results/lean_build_v3.4.log); earlier versions: `lean_build.log` (v2.2), `lean_build_v3.0.log` to `lean_build_v3.3.log` |
 
 ## Build
 
@@ -40,7 +40,7 @@ lake env lean ConditionalCRO.lean    # prints the #check and #print axioms outpu
 
 ### Compiled statement of the main theorem
 
-Excerpt from `results/lean_build_v3.3.log`.
+Excerpt from `results/lean_build_v3.4.log`.
 
 ```
 ConditionalCRO.conditional_CRO_trilemma : ∀ (F : ConditionalCRO.ProtocolFamily) (κ : ℝ),
@@ -63,9 +63,9 @@ A `ProtocolInstance` is a point of the abstract model. The **consistency witness
 
 | File | Content |
 |---|---|
-| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.3 (comments in French); the header carries the authors' names, omitted from the Appendix B listing |
+| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.4 (comments in French); the header carries the authors' names, omitted from the Appendix B listing |
 | [`lakefile.toml`](lakefile.toml), [`lean-toolchain`](lean-toolchain), [`lake-manifest.json`](lake-manifest.json) | Pinned versions of Lean and Mathlib |
 | [`results/`](results/) | Outputs of `lake env lean ConditionalCRO.lean` for each version |
 | [`cas_limite/`](cas_limite/) | Script for the limiting case of Theorem 1 of P2 in its initial formulation |
 
-The listing of Appendix B of the thesis (`lst:lean4_complet`) is this version 3.3. The version history is described in [`../docs/historique_en.md`](../docs/historique_en.md). The `.lake/` folder produced by the build is not versioned.
+The listing of Appendix B of the thesis (`lst:lean4_complet`) is this version 3.4. The version history is described in [`../docs/historique_en.md`](../docs/historique_en.md). The `.lake/` folder produced by the build is not versioned.

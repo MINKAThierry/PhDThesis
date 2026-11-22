@@ -59,9 +59,9 @@ observ\'ees dans la litt\'erature cognitive et organisationnelle.
 \toprule
 \textbf{Composante} & \textbf{Plage} & \textbf{Base} \\
 \midrule
-Pr\'ec\'edents juridiques et jurisprudence & 10--15 bits & Cat\'egories de cas document\'es \\
+Pr\'ec\'edents juridiques et jurisprudence & 10--25 bits & Cat\'egories de cas document\'es \\
 Formation d'expert et connaissances & 10--20 bits & Domaine de sp\'ecialisation \\
-R\`egles proc\'edurales et m\'emoire institutionnelle & 5--10 bits & Protocoles \'ecrits \\
+R\`egles proc\'edurales et m\'emoire institutionnelle & 5--15 bits & Protocoles \'ecrits \\
 D\'elib\'eration collaborative & 0--15 bits & Amplification collective \\
 Capacit\'e temporelle de d\'elib\'eration & 5--10 bits & Temps allou\'e \\
 Ressources externes et consultation & 5--15 bits & Experts, r\'ef\'erences \\
@@ -73,7 +73,7 @@ Ressources externes et consultation & 5--15 bits & Experts, r\'ef\'erences \\
 institution donn\'ee ne mobilise qu'un sous-ensemble de ces familles. Certaines se
 recouvrent d'ailleurs partiellement, puisque la consultation d'experts externes
 et la formation interne alimentent la m\^eme ressource cognitive. La
-sommation na\"{\i}ve des bornes sup\'erieures produirait $85$ bits, valeur
+sommation na\"{\i}ve des bornes sup\'erieures produirait $100$ bits, valeur
 sup\'erieure \`a toutes les estimations retenues dans cette th\`ese. Le
 tableau~\ref{tab:decomposition_delta} proc\`ede donc syst\`eme par syst\`eme,
 en ne retenant que les composantes effectivement mobilis\'ees dans chaque
@@ -282,7 +282,7 @@ d'adaptation, si bien qu'ils constituent des hypoth\`eses de travail.
 
 \begin{table}[H]
 \centering
-\caption{Produits CLO illustratifs, classiques et post-quantiques ($\lambda = 128$)}
+\caption{Produits CLO illustratifs, classiques et post-quantiques ($\lambda = 128$ pris comme valeur commune de comparaison)}
 \label{tab:comparaison_produits_cro}
 \small 
 \setlength{\tabcolsep}{4pt} 
@@ -308,8 +308,8 @@ PQC & SLH-DSA & 25 & 0{,}08 & 0{,}30 & --- \\
 \midrule
 Classique $\to$ PQC & ECDSA $\to$ ML-DSA & 35 $\to$ 28 & 0 $\to$ 0{,}08 &
   $0{,}273 \to 0{,}35$ & $+28\%$ \\
-Classique $\to$ PQC & RSA $\to$ SLH-DSA & 40 $\to$ 25 & 0 $\to$ 0{,}08 &
-  $0{,}35 \to 0{,}30$ & $-14\%$ \\
+Classique $\to$ PQC & RSA $\to$ SLH-DSA & 30 $\to$ 25 & 0 $\to$ 0{,}08 &
+  $0{,}23 \to 0{,}30$ & $+28\%$ \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
@@ -333,7 +333,7 @@ confronte au produit illustratif du tableau~\ref{tab:comparaison_produits_cro}.
 \begin{table}[htbp]
 \centering
 \caption{D\'ecomposition de la majoration CRO$^q$ et confrontation au produit
-         illustratif ($\lambda = 128$, sc\'enario $\eta_q > 0$)}
+         illustratif ($\lambda = 128$ pris comme valeur commune de comparaison, sc\'enario $\eta_q > 0$)}
 \label{tab:decomposition_borne_pq}
 \small
 \begin{tabular}{@{}lcccccc@{}}
@@ -341,13 +341,13 @@ confronte au produit illustratif du tableau~\ref{tab:comparaison_produits_cro}.
 \textbf{Syst\`eme} & $\Delta_q/\lambda$ & $\eta_q \cdot H(C)/\lambda$ &
 \textbf{Borne} & \textbf{Part $\eta_q$} & \textbf{Produit} & \textbf{D\'epass\'ee~?} \\
 \midrule
-ML-DSA-65 & $0{,}219$ & $0{,}006$ & $0{,}225$ & $2{,}7\%$ & $0{,}35$ & oui \\
-ML-KEM-1024$^\dagger$ & $0{,}305$ & $0{,}007$ & $0{,}312$ & $2{,}2\%$ & $0{,}42$ & oui \\
-SLH-DSA & $0{,}195$ & $0{,}006$ & $0{,}201$ & $3{,}0\%$ & $0{,}30$ & oui \\
+ML-DSA-65 & $0{,}219$ & $0{,}007$ & $0{,}225$ & $2{,}9\%$ & $0{,}35$ & oui \\
+ML-KEM-1024$^\dagger$ & $0{,}305$ & $0{,}007$ & $0{,}312$ & $2{,}4\%$ & $0{,}42$ & oui \\
+SLH-DSA & $0{,}195$ & $0{,}006$ & $0{,}201$ & $2{,}8\%$ & $0{,}30$ & oui \\
 \midrule
 \multicolumn{7}{l}{\textbf{Sc\'enario bruit\'e} ($\eta_q = 0{,}15$)} \\
 \midrule
-ML-DSA-65 & $0{,}219$ & $0{,}012$ & $0{,}231$ & $5{,}2\%$ & $0{,}35$ & oui \\
+ML-DSA-65 & $0{,}219$ & $0{,}012$ & $0{,}231$ & $5{,}3\%$ & $0{,}35$ & oui \\
 ML-KEM-1024$^\dagger$ & $0{,}305$ & $0{,}014$ & $0{,}319$ & $4{,}4\%$ & $0{,}42$ & oui \\
 \bottomrule
 \end{tabular}
@@ -492,8 +492,8 @@ l'hypoth\`ese.
 \textbf{Niveau de pr\'eparation} & $\Delta_q$ \textbf{projet\'e} &
 \textbf{Contexte} & \textbf{Horizon} \\
 \midrule
-Non pr\'epar\'e & $15$--$25$ bits & Transition d\'ebutante & 2025--2026 \\
-Partiellement pr\'epar\'e & $25$--$45$ bits & Formation en cours & 2026--2027 \\
+Non pr\'epar\'e & $15$--$30$ bits & Transition d\'ebutante & 2025--2026 \\
+Partiellement pr\'epar\'e & $30$--$45$ bits & Formation en cours & 2026--2027 \\
 Bien pr\'epar\'e & $45$--$67$ bits & Standards int\'egr\'es & 2027--2028 \\
 Expert PQC & $60$--$80$ bits & Anticipation avanc\'ee & 2028+ \\
 \midrule
@@ -673,7 +673,7 @@ proposition de th\`ese.
 02\_preprints & Fiches des neuf pr\'eprints IACR ePrint cit\'es & Chap.~1, annexe~\ref{chap:annexe_publications} \\
 03\_resultats\_these & \'Enonc\'es propres \`a la th\`ese et formulations pr\'ecis\'ees par rapport aux articles & Chap.~2 \`a 4 \\
 04\_sotp & Sp\'ecification de la famille SOTP, impl\'ementations de r\'ef\'erence et preuves game-based & Chap.~\ref{chap:constructions}, annexe~\ref{chap:annexe_gamebased} \\
-05\_formalisation\_lean & Fichier ConditionalCRO.lean (version 3.3) et configuration Lean/Mathlib & Section~\ref{sec:lean4}, annexe~\ref{chap:annexe_lean4} \\
+05\_formalisation\_lean & Fichier ConditionalCRO.lean (version 3.4) et configuration Lean/Mathlib & Section~\ref{sec:lean4}, annexe~\ref{chap:annexe_lean4} \\
 06\_calcul & Scripts, donn\'ees de calibration, sorties de r\'ef\'erence et tests & Section~\ref{sec:validation_retrospective} \\
 07\_protocoles\_terrain & Instruments des protocoles P1 \`a P7, non d\'eploy\'es & Section~\ref{sec:protocoles_experimentaux} \\
 \bottomrule

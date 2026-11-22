@@ -110,9 +110,10 @@ Nous posons quatre hypoth\`eses sur les capacit\'es
 institutionnelles~\cite{Simon1955,Miller56,Ericsson95}. Chacune repose
 sur des justifications multidisciplinaires ; aucune n'a \'et\'e valid\'ee
 \`a ce stade par protocoles exp\'erimentaux contr\^ol\'es mesurant
-directement $\Delta$, $\alpha$, $\beta$ aupr\`es d'acteurs
+directement $\Delta$ et $\alpha$ aupr\`es d'acteurs
 institutionnels r\'eels, cette limitation est reconnue
-(sous-section~\ref{subsec:note_methodo}).
+(sous-section~\ref{subsec:note_methodo}). Le param\`etre $\beta$ se calcule \`a partir
+des lois de preuve et de la loi du contexte institutionnel, sans mesure aupr\`es d'acteurs.
 
 \begin{definition}[Interpr\'etation institutionnelle admissible]\label{def:interp_admissible}
 Une interpr\'etation est admissible si le verdict s'\'ecrit
@@ -670,6 +671,7 @@ et~\ref{ass:verdicts_efficace} imposeraient $\Delta \geq \gamma - I(M;\Sigma|C)$
 de sorte qu'on serait toujours dans le second r\'egime
 (Remarque~\ref{rem:verdict_deterministe}). Ces faits sont certifi\'es
 en Lean (\texttt{trilemma\_refined}, \texttt{refined\_bound\_is\_fano\_when\_delta\_ge\_gamma},
+\texttt{factor\_lt\_one\_iff}, \texttt{seuil\_Hsharp},
 \texttt{deterministic\_forces\_capacity}, section~\ref{sec:lean4}).
 \end{remark}
 
@@ -1134,7 +1136,14 @@ bits, $\alpha = 1{,}5$, $\Delta \approx 73$ bits pour un r\'egulateur
 expert~\cite{BaselIII}, soit $H^\sharp \approx 49$ et $\gamma = 104$~; la borne
 vaut environ $0{,}70$ fois la borne de Fano. C'est dans ce r\'egime que la
 capacit\'e cognitive de l'institution, au-del\`a de la seule structure
-cryptographique, plafonne le produit.
+cryptographique, plafonne le produit. Ce classement se lit \`a l'\'echelle du domaine, avec les
+param\`etres de calibration. Il suppose un verdict de domaine dont l'entropie atteint au moins
+$\gamma = 104$ bits, ce que la th\`ese ne mesure pas. \`A l'\'echelle d'une d\'ecision, le
+chapitre~\ref{chap:experimentation} d\'enombre huit verdicts, d'o\`u $\hat\alpha \approx 0{,}27$ et
+$\hat\gamma = 2$. Le m\^eme syst\`eme rel\`eve alors du contexte rare. L'existence du r\'egime riche
+ne repose pas sur cet exemple, puisque la Remarque~\ref{rem:temoin_realisable} en donne une loi
+explicite pour tout $\Delta \leq \gamma$. Savoir quelles institutions l'occupent rel\`eve du programme
+de mesure.
 
 % -----------------------------------------------------------------------
 \begin{table}[htbp]

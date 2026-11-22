@@ -1087,7 +1087,11 @@ et des r\'egimes de construction SOTP (section~\ref{sec:sotp_construction})~; el
 sert seulement \`a illustrer l'usage de d\'efinitions calculables dans Lean. Les
 param\`etres des familles canoniques cod\'ees en Lean sont ceux de la
 calibration illustrative, \`a l'exception de $H(C)$, qui n'intervient pas dans
-cette classification.
+cette classification. Les valeurs de $\beta$ des familles canoniques sont illustratives. Au
+sens statistique, une signature qui publie le message et un chiffrement dont le chiffr\'e
+d\'etermine le clair ne sont pas $\beta$-r\'eguliers (D\'efinition~\ref{def:beta_regularite}). Le
+param\`etre $\beta$ n'intervient pas dans la borne du produit~; il n'intervient que dans le
+Lemme~4.
 
 \begin{leancode}[caption={Classification des r\'egimes institutionnels en Lean4}, label={lst:lean4_capacity_regime}]
 inductive InstitutionalRegime where

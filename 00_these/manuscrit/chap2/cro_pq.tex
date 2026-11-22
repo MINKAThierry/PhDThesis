@@ -555,9 +555,10 @@ institutionnelles~\cite{Simon1955,Miller56,Ericsson95,Kahneman11} en
 prenant en compte les r\'ealit\'es du quantique. Chacune repose sur des
 justifications multidisciplinaires. Aucune n'a toutefois \'et\'e valid\'ee \`a ce
 stade par protocoles exp\'erimentaux contr\^ol\'es mesurant directement
-$\Delta_q$, $\eta_q$, $\beta_q$, $\zeta_q$ aupr\`es d'acteurs institutionnels
+$\Delta_q$ et $\eta_q$ aupr\`es d'acteurs institutionnels
 r\'eels, limitation reconnue
-(sous-section~\ref{subsec:note_methodo}).
+(sous-section~\ref{subsec:note_methodo}). Les constantes $\beta_q$ et $\zeta_q$ se calculent \`a partir des lois de
+preuve et de la loi du contexte institutionnel, sans mesure aupr\`es d'acteurs.
 
 \begin{remark}[Version de la preuve]
 \label{rem:version_preuve_pq}
@@ -1044,7 +1045,7 @@ Profil typique & institution form\'ee ou experte & d\'ebut de migration \\
 Comme dans le cas classique, les syst\`emes d\'eploy\'es ne sont pas des
 instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}). Leurs
 produits CLO permettent seulement de calibrer des ordres de grandeur
-de $\Delta_q$~\cite{Adida08,Groth16,Johnson01,Dilithium2022,SPHINCS2022}.
+de $\Delta_q$, les hypoth\`eses de travail du tableau~\ref{tab:parametres_reference} restant la r\'ef\'erence~\cite{Adida08,Groth16,Johnson01,Dilithium2022,SPHINCS2022}.
 
 \subsubsection{Syst\`emes classiques}
 
@@ -1063,7 +1064,7 @@ quantique se r\'eduit \`a la calibration classique
 \textbf{Syst\`eme} & $\boldsymbol{\eta_q}$ & $\boldsymbol{H(C)}$ \textbf{(domaine)} & $\boldsymbol{\Delta_q}$ \textbf{implicite} & $\boldsymbol{\Delta_q/\lambda}$ \\
 \midrule
 Helios~\cite{Adida08,Adida09UCL} & $0$ & 40 bits & $\approx 56$ bits & $0{,}437$ \\
-zk-SNARKs~\cite{Groth16,BCTV14} & $0$ & 70 bits & $\approx 73$ bits & $0{,}570$ \\
+zk-SNARKs~\cite{Groth16,BCTV14} & $0$ & 70 bits & $\approx 73$ bits & $0{,}572$ \\
 ECDSA~\cite{Johnson01,NIST.FIPS.186-5} & $0$ & 20 bits & $\approx 35$ bits & $0{,}273$ \\
 \bottomrule
 \end{tabular}
@@ -1080,30 +1081,30 @@ ECDSA~\cite{Johnson01,NIST.FIPS.186-5} & $0$ & 20 bits & $\approx 35$ bits & $0{
 \centering
 \caption{Calibration illustrative des signatures post-quantiques}
 \label{tab:validation_pqc}
-\begin{tabular}{@{}lcccc@{}}
+\begin{tabular}{@{}lccccc@{}}
 \toprule
-\textbf{Sch\'ema} & \textbf{Type} & $\boldsymbol{\lambda}$ & $\boldsymbol{\eta_q}$ & $\boldsymbol{\Delta_q}$ \textbf{implicite} \\
+\textbf{Sch\'ema} & \textbf{Type} & $\boldsymbol{\lambda}$ & $\boldsymbol{\eta_q}$ & $\boldsymbol{\Delta_q}$ \textbf{implicite}~\cite{MINKA2026PQCRO} & $\boldsymbol{\Delta_q}$ \textbf{hypoth\`ese de travail} \\
 \midrule
-ML-DSA-65 (Dilithium-3)~\cite{Dilithium2022} & R\'eseau & 192 & $0$ & $\approx 54$ bits \\
-ML-DSA-87 (Dilithium-5)~\cite{Dilithium2022} & R\'eseau & 256 & $0$ & $\approx 72$ bits \\
-SLH-DSA (SPHINCS+)~\cite{SPHINCS2022} & Hachage & 256 & $0$ & $\approx 97$ bits \\
-Falcon~\cite{Falcon2022} & R\'eseau & 256 & $0$ & $\approx 70$ bits \\
+ML-DSA-65 (Dilithium-3)~\cite{Dilithium2022} & R\'eseau & 192 & $0$ & $\approx 54$ bits & 28 bits \\
+ML-DSA-87 (Dilithium-5)~\cite{Dilithium2022} & R\'eseau & 256 & $0$ & $\approx 72$ bits & non calibr\'e \\
+SLH-DSA (SPHINCS+)~\cite{SPHINCS2022} & Hachage & 256 & $0$ & $\approx 97$ bits & 25 bits \\
+Falcon~\cite{Falcon2022} & R\'eseau & 256 & $0$ & $\approx 70$ bits & non calibr\'e \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\item \footnotesize $\eta_q = 0$ car ces signatures sont des cha\^ines de bits classiques. Les valeurs $\eta_q \in [0{,}012 ; 0{,}020]$ de la formulation initiale correspondaient au sc\'enario hypoth\'etique d'un support quantique~; elles modifiaient $\Delta_q$ de moins d'un bit. ML-KEM (Kyber), m\'ecanisme d'encapsulation de cl\'e et non syst\`eme de preuve, ne figure pas dans le tableau.
+\item \footnotesize $\eta_q = 0$ car ces signatures sont des cha\^ines de bits classiques. Colonne implicite~: valeurs obtenues par inversion de la forme publi\'ee de~\cite{MINKA2026PQCRO}. Colonne hypoth\`ese de travail~: valeurs du tableau~\ref{tab:parametres_reference}, seules employ\'ees dans la suite. Pour la colonne implicite, les valeurs $\eta_q \in [0{,}012 ; 0{,}020]$ de la formulation initiale correspondaient au sc\'enario hypoth\'etique d'un support quantique~; elles modifiaient $\Delta_q$ de moins d'un bit. ML-KEM (Kyber), m\'ecanisme d'encapsulation de cl\'e et non syst\`eme de preuve, ne figure pas dans le tableau.
 \end{tablenotes}
 \end{table}
 % -----------------------------------------------------------------------
 
-Les capacit\'es implicites ($54$ \`a $97$ bits) sont de l'ordre de quelques
-dizaines de bits~; celle de SLH-DSA d\'epasse l'intervalle $[20, 80]$ bits
-sugg\'er\'e par la litt\'erature sur la rationalit\'e
-born\'ee~\cite{Miller56,Simon82,Ericsson95,Cowan2001}, ce qui signale soit une
-sur\'evaluation du produit CLO retenu pour ce sch\'ema, soit une limite de
-la calibration. Cette calibration est \textbf{r\'etrospective et
-illustrative}~; elle ne constitue pas une preuve empirique des hypoth\`eses
-institutionnelles quantiques.
+Les capacit\'es implicites ($54$ \`a $97$ bits) sont conserv\'ees pour la tra\c{c}abilit\'e
+avec~\cite{MINKA2026PQCRO}. Elles proviennent de produits CLO que le
+chapitre~\ref{chap:experimentation} ne retient plus, la confidentialit\'e d'une signature sur un
+message public \'etant nulle. Les hypoth\`eses de travail ($28$ et $25$ bits) sont les seules
+valeurs employ\'ees dans la suite. Elles se situent dans l'intervalle $[20, 80]$ bits sugg\'er\'e par
+la litt\'erature sur la rationalit\'e born\'ee~\cite{Miller56,Simon82,Ericsson95,Cowan2001}. Cette
+calibration est \textbf{r\'etrospective et illustrative}~; elle ne constitue pas une preuve
+empirique des hypoth\`eses institutionnelles quantiques.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
@@ -1208,7 +1209,7 @@ preuve transitait par un support quantique. Pour les signatures
 post-quantiques qu'il recevra, qui sont des cha\^ines de bits, ce terme est nul.
 
 La calibration reste illustrative, car les syst\`emes analys\'es ne sont pas
-des instances du th\'eor\`eme. Les capacit\'es implicites, de quelques
+des instances du th\'eor\`eme. Les hypoth\`eses de travail, de quelques
 dizaines de bits, sont plausibles sans \^etre mesur\'ees.
 
 Les bornes \'etant \'etablies, il reste \`a savoir si des constructions les
