@@ -19,8 +19,9 @@ Il s'agit de la table unique de référence (`tab:parametres_reference` de la th
 | `H_C_domaine` | réel (bits) | Entropie du contexte institutionnel général (chapitre 2) |
 | `H_C_espece` | réel (bits) | Entropie du contexte d'une décision particulière (`sec:derivation_opposabilite`) |
 | `H_V_C_espece` | réel (bits) | $H(V\mid C)$ dérivée de l'espace de verdicts d'espèce |
-| `alpha` | réel | Granularité des verdicts $\alpha$ |
-| `beta` | réel | Régularité $\beta$ (utilisée par les heuristiques SOTP) |
+| `alpha` | réel | Granularité des verdicts $\alpha$ à l'échelle du domaine |
+| `beta` | réel | Régularité $\beta$ (utilisée par les heuristiques SOTP) ; vide pour ECDSA, dont les lois de preuve à supports disjoints ne sont pas $\beta$-régulières |
+| `alpha_espece` | réel | Granularité $\hat\alpha$ à l'échelle de l'espèce, calculée par $\log_2\lvert\mathcal{V}\rvert/H(C)$ |
 | `Delta` | réel (bits) | Capacité d'extraction institutionnelle $\Delta$ (calibration) |
 | `lambda` | entier | Paramètre de sécurité de la calibration |
 | `Conf_clo`, `Rel_ver_clo`, `Opp_clo` | réels | Métriques CLO de l'article CLO (échelle opérationnelle, fiabilité de vérification) |

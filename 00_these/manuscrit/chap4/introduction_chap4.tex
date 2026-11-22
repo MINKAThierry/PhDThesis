@@ -9,12 +9,12 @@
 \begin{sloppypar}
 
 Les Trilemmes CRO classique et post-quantique \'etablis au
-chapitre~\ref{chap:cadre_formel} sont des r\'esultats conditionnels, car leur
+chapitre~\ref{chap:cadre_formel} sont des r\'esultats conditionnels. Leur
 port\'ee pratique d\'epend enti\`erement de la possibilit\'e de mesurer
 empiriquement les param\`etres institutionnels qui les param\`etrent. Pour le
 cadre classique (Production~C2), il s'agit de $\Delta$ (capacit\'e
-d'extraction), $\alpha$ (granularit\'e des verdicts), $\beta$ (r\'egularit\'e)
-et $H(\mathcal{C})$ (entropie contextuelle). Pour l'extension post-quantique
+d'extraction), $\alpha$ (granularit\'e des verdicts), $\beta$ (r\'egularit\'e, calcul\'ee sur les lois
+de preuve) et $H(\mathcal{C})$ (entropie contextuelle). Pour l'extension post-quantique
 (Production~C3), s'y ajoutent $\Delta_q$ (capacit\'e quantique) et $\eta_q$
 (coefficient de perte d'interpr\'etabilit\'e quantique). Sans proc\'edure de
 mesure, ces grandeurs demeurent des postulats~; sans estimation, les bornes
@@ -30,8 +30,8 @@ distincte, qu'il importe de ne pas confondre.
 sections~\ref{sec:protocoles_experimentaux}
 \`a~\ref{subsec:calendrier_ressources} sp\'ecifient, jusqu'au niveau
 op\'erationnel, le dispositif exp\'erimental permettant de mesurer chacun des
-param\`etres, qu'il s'agisse de la stratification des \'echantillons, des estimateurs, des crit\`eres de
-fiabilit\'e inter-\'evaluateurs ou des seuils de falsification. Ce programme n'a pas
+param\`etres. Ce dispositif couvre la stratification des \'echantillons, les estimateurs, les crit\`eres de
+fiabilit\'e inter-\'evaluateurs et les seuils de falsification. Ce programme n'a pas
 \'et\'e d\'eploy\'e dans le cadre de cette th\`ese~; son statut exact est
 pr\'ecis\'e \`a la sous-section~\ref{subsubsec:statut_deploiement}, qui referme
 cette partie.
@@ -44,8 +44,8 @@ syst\`emes cryptographiques r\'eellement d\'eploy\'es, les valeurs
 d'opposabilit\'e et les produits CRO qui servent de r\'ef\'erence \`a tout le
 chapitre. Elle estime ensuite, par une voie enti\`erement distincte (triangulation de la litt\'erature cognitive, de l'analyse documentaire et des
 sp\'ecifications techniques), les param\`etres institutionnels qui
-param\`etrent les bornes avant de mettre les deux estimations en regard. Ces deux voies
-ne sont pas ind\'ependantes, puisque les valeurs de $\Delta$ ont d'abord \'et\'e fix\'ees
+figurent dans les bornes. Elle met enfin les deux estimations en regard. Ces deux voies
+ne sont pas ind\'ependantes. Les valeurs de $\Delta$ ont d'abord \'et\'e fix\'ees
 par inversion de la borne. Les syst\`emes d\'eploy\'es ne sont pas non plus des
 instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}). Cette partie
 constitue donc une \emph{calibration illustrative}. Elle v\'erifie que les ordres
@@ -53,7 +53,7 @@ de grandeur retenus sont mutuellement coh\'erents, sans constituer une validatio
 empirique.
 
 Le chapitre sp\'ecifie d'abord les protocoles de mesure puis exploite les donn\'ees existantes.
-Cet ordre m\'ethodologique r\'epond \`a une n\'ecessit\'e logique, car on ne peut extraire
+Cet ordre m\'ethodologique r\'epond \`a une n\'ecessit\'e logique. On ne peut extraire
 d'information de mesures que si l'on sait d\'efinir ce qui doit \^etre mesur\'e.
 La sp\'ecification des protocoles pr\'ec\`ede donc l'application aux
 syst\`emes d\'eploy\'es. Les estimations r\'etrospectives restent ainsi ancr\'ees
@@ -68,7 +68,7 @@ l'\'etat de leur validation.
 
 \begin{table}[htbp]
 \centering
-\caption{Protocole de mesure et statut de validation des param\`etres institutionnels}
+\caption{Protocole de mesure ou de calcul et statut de validation des param\`etres institutionnels}
 \label{tab:parametres_mesure}
 \small
 \setlength{\tabcolsep}{4pt} % Réduit l'espacement entre les colonnes
@@ -80,7 +80,7 @@ l'\'etat de leur validation.
 \midrule
 C2 (Trilemme classique)
   & $\Delta$, $\alpha$, $\beta$, $H(\mathcal{C})$
-  & \S\ref{subsec:protocole_delta}--\S\ref{subsec:protocole_conjoint}
+  & \S\ref{subsec:protocole_delta}--\S\ref{subsec:protocole_conjoint}~; $\beta$ calcul\'e (D\'efinition~\ref{def:beta_regularite})
   & Calibration illustrative & R\'etrospectif \\
 C3 (Trilemme post-quantique)
   & $\Delta_q$, $\eta_q$, $\beta_q$
@@ -150,8 +150,8 @@ capacit\'e classique de d\'epart du tableau~\ref{tab:decomposition_delta_q}. \og
 g\'en\'eral (chapitre~\ref{chap:cadre_formel})~; \og esp\`ece\fg{} d\'esigne le contexte d'une
 d\'ecision particuli\`ere (section~\ref{sec:derivation_opposabilite}). Pour
 ML-DSA-65, $\eta_q = 0$ car la signature est une cha\^{\i}ne de bits classique
-(les valeurs $\eta_q > 0$ du chapitre d\'ecrivent un sc\'enario hypoth\'etique)~;
-$\Delta_q = 28$~bits est une hypoth\`ese de travail
+(les valeurs $\eta_q > 0$ du chapitre d\'ecrivent un sc\'enario hypoth\'etique).
+La valeur $\Delta_q = 28$~bits est une hypoth\`ese de travail
 (section~\ref{sec:etude_cas_dilithium}), \`a estimer par le protocole de la
 section~\ref{subsec:protocole_delta_q}.
 \end{minipage}

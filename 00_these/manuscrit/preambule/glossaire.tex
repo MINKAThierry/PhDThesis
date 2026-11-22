@@ -59,8 +59,8 @@
 \begin{description}[style=nextline,leftmargin=2cm,font=\normalfont\bfseries]
 \item[MAP] Maximum A Posteriori (Estimateur du maximum a posteriori)
 \item[Mathlib] Biblioth\`eque math\'ematique de Lean4
-\item[ML-DSA] Module-Lattice-Based Digital Signature Algorithm, FIPS 204, bas\'e sur Dilithium
-\item[ML-KEM] Module-Lattice-Based Key Encapsulation Mechanism, FIPS 203, bas\'e sur Kyber
+\item[ML-DSA] Module-Lattice-Based Digital Signature Algorithm, FIPS 204, d\'eriv\'e de Dilithium
+\item[ML-KEM] Module-Lattice-Based Key Encapsulation Mechanism, FIPS 203, d\'eriv\'e de Kyber
 \item[MPC] Multi-Party Computation (Calcul multi-parties)
 \item[NIST] National Institute of Standards and Technology (Institut national des normes et de la technologie)
 \item[NISQ] Noisy Intermediate-Scale Quantum (Appareils quantiques interm\'ediaires bruit\'es)
@@ -84,7 +84,7 @@
 \item[$\mathsf{Rel}$] M\'etrique de fiabilit\'e (\textit{Reliability}), voir D\'efinition~\ref{def:fiabilite_clo}
 \item[RGPD] R\`eglement G\'en\'eral sur la Protection des Donn\'ees, voir GDPR
 \item[RSA] Rivest-Shamir-Adleman (algorithme de chiffrement)
-\item[SLH-DSA] Stateless Hash-Based Digital Signature Algorithm, FIPS 205, bas\'e sur SPHINCS+
+\item[SLH-DSA] Stateless Hash-Based Digital Signature Algorithm, FIPS 205, d\'eriv\'e de SPHINCS+
 \item[SNARK] Succinct Non-interactive ARgument of Knowledge (Argument succinct non-interactif de connaissance)
 \item[SOTP] Semantic One-Time Pad (Masque jetable s\'emantique), famille de protocoles de cette th\`ese
 \item[SOTP-Base] SOTP sous le seuil $H^\sharp$, lorsque l'institution compare des contextes
@@ -117,7 +117,7 @@
 \item[$\alpha$] Granularit\'e des verdicts institutionnels, $\log_2|\mathcal{V}_\lambda| \leq \alpha H(C)$
 \item[$\beta$] Constante de r\'egularit\'e du protocole, $\mathrm{KL}(P_{\Sigma|m_0,c}\|P_{\Sigma|m_1,c}) \leq \beta \cdot I(M;\Sigma|C)$
 \item[$\eta_q$] Coefficient de perte d'interpr\'etabilit\'e quantique, $I(V;\Lambda(\Sigma)|C) \geq I(V;\Sigma|C) - \eta_q H(C)$~; $\eta_q = 0$ pour une preuve qui est une cha\^{\i}ne de bits
-\item[$H(C)$] Entropie du contexte institutionnel, $H(C) = H(L) + H(T|L) + H(R|L,T)$
+\item[$H(C)$] Entropie du contexte institutionnel, $H(C) = H(L) + H(T|L) + H(R|L,T)$~; not\'ee aussi $H(\mathcal{C})$, les deux \'ecritures d\'esignant la m\^eme quantit\'e
 \end{description}
 
 \subsection*{Param\`etres cryptographiques}
@@ -138,7 +138,7 @@
 \item[$\Relver(\mathcal{P})$] Fiabilit\'e de v\'erification, compl\'etude et solidit\'e du v\'erificateur
 \item[$\mathsf{Opp}(\mathcal{P})$] Opposabilit\'e du protocole $\mathcal{P}$, $\mathsf{Opp} = I(V;\Sigma|C)/H(V|C)$
 \item[$\mathsf{Conf}^q$] Confidentialit\'e quantique, $1 - \max \tfrac12\|\rho_{m_0,c}-\rho_{m_1,c}\|_1$ (statistique)
-\item[$\mathsf{Rel}^q$] Fiabilit\'e quantique, recouvrement optimal via POVM
+\item[$\mathsf{Rel}^q$] Fiabilit\'e quantique, recouvrement optimal par une POVM
 \item[$\mathsf{Opp}^q$] Opposabilit\'e quantique, information extraite par un interpr\`ete admissible, rapport\'ee \`a $H(V|C)$
 \end{description}
 
@@ -148,7 +148,7 @@
 \item[$M$] Variable al\'eatoire message, espace $\mathcal{M}_\lambda$ avec $|\mathcal{M}_\lambda| = 2^\lambda$
 \item[$\Sigma$] Variable al\'eatoire preuve cryptographique, espace $\Sigma_\lambda$
 \item[$C$] Variable al\'eatoire contexte institutionnel, espace $\mathcal{C}_\lambda$ avec distribution $P_C$
-\item[$V$] Variable al\'eatoire verdict institutionnel, $V = \mathsf{Interpret}(\Sigma, C)$
+\item[$V$] Variable al\'eatoire verdict institutionnel, $V = \mathsf{Interpret}(\Sigma, C, K)$ avec $K$ les ressources de l'institution
 \item[$\mathcal{Y}_\lambda$] Espace des verdicts, $|\mathcal{Y}_\lambda| \leq 2^{\alpha H(C)}$
 \item[$\rho$] \'Etat quantique (matrice de densit\'e)
 \item[$\Lambda$] Canal quantique (application CPTP)
@@ -235,10 +235,10 @@
 \item[Helios] Protocole de vote \`a v\'erification de bout en bout, $\mathsf{Conf} \approx 0{,}92$, $\Relver \approx 0{,}95$, $\mathsf{Opp} \approx 0{,}50$ (calibration)
 \item[zk-SNARKs] Preuves succinctes de conformit\'e, $\mathsf{Conf} \approx 0{,}89$, $\Relver \approx 0{,}96$, $\mathsf{Opp} \approx 0{,}67$ (calibration)
 \item[ECDSA] Signatures num\'eriques sur courbes elliptiques, $\mathsf{Conf} \approx 0{,}31$, $\Relver \approx 0{,}98$, $\mathsf{Opp} \approx 0{,}90$ (calibration)
-\item[Dilithium] Signature PQC bas\'ee sur les r\'eseaux, standardis\'ee sous le nom ML-DSA (FIPS 204)
-\item[Kyber] KEM PQC bas\'e sur les r\'eseaux, standardis\'e sous le nom ML-KEM (FIPS 203)~; hors du champ du Trilemme
-\item[SPHINCS+] Signature PQC bas\'ee sur les hachages (FIPS 205)
-\item[Falcon] Signature PQC bas\'ee sur NTRU (standardisation en cours)
+\item[Dilithium] Signature PQC fond\'ee sur les r\'eseaux, standardis\'ee sous le nom ML-DSA (FIPS 204)
+\item[Kyber] KEM PQC fond\'e sur les r\'eseaux, standardis\'e sous le nom ML-KEM (FIPS 203)~; hors du champ du Trilemme
+\item[SPHINCS+] Signature PQC fond\'ee sur les fonctions de hachage (FIPS 205)
+\item[Falcon] Signature PQC fond\'ee sur NTRU (standardisation en cours)
 \end{description}
 \end{sloppypar}
 % ============================================================================

@@ -14,16 +14,16 @@ La section pr\'ec\'edente a sp\'ecifi\'e \emph{comment} mesurer les
 param\`etres institutionnels. La pr\'esente section \'etablit \emph{quelles
 valeurs} ces param\`etres prennent, par estimation r\'etrospective sur les
 trois syst\`emes de r\'ef\'erence classiques et les standards
-post-quantiques. Aucune mesure nouvelle n'est introduite, de sorte que les chiffres qui
+post-quantiques. Aucune mesure nouvelle n'est introduite. Les chiffres qui
 suivent sont des calibrations illustratives, tir\'ees des sp\'ecifications
 publi\'ees et mises en regard des produits CLO de la
 section~\ref{sec:derivation_opposabilite}.
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre change de posture, car apr\`es un plan, il assiste \`a une
+L'arbitre change de posture. Apr\`es un plan, il assiste \`a une
 confrontation. Ce qui avait \'et\'e admis plus haut ($\Delta \in [35, 73]$
-bits, $\alpha \in [0{,}8, 1{,}5]$, $\beta = O(1)$) revient maintenant sous
+bits, $\alpha \in [0{,}8, 1{,}5]$, $\beta \geq 1$) revient maintenant sous
 forme de valeurs calibr\'ees, syst\`eme par syst\`eme. Il s'agit de savoir
 si les ordres de grandeur retenus se tiennent entre eux, sans v\'erifier le
 th\'eor\`eme, dont ces syst\`emes ne sont pas des instances.
@@ -69,7 +69,7 @@ Ressources externes et consultation & 5--15 bits & Experts, r\'ef\'erences \\
 \end{tabular}
 \end{table}
 
-\noindent\textbf{Lecture du tableau.} Ces plages ne sont pas cumulatives, car une
+\noindent\textbf{Lecture du tableau.} Ces plages ne sont pas cumulatives. Une
 institution donn\'ee ne mobilise qu'un sous-ensemble de ces familles. Certaines se
 recouvrent d'ailleurs partiellement, puisque la consultation d'experts externes
 et la formation interne alimentent la m\^eme ressource cognitive. La
@@ -143,14 +143,18 @@ ci-dessous est donc heuristique.
 \textbf{Syst\`eme} & $\alpha$ & $\beta$ & \textbf{Variante SOTP} &
 \textbf{Justification} \\
 \midrule
-ECDSA & 1{,}0 & 1{,}0 & SOTP-Low
-  & Validit\'e binaire, nonce uniforme \\
+ECDSA & 1{,}0 & --- & SOTP-Low
+  & Validit\'e binaire, $\beta$ non d\'efini \\
 Helios & 1{,}2 & 1{,}4 & SOTP-Base
   & Audit d\'etaill\'e, irr\'egularit\'e ZK \\
 zk-SNARKs & 1{,}5 & 1{,}5 & SOTP-High
   & Conformit\'e gradu\'ee, circuit optimis\'e \\
 \bottomrule
 \end{tabular}
+
+\smallskip
+{\footnotesize ECDSA publie le message. Ses lois de preuve ont des supports disjoints et $\beta$
+n'est pas d\'efini (D\'efinition~\ref{def:beta_regularite}).\par}
 \end{table}
 \end{sloppypar}
 
@@ -235,7 +239,7 @@ Simulation hybride & Variable & Variable & $0{,}02$--$0{,}15$ & Param\'etrable \
 \label{eq:relation_eta_q_fidelite}
 \end{equation}
 Cette relation n'a pas valeur de th\'eor\`eme. L'in\'egalit\'e de Fuchs--van de Graaf
-borne la distance de trace par $\sqrt{1-F}$ tandis que la continuit\'e de l'information
+borne la distance de trace par $\sqrt{1-F}$. La continuit\'e de l'information
 mutuelle conditionnelle (Alicki--Fannes--Winter) convertit cette distance en perte
 d'information avec un facteur qui d\'epend de la dimension du syst\`eme au lieu de
 $H(C)$. Elle fixe un ordre de grandeur pour le sc\'enario.
@@ -273,7 +277,7 @@ calcul\'ees \`a la section~\ref{sec:derivation_opposabilite} (avec $\Relver$).
 Pour les standards post-quantiques, o\`u aucun calcul descendant n'est
 disponible faute de contexte institutionnel document\'e, les produits sont
 obtenus par transposition du rapport $\Delta_q/\lambda$ major\'e d'une correction
-d'adaptation, si bien qu'ils constituent des hypoth\`eses de travail.
+d'adaptation. Ce sont donc des hypoth\`eses de travail.
 
 % -----------------------------------------------------------------------
 \subsection{Tableau comparatif principal}
@@ -320,8 +324,7 @@ Classique $\to$ PQC & RSA $\to$ SLH-DSA & 30 $\to$ 25 & 0 $\to$ 0{,}08 &
 \noindent\textbf{Observation.} La p\'enalit\'e d'adaptation ($\Delta_q < \Delta$)
 abaisse la borne. Le terme $\eta_q H(C)$, qui n'intervient que dans le sc\'enario
 d'un support quantique, la rel\`eve l\'eg\`erement. Le produit
-ML-DSA augmente pourtant par rapport \`a ECDSA alors que $\Delta_q$ diminue, ce qui tient
-au fait que la transposition utilis\'ee pour ces produits n'est pas d\'eduite de la borne.
+ML-DSA augmente pourtant par rapport \`a ECDSA alors que $\Delta_q$ diminue. La raison en est que la transposition utilis\'ee pour ces produits n'est pas d\'eduite de la borne.
 
 \subsubsection{Analyse de la contribution du terme $\eta_q \cdot H(C)$}
 
@@ -373,7 +376,7 @@ premi\`ere cible du protocole de la section~\ref{subsec:protocole_delta_q}.
 \begin{boiteArbitre}
 L'arbitre s'arr\^ete sur un chiffre qui ne colle pas. Les produits sont
 au-dessus de la borne, de dix \`a treize centi\`emes. Loin de le cacher, le texte
-le nomme en donnant sa raison, puisque ces syst\`emes ne sont pas des instances
+le nomme en donnant sa raison. Ces syst\`emes ne sont pas des instances
 du th\'eor\`eme. L'arbitre note que la borne n'est ni confirm\'ee ni r\'efut\'ee
 ici et qu'il reviendra \`a la mesure de $\Delta_q$ de trancher.
 \end{boiteArbitre}
@@ -390,7 +393,7 @@ ici et qu'il reviendra \`a la mesure de $\Delta_q$ de trancher.
 L'incertitude portant sur les param\`etres institutionnels est propag\'ee
 jusqu'au rapport $\Delta/\lambda$ en affectant $\Delta$ d'un coefficient de
 variation de $20\,\%$ pour les syst\`emes classiques et de $25\,\%$ pour les
-syst\`emes post-quantiques, o\`u la p\'enalit\'e d'adaptation ajoute une source
+syst\`emes post-quantiques. Pour ces derniers, la p\'enalit\'e d'adaptation ajoute une source
 d'incertitude. Ces coefficients sont des hypoth\`eses de travail~; ils ne sont
 pas tir\'es d'une mesure.
 
@@ -433,7 +436,7 @@ Avec un coefficient de variation de $25\,\%$ sur $\Delta_q$, le rapport
 $\Delta_q/\lambda$ ($\lambda = 128$) a pour intervalle \`a $95\,\%$ environ
 $[0{,}11;\,0{,}33]$ pour ML-DSA ($\Delta_q = 28$) et $[0{,}10;\,0{,}29]$ pour SLH-DSA
 ($\Delta_q = 25$). Le terme $\eta_q H(C)/\lambda$ est nul pour ces signatures,
-qui sont des cha\^{\i}nes de bits classiques~; dans le sc\'enario hypoth\'etique
+qui sont des cha\^{\i}nes de bits classiques. Dans le sc\'enario hypoth\'etique
 d'un support quantique ($\eta_q \approx 0{,}08$), il vaut moins d'un centi\`eme
 et ne modifie pas ces intervalles. Les intervalles post-quantiques de
 la formulation initiale ne sont pas repris, pour les m\^emes raisons.
@@ -477,7 +480,7 @@ zk-SNARKs (r\'egulateurs) & 73 bits & \cite{MINKA2026SOTP} & Calibration \\
 \subsubsection{Rep\`eres quantiques projet\'es}
 \label{subsec:benchmarks_quantiques}
 
-Aucun rep\`ere historique n'existe pour $\Delta_q$, car la transition PQC est en
+Aucun rep\`ere historique n'existe pour $\Delta_q$. La transition PQC est en
 cours et les institutions n'ont pas encore accumul\'e de pratique. Le
 tableau~\ref{tab:benchmarks_quantiques} propose une grille de projection
 index\'ee sur le niveau de pr\'eparation institutionnelle, qui rel\`eve de
@@ -548,8 +551,8 @@ justement que ces syst\`emes ne sont pas des instances du th\'eor\`eme
 La formulation initiale rapportait une corr\'elation $r = 0{,}9997$ entre les deux
 voies d'estimation, avec $p < 10^{-6}$ par permutation. Ce test n'est pas repris,
 pour deux raisons. Avec trois points, un test de permutation ne compte que $3! = 6$
-permutations, de sorte que la plus petite $p$-valeur atteignable est $1/6$. Surtout, la
-corr\'elation mesurait une identit\'e, puisque $\Delta$ avait \'et\'e fix\'e par
+permutations~; la plus petite $p$-valeur atteignable est $1/6$. Surtout, la
+corr\'elation mesurait une identit\'e~; $\Delta$ avait \'et\'e fix\'e par
 $\Delta := \lambda \cdot (\Conf \cdot \Relver \cdot \Opp)$.
 
 Pour les syst\`emes post-quantiques, le tableau~\ref{tab:decomposition_borne_pq} confronte
@@ -587,7 +590,8 @@ illustratifs, sans mesure.
 \texttt{system} & cha\^{\i}ne & Identifiant syst\`eme \\
 \texttt{H\_C\_domaine}, \texttt{H\_C\_espece} & r\'eel & Entropie contextuelle (deux \'echelles) \\
 \texttt{Delta}, \texttt{Delta\_q} & r\'eel & Capacit\'e d'extraction (calibration) \\
-\texttt{alpha}, \texttt{beta} & r\'eel & Granularit\'e, r\'egularit\'e \\
+\texttt{alpha}, \texttt{alpha\_espece} & r\'eel & Granularit\'e (domaine, esp\`ece) \\
+\texttt{beta} & r\'eel & R\'egularit\'e (vide si non d\'efinie) \\
 \texttt{eta\_q} & r\'eel & Perte d'interpr\'etabilit\'e (sc\'enario~; $0$ pour une cha\^{\i}ne de bits) \\
 \texttt{lambda} & entier & Param\`etre de s\'ecurit\'e \\
 \texttt{product\_clo} & r\'eel & Produit CLO (calibration illustrative, $\Relver$) \\
@@ -682,7 +686,7 @@ proposition de th\`ese.
 
 Le r\'epertoire \texttt{06\_calcul/} r\'eunit les
 scripts ci-dessous (\texttt{python/}), les donn\'ees de calibration (\texttt{data/}),
-les sorties de r\'ef\'erence avec leurs empreintes SHA-256 (\texttt{results/}) et une
+les sorties de r\'ef\'erence avec leurs empreintes SHA-256 (\texttt{results/}). On y trouve aussi une
 batterie de tests qui recalcule chaque valeur num\'erique cit\'ee dans ce chapitre
 (\texttt{tests/}). La commande \texttt{./reproduire.sh}, lanc\'ee dans
 \texttt{06\_calcul/}, r\'eg\'en\`ere l'ensemble.

@@ -19,8 +19,9 @@ This is the single reference table (`tab:parametres_reference` in the thesis). E
 | `H_C_domaine` | real (bits) | Entropy of the general institutional context, "domain" (Chapter 2) |
 | `H_C_espece` | real (bits) | Entropy of the context of a particular decision, "case" (`sec:derivation_opposabilite`) |
 | `H_V_C_espece` | real (bits) | $H(V\mid C)$ derived from the case-level verdict space |
-| `alpha` | real | Verdict granularity $\alpha$ |
-| `beta` | real | Regularity $\beta$ (used by the SOTP heuristics) |
+| `alpha` | real | Verdict granularity $\alpha$ at domain scale |
+| `beta` | real | Regularity $\beta$ (used by the SOTP heuristics); empty for ECDSA, whose proof laws have disjoint supports and are not $\beta$-regular |
+| `alpha_espece` | real | Granularity $\hat\alpha$ at case scale, computed as $\log_2\lvert\mathcal{V}\rvert/H(C)$ |
 | `Delta` | real (bits) | Institutional extraction capacity $\Delta$ (calibration) |
 | `lambda` | integer | Security parameter of the calibration |
 | `Conf_clo`, `Rel_ver_clo`, `Opp_clo` | reals | CLO metrics from the CLO article (operational scale, verification reliability) |

@@ -1,7 +1,7 @@
 % ============================================================================
 % INTRODUCTION G\'eN\'eRALE
 % source: intro_conclu_gen/introduction_generale.tex
-% Version : 2.1 — alignée sur la formalisation Lean4 révisée
+% Alignée sur la formalisation Lean4 révisée
 % ============================================================================
 
 %\chapter*{INTRODUCTION G\'EN\'ERALE}
@@ -24,7 +24,7 @@ s\'ecurit\'e calculatoire~\cite{GoldwasserMicali84,Goldreich01}, que le
 l\'egislateur a fini par prendre en compte. L'Electronic Signatures in Global and National Commerce (ESIGN) Act
 am\'ericain (2000)~\cite{ESIGN00} puis le r\`eglement electronic IDentification, Authentication and trust Services (eIDAS) europ\'een
 (2014)~\cite{eIDAS14} ont ainsi consacr\'e l'\'equivalence juridique des signatures
-num\'eriques, en pariant que la rigueur math\'ematique suffisait \`a fonder la
+num\'eriques. Le pari \'etait que la rigueur math\'ematique suffisait \`a fonder la
 confiance institutionnelle~\cite{Kerr04,Mason07}.
 
 Ce pari se v\'erifie pour les signatures. Il ne r\'esiste plus en revanche d\`es
@@ -40,9 +40,9 @@ impeccable, plus elle devient institutionnellement opaque, c'est-\`a-dire qu'ell
 
 \subsection{L'urgence post-quantique}
 
-En ao\^ut 2024, le National Institute of Standards and Technology (NIST) a publi\'e les trois premi\`eres normes de cryptographie post-quantique~\cite{NISTPQC,Alagic2020,NISTPostQuantum2022}, \`a savoir FIPS~203 (ML-KEM, bas\'e sur Kyber~\cite{Kyber2022}), FIPS~204 (ML-DSA, bas\'e sur Dilithium~\cite{Dilithium2022}) et FIPS~205 (SLH-DSA, bas\'e sur SPHINCS+~\cite{SPHINCS2022}). Avec cette standardisation, la migration vers la cryptographie post-quantique a quitt\'e le terrain de la sp\'eculation th\'eorique pour devenir une r\'ealit\'e op\'erationnelle.
+En ao\^ut 2024, le National Institute of Standards and Technology (NIST) a publi\'e les trois premi\`eres normes de cryptographie post-quantique~\cite{NISTPQC,Alagic2020,NISTPostQuantum2022}. Il s'agit de FIPS~203 (ML-KEM, d\'eriv\'e de Kyber~\cite{Kyber2022}), de FIPS~204 (ML-DSA, issu de Dilithium~\cite{Dilithium2022}) et de FIPS~205 (SLH-DSA, tir\'e de SPHINCS+~\cite{SPHINCS2022}). Avec cette standardisation, la migration vers la cryptographie post-quantique a quitt\'e le terrain de la sp\'eculation th\'eorique pour devenir une r\'ealit\'e op\'erationnelle.
 
-Cette transition d\'epasse le simple remplacement d'algorithmes, car elle rompt avec plusieurs paradigmes \'etablis. Les adversaires classiques sont limit\'es par la puissance de calcul, alors que les adversaires quantiques exploitent des requ\^etes en superposition~\cite{Boneh2011,Watrous2009} qui invalident les preuves de s\'ecurit\'e conventionnelles. La migration aggrave donc le paradoxe de l'authenticit\'e invisible, puisque la complexit\'e structurelle des sch\'emas post-quantiques (fond\'es sur les r\'eseaux ou sur les fonctions de hachage) entre en tension avec les besoins institutionnels. La mani\`ere dont ces effets quantiques modifient la valeur probante des preuves et leur compr\'ehension par les interpr\`etes institutionnels (juge, auditeur, r\'egulateur) demeure \`a ce jour largement inexplor\'ee.
+Cette transition d\'epasse le simple remplacement d'algorithmes. Elle rompt avec plusieurs paradigmes \'etablis. Les adversaires classiques sont limit\'es par la puissance de calcul, alors que les adversaires quantiques exploitent des requ\^etes en superposition~\cite{Boneh2011,Watrous2009} qui invalident les preuves de s\'ecurit\'e conventionnelles. La migration aggrave donc le paradoxe de l'authenticit\'e invisible, puisque la complexit\'e structurelle des sch\'emas post-quantiques (fond\'es sur les r\'eseaux ou sur les fonctions de hachage) entre en tension avec les besoins institutionnels. La mani\`ere dont ces effets quantiques modifient la valeur probante des preuves et leur compr\'ehension par les interpr\`etes institutionnels (juge, auditeur, r\'egulateur) demeure \`a ce jour largement inexplor\'ee.
 
 \end{sloppypar}
 
@@ -66,7 +66,7 @@ de v\'erification.
 
 La cryptographie classique mesure l'\emph{avantage de l'adversaire}~\cite{GMR88,Shoup01},
 d\'efini \`a partir d'un distingueur polynomial confront\'e \`a un d\'efi.
-La v\'erification institutionnelle repose sur d'autres exigences, \`a savoir l'intelligibilit\'e
+La v\'erification institutionnelle repose sur d'autres exigences, dont l'intelligibilit\'e
 pour un juge, l'auditabilit\'e r\'etrospective par un contr\^oleur et la tra\c{c}abilit\'e par un r\'egulateur~\cite{Citron14,Casey11}.
 \`A notre connaissance, aucune m\'etrique ne rend compte de ces propri\'et\'es dans la litt\'erature cryptographique
 classique~\cite{GMR85,Goldreich01}.
@@ -108,7 +108,7 @@ Ces deux questions se d\'eclinent en six \textbf{objectifs} de recherche, qui co
 
 \medskip
 \begin{boiteQuestion}{Obj4. Constructions optimales}
-\textit{Construire des protocoles qui atteignent asymptotiquement ces bornes afin de transformer une barri\`ere th\'eorique en objectif d'ing\'enierie.}
+\textit{Concevoir des protocoles qui atteignent asymptotiquement ces bornes puis \'etablir leur optimalit\'e, de sorte que le r\'esultat d'impossibilit\'e serve de guide \`a la conception.}
 \end{boiteQuestion}
 
 \medskip
@@ -129,8 +129,8 @@ La progression Obj1~$\to$~Obj6 organise la th\`ese en six \'etapes, \textbf{F}or
 e\textbf{X}p\'erimenter, qui forment un cycle (figure~\ref{fig:cycle_recherche}). Le chapitre~\ref{chap:contexte} pose les fondements en amont de~F.
 Le chapitre~\ref{chap:cadre_formel} r\'ealise F$\to$B$\to$E et le
 chapitre~\ref{chap:constructions} r\'ealise S$\to$C. Le
-chapitre~\ref{chap:experimentation} r\'ealise~X, tandis que le
-chapitre~\ref{chap:resultats_discussions} analyse les r\'esultats et ouvre les perspectives.
+chapitre~\ref{chap:experimentation} r\'ealise~X. Le
+chapitre~\ref{chap:resultats_discussions}, enfin, analyse les r\'esultats et ouvre les perspectives.
 La probl\'ematique demeure la question unique de ce travail, \`a laquelle la r\'ealisation
 successive des six objectifs apporte une r\'eponse.
 
@@ -168,7 +168,7 @@ successive des six objectifs apporte une r\'eponse.
 
 La \textbf{Cryptographie Institutionnelle} se situe \`a l'intersection de la th\'eorie
 de l'information, de la cryptographie classique et post-quantique, du droit et des sciences cognitives~\cite{Simon82,Cowan2001,Ericsson95}.
-Ce croisement est impos\'e par la nature du probl\`eme, car aucune de ces disciplines prise isol\'ement ne permet
+Ce croisement est impos\'e par la nature du probl\`eme. Aucune de ces disciplines prise isol\'ement ne permet
 de formaliser le compromis entre opacit\'e cryptographique et intelligibilit\'e
 institutionnelle~\cite{Citron14,Casey10,Casey11}.
 
@@ -223,12 +223,12 @@ La lecture suppose une familiarit\'e avec les preuves \`a divulgation nulle~\cit
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre ne sait pas encore qu'il est pris dans un paradoxe~;
-il sait seulement que quelque chose ne fonctionne pas entre la preuve qu'on
+L'arbitre ne sait pas encore qu'il est pris dans un paradoxe.
+Il sait seulement que quelque chose ne fonctionne pas entre la preuve qu'on
 lui soumet et la d\'ecision qu'on lui demande de rendre. Ce chapitre lui donne
-le nom du probl\`eme et la carte du voyage, avec six questions, six
+le nom du probl\`eme et la carte du voyage, avec deux questions, six objectifs, six
 contributions et un cycle. Il lui pr\'esente aussi les \'equipiers dont il aura
-besoin, \`a savoir la th\'eorie de l'information, la cryptographie, les
+besoin, soit la th\'eorie de l'information, la cryptographie, les
 sciences cognitives, le droit et la v\'erification formelle. Le voyage commence
 \`a la section~\ref{sec:contexte}.
 \end{boiteArbitre}
@@ -275,7 +275,7 @@ Soumis au \emph{Journal of Automated Reasoning}, cet article pr\'esente la premi
 
 \paragraph{C6. Nous sp\'ecifions un programme de validation falsifiable
 (chapitre~\ref{chap:experimentation}).}
-Le chapitre~\ref{chap:experimentation} sp\'ecifie, jusqu'au niveau op\'erationnel, les protocoles qui mesurent $\Delta$, $\alpha$, $\Delta_q$ et $\eta_q$, $\beta$ se calculant sur les lois de preuve, avec leurs estimateurs, leurs plans d'\'echantillonnage et leurs seuils de r\'efutation. Le trilemme devient ainsi falsifiable au sens de Popper~\cite{Popper1934}. Le chapitre calcule aussi l'opposabilit\'e de trois syst\`emes de r\'ef\'erence pour une calibration illustrative. Le programme n'a pas encore \'et\'e d\'eploy\'e (sous-section~\ref{subsubsec:statut_deploiement}).
+Le chapitre~\ref{chap:experimentation} sp\'ecifie, jusqu'au niveau op\'erationnel, les protocoles qui mesurent $\Delta$, $\alpha$, $\Delta_q$ et $\eta_q$, avec leurs estimateurs, leurs plans d'\'echantillonnage et leurs seuils de r\'efutation. Le param\`etre $\beta$, lui, se calcule sur les lois de preuve. Le trilemme devient ainsi falsifiable au sens de Popper~\cite{Popper1934}. Le chapitre calcule aussi l'opposabilit\'e de trois syst\`emes de r\'ef\'erence pour une calibration illustrative. Le programme n'a pas encore \'et\'e d\'eploy\'e (sous-section~\ref{subsubsec:statut_deploiement}).
 
 \end{sloppypar}
 

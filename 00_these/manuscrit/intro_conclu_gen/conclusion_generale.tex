@@ -1,7 +1,7 @@
 % ============================================================================
 % CONCLUSION G\'eN\'eRALE
 % source : intro_conclu_gen/conclusion_generale.tex
-% Version : 2.2 — alignée sur la formalisation Lean4 révisée
+% Alignée sur la formalisation Lean4 révisée
 % ============================================================================
 
 %\chapter*{CONCLUSION G\'eN\'eRALE}
@@ -17,7 +17,7 @@
 Le \textbf{paradoxe de l'authenticit\'e invisible}~\cite{MINKA2026CLO}, selon lequel une preuve
 cryptographique math\'ematiquement irr\'eprochable peut demeurer institutionnellement
 opaque, formalise une tension latente entre les exigences cryptographiques et
-l'utilit\'e institutionnelle qui passe par l'interpr\'etabilit\'e des preuves par
+l'utilit\'e institutionnelle. Cette utilit\'e passe par l'interpr\'etabilit\'e des preuves par
 les arbitres (juge, r\'egulateur, auditeur) non-experts. Nous nous sommes servi
 d'exemples illustratifs~\cite{IACR2025incident,Adida09UCL} d\'ecrits \`a la
 section~\ref{subsec:cas_etude} pour mat\'erialiser la r\'ealit\'e de cette
@@ -40,7 +40,7 @@ atteints, si les questions ont trouv\'e r\'eponse et si la probl\'ematique a \'e
 \textbf{Obj~\ref{obj:obj1_unification}. Formalisation.} Peut-on formaliser
 l'utilit\'e institutionnelle d'un protocole cryptographique~? Nous avons
 d\'efini trois mesures issues de la th\'eorie de
-l'information~\cite{Shannon48,CoverThomas06}, \`a savoir $\Conf$ (statistique), la
+l'information~\cite{Shannon48,CoverThomas06}, soit $\Conf$ (statistique), la
 fiabilit\'e distingu\'ee en $\Relrec$ (reconstruction) et $\Relver$
 (v\'erification), enfin $\Opp = I(V;\Sigma|C)/H(V|C)$, dont l'in\'egalit\'e
 $I(V;\Sigma|C) \leq \min\{H(\Sigma|C),H(V|C)\} \leq \alpha H(\mathcal{C})$ formalise
@@ -62,7 +62,7 @@ $\Delta/(\gamma\lambda)$~; les autres sont en $O(\lambda^{-2})$. La forme raffin
 \eqref{eq:trilemme_cro_raffine} identifie le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la
 capacit\'e d'extraction institutionnelle est la contrainte liante, la puissance
 de calcul de l'adversaire passant au second plan. La formulation
-publi\'ee~\cite{MINKA2026CRO} s'en d\'eduit comme corollaire sous l'Hypoth\`ese~\ref{ass:regime} pos\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue en conservant le terme entropique de l'in\'egalit\'e de Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}). Les contributions C2.1 \`a C2.7 y r\'epondent. L'objectif est atteint, sous des hypoth\`eses institutionnelles \'enonc\'ees.
+publi\'ee~\cite{MINKA2026CRO} s'en d\'eduit comme corollaire sous l'Hypoth\`ese~\ref{ass:regime} pos\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue par une minoration directe de la divergence binaire et non par Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}). Les contributions C2.1 \`a C2.7 y r\'epondent. L'objectif est atteint, sous des hypoth\`eses institutionnelles \'enonc\'ees.
 
 \textbf{Obj~\ref{obj:obj3_postquantique}. Extension quantique.} Les bornes CRO
 se pr\'eservent-elles face aux adversaires quantiques~? Nous avons \'etabli
@@ -117,7 +117,7 @@ calibration illustrative sur des syst\`emes d\'eploy\'es v\'erifie que les ordre
 grandeur retenus sont mutuellement coh\'erents~; ces syst\`emes ne sont pas des
 instances du th\'eor\`eme. Le programme exp\'erimental lui-m\^eme n'a d'ailleurs pas \'et\'e
 d\'eploy\'e dans le cadre de cette th\`ese. Les contributions C6.1 \`a C6.3 y r\'epondent.
-L'objectif est partiellement atteint, puisque le programme est sp\'ecifi\'e et calibr\'e sans
+L'objectif est partiellement atteint. Le programme est sp\'ecifi\'e et calibr\'e sans
 avoir \'et\'e d\'eploy\'e.
 
 Le tableau~\ref{tab:synthese_contributions} r\'esume ces verdicts.
@@ -146,8 +146,8 @@ Obj6 Exp\'erimentation (X) & C6 Programme & Protocoles sp\'ecifi\'es et r\'efuta
 \textbf{Q1. Conciliation} (Obj~\ref{obj:obj1_unification} et Obj~\ref{obj:obj4_saturation}).
 Oui, en partie. La conciliation est possible, mais elle est born\'ee. Le cadre CLO rend
 les trois exigences mesurables sur une m\^eme \'echelle (C1.1 et C1.2). Le paradigme
-Gold-Iron-Clay les confie \`a trois couches distinctes (C4.1), de sorte que les variantes
-SOTP obtiennent une confidentialit\'e et une fiabilit\'e de v\'erification prouv\'ees (C4.2 et
+Gold-Iron-Clay les confie \`a trois couches distinctes (C4.1). Les variantes
+SOTP obtiennent ainsi une confidentialit\'e et une fiabilit\'e de v\'erification prouv\'ees (C4.2 et
 C4.3). Cette conciliation a un prix. La fiabilit\'e de reconstruction tombe \`a l'ordre de
 $2^{-\lambda}$ et l'opposabilit\'e que la preuve peut porter reste plafonn\'ee par
 $\Delta/\gamma$. Une loi explicite atteint ce plafond (C2.5). Qu'une construction SOTP l'approche \`a un facteur constant pr\`es reste une conjecture (C4.4).
@@ -156,7 +156,7 @@ $\Delta/\gamma$. Une loi explicite atteint ce plafond (C2.5). Qu'une constructio
 Obj~\ref{obj:obj5_verification} et Obj~\ref{obj:obj6_experimentation}). Oui sur le plan
 th\'eorique, pas encore sur le plan empirique. Les limites d\'ependent de la capacit\'e
 d'extraction $\Delta$, de la granularit\'e des verdicts $\alpha$ \`a travers
-$\gamma = \alpha H(C) - 1$ et de la constante de r\'egime $\kappa$~; la r\'egularit\'e $\beta$ ne
+$\gamma = \alpha H(C) - 1$ et de la constante de r\'egime $\kappa$. La r\'egularit\'e $\beta$ ne
 contraint que la confidentialit\'e (C2.1, C2.2 et C5.4). Elles restent valides face aux
 adversaires quantiques, avec $\Delta_q$ et $\gamma_q$, la perte $\eta_q$ n'intervenant que dans
 la forme affaiblie (C3.1 et C3.2). Elles sont certifi\'ees m\'ecaniquement, des propri\'et\'es
@@ -171,9 +171,9 @@ et conditionnelle. Sous quatre hypoth\`eses institutionnelles, le produit
 $\Conf \cdot \Relrec \cdot \Opp$ est major\'e par une quantit\'e dont le terme dominant est
 $\Delta/(\gamma\lambda)$. La borne aigu\"e ram\`ene ce terme \`a l'ordre $\kappa/\lambda^2$, ordre
 qui ne peut pas \^etre am\'elior\'e. La forme raffin\'ee identifie le r\'egime
-($H(\mathcal{C}) > H^\sharp$) o\`u la capacit\'e de l'institution, et non la puissance de calcul
-de l'adversaire, est la contrainte liante. Cette limite est certifi\'ee m\'ecaniquement et sa
-port\'ee est d\'elimit\'ee, puisque les syst\`emes d\'eploy\'es \`a haute fiabilit\'e de v\'erification
+($H(\mathcal{C}) > H^\sharp$) o\`u la contrainte liante tient \`a la capacit\'e de l'institution plut\^ot qu'\`a la puissance de calcul
+de l'adversaire. Cette limite est certifi\'ee m\'ecaniquement et sa
+port\'ee est d\'elimit\'ee. Les syst\`emes d\'eploy\'es \`a haute fiabilit\'e de v\'erification
 n'en sont pas des instances et servent \`a calibrer les ordres de grandeur. Les deux r\'eponses
 manquantes, l'optimalit\'e des constructions et la mesure de $\Delta$ par l'estimateur
 $\hat{I}(V;\Sigma|M,C)$, forment le programme ouvert par ce travail.
@@ -198,7 +198,7 @@ tableau~\ref{tab:contributions_these} du chapitre~\ref{chap:contexte} en d\'etai
 
 
 \textbf{C1. Cadre CLO}~\cite{MINKA2026CLO}. Premier cadre unifi\'e, \`a notre connaissance,
-formalisant $\Conf$, $\Rel$ et $\Opp$ via la th\'eorie de l'information, avec
+formalisant $\Conf$, $\Rel$ et $\Opp$ par la th\'eorie de l'information, avec
 la distinction entre fiabilit\'e de reconstruction et de v\'erification.
 Le th\'eor\`eme du goulot d'\'etranglement contextuel \'etablit que
 $I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$~; un verdict d\'eterministe donne $\Opp = 1$.
@@ -208,10 +208,14 @@ borne prouv\'ee, \`a notre connaissance, sur les compromis $(\Conf, \Rel, \Opp)$
 aux param\`etres $(\Delta, \alpha, \beta)$ et au r\'egime de
 confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La forme explicite
 est $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$~;
-la forme raffin\'ee, fond\'ee sur l'identit\'e
-$I(V;\Sigma|C) = I(V;M|C) + I(V;\Sigma|M,C)$ pour un interpr\`ete admissible, distingue
-un r\'egime o\`u Fano limite l'opposabilit\'e et un r\'egime o\`u $\Delta$ la limite.
-La finesse de la borne reste une question ouverte.
+la forme raffin\'ee, qui combine $\Opp \leq 1$ et les
+Hypoth\`eses~\ref{ass:extraction_bornee} et~\ref{ass:verdicts_efficace}, distingue
+un r\'egime o\`u Fano limite le produit et un r\'egime o\`u $\Delta$ le limite.
+L'identit\'e $I(V;\Sigma|C) = I(V;M|C) + I(V;\Sigma|M,C)$ fonde, pour un interpr\`ete
+admissible, l'hypoth\`ese d'extraction born\'ee
+(Proposition~\ref{prop:fondement_extraction}). La borne aigu\"e atteint l'ordre exact
+$\lambda^{-2}$ et seule sa constante reste ouverte
+(Remarque~\ref{rem:borne_aigue_portee}).
 
 \textbf{C3. Trilemme CRO post-quantique}~\cite{MINKA2026PQCRO}. Extension
 aux adversaires quantiques avec param\`etres $\Delta_q$ et $\eta_q$.
@@ -225,15 +229,15 @@ conjectur\'ee. Introduction du paradigme Gold-Iron-Clay.
 \textbf{C5. Formalisation Lean4, du noyau alg\'ebrique aux lois finies}. Certification m\'ecanis\'ee
 du noyau alg\'ebrique et de la forme raffin\'ee. Fano et Pinsker, pos\'es comme
 propri\'et\'es d'instance dans le noyau, d\'emontr\'es pour des lois de probabilit\'e finies
-dans la couche concr\`ete, mise au jour des hypoth\`eses institutionnelles
-et production de deux t\'emoins, l'un de coh\'erence (mod\`ele abstrait), l'autre de
-port\'ee. Les formulations alternatives issues de
-la certification sont pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
+dans la couche concr\`ete. S'y ajoutent la mise au jour des hypoth\`eses institutionnelles
+et la production de deux t\'emoins, l'un de coh\'erence (mod\`ele abstrait), l'autre de
+port\'ee. La sous-section~\ref{subsec:lean4_erreurs} recense les
+pr\'ecisions que la certification a apport\'ees aux \'enonc\'es.
 
 \textbf{C6. Programme de validation falsifiable}. Les protocoles
-exp\'erimentaux permettant de mesurer $\Delta$, $\alpha$, $\beta$,
-$\Delta_q$ et $\eta_q$ sont sp\'ecifi\'es jusqu'au niveau
-op\'erationnel~(chapitre~\ref{chap:experimentation}).
+exp\'erimentaux permettant de mesurer $\Delta$, $\alpha$, $\Delta_q$ et $\eta_q$ sont sp\'ecifi\'es
+jusqu'au niveau op\'erationnel~(chapitre~\ref{chap:experimentation}). Le param\`etre $\beta$ se calcule
+sur les lois de preuve.
 
 \subsection*{Apports transversaux}
 
@@ -270,13 +274,13 @@ testable et critiquable~(section~\ref{subsec:statut_protocoles_experimentaux}).
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
 
-Quatre corpus ont abord\'e des aspects partiels du probl\`eme, \`a savoir la
+Quatre corpus ont abord\'e des aspects partiels du probl\`eme. Ce sont la
 QIF~\cite{Smith09}, la s\'ecurit\'e utilisable~\cite{Bonneau12}, les \'etudes
 juridiques~\cite{Kerr04} et les trilemmes d'impossibilit\'e
 (CAP~\cite{Brewer00,GilbertLynch02}, FLP~\cite{FLP85},
 Blockchain~\cite{Nakamoto08,Buterin17}). Le cadre CLO-CRO s'en distingue
 en ce qu'il formalise simultan\'ement les trois dimensions
-$(\Conf, \Rel, \Opp)$, prouve une borne quantitative conditionnelle
+$(\Conf, \Rel, \Opp)$. Il prouve une borne quantitative conditionnelle
 classique et quantique, propose des constructions dont l'optimalit\'e est
 conjectur\'ee et certifie m\'ecaniquement une partie du r\'esultat.
 
@@ -339,8 +343,8 @@ communaut\'e des outils et des m\'ethodes transf\'erables.
 \begin{sloppypar}
 
 Quatre limitations d\'elimitent le p\'erim\`etre des contributions. Les
-hypoth\`eses institutionnelles $(\Delta, \alpha, \beta)$ ne sont pas
-encore valid\'ees par des \'etudes exp\'erimentales~; les valeurs retenues,
+param\`etres $\Delta$ et $\alpha$ ne sont pas encore valid\'es par des \'etudes exp\'erimentales
+et $\beta$ n'a pas encore \'et\'e calcul\'e sur les lois de preuve de syst\`emes d\'eploy\'es~; les valeurs retenues,
 de quelques dizaines de bits, sont une calibration illustrative rendue
 plausible par la litt\'erature sur la rationalit\'e born\'ee. L'opposabilit\'e
 des constructions SOTP est heuristique et leur optimalit\'e conjectur\'ee. La formalisation Lean4 couvre le noyau
@@ -356,9 +360,9 @@ tableau~\ref{tab:perspectives_horizons}.
 
 Le programme futur s'organise selon trois directions structurantes.
 
-\textbf{Validation empirique.} Les param\`etres $\Delta$, $\alpha$,
-$\beta$, $\Delta_q$, $\eta_q$ doivent \^etre mesur\'es sur des acteurs
-institutionnels r\'eels. Le programme du
+\textbf{Validation empirique.} Les param\`etres $\Delta$, $\alpha$, $\Delta_q$ et $\eta_q$ doivent
+\^etre mesur\'es sur des acteurs institutionnels r\'eels. Le param\`etre $\beta$ doit \^etre calcul\'e
+sur les lois de preuve des protocoles retenus. Le programme du
 chapitre~\ref{chap:experimentation} fournit la feuille de route.
 
 \textbf{Extension de la formalisation.} La formalisation Lean4 doit
@@ -391,9 +395,9 @@ La certification Lean4 illustre un pari \'epist\'emologique selon lequel les
 th\'eor\`emes importants m\'eritent une v\'erification m\'ecanique.
 
 La cryptographie institutionnelle dispose d\'esormais d'un cadre
-compos\'e de m\'etriques (CLO), d'une borne d'impossibilit\'e conditionnelle classique et
-quantique (CRO), de constructions (SOTP), d'une v\'erification formelle (Lean4)
-et d'un programme de validation (C6). Le travail restant (finesse de la borne,
+compos\'e de m\'etriques (CLO) et d'une borne d'impossibilit\'e conditionnelle classique et
+quantique (CRO). Il comprend aussi des constructions (SOTP), une v\'erification formelle (Lean4)
+et un programme de validation (C6). Le travail restant (constante de la borne aigu\"e,
 optimalit\'e des constructions, calibration des param\`etres,
 extensions FHE/MPC, validation empirique, standardisation) constitue un
 programme de recherche ouvert.
@@ -432,15 +436,15 @@ ces pr\'ecisions et sp\'ecifi\'e comment tester ce qui reste \`a
 % Bo\^ite finale
 % ----------------------------------------------------------------------------
 \begin{boiteArbitre}
-L'arbitre referme le dossier sans avoir r\'esolu le paradoxe, puisque le Trilemme
+L'arbitre referme le dossier sans avoir r\'esolu le paradoxe. Le Trilemme
 CRO \'etablit que, sous ses hypoth\`eses, aucun protocole ne peut le r\'esoudre enti\`erement, que
 ce soit en environnement classique~\cite{MINKA2026CRO} ou
 quantique~\cite{MINKA2026PQCRO}. Il dispose toutefois d\'esormais de ce
-que la cryptographie classique ne lui avait jamais offert, \`a savoir une
+que la cryptographie classique ne lui avait jamais offert. C'est d'abord une
 m\'etrique pour mesurer \`a quel point un protocole s'approche de ce qu'il
 peut interpr\'eter~\cite{MINKA2026CLO} ainsi qu'une famille de constructions pour
-commencer. Le paradoxe de l'authenticit\'e invisible n'est plus invisible
-puisqu'il est formalis\'e et born\'e, sous des hypoth\`eses qu'il reste \`a mesurer. Ce que l'arbitre ne comprend pas
+commencer. Le paradoxe de l'authenticit\'e invisible n'est plus invisible.
+Il est formalis\'e et born\'e, sous des hypoth\`eses qu'il reste \`a mesurer. Ce que l'arbitre ne comprend pas
 encore enti\`erement, la th\'eorie lui dit maintenant combien cela lui
 co\^ute en bits.
 \end{boiteArbitre}

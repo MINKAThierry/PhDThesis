@@ -113,7 +113,7 @@ structure InstitutionalParams where
 /-- γ = αH(C) − 1 : borne inférieure de H(V|C) (Hypothèse 2′). -/
 def gamma (p : InstitutionalParams) : ℝ := p.α * p.H - 1
 
--- Familles canoniques (valeurs empiriques de l'article CLO)
+-- Familles canoniques (valeurs illustratives de la calibration)
 noncomputable def HeliosParams : InstitutionalParams :=
   { H := 40, Δ := 56, α := 1.2, β := 1.4,
     hH_nonneg := by norm_num, hΔ_nonneg := by norm_num,
@@ -1511,7 +1511,7 @@ end CLOModel
 open CLOModel in
 /-- **Non-vacuité sur de vraies lois.** Pour tout λ, le modèle `famModel λ` satisfait
     toutes les hypothèses des théorèmes concrets avec Δ = 1, α = 2, β = 1 et κ = 0
-    (d'où H(C) = 1 et γ = 1) : taille de l'espace des verdicts, Hypothèses 1, 2′, 3
+    (contexte d'un bit uniforme, donc H(C) = 1 et γ = 1) : taille de l'espace des verdicts, Hypothèses 1, 2′, 3
     et 4, supports communs. -/
 theorem concrete_assumptions_satisfiable (l : ℕ) :
     Real.log (Fintype.card (Fin 2)) / Real.log 2 ≤ 2 * (famModel l).HC ∧

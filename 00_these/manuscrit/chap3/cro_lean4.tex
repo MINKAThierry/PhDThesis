@@ -1,7 +1,7 @@
 % ============================================================================
 % SECTION 2.6 : FORMALISATION DU TRILEMME CRO DANS LEAN4
 % Source : partie2/cro_lean4.tex
-% Version : 2.2 — alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
+% Alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
 % ============================================================================
 
 \section{FORMALISATION DU TRILEMME CRO DANS LEAN4}
@@ -31,7 +31,7 @@ conventions typographiques propres \`a cette section
 (section~\ref{subsec:conventions_typographiques}). Elles rappellent ensuite les
 \'el\'ements du Trilemme CRO s\'electionn\'es pour la formalisation, avec les points
 critiques identifi\'es lors de l'analyse pr\'eliminaire
-(section~\ref{subsec:elements_formaliser}), avant d'exposer les d\'efis techniques
+(section~\ref{subsec:elements_formaliser}). Elles exposent enfin les d\'efis techniques
 de la formalisation (section~\ref{subsec:defis_formalisation}), le mod\`ele formel
 et l'axiomatisation (section~\ref{subsec:modele_formel_lean4}) ainsi que la preuve
 du c\oe ur alg\'ebrique (section~\ref{subsec:preuve_coeur_algebrique}). Les deux
@@ -70,7 +70,7 @@ Nous d\'efinissons une structure \texttt{ProtocolFamily} index\'ee par le
 param\`etre de s\'ecurit\'e $\lambda$, avec des param\`etres institutionnels
 fixes $(\Delta, \alpha, \beta, H(C))$. Dans le noyau alg\'ebrique, nous
 int\'egrons comme propri\'et\'es des instances de protocole les quatre pr\'emisses
-du th\'eor\`eme, \`a savoir l'in\'egalit\'e de
+du th\'eor\`eme. Ce sont l'in\'egalit\'e de
 Fano~\cite{Fano61,CoverThomas06}, l'in\'egalit\'e de Pinsker (sous-sous-section~\ref{subsubsec:pinsker_classique}) combin\'ee \`a la
 r\'egularit\'e~\cite{Pinsker1964,Tsybakov2009}, l'hypoth\`ese d'extraction
 institutionnelle~\cite{Simon82,Miller56} et l'hypoth\`ese de verdict efficace.
@@ -85,7 +85,7 @@ pr\'eservation de la confidentialit\'e, Hypoth\`ese~\ref{ass:regime}), on a
 ainsi que la forme raffin\'ee~\eqref{eq:trilemme_cro_raffine}. Ces preuves
 n'utilisent que l'alg\`ebre \'el\'ementaire et sont enti\`erement v\'erifi\'ees par
 Lean4. Nous prouvons \'egalement que $(1/2)^\lambda$ est n\'egligeable, par un
-passage \`a la limite (\texttt{Tendsto}) et un argument de filtre, ce qui comble
+passage \`a la limite (\texttt{Tendsto}) et un argument de filtre. Nous comblons ainsi
 une lacune fr\'equente dans les expositions informelles.
 
 \subsubsection{Ce que la formalisation ne couvre pas}
@@ -123,7 +123,7 @@ Cette sous-section pr\'esente une sp\'ecificit\'e li\'ee \`a la nature de son
 contenu. Le corps du texte, les d\'efinitions math\'ematiques, les
 th\'eor\`emes et les explications utilisent la ponctuation et les conventions
 typographiques fran\c{c}aises (espaces avant les deux-points, guillemets
-fran\c{c}ais, etc.), en coh\'erence avec les autres chapitres de cette th\`ese.
+fran\c{c}ais, etc.). Ils restent ainsi coh\'erents avec les autres chapitres de cette th\`ese.
 
 En revanche, les listings de code Lean4 pr\'eservent la syntaxe anglaise de
 ce langage de programmation pour garantir la validit\'e technique du code.
@@ -279,8 +279,8 @@ pour un protocole $\beta$-r\'egulier avec messages uniformes
 \end{equation}
 \end{theorem}
 
-La preuve originale proc\`ede en
-quatre \'etapes successives.
+La preuve originale encha\^ine
+quatre arguments.
 \begin{enumerate}
     \item L'in\'egalit\'e de Fano~\cite{Fano61,CoverThomas06} donne
           $I(M;\Sigma|C) \ge \Rel \cdot \lambda - 1$
@@ -301,7 +301,7 @@ Notre analyse pr\'eliminaire a identifi\'e trois points qui demandent un
 traitement rigoureux.
 
 \paragraph{Statut de $I$ comme variable.}
-L'information mutuelle $I(M;\Sigma|C)$ n'est pas une variable libre, puisqu'elle
+L'information mutuelle $I(M;\Sigma|C)$ n'est pas une variable libre. Elle
 est d\'etermin\'ee par le protocole. Le r\'egime de pr\'eservation de la
 confidentialit\'e $I(\lambda) \le \kappa/\lambda$ (Hypoth\`ese~\ref{ass:regime})
 est pos\'e comme condition du th\'eor\`eme.
@@ -315,7 +315,8 @@ faisant appara\^itre la d\'ependance en $\kappa$.
 
 \paragraph{Constantes implicites.}
 La notation $O(\lambda^{-2})$ dissimule la d\'ependance en
-$1/(\alpha H+1)$ et $\beta$. Notre borne explicite
+$1/\gamma = 1/(\alpha H(C) - 1)$ et en $\kappa$. La constante $\beta$ n'y figure pas,
+puisqu'elle ne sert qu'au Lemme~\ref{lem:confidentiality_guarantee}. Notre borne explicite
 $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
 rend mesurables les param\`etres qui gouvernent la borne~\cite{Grossklags10,Herley09}.
 
@@ -336,7 +337,7 @@ propri\'et\'es falsifiables et v\'erifiables instance par instance. La couche co
 
 \textbf{Simplification~2. R\'egime de confidentialit\'e explicite.} Le r\'egime
 $I \le \kappa/\lambda$ est pos\'e comme condition du
-th\'eor\`eme, garantissant la confidentialit\'e via le
+th\'eor\`eme. Il garantit la confidentialit\'e par le
 Lemme~\ref{lem:confidentiality_guarantee}.
 \end{sloppypar}
 
@@ -385,7 +386,7 @@ theorem conditional_CRO_trilemma (F : ProtocolFamily) (κ : ℝ) (hκ : 0 ≤ κ
 
 Fano~\cite{Fano61} et Pinsker~\cite{Pinsker1964} sont des th\'eor\`emes
 classiques de th\'eorie de l'information. Le noyau les int\`egre comme
-champs de la structure \texttt{ProtocolInstance}, de sorte que chaque
+champs de la structure \texttt{ProtocolInstance}. Chaque
 instance de protocole doit fournir la preuve que ces in\'egalit\'es
 s'appliquent \`a ses param\`etres. La couche concr\`ete fournit cette preuve pour
 toute loi finie (sous-section~\ref{subsec:lean4_concret}).
@@ -468,7 +469,7 @@ structure InstitutionalParams where
   hβ_ge_one : 1 ≤ β
 \end{leancode}
 
-Cette structure capture les trois familles canoniques~\cite{Adida08,Groth16,Johnson01},
+Cette structure couvre les trois familles canoniques~\cite{Adida08,Groth16,Johnson01},
 instanci\'ees ci-dessous.
 
 \begin{leancode}[caption={Instances canoniques Helios, zk-SNARKs et audit traditionnel}, label={lst:lean4_instances_canoniques}]
@@ -560,7 +561,7 @@ tout $c > 0$ et tout $\lambda$ assez grand. Soit $c > 0$ et $k = \lceil c\rceil$
 La suite $\lambda^k/2^\lambda$ tend vers $0$, car le quotient de deux termes
 cons\'ecutifs, $\tfrac12(1+1/\lambda)^k$, tend vers $1/2$. Elle devient donc
 inf\'erieure \`a $1$, ce qui donne $2^{-\lambda} < \lambda^{-k} \leq \lambda^{-c}$ pour
-$\lambda \geq 1$ assez grand. Le listing~\ref{lst:lean4_eps0} suit exactement cette
+$\lambda \geq 1$ assez grand. Le code~\ref{lst:lean4_eps0} suit exactement cette
 d\'emarche.
 \end{Preuve}
 
@@ -639,13 +640,13 @@ chapitre~\ref{chap:cadre_formel} (Preuve~\ref{prv:cro_classique}). La
 forme~\eqref{eq:main_theorem_lean4} s'en d\'eduit comme dans la
 Remarque~\ref{rem:corollaire_publie}, avec $K = \kappa(\Delta+1)+\kappa^2$, qui ne
 d\'epend pas de $\lambda$ puisque les param\`etres institutionnels sont communs \`a
-la famille, et avec pour $\varepsilon$ toute fonction n\'egligeable positive, par
+la famille. On prend pour $\varepsilon$ toute fonction n\'egligeable positive, par
 exemple $\varepsilon_0$ (Lemme~\ref{lem:negligeabilite_eps0}). Le code Lean
 certifie chacune de ces \'etapes alg\'ebriques. Il montre aussi que la preuve
 n'utilise pas l'Hypoth\`ese~\ref{ass:regularite}, port\'ee par la structure
 \texttt{InstitutionalAssumptions}. Cette hypoth\`ese ne sert qu'au
 Lemme~\ref{lem:confidentiality_guarantee}. Le terme $\varepsilon$ conserve la forme
-publi\'ee, la borne tenant aussi sans lui, et le seuil $\lambda \geq 64$ reprend celui
+publi\'ee, la borne tenant aussi sans lui. Le seuil $\lambda \geq 64$ reprend celui
 du chapitre~\ref{chap:cadre_formel}, la preuve n'exigeant que $\lambda \geq 1$.
 \end{Preuve}
 \end{sloppypar}
@@ -692,7 +693,7 @@ r\'ealise est une autre question. Pour une loi r\'eelle avec $M$ uniforme sur $\
 impose $\Relrec = 2^{-\lambda}$ au lieu de $1/\lambda$. Le t\'emoin atteint donc la borne
 rel\^ach\'ee~; il ne montre pas qu'un protocole r\'eel l'atteint. Il a $\Delta = \gamma = 1$
 et r\'ealise l'\'egalit\'e dans la forme rel\^ach\'ee de Fano. Il illustre ainsi le r\'egime
-$\Delta \geq \gamma$ de la Remarque~\ref{rem:activite_delta}. Le t\'emoin de port\'ee
+$\Delta \geq \gamma - \kappa/\lambda$ de la Remarque~\ref{rem:activite_delta}, ici avec $\kappa = 0$. Le t\'emoin de port\'ee
 (Th\'eor\`eme~\ref{thm:scope_necessity}) est, lui, r\'ealis\'e par une loi explicite
 (Remarque~\ref{rem:scope_trilemme_classique}). Le facteur institutionnel
 $\Delta/\gamma$ est lui aussi r\'ealis\'e par une loi explicite
@@ -765,7 +766,7 @@ pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 Quatre \'enonc\'es compl\`etent la formalisation (version~2.2 du fichier,
-listing~\ref{lst:lean4_extensions})~; ils certifient les deux faits
+code~\ref{lst:lean4_extensions})~; ils certifient les deux faits
 structurels \'etablis au chapitre~\ref{chap:cadre_formel}.
 \begin{itemize}
 \item \texttt{opp\_eq\_one\_of\_deterministic} \'etablit que, si $I(V;\Sigma|C) = H(V|C) > 0$
@@ -879,8 +880,8 @@ d\'ecompose en cinq \'etapes, toutes v\'erifi\'ees sans \texttt{sorry}.
       $p\log N - \log 2 \leq I(M;\Sigma)$ (\texttt{fano\_finite}). La preuve applique
       l'in\'egalit\'e log-somme \`a l'\'ev\'enement de succ\`es du d\'ecodeur.
 \item \textbf{Mod\`ele concret.} La structure \texttt{CLOModel} d\'ecrit la loi jointe de
-      $(C, M, \Sigma)$, avec $M$ uniforme sur $2^\lambda$ valeurs et ind\'ependant de $C$,
-      et un noyau de verdict qui ne d\'epend que de $(\Sigma, C)$. Ce noyau encode
+      $(C, M, \Sigma)$, avec $M$ uniforme sur $2^\lambda$ valeurs et ind\'ependant de $C$~;
+      elle comporte aussi un noyau de verdict qui ne d\'epend que de $(\Sigma, C)$. Ce noyau encode
       l'interpr\'etation admissible (D\'efinition~\ref{def:interp_admissible}). Les
       grandeurs $\Conf$, $\Opp$, $H(C)$, $I(M;\Sigma|C)$, $I(V;\Sigma|C)$, $H(V|C)$,
       $\TV_{\max}$ et $\KL_{\max}$ y sont d\'efinies \`a partir de la loi, en bits. La
@@ -895,7 +896,7 @@ th\'eor\`emes \texttt{pinsker\_model} et \texttt{fano\_model}. Les th\'eor\`emes
 le trilemme et le Lemme~\ref{lem:confidentiality_guarantee} directement sur les lois.
 
 Le cadre de ces th\'eor\`emes est fini et classique. Le message y est uniforme sur
-$2^\lambda$ valeurs et ind\'ependant du contexte, et le verdict est tir\'e selon un noyau
+$2^\lambda$ valeurs et ind\'ependant du contexte~; le verdict est tir\'e selon un noyau
 admissible. Les trilemmes n'utilisent que Fano et les
 Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace} et~\ref{ass:regime}.
 Seule la majoration $\Conf \leq 1$ intervient dans le produit. La contrainte qui
@@ -911,20 +912,21 @@ $|\mathcal{V}_\lambda| \leq 2^{\alpha H(C)}$ y figure par fid\'elit\'e \`a
 l'Hypoth\`ese~\ref{ass:verdicts_efficace}, sans que la preuve s'en serve. Pinsker,
 l'Hypoth\`ese~\ref{ass:regularite} et une condition de supports communs ne servent
 qu'au Lemme~\ref{lem:confidentiality_guarantee}. Cette condition demande que les lois de
-$\Sigma$ pour deux messages aient le m\^eme support, ce qui \'equivaut \`a la finitude des
+$\Sigma$ pour deux messages aient le m\^eme support. Cela \'equivaut \`a la finitude des
 divergences de l'Hypoth\`ese~\ref{ass:regularite}. La forme asymptotique garde fixes les
 ensembles des contextes et des verdicts quand $\lambda$ varie. Elle demande seulement que
 l'entropie $H(C)$ de chaque mod\`ele soit minor\'ee par une m\^eme valeur $H_0$, d'o\`u
-$\gamma \geq \alpha H_0 - 1$, et ne demande les hypoth\`eses que pour $\lambda \geq 64$, ce qui suffit pour une conclusion asymptotique. Avec les
+$\gamma \geq \alpha H_0 - 1$. Elle ne demande les hypoth\`eses que pour $\lambda \geq 64$, ce qui suffit pour une conclusion asymptotique. Avec les
 conventions de Lean ($\log 0 = 0$ et $x/0 = 0$), la divergence calcul\'ee sous-estime la
 vraie divergence quand les supports diff\`erent. C'est pourquoi elle n'est employ\'ee que
 sous la condition de supports communs.
 
 Une famille de lois concr\`etes (\texttt{famModel}) satisfait toutes ces hypoth\`eses
-simultan\'ement pour tout $\lambda$. Le message y est uniforme sur $2^\lambda$ valeurs, le
-contexte et la preuve sont deux bits uniformes ind\'ependants et le verdict recopie la
-preuve. Le th\'eor\`eme \texttt{concrete\_assumptions\_satisfiable} le certifie avec
-$\Delta = 1$, $\alpha = 2$, $\beta = 1$ et $\kappa = 0$, d'o\`u $H(C) = 1$ et $\gamma = 1$.
+simultan\'ement pour tout $\lambda$. Le message y est uniforme sur $2^\lambda$ valeurs.
+Le contexte et la preuve sont deux bits uniformes ind\'ependants, ce qui donne
+$H(C) = 1$. Le verdict recopie la preuve. Le th\'eor\`eme
+\texttt{concrete\_assumptions\_satisfiable} le certifie avec $\Delta = 1$, $\alpha = 2$,
+$\beta = 1$ et $\kappa = 0$, d'o\`u $\gamma = \alpha H(C) - 1 = 1$.
 Le th\'eor\`eme \texttt{concrete\_asymptotic\_applies} montre que la forme asymptotique
 s'applique effectivement \`a cette famille. Les hypoth\`eses concr\`etes ne sont donc pas
 vides. Les deux t\'emoins de la sous-section~\ref{subsubsec:temoins_lean4} restent des
@@ -942,7 +944,7 @@ au-del\`a de la certification, des formulations alternatives de plusieurs
 \'etapes des preuves publi\'ees~\cite{MINKA2026CRO,MINKA2026PQCRO}. Ces
 formulations, plus pr\'ecises que les versions initiales, \'eclairent la
 structure logique du r\'esultat et d\'elimitent son domaine de validit\'e.
-Elles sont document\'ees ci-dessous, car elles constituent une contribution
+Elles sont document\'ees ci-dessous. Elles constituent en effet une contribution
 m\'ethodologique \`a part enti\`ere.
 
 \paragraph{Sens de l'in\'egalit\'e du Lemme~4.}
@@ -1005,7 +1007,7 @@ et $I(M;\Sigma|C) = \lambda/2 - 1 + O(\lambda 2^{-\lambda})$. Le
 protocole est $\beta$-r\'egulier avec $\beta \leq 1{,}04$ pour tout
 $\lambda \geq 64$. Il satisfait donc les
 Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regularite}. Il
-\emph{s'\'ecarte} cependant de l'Hypoth\`ese~\ref{ass:regime}, car
+\emph{s'\'ecarte} cependant de l'Hypoth\`ese~\ref{ass:regime}~;
 $I(M;\Sigma|C) = \Theta(\lambda)$ alors que le r\'egime exige $O(1/\lambda)$.
 
 Pour ce protocole, le produit CRO vaut
@@ -1014,7 +1016,7 @@ Pour ce protocole, le produit CRO vaut
 \end{equation}
 ind\'ependant de $\lambda$. La borne du Trilemme
 $\Conf \cdot \Rel \cdot \Opp \leq \Delta/\lambda + O(\lambda^{-2})$ ne
-tient donc pas uniform\'ement pour $I = \Theta(\lambda)$, puisqu'elle
+tient donc pas uniform\'ement pour $I = \Theta(\lambda)$. Elle
 requiert le r\'egime de confidentialit\'e.
 
 \textbf{Cons\'equence.} Ce cas limite \'etablit que
@@ -1022,9 +1024,9 @@ l'Hypoth\`ese~\ref{ass:regime} est une \emph{condition n\'ecessaire} de la
 borne. Il justifie r\'etrospectivement la formulation alternative du
 Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}, dans laquelle cette
 hypoth\`ese est explicite. Il a aussi motiv\'e la distinction formelle, dans
-l'annexe~\ref{chap:annexe_lean4}, entre le \textbf{t\'emoin de coh\'erence}
-(qui atteint la borne) et le \textbf{t\'emoin de port\'ee} (qui s'\'ecarte du
-r\'egime et montre que la borne ne tient pas sans lui).
+l'annexe~\ref{chap:annexe_lean4}, entre deux t\'emoins. Le \textbf{t\'emoin de coh\'erence}
+atteint la borne~; le \textbf{t\'emoin de port\'ee} s'\'ecarte du
+r\'egime et montre que la borne ne tient pas sans lui.
 
 \paragraph{Propagation \`a l'extension quantique.}
 Les formulations alternatives de la preuve classique ont conduit \`a
@@ -1041,7 +1043,7 @@ sections~\ref{subsec:enonce_preuve_pq} et~\ref{subsec:hypotheses_quantiques}.
 Ces formulations alternatives sont issues de la formalisation. La relecture
 des articles ne les avait pas fait appara\^itre. Elles sont n\'ees \`a deux
 moments pr\'ecis. D'abord, l'\'enonc\'e publi\'e du Lemme~4 n'a pas pu \^etre
-d\'emontr\'e \`a partir des hypoth\`eses disponibles, ce qui a conduit \`a
+d\'emontr\'e \`a partir des hypoth\`eses disponibles. Il a donc fallu
 r\'eexaminer la preuve et \`a pr\'eciser le sens de l'in\'egalit\'e. Un \'echec
 de preuve formelle ne tranche pas \`a lui seul~; l'examen qui l'a suivi a
 \'etabli la formulation retenue. Ensuite, la formalisation du noyau
@@ -1061,14 +1063,14 @@ restent accessibles pour r\'ef\'erence~\cite{MINKA2026CRO,MINKA2026PQCRO}.
 Les formulations alternatives et le cas limite qui \'etablit la n\'ecessit\'e
 du r\'egime de confidentialit\'e conduisent \`a une le\c{c}on
 m\'ethodologique sur le r\^ole de la formalisation dans le processus de
-publication scientifique, d\'evelopp\'ee \`a la
-section~\ref{subsec:verification_corrige_lecon}.
+publication scientifique. La
+section~\ref{subsec:verification_corrige_lecon} la d\'eveloppe.
 \end{sloppypar}
 
 \begin{boiteArbitre}
 L'arbitre referme le dossier. La machine a produit des formulations
 alternatives que les auteurs ont retenues. La le\c{c}on qu'il en tire
-d\'epasse la substitution d'une formule \`a une autre, car ni la relecture
+d\'epasse la substitution d'une formule \`a une autre. Ni la relecture
 humaine ni la machine ne suffisent seules. La machine v\'erifie les
 d\'eductions tandis que la relecture v\'erifie que les d\'efinitions disent ce
 qu'on croit. L'arbitre en conclut que la formalisation est une n\'ecessit\'e
@@ -1128,6 +1130,13 @@ theorem Helios_regime_at_128 :
 dans le r\'egime de capacit\'e moyenne, car $73 \in [25{,}6,\, 128]$.
 \end{theorem}
 
+La capacit\'e $\Delta = 73$~bits est calibr\'ee \`a $\lambda = 128$
+(tableau~\ref{tab:validation_cro_classique}). \`A ce param\`etre, $73 > 64$ et la
+classification range les zk-SNARKs dans le r\'egime de haute capacit\'e
+(D\'efinition~\ref{def:regime_high}). Le
+th\'eor\`eme l'\'evalue \`a $\lambda = 256$ pour montrer que la classification d\'epend
+aussi du param\`etre de s\'ecurit\'e.
+
 \begin{leancode}[caption={V\'erification du r\'egime zk-SNARKs en Lean4}, label={lst:lean4_zksnark_regime}]
 theorem zkSNARK_regime_at_256 :
     capacity_regime zkSNARKParams.Δ 256 = .MidCapacity := by
@@ -1162,17 +1171,17 @@ L'arbitre referme le dossier Lean4. Il a achev\'e l'\'etape \textbf{C}.
 Cette section lui a appris que la preuve qu'il croyait compl\`ete gagnait
 \`a \^etre pr\'ecis\'ee en plusieurs points.
 
-Huit contributions structurent ce qu'il retient. Il y a d'abord le mod\`ele formel
+Huit \'el\'ements structurent ce qu'il retient. Il y a d'abord le mod\`ele formel
 (familles de protocoles index\'ees par $\lambda$, param\`etres institutionnels
-fixes), puis l'int\'egration des propri\'et\'es informationnelles comme champs de
+fixes). Vient ensuite l'int\'egration des propri\'et\'es informationnelles comme champs de
 structure (Fano, Pinsker) et le noyau alg\'ebrique certifi\'e sans aucune
-admission tacite. S'y ajoutent la preuve de n\'egligeabilit\'e, l\`a o\`u l'expos\'e
-informel \'ecrivait simplement \og n\'egligeable\fg, le r\'egime de confidentialit\'e
+admission tacite. S'y ajoute la preuve de n\'egligeabilit\'e, l\`a o\`u l'expos\'e
+informel \'ecrivait simplement \og n\'egligeable\fg. Comptent aussi le r\'egime de confidentialit\'e
 pos\'e comme condition du th\'eor\`eme ainsi que les constantes explicites
 ($\kappa(\Delta+1)$ et $\kappa^2$ au lieu d'un $O(\lambda^{-2})$ non chiffr\'e). La
 forme raffin\'ee compl\`ete l'ensemble en lui indiquant exactement quand sa capacit\'e
 d'extraction devient la contrainte liante. La couche concr\`ete compl\`ete le tout en
-d\'emontrant Fano et Pinsker pour des lois finies, ce qui fait porter le trilemme sur
+d\'emontrant Fano et Pinsker pour des lois finies. Le trilemme porte alors sur
 de vraies lois.
 
 L'encha\^inement des faits le marque particuli\`erement. Trois formulations
@@ -1184,6 +1193,6 @@ r\'egime est d'ailleurs n\'e de cette exigence.
 
 La borne $\Delta/(\gamma\lambda) + O(\lambda^{-2})$ est maintenant prouv\'ee dans le
 cadre du r\'egime, avec des termes correctifs chiffr\'es. Cette section en tire sa
-port\'ee \'epist\'emologique, puisqu'elle montre que la rigueur se v\'erifie au lieu
+port\'ee \'epist\'emologique. Elle montre que la rigueur se v\'erifie au lieu
 de se supposer.
 \end{boiteArbitre}

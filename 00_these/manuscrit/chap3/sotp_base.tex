@@ -17,7 +17,7 @@ fonctionnelles. Sa d\'enomination, inspir\'ee de la m\'etallurgie m\'edi\'evale,
 refl\`ete la relation entre mall\'eabilit\'e et r\'esistance.
 
 \paragraph{Couche Gold (confidentialit\'e).}
-Masquage cryptographique du message via one-time pads bas\'es sur PRG,
+Masquage cryptographique du message par des one-time pads construits sur un PRG,
 chiffrements s\'emantiquement s\^urs~\cite{GoldwasserMicali84,Bellare97}, ou preuves zero-knowledge~\cite{GMR85,BenOr88}. La couche
 Gold r\'epond \`a la question \emph{\guillemotleft~Comment rendre $\sigma$ indiscernable entre deux
 messages~?\guillemotright}
@@ -143,8 +143,8 @@ un maximum d'information sur $V$ depuis $(c, \sigma)$~?\guillemotright}
 \smallskip
 \begin{minipage}{\linewidth}
   \small\textit{Note :} La couche \textbf{Gold} (dor\'ee, $\Conf$) assure le
-  masquage cryptographique, la couche \textbf{Iron} (acier, $\Relver$) garantit
-  le liage et la v\'erification fiable, tandis que la couche \textbf{Clay} (terre
+  masquage cryptographique. La couche \textbf{Iron} (acier, $\Relver$) garantit
+  le liage et la v\'erification fiable. La couche \textbf{Clay} (terre
   cuite, $\Opp$) pr\'esente le contexte sous une forme interpr\'etable~; elle
   n'accro\^it $\Opp$ que si elle transmet une information que l'institution
   ne d\'etient pas d\'ej\`a (Remarque~\ref{rem:statut_sotp}). Les accolades
@@ -176,9 +176,9 @@ contraire l'opposabilit\'e prime ($\Opp_{\min} = 0{,}8$), les proportions
 s'inversent, avec $20\%$ pour Gold (masquage minimal), $30\%$ pour Iron
 (binding standard) et $50\%$ pour Clay (pr\'eservation riche du contexte).
 
-L'ind\'ependance modulaire des couches est n\'ecessaire, car Gold, Iron et Clay
+L'ind\'ependance modulaire des couches est n\'ecessaire. Gold, Iron et Clay
 doivent pouvoir \^etre substitu\'es sans refonte compl\`ete~\cite{canetti2001,Goldreich02}. Remplacer le PRG
-par AES-GCM n'affecte pas Iron ni Clay~; remplacer Pedersen par un
+par AES-GCM n'affecte ni Iron ni Clay. Substituer \`a Pedersen un
 accumulateur RSA laisse Gold et Clay intacts~; remplacer le hachage
 contextuel par une repr\'esentation JL ne modifie pas les deux premi\`eres
 couches. Cette modularit\'e facilite l'adaptation aux \'evolutions
@@ -315,9 +315,9 @@ parfaite. Son opposabilit\'e reste born\'ee par $H(h|C)/H(V|C)$, par le m\^eme a
 que ci-dessus. Une preuve d'optimalit\'e demanderait de d\'efinir
 formellement la classe OTP et d'y d\'emontrer une borne sup\'erieure
 uniforme~; nous la laissons ouverte. Selon cet argument heuristique, une
-construction atteignant une opposabilit\'e sup\'erieure devrait soit (i) abandonner la confidentialit\'e
-information-th\'eorique au profit d'hypoth\`eses calculatoires, soit (ii) utiliser
-des protocoles interactifs multi-tours, soit (iii) employer des primitives
+construction atteignant une opposabilit\'e sup\'erieure devrait faire l'un de trois choix. Elle pourrait (i) abandonner la confidentialit\'e
+information-th\'eorique au profit d'hypoth\`eses calculatoires, (ii) utiliser
+des protocoles interactifs multi-tours ou (iii) employer des primitives
 diff\'erentes, au-del\`a du paradigme OTP.
 \end{remark}
 
@@ -351,8 +351,8 @@ tandis que~\cite{MINKA2026CLO} donne un produit de l'ordre de $H(\mathcal{C})/\l
 Ce produit \'elev\'e n'est r\'ealisable que sous le seuil, soit $H(\mathcal{C}) \leq H^\sharp$.
 Au-del\`a, l'opposabilit\'e
 est major\'ee par $(\kappa/\lambda + \Delta)/\gamma \approx \Delta/(\alpha H(\mathcal{C})) < 1$, quantit\'e qui d\'ecro\^it en $1/H(\mathcal{C})$
-(preuve de la Proposition~\ref{prop:borne_aigue}, \'etape~6), ce qui motive
-la variante SOTP-High de la section~\ref{sec:sotp_construction}, SOTP-Base r\'epondant sous le seuil
+(preuve de la Proposition~\ref{prop:borne_aigue}, \'etape~6). Cette d\'ecroissance motive
+la variante SOTP-High de la section~\ref{sec:sotp_construction}. Sous le seuil, SOTP-Base r\'epond
 au besoin de proximit\'e entre contextes.
 
 \begin{boiteArbitre}
@@ -363,7 +363,7 @@ deviennent n\'ecessaires.
 
 La remarque~\ref{thm:optimalite_sotp} indique que S-OTP serait optimal
 dans sa classe, sans le d\'emontrer. Cette optimalit\'e, m\^eme \'etablie,
-resterait restreinte, car les variantes SOTP-Base et SOTP-High utilisent
+resterait restreinte. Les variantes SOTP-Base et SOTP-High utilisent
 des techniques au-del\`a des protocoles XOR (projection JL, zk-SNARKs)
 et r\'epondent \`a d'autres besoins.
 \end{sloppypar}

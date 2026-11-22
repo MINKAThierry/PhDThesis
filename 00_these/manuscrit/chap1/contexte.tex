@@ -15,7 +15,7 @@ proc\'edures \'etablies~\cite{Daubert1993,Casey10}. Longtemps g\'erable, cette a
 creus\'ee avec les protocoles modernes au point de devenir une fracture structurelle~\cite{Citron14,Kerr04}.
 
 Pour en d\'ecrire les contours, ce chapitre s'appuie sur trois syst\`emes
-cryptographiques employ\'es comme construits illustratifs th\'eoriques, \`a savoir Helios pour le vote
+cryptographiques employ\'es comme construits illustratifs th\'eoriques. Ce sont Helios pour le vote
 \'electronique, les zk-SNARKs pour la conformit\'e financi\`ere et ECDSA pour
 les signatures contractuelles. Leurs profils CLO ($\Conf$, $\Rel$, $\Opp$)
 sont des estimations param\'etriques calcul\'ees analytiquement depuis leurs
@@ -43,9 +43,9 @@ jonction de la cryptographie, des syst\`emes d'information, des m\'ethodes forme
 \subsubsection{L'exp\'erience professionnelle de l'auteur}
 \label{subsubsec:experience_auteur}
 
-Notre parcours professionnel associe plusieurs expertises compl\'ementaires, puisque nous exer\c{c}ons comme Auditeur des finances publiques au sein des \textbf{Services du Contr\^ole Sup\'erieur de l'\'Etat (CONSUPE)}, comme Expert judiciaire pr\`es les tribunaux du Cameroun ainsi que comme Expert certifi\'e en cybers\'ecurit\'e.
+Notre parcours professionnel associe plusieurs expertises compl\'ementaires. Nous exer\c{c}ons comme Auditeur des finances publiques au sein des \textbf{Services du Contr\^ole Sup\'erieur de l'\'Etat (CONSUPE)}, comme Expert judiciaire pr\`es les tribunaux du Cameroun ainsi que comme Expert certifi\'e en cybers\'ecurit\'e.
 
-L'exercice de ces fonctions nous a souvent mis face \`a une situation d\'econcertante, dans laquelle des syst\`emes d'information robustes sur le plan cryptographique et s\^urs sur le plan math\'ematique ne parvenaient pas \`a convaincre les institutions qui devaient s'en servir~\cite{Bonneau16,Narayanan16}. En audit financier comme en expertise judiciaire, la validit\'e de la preuve technique suffisait rarement \`a fonder la confiance s\'emantique qu'exige une d\'ecision administrative ou juridictionnelle~\cite{Casey16,Grimmelmann15}.
+L'exercice de ces fonctions nous a souvent mis face \`a une situation d\'econcertante. Des syst\`emes d'information robustes sur le plan cryptographique et s\^urs sur le plan math\'ematique ne parvenaient pas \`a convaincre les institutions qui devaient s'en servir~\cite{Bonneau16,Narayanan16}. En audit financier comme en expertise judiciaire, la validit\'e de la preuve technique suffisait rarement \`a fonder la confiance s\'emantique qu'exige une d\'ecision administrative ou juridictionnelle~\cite{Casey16,Grimmelmann15}.
 
 \end{sloppypar}
 
@@ -57,7 +57,7 @@ L'exercice de ces fonctions nous a souvent mis face \`a une situation d\'econcer
 
 La question centrale de cette th\`ese proc\`ede donc moins d'une r\'eflexion men\'ee \textit{in abstracto} que de l'observation r\'ep\'et\'ee d'un ph\'enom\`ene auquel nous avons donn\'e le nom de \textbf{paradoxe de l'authenticit\'e invisible}.
 
-Le paradoxe tient \`a la conception m\^eme des protocoles cryptographiques actuels, qui ne prennent pas en compte la capacit\'e cognitive de leurs interpr\`etes~\cite{Simon82,Miller56,Herley09}, bien davantage qu'\`a un d\'efaut d'acculturation ou de formation des acteurs institutionnels.
+Le paradoxe tient \`a la conception m\^eme des protocoles cryptographiques actuels, qui ne prennent pas en compte la capacit\'e cognitive de leurs interpr\`etes~\cite{Simon82,Miller56,Herley09}. Un d\'efaut d'acculturation ou de formation des acteurs institutionnels l'explique beaucoup moins.
 
 Ces constats avaient \'et\'e faits dans un cadre national. Pour le d\'epasser, nous avons retenu trois cas d'\'etude de port\'ee internationale, Helios pour le vote, les zk-SNARKs pour la conformit\'e et ECDSA pour la signature. Leurs enseignements valent au-del\`a de leur contexte d'origine pour les questions de confiance num\'erique~\cite{DeFilippi16,Garay15}.
 
@@ -105,10 +105,10 @@ sciences exp\'erimentales~\cite{Tsybakov2009}, ni th\'eorique.
 \begin{sloppypar}
 Les trois cas d'\'etude introduits \`a la section~\ref{subsec:genese_question} permettent de pr\'eciser le paradoxe. Leur choix tient \`a ce qu'ils
 parcourent l'ensemble des compromis possibles entre confidentialit\'e et
-opposabilit\'e, depuis les syst\`emes tr\`es confidentiels mais peu opposables
+opposabilit\'e. On va ainsi des syst\`emes tr\`es confidentiels mais peu opposables
 (Helios, zk-SNARKs) jusqu'\`a un syst\`eme tr\`es opposable dont la confidentialit\'e
-est quasi nulle (ECDSA). Pris ensemble, ils font appara\^itre une r\'egularit\'e,
-puisque aucune des trois estimations n'atteint un produit $\Conf \cdot \Rel \cdot \Opp$
+est quasi nulle (ECDSA). Pris ensemble, ils font appara\^itre une r\'egularit\'e.
+Aucune des trois estimations n'atteint un produit $\Conf \cdot \Rel \cdot \Opp$
 sup\'erieur \`a $0{,}58$. Cette observation laisse supposer l'existence d'une
 contrainte de fond.
 \end{sloppypar}
@@ -124,8 +124,8 @@ contrainte de fond.
 
 Le protocole Helios, con\c{c}u par Ben Adida en 2008~\cite{Adida08}, est
 une r\'ef\'erence pour le vote \'electronique v\'erifiable de bout en bout~\cite{Benaloh94,Lindeman12}. Il
-associe le chiffrement homomorphe ElGamal~\cite{ElGamal85}, gr\^ace auquel les
-bulletins chiffr\'es peuvent \^etre agr\'eg\'es sans \^etre d\'echiffr\'es un \`a un, \`a des
+emploie le chiffrement homomorphe ElGamal~\cite{ElGamal85}, gr\^ace auquel les
+bulletins chiffr\'es peuvent \^etre agr\'eg\'es sans \^etre d\'echiffr\'es un \`a un. Il y adjoint des
 preuves non-interactives zero-knowledge
 (protocole de Chaum-Pedersen~\cite{ChaumPedersen92} rendu non interactif par Fiat-Shamir~\cite{FiatShamir87})
 qui attestent la validit\'e de chaque bulletin sans en r\'ev\'eler le contenu.
@@ -154,8 +154,8 @@ En novembre 2025, l'IACR a d\^u annuler son \'election annuelle apr\`es qu'un
 trustee eut perdu de fa\c{c}on irr\'em\'ediable sa cl\'e partielle~\cite{IACR2025incident}.
 La configuration exigeait en effet les parts des trois garants (partage 3-sur-3).
 Le scrutin a donc \'et\'e repris avec un seuil 2-sur-3. Les acteurs concern\'es
-\textit{\'etaient} cette fois des experts en cryptographie, si bien que l'incident
-met en \'evidence, ind\'ependamment de toute question de comp\'etence,
+\textit{\'etaient} cette fois des experts en cryptographie. L'incident
+met donc en \'evidence, ind\'ependamment de toute question de comp\'etence,
 l'\'ecart entre la complexit\'e op\'erationnelle du protocole et les
 contraintes concr\`etes d'un d\'eploiement institutionnel.
 
@@ -193,11 +193,11 @@ ont nettement renforc\'e la confidentialit\'e des preuves. Une preuve $\pi$
 de taille constante ($128$--$256$ octets) y certifie que
 $\mathcal{C}(x, w) = 1$ pour un t\'emoin secret $w$, sa v\'erification ne
 demandant que quelques millisecondes~\cite{Parno13,Wahby18}. Ces propri\'et\'es expliquent l'int\'er\^et
-des zk-SNARKs pour la conformit\'e r\'eglementaire, puisqu'elles permettent de prouver
+des zk-SNARKs pour la conformit\'e r\'eglementaire. Elles permettent en effet de prouver
 le respect des r\`egles AML~\cite{FATF12,AMLD4} ou de B\^ale~III~\cite{BaselIII}
 sans divulguer les transactions sous-jacentes~\cite{Garratt19}.
 
-Cette succinctit\'e a toutefois un co\^ut~\cite{Bitansky2017}, car une preuve qui ne r\'ev\`ele rien du t\'emoin
+Cette succinctit\'e a toutefois un co\^ut~\cite{Bitansky2017}. Une preuve qui ne r\'ev\`ele rien du t\'emoin
 interdit aussi \`a un r\'egulateur d'auditer apr\`es coup une transaction suspecte.
 Lors d'une crise syst\'emique comparable \`a celle des \textit{subprimes} de 2008~\cite{FCIC2011}, l'analyse de la contagion serait fortement entrav\'ee, l'opacit\'e
 qui prot\`ege les clients faisant alors obstacle \`a l'investigation~\cite{Androulaki13,Meiklejohn13}. Le probl\`eme rel\`eve d'un vide de
@@ -221,8 +221,8 @@ incompatibilit\'es~\cite{FinckMoscon19,Sergey18}.
 Sous les m\^emes hypoth\`eses, les estimations param\'etriques analytiques donnent
 $\Conf \approx 0{,}89$ (confidentialit\'e op\'erationnelle estim\'ee du dispositif de conformit\'e, au-del\`a de la seule preuve~\cite{Groth16}),
 $\Relver \approx 0{,}96$ (compl\'etude et solidit\'e de la v\'erification),
-$\Opp \approx 0{,}67$ (opposabilit\'e \'elev\'ee pour les institutions dot\'ees
-d'une forte capacit\'e d'extraction $\Delta \approx 73$ bits~\cite{MINKA2026CRO}),
+$\Opp \approx 0{,}67$ (opposabilit\'e mod\'er\'ee, port\'ee par une forte capacit\'e
+d'extraction $\Delta \approx 73$ bits~\cite{MINKA2026CRO}),
 d'o\`u le produit
 \begin{equation}
 \Conf \cdot \Rel \cdot \Opp \;\approx\; 0{,}572.
@@ -251,7 +251,7 @@ courbes elliptiques (ECDLP)~\cite{RFC6090,RFC6979}, la cl\'e publique $Q = d \cd
 \'etant obtenue \`a partir de la cl\'e secr\`ete $d \in [1, n-1]$. La signature d'un message $m$ produit
 $(r, s)$ v\'erifiable par quiconque conna\^it $Q$ et $m$.
 
-Cette transparence totale fonde l'opposabilit\'e d'ECDSA~\cite{ESIGN00,eIDAS14}, puisque la
+Cette transparence totale fonde l'opposabilit\'e d'ECDSA~\cite{ESIGN00,eIDAS14}. La
 v\'erification ne d\'epend d'aucun expert tiers, peut \^etre rejou\'ee \`a tout moment et
 aboutit \`a une attribution univoque assortie d'une tra\c{c}abilit\'e compl\`ete~\cite{Sasson14}.
 Elle a pour contrepartie directe l'absence de toute confidentialit\'e, le message
@@ -287,16 +287,16 @@ varient en sens inverse, les protocoles qui maximisent l'une minimisant
 l'autre~\cite{ClarksonSchneider10}. Aucun des trois n'approche la r\'egion $(\Conf, \Rel, \Opp)
 \approx (0{,}8, 0{,}8, 0{,}8)$, qui resterait pourtant en dessous de
 $1$. Ensuite, les produits $\Conf \cdot \Rel \cdot \Opp$ varient de
-$0{,}273$ \`a $0{,}572$, ce qui sugg\`ere l'existence d'une contrainte
+$0{,}273$ \`a $0{,}572$. Cet \'ecart sugg\`ere l'existence d'une contrainte
 qui d\'epend des param\`etres
 institutionnels ($\Delta$, $\alpha$, $\beta$)~\cite{Simon82,Cowan2001}.
 
 La cryptographie classique ne dispose, \`a notre connaissance, d'aucun outil pour formaliser cette
-contrainte~\cite{AbadiRogaway00}, car elle mesure l'avantage de l'adversaire~\cite{Goldreich01} sans rien dire de l'utilit\'e institutionnelle. La litt\'erature sur l'\emph{usable
+contrainte~\cite{AbadiRogaway00}. Elle mesure l'avantage de l'adversaire~\cite{Goldreich01} sans rien dire de l'utilit\'e institutionnelle. La litt\'erature sur l'\emph{usable
 security}~\cite{Bonneau12,Cranor05,Herley09,Dhamija06,Schechter07} \'etudie l'utilisabilit\'e, mais
 qualitativement, sans m\'etriques quantifiables. L'informatique
 juridique~\cite{Kerr04,Casey11,Mason07} analyse l'admissibilit\'e des preuves,
-mais via la jurisprudence, sans formalisme math\'ematique.
+mais par la jurisprudence, sans formalisme math\'ematique.
 
 \`A notre connaissance, aucune de ces trois disciplines, qui s'ignorent largement, ne propose donc de
 m\'etrique de l'opposabilit\'e~\cite{Smith09,Alvim12}. La section~\ref{subsec:trois_dimensions} s'attache \`a combler ce manque.
@@ -415,7 +415,7 @@ Il en retient quatre enseignements. Une confidentialit\'e tr\`es \'elev\'ee
 (sup\'erieure \`a $0{,}90$) produit une opacit\'e qui paralyse l'interpr\`ete
 institutionnel, comme le montrent Helios et les zk-SNARKs. Les
 produits $\Conf \cdot \Rel \cdot \Opp$ s'\'etagent de $0{,}273$ \`a $0{,}572$
-selon les param\`etres institutionnels ($\Delta$, $\alpha$, $\beta$), ce qui
+selon les param\`etres institutionnels ($\Delta$, $\alpha$, $\beta$). Cet \'etagement
 d\'esigne une contrainte qui d\'epend du contexte.
 Les protocoles actuels ont aussi \'et\'e con\c{c}us sans tenir compte de
 lui, puisque sa capacit\'e cognitive born\'ee ($\Delta$) n'appara\^it dans aucune

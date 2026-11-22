@@ -10,21 +10,21 @@ La famille SOTP (section~\ref{sec:sotp_construction}) propose trois
 constructions de r\'ef\'erence. Sous le seuil $H^\sharp$, SOTP-Low transmet le contexte exact
 et SOTP-Base sa proximit\'e avec d'autres contextes~; au-del\`a, SOTP-High certifie une
 assertion sur le contexte. Leurs propri\'et\'es
-cryptographiques, \`a savoir la confidentialit\'e (statistique par troncature ou
-calculatoire pour les variantes \`a masque, divulgation nulle de connaissance pour SOTP-High) et la
-fiabilit\'e de v\'erification, sont prouv\'ees sous PRG, DLog et la solidit\'e de
+cryptographiques sont prouv\'ees. Il s'agit de la confidentialit\'e (statistique par troncature ou
+calculatoire pour les variantes \`a masque, divulgation nulle de connaissance pour SOTP-High) et de la
+fiabilit\'e de v\'erification. Elles sont obtenues sous PRG, DLog et la solidit\'e de
 connaissance de Groth16 (mod\`ele du groupe g\'en\'erique ou alg\'ebrique). Les facteurs
 $0{,}75$, $0{,}5$ et $0{,}45$ des formulations initiales sont conserv\'es comme
 heuristiques de conception, tandis que l'optimalit\'e universelle
 est formul\'ee comme conjecture (Conjecture~\ref{conj:optimalite_universelle}). Cette
-r\'eserve a une raison structurelle, car une couche Clay qui ne d\'epend que du contexte public
+r\'eserve a une raison structurelle. Une couche Clay qui ne d\'epend que du contexte public
 n'apporte aucune information conditionnelle au sens de $\Opp$
 (Remarque~\ref{rem:statut_sotp}).
 
 La v\'erification Lean4 (section~\ref{sec:lean4}) a certifi\'e
 le noyau alg\'ebrique. Les in\'egalit\'es de Pinsker et de Fano y sont
 int\'egr\'ees comme propri\'et\'es des instances de protocole, puis d\'emontr\'ees pour
-des lois finies dans la couche concr\`ete, et les hypoth\`eses
+des lois finies dans la couche concr\`ete. Les hypoth\`eses
 institutionnelles y sont pr\'ecis\'ees~; la borne
 $\Delta/(\gamma\lambda) + O(\lambda^{-2})$ et sa forme raffin\'ee sont v\'erifi\'ees
 sans \texttt{sorry}. Deux t\'emoins formalisent la coh\'erence (une instance du
@@ -35,22 +35,23 @@ r\'egime atteint $1/4$). Cette d\'emarche illustre la valeur
 plus pr\'ecises de trois \'enonc\'es publi\'es (sous-section~\ref{subsec:lean4_erreurs}).
 
 Quatre limitations demeurent. Les param\`etres
-$\Delta$, $\alpha$, $\beta$ reposent sur des estimations analytiques. Leur mesure directe aupr\`es
+$\Delta$ et $\alpha$ reposent sur des estimations analytiques. Leur mesure directe aupr\`es
 d'acteurs institutionnels r\'eels rel\`eve des protocoles du
-chapitre~\ref{chap:experimentation}. Les m\'etriques CLO
+chapitre~\ref{chap:experimentation}. Le param\`etre $\beta$ se calcule sur les lois de preuve,
+mais les valeurs retenues pour les syst\`emes de r\'ef\'erence restent des estimations. Les m\'etriques CLO
 des syst\`emes de r\'ef\'erence ont \'et\'e fix\'ees par calibration param\'etrique
 r\'etrospective, sans exp\'erimentation directe et ne valident pas les
 heuristiques SOTP. La formalisation Lean4 couvre le noyau
 alg\'ebrique et les lois finies. Les r\'eductions de s\'ecurit\'e des constructions SOTP n'y figurent que
 pour SOTP-Low, en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}). Le mod\`ele quantique utilise
-principalement le canal d\'epolarisant, qui peut ne pas capturer toutes les
+principalement le canal d\'epolarisant, qui peut ne pas rendre compte de toutes les
 nuances des syst\`emes quantiques r\'eels.
 
 La cryptographie institutionnelle dispose d\'esormais des m\'etriques, de la
 loi d'impossibilit\'e, des constructions de r\'ef\'erence et de la certification
 formelle que requiert tout sous-domaine th\'eorique. Ces r\'esultats doivent
-encore \^etre confront\'es aux syst\`emes r\'eels, ce qui conduit \`a se demander
-si les param\`etres institutionnels qui gouvernent ces bornes sont mesurables.
+encore \^etre confront\'es aux syst\`emes r\'eels. Les param\`etres institutionnels qui gouvernent ces bornes
+sont-ils mesurables~?
 Cette question correspond \`a l'\'etape \textbf{X} de la progression et fait
 l'objet du chapitre~\ref{chap:experimentation}.
 \end{sloppypar}

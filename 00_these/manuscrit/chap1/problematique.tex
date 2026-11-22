@@ -11,9 +11,9 @@ La section~\ref{sec:contexte} a
 document\'e trois \'echecs institutionnels r\'eels (Louvain~2009~\cite{Adida09UCL},
 IACR~2025~\cite{IACR2025incident} et le vide de contr\^ole AML~\cite{FATF12,AMLD4}) ainsi qu'un succ\`es plus nuanc\'e, celui d'ECDSA~\cite{Johnson01,NIST.FIPS.186-5}.
 La section~\ref{sec:etat_art} a ensuite rassembl\'e les outils n\'ecessaires
-\`a leur quantification, \`a savoir l'entropie classique et quantique~\cite{Shannon48,NielsenChuang2010}, l'information mutuelle,
-les in\'egalit\'es de Pinsker~\cite{Pinsker1964} et de Fano~\cite{Fano61} ainsi que les trilemmes d'impossibilit\'e~\cite{Arrow50,Brewer00,FLP85}. Il reste \`a convertir ces observations en un programme de recherche
-formalis\'e, ce qui fait l'objet de la pr\'esente section.
+\`a leur quantification, dont l'entropie classique et quantique~\cite{Shannon48,NielsenChuang2010}, l'information mutuelle,
+les in\'egalit\'es de Pinsker~\cite{Pinsker1964} et de Fano~\cite{Fano61} ainsi que les trilemmes d'impossibilit\'e~\cite{Arrow50,Brewer00,FLP85}. La pr\'esente section convertit ces observations en un programme de recherche
+formalis\'e.
 
 Notre d\'emarche reprend la progression canonique d\'ecrite \`a la section~\ref{sec:ig_problematique}.
 Nous formalisons d'abord, \`a la sous-section~\ref{subsec:paradoxe_authenticite},
@@ -25,7 +25,7 @@ correspondent. Il s'agit de borner les compromis classiques (\textbf{B}) puis
 d'\'etendre ces bornes aux contextes post-quantiques (\textbf{E}). Viennent
 ensuite l'approche des bornes par des constructions dont l'optimalit\'e
 est examin\'ee (\textbf{S}) et la certification des r\'esultats par v\'erification formelle
-(\textbf{C}), puis la sp\'ecification d'un programme exp\'erimental qui mesure les
+(\textbf{C}). Vient enfin la sp\'ecification d'un programme exp\'erimental qui mesure les
 param\`etres institutionnels (\textbf{X}). Enfin, la sous-section~\ref{subsec:objectifs_programme} examine
 la coh\'erence interne du programme et en esquisse les retomb\'ees scientifiques,
 pratiques et soci\'etales.
@@ -36,8 +36,8 @@ Le foss\'e que l'arbitre constate entre validit\'e technique et conviction
 institutionnelle trouve ici une formulation pr\'ecise, celle du paradoxe de
 l'authenticit\'e invisible. Ce paradoxe na\^it de l'incompatibilit\'e structurelle entre
 v\'erification algorithmique et v\'erification substantielle~\cite{MINKA2026CLO,eIDAS14}.
-Il en d\'ecoule six questions, qui vont de la formalisation du paradoxe
-jusqu'\`a son exp\'erimentation. L'arbitre se les posait d\'ej\`a sans parvenir
+Il en d\'ecoule deux questions, que d\'eclinent six objectifs allant de la formalisation du
+paradoxe jusqu'\`a son exp\'erimentation. L'arbitre se posait d\'ej\`a ces questions sans parvenir
 \`a les formuler~; loin de lui para\^itre acad\'emiques, elles r\'epondent \`a ce
 qu'il attendait.
 \end{boiteArbitre}
@@ -52,7 +52,7 @@ les cas de la section~\ref{sec:contexte}. Helios a connu un \'echec op\'erationn
 Louvain~(2009)~\cite{Adida09UCL,Goodman15} et lors de l'\'election IACR~(2025)~\cite{IACR2025incident}. Les zk-SNARKs laissent un vide de contr\^ole
 pour la conformit\'e AML/B\^ale~III~\cite{BaselIII,Garratt19}. ECDSA b\'en\'eficie d'une
 acceptation judiciaire universelle~\cite{ESIGN00,eIDAS14}, obtenue au prix d'une
-confidentialit\'e nulle. La seconde rassemble les fondements pos\'es \`a la section~\ref{sec:etat_art}, \`a savoir la th\'eorie de l'information de
+confidentialit\'e nulle. La seconde rassemble les fondements pos\'es \`a la section~\ref{sec:etat_art}, dont la th\'eorie de l'information de
 Shannon~\cite{Shannon48,Shannon49,CoverThomas06}, la th\'eorie quantique~\cite{Wilde2017,Holevo1973}, les primitives d'obscurcissement~\cite{Pedersen91,Groth16} et les trilemmes
 CAP/FLP/Blockchain~\cite{GilbertLynch02,Buterin17,Nakamoto08}. Nous formalisons maintenant cette tension comme probl\'ematique centrale.
 
@@ -63,14 +63,14 @@ Les syst\`emes cryptographiques con\c{c}us pour la s\'ecurit\'e math\'ematique
 \'echouent dans les contextes institutionnels exigeant une interpr\'etation
 humaine non-experte~\cite{Bonneau12,Whitten99,Herley09}. Cette d\'efaillance ne se corrige ni par une
 meilleure impl\'ementation ni par une formation suppl\'ementaire des
-utilisateurs, car elle proc\`ede d'une \textbf{incompatibilit\'e structurelle}
+utilisateurs. Elle proc\`ede d'une \textbf{incompatibilit\'e structurelle}
 entre deux paradigmes de v\'erification.
 
 \paragraph{Le paradigme cryptographique de la v\'erification algorithmique.}
 \label{par:paradigme_crypto}
 
 La recherche cryptographique classique, depuis les travaux de
-Goldwasser, Micali et Rackoff~\cite{GMR85}, mesure la s\'ecurit\'e via
+Goldwasser, Micali et Rackoff~\cite{GMR85}, mesure la s\'ecurit\'e par
 des \textbf{jeux} opposant un challenger \`a un adversaire polynomial~\cite{Goldreich01,Shoup01}.
 Trois propri\'et\'es en ressortent.
 
@@ -97,8 +97,8 @@ existentielle dans le jeu EUF-CMA~\cite{GMR88,Schnorr91}, c'est-\`a-dire par l'i
 \leq \negl(\lambda).
 \end{equation}
 
-Ces trois d\'efinitions portent sur des propri\'et\'es \textbf{adversariales},
-puisqu'elles quantifient la capacit\'e d'un attaquant \`a violer la s\'ecurit\'e.
+Ces trois d\'efinitions portent sur des propri\'et\'es \textbf{adversariales}.
+Elles quantifient la capacit\'e d'un attaquant \`a violer la s\'ecurit\'e.
 Elles ne fournissent en revanche aucune m\'etrique des propri\'et\'es
 \textbf{interpr\'etatives}, c'est-\`a-dire de la capacit\'e d'un utilisateur
 l\'egitime \`a comprendre ce que le syst\`eme
@@ -118,10 +118,10 @@ syst\'ematiquement \`a des experts externes. Cette exigence entre en tension dir
 avec le principe zero-knowledge, dont l'objet m\^eme est de minimiser
 l'information r\'ev\'el\'ee~\cite{BenSasson2019,PLONK20}. La deuxi\`eme tient \`a l'auditabilit\'e r\'etrospective~\cite{Twining1999}.
 Une d\'ecision institutionnelle doit rester r\'evisable plusieurs ann\'ees apr\`es
-avoir \'et\'e prise, ce qui suppose des traces explicites du raisonnement suivi~;
+avoir \'et\'e prise. Il lui faut donc des traces explicites du raisonnement suivi~;
 or une preuve zero-knowledge ne laisse aucune trace exploitable
 au-del\`a du r\'esultat binaire \guillemotleft~valide/invalide~\guillemotright. La troisi\`eme
-concerne l'attribution des responsabilit\'es~\cite{Citron14}, puisqu'en cas de d\'efaillance ou de fraude
+concerne l'attribution des responsabilit\'es~\cite{Citron14}. En cas de d\'efaillance ou de fraude
 il doit \^etre possible d'identifier les acteurs responsables et de reconstituer
 la cha\^ine causale.
 
@@ -235,8 +235,8 @@ institutionnelle risque donc de se creuser~\cite{Ravi2020}.
 \label{par:adversaires_quantiques}
 
 Un adversaire quantique peut interroger les oracles cryptographiques par des \textbf{requ\^etes en
-superposition}~\cite{Boneh2011,Watrous2009,Zhandry}, ce qui est susceptible de modifier
-les bornes de s\'ecurit\'e classiques. Les canaux de
+superposition}~\cite{Boneh2011,Watrous2009,Zhandry}. Les bornes de s\'ecurit\'e
+classiques peuvent s'en trouver modifi\'ees. Les canaux de
 communication quantiques subissent aussi des d\'egradations intrins\`eques,
 telles que la d\'ecoh\'erence ou le bruit de mesure, qui alt\`erent l'interpr\'etabilit\'e des
 preuves transmises~\cite{Zurek2003,Wootters1982}. Ce sont ces effets quantiques~\cite{Mayers1997,Lo1997,Unruh2016} qui conduisent \`a introduire
@@ -251,21 +251,21 @@ de recherche.
 Il faut d'abord faire de l'opposabilit\'e une propri\'et\'e de premi\`ere classe. Les
 d\'efaillances observ\'ees (Louvain~2009, IACR~2025, vide de contr\^ole
 AML) ne se r\'esorbent pas avec de meilleures interfaces ou des
-formations suppl\'ementaires, car elles t\'emoignent de limites structurelles
+formations suppl\'ementaires. Elles t\'emoignent de limites structurelles
 qui appellent une refonte conceptuelle de la cryptographie institutionnelle~\cite{Bonneau16,Narayanan16}.
 
 La capacit\'e cognitive humaine ($\Delta$) est la contrainte dominante.
 Contrairement aux analyses cryptographiques classiques centr\'ees sur la
-puissance de calcul de l'adversaire (mesur\'ee en temps polynomial), la
-contrainte limitante en contexte institutionnel est la capacit\'e
-d'extraction issue de la th\'eorie de l'information des arbitres. Estim\'ee
+puissance de calcul de l'adversaire (mesur\'ee en temps polynomial), nous
+retenons une autre contrainte limitante en contexte institutionnel. C'est la capacit\'e
+d'extraction des arbitres, au sens de la th\'eorie de l'information. Estim\'ee
 entre~20 et~80 bits selon la th\'eorie de la rationalit\'e
 born\'ee~\cite{Simon82,Simon1955,Miller56,Cowan2001,Ericsson95}, elle est syst\'ematiquement inf\'erieure au param\`etre de s\'ecurit\'e cryptographique $\lambda \in [128,256]$ bits.
 
 Les compromis observ\'es laissent aussi pr\'esager des bornes fondamentales.
 Aucune des trois estimations illustratives de la section~\ref{sec:contexte} n'atteint
 un produit $\Conf \cdot \Rel \cdot \Opp > 0{,}6$.
-Le fait que tous plafonnent au m\^eme niveau s'accorde avec l'existence de contraintes th\'eoriques
+Le fait que tous restent sous ce seuil s'accorde avec l'existence de contraintes th\'eoriques
 comparables au th\'eor\`eme~CAP~\cite{Brewer00,GilbertLynch02} ou au trilemme
 blockchain~\cite{Buterin17,Garay15}.
 
@@ -313,12 +313,12 @@ en m\'etriques quantitatives ($\Opp = I(V;\Sigma|C)/H(V|C)$) est la
 condition pr\'ealable \`a toute th\'eorie~\cite{Clarkson05,Smith09,Alvim12}.
 
 \paragraph{Production~C1, le cadre CLO (Cryptographic Legal Opposability).}
-Nous d\'efinissons trois mesures issues de la th\'eorie de l'information,
-\`a savoir la confidentialit\'e $\Conf$, la fiabilit\'e $\Rel$ et l'opposabilit\'e $\Opp$ (voir
+Nous d\'efinissons trois mesures issues de la th\'eorie de l'information, soit
+la confidentialit\'e $\Conf$, la fiabilit\'e $\Rel$ et l'opposabilit\'e $\Opp$ (voir
 \'equations~\eqref{eq:conf_def}--\eqref{eq:opp_def} de la section~\ref{subsec:definitions_preliminaires_cro}). Le cadre \'etablit le Th\'eor\`eme du Goulot
 d'\'etranglement Contextuel $I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$,
-fournit des r\`egles de composition s\'equentielle et parall\`ele pour $\Conf$ et $\Rel$, s\'equentielle seulement pour $\Opp$ (Remarque~\ref{rem:composition_opp}), et
-propose la construction Semantic One-Time Pad (S-OTP). Les \'etudes de cas
+fournit des r\`egles de composition s\'equentielle et parall\`ele pour $\Conf$ et $\Rel$, s\'equentielle seulement pour $\Opp$ (Remarque~\ref{rem:composition_opp}). Il
+propose aussi la construction Semantic One-Time Pad (S-OTP). Les \'etudes de cas
 illustratives portant sur Helios ($\Conf \cdot \Relver \cdot \Opp \approx
 0{,}437$), zk-SNARKs ($\approx 0{,}572$) et ECDSA ($\approx 0{,}273$), sur
 l'\'echelle op\'erationnelle CLO, font appara\^itre un spectre de compromis
@@ -381,7 +381,7 @@ born\'ee~\cite{Simon82,Kahneman11}.
   \item[\textbf{C2.2}] La borne $\Conf\cdot\Rel\cdot\Opp \leq \Delta/(\gamma\lambda) + O(\lambda^{-2})$ sous hypoth\`eses \'enonc\'ees (Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}).
   \item[\textbf{C2.3}] L'interpr\`ete admissible et le fondement informationnel de l'extraction born\'ee (D\'efinition~\ref{def:interp_admissible}, Proposition~\ref{prop:fondement_extraction}).
   \item[\textbf{C2.4}] La forme raffin\'ee et le seuil $H^\sharp$ qui s\'epare les r\'egimes (Remarque~\ref{rem:activite_delta}).
-  \item[\textbf{C2.5}] La borne aigu\"e d'ordre $\kappa/\lambda^2$, dont l'ordre est optimal, et le t\'emoin r\'ealisable (Proposition~\ref{prop:borne_aigue}, Remarques~\ref{rem:temoin_realisable} et~\ref{rem:temoin_combine}).
+  \item[\textbf{C2.5}] La borne aigu\"e d'ordre $\kappa/\lambda^2$, d'ordre optimal, accompagn\'ee du t\'emoin r\'ealisable (Proposition~\ref{prop:borne_aigue}, Remarques~\ref{rem:temoin_realisable} et~\ref{rem:temoin_combine}).
   \item[\textbf{C2.6}] La n\'ecessit\'e de l'Hypoth\`ese de r\'egime (Remarque~\ref{rem:scope_trilemme_classique}).
   \item[\textbf{C2.7}] La capacit\'e $\Delta^*$ propre \`a l'institution et sa majoration par $\gamma + 1$ (Remarque~\ref{rem:delta_capacite}).
 \end{itemize}
@@ -401,7 +401,7 @@ La migration vers les standards NIST PQC soul\`eve une question in\'edite, celle
 les bornes \'etablies dans le cadre classique restent valides face \`a
 des adversaires capables de requ\^etes quantiques~\cite{Kiltz2017}. Elle conduit aussi \`a se demander si les canaux quantiques
 introduisent une perte d'interpr\'etabilit\'e suppl\'ementaire~\cite{Schumacher1997}. Ces
-questions sont urgentes car les institutions doivent d\`es maintenant
+questions sont urgentes. Les institutions doivent en effet d\`es maintenant
 choisir des protocoles adapt\'es \`a l'\`ere post-quantique.
 
 \paragraph{Production~C3, le Trilemme CRO post-quantique.}
@@ -413,8 +413,8 @@ Nous \'etendons le Trilemme CRO aux contextes quantiques~\cite{Holevo1973,Wilde2
 \end{equation}
 o\`u $\Delta_q$ quantifie la capacit\'e d'extraction institutionnelle adapt\'ee
 au quantum et $\eta_q$ le coefficient de perte d'interpr\'etabilit\'e quantique.
-La preuve mobilise des outils de th\'eorie de l'information quantique,
-\`a savoir l'in\'egalit\'e de Pinsker quantique, le lemme de Gentle Measurement~\cite{Wilde2017} et les bornes
+La preuve mobilise des outils de th\'eorie de l'information quantique, dont
+l'in\'egalit\'e de Pinsker quantique, le lemme de Gentle Measurement~\cite{Wilde2017} et les bornes
 de Fano quantiques. La borne explicite conserve la forme classique, avec
 $\Delta_q$~; le terme $\eta_q H(C)$ n'appara\^it que dans la majoration
 affaiblie ci-dessus. Une calibration illustrative sur des signatures
@@ -460,7 +460,7 @@ Qu'elles atteignent, \`a une constante pr\`es, la meilleure opposabilit\'e permi
 
 \noindent\textit{Contributions.}
 \begin{itemize}
-  \item[\textbf{C4.1}] Le paradigme Gold-Iron-Clay, principe de conception des protocoles institutionnels qui confie la confidentialit\'e \`a la couche Gold, la fiabilit\'e de v\'erification \`a la couche Iron et la pr\'esentation du contexte institutionnel \`a la couche Clay (sous-section~\ref{subsec:gold_iron_clay}).
+  \item[\textbf{C4.1}] Le paradigme Gold-Iron-Clay, principe de conception des protocoles institutionnels. Il confie la confidentialit\'e \`a la couche Gold, la fiabilit\'e de v\'erification \`a la couche Iron et la pr\'esentation du contexte institutionnel \`a la couche Clay (sous-section~\ref{subsec:gold_iron_clay}).
   \item[\textbf{C4.2}] Les trois variantes SOTP-Low, SOTP-Base et SOTP-High, qui instancient ce paradigme selon le r\'egime du contexte (seuil $H^\sharp$) et le besoin fonctionnel de l'institution (section~\ref{sec:sotp_construction}).
   \item[\textbf{C4.3}] Les r\'eductions game-based aux hypoth\`eses PRG et DLOG, au lemme JL et \`a la solidit\'e de connaissance de Groth16 (Tableau~\ref{tab:ann_g_reductions}). La confidentialit\'e devient statistique lorsque le masque est tronqu\'e (Remarque~\ref{rem:masque_troncature}).
   \item[\textbf{C4.4}] La conjecture d'optimalit\'e universelle (Conjecture~\ref{conj:optimalite_universelle}).
@@ -489,7 +489,7 @@ celui qu'offrent des preuves informelles~\cite{BartheEA2013,BhargavanEA2017}.
 Le noyau alg\'ebrique du Trilemme~CRO est v\'erifi\'e m\'ecaniquement
 dans l'assistant de preuve Lean4~\cite{Lean4,moura2015lean} (version~4.35.0,
 biblioth\`eque Mathlib~\cite{Mathlib} v4.35.0). La formalisation apporte
-quatre contributions. Elle fournit d'abord un mod\`ele formel de familles de protocoles,
+les six contributions C5.1 \`a C5.6 recens\'ees ci-dessous. Elle fournit d'abord un mod\`ele formel de familles de protocoles,
 $\mathtt{ProtocolFamily}$, qui rend compte de la nature asymptotique du th\'eor\`eme.
 Elle s\'epare ensuite le noyau v\'erifi\'e des in\'egalit\'es de Pinsker
 et de Fano, pos\'ees comme propri\'et\'es des instances~\cite{AbadiRogaway00,BanaComon12},
@@ -502,8 +502,8 @@ est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'educt
 \noindent\textit{Contributions.}
 \begin{itemize}
   \item[\textbf{C5.1}] Le noyau alg\'ebrique certifi\'e dans ses formes explicite, raffin\'ee et asymptotique (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}).
-  \item[\textbf{C5.2}] Les hypoth\`eses mises au jour, \`a savoir l'efficacit\'e du verdict et le r\'egime de fuite (sous-section~\ref{subsec:lean4_erreurs}).
-  \item[\textbf{C5.3}] Pinsker, sous sa forme serr\'ee, et Fano d\'emontr\'es pour des lois de probabilit\'e finies (sous-section~\ref{subsec:lean4_concret}).
+  \item[\textbf{C5.2}] Les hypoth\`eses mises au jour, soit l'efficacit\'e du verdict et le r\'egime de fuite (sous-section~\ref{subsec:lean4_erreurs}).
+  \item[\textbf{C5.3}] Pinsker sous sa forme serr\'ee ainsi que Fano, d\'emontr\'es pour des lois de probabilit\'e finies (sous-section~\ref{subsec:lean4_concret}).
   \item[\textbf{C5.4}] Le constat que l'Hypoth\`ese~\ref{ass:regularite} ne sert qu'au Lemme~\ref{lem:confidentiality_guarantee} et non au trilemme (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}).
   \item[\textbf{C5.5}] Les t\'emoins de coh\'erence et de port\'ee et la famille de lois t\'emoins pour tout $\lambda$ (sous-sous-section~\ref{subsubsec:temoins_lean4}, sous-section~\ref{subsec:lean4_concret}).
   \item[\textbf{C5.6}] La le\c{c}on m\'ethodologique selon laquelle la certification m\'ecanique doit pr\'ec\'eder la soumission d'un r\'esultat (sous-section~\ref{subsec:verification_corrige_lecon}).
@@ -527,17 +527,17 @@ est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'educt
 Un th\'eor\`eme conditionnel ne vaut que par la mesurabilit\'e de ses
 conditions. Les bornes \'etablies d\'ependent de six grandeurs,
 $\Delta$, $\alpha$, $\beta$, $H(\mathcal{C})$, $\Delta_q$ et $\eta_q$, dont
-aucune ne dispose \`a ce jour de proc\'edure de mesure normalis\'ee. Sans
+aucune ne dispose \`a ce jour de proc\'edure normalis\'ee de mesure ou, pour $\beta$, de calcul. Sans
 d\'efinition op\'erationnelle, ces param\`etres demeurent des postulats et
 les bornes restent muettes sur les syst\`emes r\'eels~\cite{Popper1934}. Un
 r\'esultat n'acquiert sa port\'ee scientifique qu'\`a la condition d'\^etre
-r\'efutable, ce qui oblige \`a pr\'eciser les mesures par lesquelles il pourrait l'\^etre.
+r\'efutable. Il faut donc pr\'eciser les mesures par lesquelles il pourrait l'\^etre.
 
 \paragraph{Production~C6, le programme exp\'erimental et la validation r\'etrospective.}
-Nous sp\'ecifions six protocoles op\'erationnels consacr\'es respectivement
-\`a la capacit\'e d'extraction institutionnelle, \`a l'entropie contextuelle,
-\`a l'opposabilit\'e sur syst\`emes d\'eploy\'es, \`a l'estimation conjointe de la
-capacit\'e et de la granularit\'e, \`a la capacit\'e d'extraction quantique et au
+Nous sp\'ecifions six protocoles op\'erationnels. Les trois premiers portent
+sur la capacit\'e d'extraction institutionnelle, l'entropie contextuelle
+et l'opposabilit\'e sur syst\`emes d\'eploy\'es. Les trois autres traitent de l'estimation conjointe de la
+capacit\'e et de la granularit\'e, de la capacit\'e d'extraction quantique et du
 coefficient de perte d'interpr\'etabilit\'e quantique. Chacun est assorti d'une
 d\'efinition op\'erationnelle, d'un estimateur explicite, d'un plan
 d'\'echantillonnage et de crit\`eres de fiabilit\'e inter-\'evaluateurs. Nous calculons
@@ -545,13 +545,13 @@ ensuite, par une premi\`ere voie, les valeurs d'opposabilit\'e de trois
 syst\`emes de r\'ef\'erence, puis nous les confrontons aux param\`etres
 institutionnels estim\'es par une seconde voie ind\'ependante. La
 convergence des deux voies \'etablit la coh\'erence interne du cadre sans
-en d\'emontrer la validit\'e empirique, puisque le programme n'a pas \'et\'e d\'eploy\'e dans le
+en d\'emontrer la validit\'e empirique. Le programme n'a pas \'et\'e d\'eploy\'e dans le
 cadre de cette th\`ese. Les seuils \`a partir desquels il invaliderait
 le mod\`ele sont en revanche \'enonc\'es.
 
 \noindent\textit{Contributions.}
 \begin{itemize}
-  \item[\textbf{C6.1}] Les protocoles de mesure de $\Delta$, $\alpha$, $\beta$, $\Delta_q$ et $\eta_q$ et leurs crit\`eres de r\'efutation (section~\ref{sec:protocoles_experimentaux}, Tableau~\ref{tab:criteres_refutation}).
+  \item[\textbf{C6.1}] Les protocoles de mesure de $\Delta$, $\alpha$, $\Delta_q$ et $\eta_q$, le calcul de $\beta$ sur les lois de preuve et les crit\`eres de r\'efutation (section~\ref{sec:protocoles_experimentaux}, Tableau~\ref{tab:criteres_refutation}).
   \item[\textbf{C6.2}] L'estimateur de $\Delta$ et le plan factoriel (\'equation~\eqref{eq:estimateur_delta}, sous-sous-section~\ref{subsubsec:plan_factoriel_delta}).
   \item[\textbf{C6.3}] L'opposabilit\'e des syst\`emes de r\'ef\'erence et la calibration illustrative des param\`etres (section~\ref{sec:derivation_opposabilite}, Tableau~\ref{tab:parametres_reference}).
 \end{itemize}
@@ -603,7 +603,7 @@ La figure~\ref{fig:cycle_detaille} repr\'esente cet encha\^inement et ses r\'etr
 
 Chaque d\'ependance est fonctionnelle. Les d\'efinitions formelles de
 $\Conf$, $\Rel$, $\Opp$~Objectif~1~(\ref{obj:obj1_unification}) sont n\'ecessaires pour \'enoncer
-le Trilemme~CRO~Objectif~2~(\ref{obj:obj2_impossibilite}), car sans op\'erationnalisation
+le Trilemme~CRO~Objectif~2~(\ref{obj:obj2_impossibilite}). Sans op\'erationnalisation
 de l'opposabilit\'e au sens de la th\'eorie de l'information, le trilemme resterait une
 conjecture informelle~\cite{ClarksonSchneider10}. La borne d'impossibilit\'e classique~Objectif~2~(~\ref{obj:obj2_impossibilite}) fournit
 le point de d\'epart que l'extension post-quantique~Objectif~3~(\ref{obj:obj3_postquantique}) g\'en\'eralise avec
@@ -613,8 +613,8 @@ constructions SOTP~Objectif~4~(\ref{obj:obj4_saturation}) visent. Sans ces borne
 collection de protocoles ad~hoc~\cite{JohnsonLindenstrauss84,Groth16}. La
 question de savoir si une variante SOTP offre, \`a un facteur constant pr\`es, la meilleure
 opposabilit\'e de son r\'egime reste ouverte. Elle est formul\'ee comme conjecture au chapitre~\ref{chap:constructions}. La complexit\'e de la cha\^ine de
-raisonnement justifie l'investissement dans la v\'erification formelle~Objectif~5~(\ref{obj:obj5_verification}),
-car la certification m\'ecanis\'ee s'impose pour des th\'eor\`emes aux implications
+raisonnement justifie l'investissement dans la v\'erification formelle~Objectif~5~(\ref{obj:obj5_verification}).
+La certification m\'ecanis\'ee s'impose pour des th\'eor\`emes aux implications
 soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. La formalisation Lean4~Objectif~5~(\ref{obj:obj5_verification}) agit en retour sur les \'etapes
 qui la pr\'ec\`edent. Elle a d\'egag\'e le verdict d\'eterministe, qui enrichit le cadre de
 l'Objectif~1~(\ref{obj:obj1_unification}). Elle a surtout impos\'e de poser l'Hypoth\`ese de r\'egime
@@ -622,12 +622,12 @@ et de pr\'eciser trois \'enonc\'es publi\'es, ce qui a conduit \`a la forme raff
 de l'Objectif~2~(\ref{obj:obj2_impossibilite})~\cite{Zellagui2018}. La certification ne se contente donc pas
 de v\'erifier les bornes apr\`es coup. Elle peut en modifier l'\'enonc\'e et l'a d\'ej\`a fait.
 L'exp\'erimentation~Objectif~6~(\ref{obj:obj6_experimentation}) ferme le cycle. Elle mesure $\Delta$, $\alpha$,
-$\beta$, $\Delta_q$ et $\eta_q$, dont d\'ependent les bornes certifi\'ees. Si les valeurs mesur\'ees
+$\Delta_q$ et $\eta_q$ et calcule $\beta$, param\`etres dont d\'ependent les bornes certifi\'ees. Si les valeurs mesur\'ees
 sortent des plages retenues ou franchissent les seuils de r\'efutation du
-chapitre~\ref{chap:experimentation}, les hypoth\`eses de l'Objectif~2 devront \^etre r\'evis\'ees, ce
-qui rouvrira l'\'etape~B. Si la mesure montre que les m\'etriques elles-m\^emes saisissent mal
-la pratique institutionnelle, c'est le cadre de l'Objectif~1 qui sera repris, ce qui rouvrira
-l'\'etape~F. Sur la figure~\ref{fig:cycle_detaille}, le trait interrompu \`a double sens entre C et B
+chapitre~\ref{chap:experimentation}, les hypoth\`eses de l'Objectif~2 devront \^etre r\'evis\'ees et
+l'\'etape~B sera rouverte. Si la mesure montre que les m\'etriques elles-m\^emes saisissent mal
+la pratique institutionnelle, c'est le cadre de l'Objectif~1 qui sera repris. L'\'etape~F s'en trouvera
+rouverte. Sur la figure~\ref{fig:cycle_detaille}, le trait interrompu \`a double sens entre C et B
 illustre la r\'evision par la certification, d\'ej\`a survenue. La fl\`eche en pointill\'es de X vers B
 et la fl\`eche pleine de X vers F montrent les r\'evisions par la mesure, encore \`a venir.
 
@@ -731,7 +731,7 @@ quantiques ($\eta_q$), en plus de leur s\'ecurit\'e calculatoire~\cite{NISTPQC,K
 \label{par:impact_societal}
 
 Le paradoxe de l'authenticit\'e invisible pose un d\'efi de fond \`a
-la d\'emocratie num\'erique, puisqu'il oblige \`a se demander comment des citoyens peuvent contr\^oler des
+la d\'emocratie num\'erique. Il oblige \`a se demander comment des citoyens peuvent contr\^oler des
 syst\`emes qu'ils ne comprennent pas~\cite{Citron14,Grimmelmann15}. Calibrer l'opposabilit\'e $\Opp$ selon la capacit\'e institutionnelle $\Delta$ fournit une r\'eponse
 quantifiable universelle, selon laquelle les syst\`emes restent sous contr\^ole d\'emocratique
 effectif \`a condition que $\Opp$ reste au-dessus du seuil impos\'e par $\Delta$.
@@ -762,13 +762,13 @@ pour magistrats, auditeurs et r\'egulateurs peuvent alors viser une cible quanti
 
 \begin{boiteArbitre}
 L'arbitre pose son stylo. Ce chapitre a accompli une chose
-inhabituelle \`a ses yeux, puisqu'il a converti en programme de recherche
+inhabituelle \`a ses yeux. Il a converti en programme de recherche
 formalis\'e ce qu'il ressent depuis des ann\'ees. Le foss\'e qu'il constatait entre validit\'e technique et
 conviction institutionnelle porte d\'esormais un nom pr\'ecis, le paradoxe de
 l'authenticit\'e invisible. Il dispose aussi d'une mesure, $\Opp = I(V;\Sigma|C)/H(V|C)$,
 ainsi que d'une borne quantitative.
 
-Il retient sans effort les six questions qui en d\'ecoulent, car elles suivent
+Il retient sans effort les six objectifs qui en d\'ecoulent, car ils suivent
 l'ordre naturel de toute enqu\^ete s\'erieuse. Il s'agit d'abord de nommer les choses
 (Obj~\ref{obj:obj1_unification}, le cadre CLO) puis d'en chercher les limites
 (Obj~\ref{obj:obj2_impossibilite}, le Trilemme CRO). Ces limites doivent ensuite r\'esister \`a l'examen
@@ -780,8 +780,8 @@ tient (Obj~\ref{obj:obj5_verification}, Lean4) puis \`a dire comment le soumettr
 Il est surtout sensible \`a la coh\'erence du cycle, dans lequel chaque r\'eponse appelle
 la suivante. Les d\'efinitions permettent d'\'enoncer les bornes
 classiques, qui fournissent \`a leur tour leur cible aux constructions SOTP. L'optimalit\'e de ces
-constructions dans leur r\'egime reste une conjecture, tandis que la formalisation met au jour ce que
-les preuves papier laissaient dans l'ombre, \`a savoir une hypoth\`ese implicite
+constructions dans leur r\'egime reste une conjecture. La formalisation, elle, met au jour ce que
+les preuves papier laissaient dans l'ombre, soit une hypoth\`ese implicite
 et un \'ecart entre deux ordres de grandeur.
 
 Reste \`a v\'erifier, au chapitre~\ref{chap:cadre_formel}, si les

@@ -26,14 +26,14 @@ instances de protocole. Dans la couche concr\`ete, ce sont des th\'eor\`emes d\'
 finies. Les hypoth\`eses institutionnelles
 (Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace}, \ref{ass:regularite} et~\ref{ass:regime}) sont des hypoth\`eses d\'eclar\'ees des
 th\'eor\`emes. Toutes les preuves ne d\'ependent que des trois axiomes
-standards de Lean/Mathlib, \`a savoir \texttt{propext}, \texttt{Classical.choice}
+standards de Lean/Mathlib, soit \texttt{propext}, \texttt{Classical.choice}
 et \texttt{Quot.sound}.
 
 \medskip
 \noindent\textbf{Mode d'emploi.} Pour v\'erifier le code (d\'etails \`a la
 section~\ref{sec:lean4_reproduction}), on proc\`ede comme suit.
 \begin{enumerate}
-\item Dans le navigateur, coller le Listing~\ref{lst:lean4_complet} dans
+\item Dans le navigateur, coller le code~\ref{lst:lean4_complet} dans
       \url{https://live.lean-lang.org} (projet Mathlib), qui utilise la version
       courante de Mathlib.
 \item Localement, ex\'ecuter \texttt{lake exe cache get \&\& lake build} dans le
@@ -55,7 +55,7 @@ math\'ematique du Trilemme CRO.
 \begin{enumerate}
 \item \textbf{Constante de Pinsker} $c_0 = 1/(2\ln 2)$ et ses propri\'et\'es.
 \item \textbf{N\'egligeabilit\'e} de $\varepsilon_0(\lambda) = 2^{-\lambda}$,
-      prouv\'ee via les outils d'analyse r\'eelle de Mathlib.
+      prouv\'ee avec les outils d'analyse r\'eelle de Mathlib.
 \item \textbf{Param\`etres institutionnels} $(\Delta, \alpha, \beta, H(C))$
       et le coefficient $\gamma = \alpha H(C) - 1$.
 \item \textbf{Instance de protocole} avec les d\'efinitions de Conf, Rel,
@@ -70,7 +70,7 @@ math\'ematique du Trilemme CRO.
 \item \textbf{Couche concr\`ete} (version~3.3) avec l'in\'egalit\'e log-somme, l'entropie binaire,
       Pinsker binaire et fini, l'information mutuelle, Fano fini, la structure
       \texttt{CLOModel}, les trilemmes \'enonc\'es sur de vraies lois avec $\gamma = \alpha H(C) - 1$
-      calcul\'e \`a partir de la loi de $C$, et une famille de lois t\'emoins \texttt{famModel}
+      calcul\'e \`a partir de la loi de $C$. Elle contient enfin une famille de lois t\'emoins \texttt{famModel}
       qui satisfait toutes les hypoth\`eses pour tout $\lambda$.
 \item \textbf{Bloc de v\'erification} (\texttt{\#check}, \texttt{\#print axioms}).
 \end{enumerate}
@@ -113,7 +113,7 @@ $n$ suffisamment grand, $P(n)$ est vrai \fg. \texttt{sorry} marque une
 \'etape admise (aucune dans ce fichier).
 
 L'instruction \texttt{import Mathlib} en t\^ete de fichier charge la biblioth\`eque
-Mathlib, ce qui donne acc\`es aux lemmes d'analyse r\'eelle et d'alg\`ebre
+Mathlib. Elle donne acc\`es aux lemmes d'analyse r\'eelle et d'alg\`ebre
 utilis\'es.
 \end{sloppypar}
 
@@ -241,7 +241,7 @@ structure InstitutionalParams where
 /-- γ = αH(C) − 1 : borne inférieure de H(V|C) (Hypothèse 2′). -/
 def gamma (p : InstitutionalParams) : ℝ := p.α * p.H - 1
 
--- Familles canoniques (valeurs empiriques de l'article CLO)
+-- Familles canoniques (valeurs illustratives de la calibration)
 noncomputable def HeliosParams : InstitutionalParams :=
   { H := 40, Δ := 56, α := 1.2, β := 1.4,
     hH_nonneg := by norm_num, hΔ_nonneg := by norm_num,
@@ -1639,7 +1639,7 @@ end CLOModel
 open CLOModel in
 /-- **Non-vacuité sur de vraies lois.** Pour tout λ, le modèle `famModel λ` satisfait
     toutes les hypothèses des théorèmes concrets avec Δ = 1, α = 2, β = 1 et κ = 0
-    (d'où H(C) = 1 et γ = 1) : taille de l'espace des verdicts, Hypothèses 1, 2′, 3
+    (contexte d'un bit uniforme, donc H(C) = 1 et γ = 1) : taille de l'espace des verdicts, Hypothèses 1, 2′, 3
     et 4, supports communs. -/
 theorem concrete_assumptions_satisfiable (l : ℕ) :
     Real.log (Fintype.card (Fin 2)) / Real.log 2 ≤ 2 * (famModel l).HC ∧
@@ -1807,7 +1807,7 @@ fichiers \texttt{lean-toolchain}, \texttt{lakefile.toml} et
 \noindent\textbf{Proc\'edure dans le navigateur.}
 \begin{enumerate}
 \item Ouvrir \url{https://live.lean-lang.org} et choisir le projet \og Mathlib\fg.
-\item Coller l'int\'egralit\'e du Listing~\ref{lst:lean4_complet} et attendre la
+\item Coller l'int\'egralit\'e du code~\ref{lst:lean4_complet} et attendre la
       fin de la v\'erification. Le site utilise la version courante de Mathlib~;
       la version~2.2 y a \'et\'e v\'erifi\'ee en octobre 2026 et la version~3.2 le 22 novembre 2026.
 \end{enumerate}

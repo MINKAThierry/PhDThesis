@@ -1,7 +1,7 @@
 % ============================================================================
 % SECTION 2.5 : LA FAMILLE SOTP — CONSTRUCTIONS OPTIMALES
 % Source : partie2/sotp_construction.tex
-% Version : 2.2 — alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
+% Alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
 % ============================================================================
 
 \section{LA FAMILLE SOTP ET SA CONSTRUCTION PAR R\'EGIME}
@@ -10,19 +10,19 @@
 Le Trilemme CRO conditionnel classique~(section~\ref{sec:cro_classique}) \'etablit
 que $\Conf \cdot \Rel \cdot \Opp \leq \Delta/(\gamma\lambda) +
 O(\lambda^{-2})$, avec une forme raffin\'ee. Une borne d'impossibilit\'e sans
-construction est incompl\`ete, car elle \'enonce une limite sans dire si
+construction est incompl\`ete. Elle \'enonce une limite sans dire si
 cette limite est approchable. La \textbf{famille SOTP} (Semantic One-Time
 Pad) propose trois constructions de r\'ef\'erence pour les deux r\'egimes de richesse
-contextuelle, dont les propri\'et\'es cryptographiques sont prouv\'ees et dont
-l'optimalit\'e \`a facteur constant est formul\'ee comme conjecture
+contextuelle. Leurs propri\'et\'es cryptographiques sont prouv\'ees~; leur
+optimalit\'e \`a facteur constant est formul\'ee comme conjecture
 (Conjecture~\ref{conj:optimalite_universelle}). Cette mise en regard
 borne/construction transforme un r\'esultat n\'egatif en guide de conception.
 
 \medskip
 \noindent\textbf{Statut de cette contribution.} La famille SOTP
 constitue la contribution \textbf{C4} de cette th\`ese. Elle est
-aussi importante que la borne elle-m\^eme, puisqu'elle
-donne au Trilemme CRO sa port\'ee op\'erationnelle. Sous le seuil $H^\sharp$ du th\'eor\`eme,
+aussi importante que la borne elle-m\^eme. Elle
+donne en effet au Trilemme CRO sa port\'ee op\'erationnelle. Sous le seuil $H^\sharp$ du th\'eor\`eme,
 SOTP-Low et SOTP-Base r\'epondent \`a deux besoins, le contexte exact ou la proximit\'e entre
 contextes. Au-del\`a, SOTP-High prend le relais. Les trois variantes couvrent ainsi l'ensemble du
 spectre d'entropie contextuelle. Chacune fournit une construction cryptographique concr\`ete, dont
@@ -70,13 +70,13 @@ Trois couches fonctionnelles structurent chaque protocole selon le paradigme
 Gold-Iron-Clay~(sous-section~\ref{subsec:gold_iron_clay}).
 La couche \textbf{Gold} accomplit le masquage cryptographique au moyen d'un masque jetable,
 tronqu\'e ou pseudo-al\'eatoire, pour SOTP-Low et SOTP-Base~\cite{Shannon49,BlumMicali84}. Elle recourt aux preuves
-zero-knowledge pour SOTP-High~\cite{GMR85,BenOr88}. La couche \textbf{Iron} assure le binding via des commitments
+zero-knowledge pour SOTP-High~\cite{GMR85,BenOr88}. La couche \textbf{Iron} assure le binding par des commitments
 contraignants, Pedersen~\cite{Pedersen91,ChaumPedersen92} pour SOTP-Low/Base, Groth16~\cite{Groth16,BCTV14}
 pour SOTP-High, permettant l'ouverture v\'erifiable du message. La couche
 \textbf{Clay} enfin pr\'esente le contexte institutionnel sous une forme que des
 interpr\`etes \`a capacit\'e born\'ee~$\Delta$ peuvent exploiter pour rendre leurs
-verdicts~\cite{Simon82,Miller56}~; elle n'accro\^it $\Opp$ que si elle transmet une
-information que l'institution ne d\'etient pas d\'ej\`a (Remarque~\ref{rem:statut_sotp}).
+verdicts~\cite{Simon82,Miller56}. Comme l'indique d\'ej\`a la figure~\ref{fig:gold_iron_clay}, elle n'accro\^it $\Opp$ qu'en transmettant
+une information nouvelle pour l'institution (Remarque~\ref{rem:statut_sotp}).
 
 L'architecture elle-m\^eme \'etait d\'ej\`a esquiss\'ee par la
 construction S-OTP de la section~\ref{subsec:construction_sotp}. L'apport propre \`a cette section tient \`a son adaptation
@@ -88,19 +88,19 @@ Poseidon~\cite{Groth16,Poseidon2019}.
 \subsubsection{Correspondance entre m\'etriques CLO et propri\'et\'es cryptographiques}
 \label{subsubsec:interpretation_operationnelle}
 
-Tandis que le cadre CLO d\'efinit $\Conf$, $\Rel$, $\Opp$ via la th\'eorie de
-l'information~\cite{MINKA2026CLO,Shannon48,CoverThomas06}, les preuves de ce chapitre les
-expriment en termes de propri\'et\'es de s\'ecurit\'e cryptographique standard admettant des
+Le cadre CLO d\'efinit $\Conf$, $\Rel$, $\Opp$ par la th\'eorie de
+l'information~\cite{MINKA2026CLO,Shannon48,CoverThomas06}. Les preuves de ce chapitre les
+expriment, elles, en termes de propri\'et\'es de s\'ecurit\'e cryptographique standard admettant des
 r\'eductions aux hypoth\`eses bien \'etablies~\cite{Goldreich01,KatzLindell14}.
 
-La \textbf{confidentialit\'e} $\Conf$, notion statistique, a pour pendant calculatoire l'indistinguabilit\'e s\'emantique~\cite{GoldwasserMicali84,MicaliRackoff91}, selon laquelle, pour
+La \textbf{confidentialit\'e} $\Conf$, notion statistique, a pour pendant calculatoire l'indistinguabilit\'e s\'emantique~\cite{GoldwasserMicali84,MicaliRackoff91}. Pour
 toute paire de messages $(m_0, m_1)$ dans le m\^eme contexte $c$, nul adversaire polynomial
 ne peut distinguer la preuve de $m_0$ de celle de $m_1$ avec avantage non n\'egligeable.
 La \textbf{fiabilit\'e de v\'erification} $\Relver$ (Remarque~\ref{rem:rel_ver}) correspond au binding~\cite{Pedersen91,Damgard87}, propri\'et\'e selon laquelle aucun adversaire polynomial ne peut
 produire deux ouvertures distinctes d'un m\^eme commitment sur des messages diff\'erents avec
 probabilit\'e non n\'egligeable. Quant \`a l'\textbf{opposabilit\'e} $\Opp$, elle correspond \`a
 la fraction d'information extractible sur le verdict, soit $I(V;\Sigma|C)/H(V|C)$, quantifi\'ee
-via la capacit\'e d'extraction institutionnelle~$\Delta$ (D\'efinition~\ref{def:delta_extraction})~\cite{Simon82,Miller56,Ericsson95}.
+par la capacit\'e d'extraction institutionnelle~$\Delta$ (D\'efinition~\ref{def:delta_extraction})~\cite{Simon82,Miller56,Ericsson95}.
 
 Cette traduction rend le cycle des preuves explicite. Les garanties de confidentialit\'e
 et de fiabilit\'e de v\'erification r\'esultent de r\'eductions formelles \`a des hypoth\`eses
@@ -134,12 +134,12 @@ H_{\text{total}} = H_{\text{Gold}} + H_{\text{Iron}} + H_{\text{Clay}}
 \end{equation}
 Pour $\lambda = 128$ et $H(\mathcal{C}) = 40$ bits (vote type Helios~\cite{Adida08}), cela donne
 $\approx 296$ bits. Ce budget compte l'entropie de la preuve et non sa longueur~; la
-repr\'esentation JL de SOTP-Base occupe ainsi $k$ coordonn\'ees r\'eelles. Il contraint la couche Clay, car pr\'eserver trop de contexte
+repr\'esentation JL de SOTP-Base occupe ainsi $k$ coordonn\'ees r\'eelles. Il contraint la couche Clay. Pr\'eserver trop de contexte
 peut corr\'eler $\Sigma$ avec $m$, r\'eduisant $\Conf$~; compresser trop agressivement
 r\'eduit $\Opp$ parce que l'interpr\`ete ne peut plus extraire les verdicts~\cite{Smith09,Alvim12}.
 
 L'allocation \'equilibr\'ee est modulaire par conception~\cite{canetti2001,Goldreich02}. La couche Gold peut substituer
-AES-GCM~\cite{AES01} \`a ChaCha20~\cite{ChaCha20} sans affecter Iron ou Clay~; la couche Iron peut passer d'un
+AES-GCM~\cite{AES01} \`a ChaCha20~\cite{ChaCha20} sans affecter Iron ou Clay. La couche Iron peut passer d'un
 commitment Pedersen \`a un accumulateur RSA~\cite{CamenischLysyanskaya02} sans toucher Gold ou Clay~; la couche Clay
 peut changer de technique d'encodage ind\'ependamment. Cette modularit\'e facilite les
 migrations quantiques et l'adaptation aux \'evolutions r\'eglementaires.
@@ -168,8 +168,8 @@ $H^\sharp \approx 36$ bits obtenu avec $\Delta \approx 35$ bits et $\alpha = 1$.
 L'id\'ee consiste \`a encoder le contexte \emph{d\'eterministiquement} dans la couche Clay,
 ce qui n'entra\^ine ni perte de compression ni circuit co\^uteux. La preuve se compose d'un masque PRG
 (Gold), d'un commitment Pedersen (Iron) et d'un triplet $(\phi(c), \mathsf{Hash}(c), V(c))$
-(Clay), cette derni\`ere composante r\'ev\`ele le contexte sans r\'ev\'eler le message, puisque
-$M \perp C$ par construction.
+(Clay). Cette derni\`ere composante r\'ev\`ele le contexte sans r\'ev\'eler le message,
+$M \perp C$ \'etant garanti par construction.
 
 \subsubsection{Construction SOTP-Low}
 \label{subsubsec:construction_low}
@@ -207,13 +207,13 @@ aux trois couches du paradigme Gold-Iron-Clay.
 
 La phase \textsf{Setup} installe les param\`etres cryptographiques partag\'es.
 Elle g\'en\`ere un groupe cyclique $(\mathbb{G}, q)$ d'ordre premier $q$, avec
-$|q| \geq 2\lambda$, dans lequel le logarithme discret est difficile, ce qui fonde
+$|q| \geq 2\lambda$, dans lequel le logarithme discret est difficile. Cette difficult\'e fonde
 la s\'ecurit\'e de la couche Iron. Elle tire al\'eatoirement deux g\'en\'erateurs
 $g$ et $h$ dont le logarithme discret $\log_g h$ n'est connu d'aucun
 participant. Cette ignorance rend l'engagement de Pedersen calculatoirement
-liant sous DLog. Son masquage est parfait quel que soit $\log_g h$. Elle fixe enfin trois primitives fonctionnelles, \`a savoir
-un PRG pour le masquage de message, une fonction de hachage r\'esistante
-aux collisions pour l'authentification du contexte et un encodage
+liant sous DLog. Son masquage est parfait quel que soit $\log_g h$. Elle fixe enfin trois primitives fonctionnelles. La premi\`ere est
+un PRG pour le masquage de message. La deuxi\`eme est une fonction de hachage r\'esistante
+aux collisions pour l'authentification du contexte. Vient enfin un encodage
 d\'eterministe $\phi$ qui serialise le contexte institutionnel $c$ sur
 exactement $H(\mathcal{C})$ bits. Ce dernier point est sp\'ecifique \`a SOTP-Low, qui
 transmet le contexte exact.
@@ -228,8 +228,8 @@ connaissant pas $s$. La couche Iron (ligne~13) construit
 un engagement de Pedersen sur la graine $s$, soit $\sigma_2 = g^{s} \cdot h^\rho$
 o\`u $\rho$ est un scalaire al\'eatoire. Tirer la graine dans $\mathbb{Z}_q$ est
 n\'ecessaire. Avec $s \in \{0,1\}^\lambda$ et un engagement sur $\mathsf{int}(s)
-\bmod q$, deux graines $s$ et $s+q$ donneraient en effet le m\^eme engagement, ce qui ferait perdre le
-caract\`ere liant. Cet
+\bmod q$, deux graines $s$ et $s+q$ donneraient en effet le m\^eme engagement. Le caract\`ere liant
+serait alors perdu. Cet
 engagement lie le producteur de la preuve \`a la valeur de $s$ sans la
 r\'ev\'eler~; il garantit que le message masqu\'e $\sigma_1$ ne peut \^etre
 ouvert que sur un unique message $m$. La couche Clay
@@ -242,13 +242,13 @@ La preuve compl\`ete $\sigma = (\sigma_1, \sigma_2, \sigma_3)$ est
 retourn\'ee publiquement~; la paire $(s, \rho)$ reste secr\`ete chez le
 producteur.
 
-La phase \textsf{Verify} est d\'elib\'er\'ement l\'eg\`ere, puisqu'elle contr\^ole
+La phase \textsf{Verify} est d\'elib\'er\'ement l\'eg\`ere. Elle contr\^ole
 uniquement que le condens\'e de hachage du contexte soumis correspond \`a
 celui encod\'e dans $\sigma_3$, que l'encodage $\phi(c)$ co\"incide et que
 $\sigma_2$ appartient bien au groupe $\mathbb{G}$. Elle ne v\'erifie pas la
-coh\'erence entre $\sigma_1$ et $\sigma_2$, car ce lien n'est contr\^ol\'e que lors
-de l'ouverture ($\mathsf{Open}$), qui requiert le t\'emoin $(m, s, \rho)$~;
-sans ouverture, $\sigma_1$ et $\sigma_2$ ne sont pas li\'es, de sorte que
+coh\'erence entre $\sigma_1$ et $\sigma_2$. Ce lien n'est contr\^ol\'e que lors
+de l'ouverture ($\mathsf{Open}$), qui requiert le t\'emoin $(m, s, \rho)$.
+Sans ouverture, $\sigma_1$ et $\sigma_2$ ne sont pas li\'es~;
 $\mathsf{Verify}$ seul accepte toute paire bien form\'ee. L'arbitre peut
 donc v\'erifier la forme de la preuve sans acc\'eder au message $m$~; la
 garantie de liaison porte sur l'ouverture. La couche Clay pr\'esente le
@@ -276,13 +276,13 @@ Sous s\'ecurit\'e PRG~\cite{BlumMicali84,Yao82} et difficult\'e DLog~\cite{Diffi
 La formulation initiale de ce r\'esultat \'enon\c{c}ait la minoration
 $\Conf \cdot \Rel \cdot \Opp \geq 0{,}75 \cdot \min\{\Delta, H(\mathcal{C})\}/\lambda$.
 La formalisation a conduit \`a la remplacer, pour trois raisons. (i)~La composante $\sigma_3 = (\phi(c), \mathsf{Hash}(c), V(c))$
-est une fonction du contexte public, donc $I(V;\sigma_3|C) = 0$~; (ii)~le passage
+est une fonction du contexte public, donc $I(V;\sigma_3|C) = 0$. (ii)~Le passage
 par $H(V|C) \approx \lambda$ contredit l'Hypoth\`ese~\ref{ass:verdicts_efficace}
-($\log_2|\mathcal{V}_\lambda| \leq \alpha H(\mathcal{C})$)~; (iii)~une telle minoration
+($\log_2|\mathcal{V}_\lambda| \leq \alpha H(\mathcal{C})$). (iii)~Une telle minoration
 d\'epasserait le majorant du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} d\`es
 que $\gamma > 4/3$ tout en portant sur $\Relver$ au lieu de $\Relrec$. L'expression
-$0{,}75\,\Delta/\lambda$ est conserv\'ee comme \emph{heuristique de conception}, car
-elle d\'ecrit la fraction de la capacit\'e d'extraction qu'un encodage entier de
+$0{,}75\,\Delta/\lambda$ est conserv\'ee comme \emph{heuristique de conception}.
+Elle d\'ecrit la fraction de la capacit\'e d'extraction qu'un encodage entier de
 $\lfloor H(\mathcal{C}) \rfloor$ bits permettrait d'exploiter si ce contexte
 \'etait un contexte d'esp\`ece inconnu de l'institution ($1 - 1/\Delta \geq 0{,}75$
 pour $\Delta \geq 4$). Sa justification rigoureuse, dans un mod\`ele \`a contexte
@@ -389,7 +389,7 @@ situation r\'eduite, pour toute fonction $G$ (annexe~\ref{chap:annexe_gamebased}
 \`A titre d'illustration, sans valeur de validation (les m\'etriques CLO d'ECDSA sont
 des estimations param\'etriques analytiques issues des sp\'ecifications
 publi\'ees~\cite{Johnson01,NIST.FIPS.186-5} et ECDSA n'est pas une instance du
-th\'eor\`eme, Remarque~\ref{rem:portee_cas_etude}), les param\`etres $\Delta = 35$ bits,
+th\'eor\`eme, Remarque~\ref{rem:portee_cas_etude}). Les param\`etres $\Delta = 35$ bits,
 $\lambda = 128$ donnent pour l'heuristique de SOTP-Low la valeur
 $0{,}75 \times 35/128 \approx 0{,}205$. Cette valeur n'est pas comparable au produit
 CLO d'ECDSA ($0{,}273$).
@@ -412,8 +412,8 @@ Helios~\cite{Adida08,Adida09UCL} en est l'arch\'etype. Le contexte \'electoral (
 une \'election de taille moyenne (tableau~\ref{tab:parametres_reference}). La capacit\'e d'un comit\'e
 de garants sp\'ecialis\'es est estim\'ee
 \`a $\Delta \approx 56$ bits, soit $H^\sharp \approx 48$ bits pour $\alpha = 1{,}2$. L'usage d\'ecide
-de la variante. La taille n'y intervient pas, puisque l'encodage exact tiendrait en quelques dizaines de
-bits. Les garants comparent des scrutins et rep\`erent des \'ecarts, ce qui demande
+de la variante. La taille n'y intervient pas. L'encodage exact tiendrait en quelques dizaines de
+bits. Les garants comparent des scrutins et rep\`erent des \'ecarts. Il leur faut
 une repr\'esentation o\`u deux contextes proches restent proches. Un scrutin dont le contexte
 d\'epasserait $H^\sharp$ rel\`everait de SOTP-High.
 
@@ -462,8 +462,7 @@ SOTP-Low, puis calcule deux dimensions caract\'eristiques de la
 repr\'esentation. La dimension de plongement $d = \lceil 4\Delta
 H(\mathcal{C})/\varepsilon^2 \rceil$ (ligne~4) calibre l'espace de
 repr\'esentation interm\'ediaire sur le produit de la capacit\'e
-d'extraction institutionnelle $\Delta$ et de l'entropie contextuelle, car
-plus le contexte est riche et plus l'institution peut en extraire,
+d'extraction institutionnelle $\Delta$ et de l'entropie contextuelle. Plus le contexte est riche et plus l'institution peut en extraire,
 plus la repr\'esentation doit \^etre large pour pr\'eserver les
 distances s\'emantiques pertinentes. La dimension d'arriv\'ee (ligne~5) vaut
 $k = \lceil 4\ln N/(\varepsilon^2/2 - \varepsilon^3/3) \rceil$, avec $N = 2^{H(\mathcal{C})}$
@@ -480,9 +479,8 @@ garantie JL.
 La phase \textsf{Prove} (lignes~8--13) reconstruit $\sigma_1$ et
 $\sigma_2$ exactement comme SOTP-Low, puis traite le contexte
 diff\'eremment. La ligne~11 plonge d'abord le contexte $c$ dans
-$\mathbb{R}^d$ via la fonction $\mathsf{embed}$, qui traduit la
-structure s\'emantique du contexte institutionnel en vecteur de r\'eels, de sorte que
-deux contextes proches s\'emantiquement produisent des vecteurs proches
+$\mathbb{R}^d$ par la fonction $\mathsf{embed}$, qui traduit la
+structure s\'emantique du contexte institutionnel en vecteur de r\'eels. Deux contextes proches s\'emantiquement produisent des vecteurs proches
 au sens de la distance euclidienne. La ligne~12 applique ensuite la
 projection $\sigma_3 = \Phi\vec{c} \in \mathbb{R}^k$, par laquelle le vecteur de
 $d$ dimensions est projet\'e vers un espace de $k \ll d$ dimensions.
@@ -494,8 +492,8 @@ $\varepsilon$ pr\`es par la garantie JL. La pr\'eservation de l'information
 extractible reste une hypoth\`ese de conception.
 
 La phase \textsf{Verify} (lignes~14--16) recalcule $\Phi \cdot \mathsf{embed}(c)$ et le compare
-\`a $\sigma_3$. La matrice $\Phi$ est publique et fix\'ee au \textsf{Setup}, de sorte que l'\'egalit\'e
-est exacte~; la tol\'erance ne couvre que l'arrondi de la repr\'esentation des r\'eels.
+\`a $\sigma_3$. La matrice $\Phi$ est publique et fix\'ee au \textsf{Setup}~; l'\'egalit\'e
+est donc exacte~; la tol\'erance ne couvre que l'arrondi de la repr\'esentation des r\'eels.
 Le param\`etre $\varepsilon$ gouverne la distorsion des distances entre contextes et n'intervient pas
 dans la v\'erification. Il r\`egle le compromis entre la fid\'elit\'e de la repr\'esentation
 et la dimension $k$ de la preuve transmise. R\'eduire $\varepsilon$
@@ -522,8 +520,8 @@ de $\Phi$, o\`u $\delta \leq 2/N^2$ pour le $k$ de la ligne~5, $\|\Phi\,\mathsf{
 
 \begin{proof}
 Les arguments de la Proposition~\ref{thm:saturation_sotp_low} s'appliquent sans
-changement aux couches Gold et Iron~; la couche Clay n'intervient ni dans la
-confidentialit\'e (elle ne d\'epend que de $c$, ind\'ependant de $m$) ni dans la
+changement aux couches Gold et Iron. La couche Clay n'intervient ni dans la
+confidentialit\'e, puisqu'elle ne d\'epend que de $c$, ind\'ependant de $m$, ni dans la
 liaison. La derni\`ere propri\'et\'e est le lemme de Johnson--Lindenstrauss appliqu\'e
 \`a l'ensemble fini des plongements de contextes.
 \end{proof}
@@ -566,7 +564,7 @@ d'une opposabilit\'e r\'eduite.
 \subsubsection{Motivation et champ d'application}
 \label{subsubsec:motivation_high}
 
-La conformit\'e financi\`ere via zk-SNARKs~\cite{Groth16,Garratt15,BaselIII} illustre ce r\'egime, o\`u transactions complexes,
+La conformit\'e financi\`ere par zk-SNARKs~\cite{Groth16,Garratt15,BaselIII} illustre ce r\'egime. Transactions complexes,
 r\'eglementations multi-juridictionnelles et historiques longs produisent $H(\mathcal{C})
 \approx 70$--$90$ bits, au-del\`a du seuil $H^\sharp \approx 49$ bits obtenu avec $\Delta \approx 73$ bits
 et $\alpha = 1{,}5$. La capacit\'e de l'institution ne couvre plus l'entropie des verdicts,
@@ -581,7 +579,7 @@ elle offre environ $100$ bits de s\'ecurit\'e~; la valeur $\lambda = 128$ y est 
 l'ordre $q \approx 2^{252}$ des groupes utilis\'es ne satisfait la condition $|q| \geq 2\lambda$ qu'\`a
 quelques bits pr\`es.} ind\'ependante de la complexit\'e du
 circuit v\'erifi\'e. Le caract\`ere succinct brise le couplage lin\'eaire entre $H(\mathcal{C})$ et la
-taille de preuve, permettant d'encoder des relations complexes sur un contexte de
+taille de preuve. Il permet d'encoder des relations complexes sur un contexte de
 plusieurs milliers de bits dans un condens\'e que l'interpr\`ete peut v\'erifier en quelques millisecondes.
 
 Cette solution a une double contrepartie. Une \'etape de mise en place de confiance (\emph{trusted
@@ -623,7 +621,7 @@ l'institution ne couvre plus le contexte et une repr\'esentation fid\`ele du con
 preuve ne servirait plus le verdict. Le seuil est celui du th\'eor\`eme,
 certifi\'e en Lean dans les deux sens. La solution
 adopt\'ee s'\'ecarte donc de SOTP-Low et SOTP-Base. Au lieu de transmettre le contexte ou sa repr\'esentation, on transmet une
-\emph{preuve de connaissance} d'un message conforme au contexte via un zk-SNARK Groth16.
+\emph{preuve de connaissance} d'un message conforme au contexte, au moyen d'un zk-SNARK Groth16.
 
 La phase \textsf{Setup} (lignes~2--7) est la plus sensible des trois
 constructions. Elle \'echantillonne cinq scalaires $\tau, \alpha_s,
@@ -636,7 +634,7 @@ un imp\'eratif de s\'ecurit\'e. Si l'un quelconque de ces cinq
 scalaires subsistait apr\`es le \textsf{Setup}, son d\'etenteur pourrait
 forger des preuves valides pour n'importe quelle assertion, brisant
 enti\`erement la propri\'et\'e de soundness du syst\`eme. En pratique,
-cette destruction est r\'ealis\'ee via une \'etape multi-partite
+cette destruction est r\'ealis\'ee par une \'etape multi-partite
 o\`u la compromission simultan\'ee de tous les participants serait
 n\'ecessaire pour reconstituer les toxiques. Le Setup produit enfin
 une paire $(g, h)$ pour la couche Iron de Pedersen, ind\'ependante
@@ -647,8 +645,8 @@ en deux op\'erations principales. Les lignes~10 et~11 r\'ealisent les
 trois couches. Le hash Poseidon $h_c =
 \mathsf{Poseidon}(c)$ comprime le contexte arbitrairement riche $c$
 vers un condens\'e de 256 bits qui constitue l'entr\'ee publique du
-circuit~; l'engagement de Pedersen $c_m = g^m \cdot h^\rho$ joue le r\^ole de
-la couche Iron, puisqu'il lie le prouveur au message $m$ sans le r\'ev\'eler. La
+circuit. L'engagement de Pedersen $c_m = g^m \cdot h^\rho$ joue le r\^ole de
+la couche Iron. Il lie le prouveur au message $m$ sans le r\'ev\'eler. La
 preuve $\pi$ atteste que le prouveur conna\^it $(m, c, \rho)$ tels que
 $h_c = \mathsf{Poseidon}(c)$, $c_m = g^m h^\rho$ et que le pr\'edicat de
 conformit\'e $\mathsf{Conforme}(m, c)$ est satisfait~; cette relation
@@ -665,8 +663,8 @@ La phase \textsf{Verify} (lignes~15--18) est l\'eg\`ere
 au regard de la richesse du contexte original. Elle re\c{c}oit le contexte public $c$, comme
 dans le mod\`ele CLO. Elle contr\^ole d'abord que $h_c = \mathsf{Poseidon}(c)$ ($b_0$). La
 premi\`ere v\'erification cryptographique, $b_1$, v\'erifie que la
-preuve Groth16 $\pi$ est valide pour le condens\'e public $h_c$ via
-la cl\'e $vk_{\mathsf{verify}}$~; la seconde, $b_2$, v\'erifie que $c_m$ est un
+preuve Groth16 $\pi$ est valide pour le condens\'e public $h_c$ avec
+la cl\'e $vk_{\mathsf{verify}}$. La seconde, $b_2$, v\'erifie que $c_m$ est un
 point l\'egitime du groupe $\mathbb{G}$. La conjonction $b_0 \wedge b_1 \wedge
 b_2$ suffit \`a \'etablir que le prouveur connaissait effectivement
 un message $m$ conforme \`a un contexte de condens\'e $h_c$. Ce contexte est $c$, sauf collision
@@ -814,7 +812,7 @@ l'Algorithme~\ref{alg:selection_variante_sotp}, avec les param\`etres de la cali
 Les trois variantes couvrent l'ensemble du spectre
 d'entropie contextuelle. SOTP-Low privil\'egie la lisibilit\'e du contexte exact sous le seuil
 $H^\sharp$. Elle est adapt\'ee aux applications juridiques ou contractuelles~\cite{Mason07,Kerr04}. SOTP-Base
-pr\'eserve la proximit\'e entre contextes, ce qui la destine aux applications
+pr\'eserve la proximit\'e entre contextes. Elle est donc destin\'ee aux applications
 gouvernementales et \'electorales~\cite{Adida08,Goodman15}. SOTP-High sacrifie l'opposabilit\'e au profit de la confidentialit\'e
 parfaite et du passage \`a l'\'echelle. Elle r\'epond aux applications financi\`eres ou m\'edicales \`a
 contexte tr\`es riche~\cite{Garratt15,BaselIII}.
@@ -868,9 +866,8 @@ ne pas avoir \'et\'e conduite, faute de ressources pour organiser un protocole
 multi-parties ou parce que le contexte r\'eglementaire ne l'autorise pas. Si le
 contexte d\'epasse n\'eanmoins $H^\sharp$, l'algorithme
 \'emet une alerte explicite et ne d\'egrade pas silencieusement la
-s\'ecurit\'e. Il recommande alors
-soit d'accepter la variante qui r\'epond au besoin de l'institution, SOTP-Low ou SOTP-Base,
-avec la perte d'opposabilit\'e associ\'ee \`a un contexte qui d\'epasse le seuil, soit de d\'eployer
+s\'ecurit\'e. Il recommande alors l'une de deux voies. La premi\`ere accepte la variante qui r\'epond au besoin de l'institution, SOTP-Low ou SOTP-Base,
+avec la perte d'opposabilit\'e associ\'ee \`a un contexte qui d\'epasse le seuil. La seconde consiste \`a d\'eployer
 un protocole MPC pour r\'ealiser le trusted setup de mani\`ere
 distribu\'ee. Ce traitement explicite de la d\'efaillance op\'erationnelle
 distingue SOTP-High des deux autres variantes, qui n'ont aucune
@@ -903,7 +900,7 @@ exigences minimales $\Conf_{\min}$, $\Rel_{\min}$, $\Opp_{\min}$.
 
 \textbf{Phase 2. \'Evaluation institutionnelle.} Estimer $\Delta$ (capacit\'e de
 d\'elib\'eration, expertise, m\'emoire institutionnelle) et $\alpha$ (granularit\'e des verdicts).
-Ces estimations sont analytiques, car une mesure directe via protocoles cognitifs contr\^ol\'es
+Ces estimations sont analytiques. Une mesure directe par des protocoles cognitifs contr\^ol\'es
 reste un travail futur.
 
 \textbf{Phase 3. Test de faisabilit\'e.} V\'erifier l'in\'egalit\'e
@@ -958,10 +955,10 @@ La formulation initiale de cet \'enonc\'e \'etait pr\'esent\'ee comme th\'eor\`e
 $\text{produit}(\mathcal{P}') \leq c \cdot \text{produit}(\text{SOTP}) + o(1)$ avec
 $c \in [0{,}45;\,0{,}75]$. Elle a \'et\'e remplac\'ee par une formulation plus pr\'ecise, pour
 quatre raisons. (i)~Avec $c < 1$ et $\mathcal{P}' = \text{SOTP}$, elle donnerait
-$\text{produit} \leq 0{,}75 \times \text{produit}$, ce qui impose $C_R \geq 1$~;
-(ii)~le terme additif $o(1)$ domine des produits tous en $O(1/\lambda)$~;
-(iii)~son argument invoquait le trilemme sans l'Hypoth\`ese~\ref{ass:regime}~;
-(iv)~elle s'appuyait sur les minorations des Remarques~\ref{rem:facteur_limitant_low},
+$\text{produit} \leq 0{,}75 \times \text{produit}$, ce qui impose $C_R \geq 1$.
+(ii)~Le terme additif $o(1)$ domine des produits tous en $O(1/\lambda)$.
+(iii)~Son argument invoquait le trilemme sans l'Hypoth\`ese~\ref{ass:regime}.
+(iv)~Elle s'appuyait sur les minorations des Remarques~\ref{rem:facteur_limitant_low},
 \ref{rem:heuristique_sotp_base} et~\ref{rem:heuristique_sotp_high}, qui rel\`event
 d'heuristiques de conception. L'\'enonc\'e retenu compare les opposabilit\'es \`a fuite n\'egligeable.
 Pour ces protocoles, l'opposabilit\'e est major\'ee par $\min\{1, (\kappa/\lambda + \Delta)/\gamma\}$ et la loi
@@ -1007,7 +1004,7 @@ $30\%$. Dans le r\'egime \`a contexte rare ($\Delta \geq \gamma$), la borne est 
 Fano et ne d\'epend pas de $\Delta$.
 
 \textbf{Sensibilit\'e \`a $\alpha$.} Dans le r\'egime \`a contexte riche, la borne varie en
-$1/\gamma = 1/(\alpha H(\mathcal{C}) - 1)$, de sorte que des verdicts plus grossiers (passer de 12
+$1/\gamma = 1/(\alpha H(\mathcal{C}) - 1)$. Des verdicts plus grossiers (passer de 12
 niveaux \`a 6) rel\`event la borne et peuvent faire basculer l'institution dans le
 r\'egime \`a contexte rare. Les institutions \`a verdicts tr\`es nuanc\'es (\'echelles de risque
 fines, montants d'amendes gradu\'es) paient ainsi une p\'enalit\'e r\'eelle. L'optimum entre
@@ -1032,7 +1029,7 @@ La section~\ref{sec:cro_pq} a \'etabli les bornes quantiques~;
 l'extension des constructions SOTP au r\'egime quantique requiert des adaptations 
 propres \`a chaque variante.
 
-\textbf{SOTP-Low post-quantique.} La couche Gold peut int\'egrer des PRG bas\'es sur 
+\textbf{SOTP-Low post-quantique.} La couche Gold peut int\'egrer des PRG construits sur 
 les fonctions de hachage (dont l'algorithme de Grover~\cite{Grover96} r\'eduit la s\'ecurit\'e de $\lambda$
 \`a $\lambda/2$ bits). L'engagement de Pedersen
 reste parfaitement masquant, mais son caract\`ere liant repose sur DLog, que

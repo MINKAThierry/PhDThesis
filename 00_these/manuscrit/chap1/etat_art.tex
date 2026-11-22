@@ -7,7 +7,7 @@
 \section{\'ETAT DE L'ART}
 \label{sec:etat_art}
 \begin{sloppypar}
-La cryptographie institutionnelle ne peut \^etre formalis\'ee qu'en r\'eunissant six corpus th\'eoriques d'ordinaire s\'epar\'es, \`a savoir la th\'eorie de l'information classique~\cite{Shannon48,Shannon49,CoverThomas06}, la th\'eorie de l'information
+La cryptographie institutionnelle ne peut \^etre formalis\'ee qu'en r\'eunissant six corpus th\'eoriques d'ordinaire s\'epar\'es. Ce sont la th\'eorie de l'information classique~\cite{Shannon48,Shannon49,CoverThomas06}, la th\'eorie de l'information
 quantique~\cite{NielsenChuang2010,Wilde2017}, les primitives cryptographiques d'obscurcissement~\cite{Pedersen91,Groth16}, les
 d\'efinitions pr\'eliminaires du cadre CRO, les trilemmes d'impossibilit\'e~\cite{Arrow50,Brewer00,FLP85} ainsi que la v\'erification formelle~\cite{moura2015lean,Lean4,Coq,Isabelle}. Nous les parcourons ici dans le but de \emph{pr\'eparer des blocs directement utilisables}. Chaque section ne retient donc que les r\'esultats dont les sections~\ref{sec:clo}, \ref{sec:cro_classique},
 \ref{sec:cro_pq}, \ref{sec:sotp_construction} et~\ref{sec:lean4}
@@ -89,7 +89,7 @@ divergence de Kullback-Leibler, d\'efinie par
 \KL(P \| Q) = \sum_x P(x)\log_2\frac{P(x)}{Q(x)}
 \label{eq:kl_divergence}
 \end{equation}
-majore $\TV$ via l'in\'egalit\'e de Pinsker~\cite{Pinsker1964}, que nous utiliserons pour borner
+majore $\TV$ par l'in\'egalit\'e de Pinsker~\cite{Pinsker1964}, que nous utiliserons pour borner
 la confidentialit\'e.
 
 \subsubsection{L'in\'egalit\'e de Pinsker}
@@ -107,7 +107,7 @@ Pour toutes distributions $P$ et $Q$ sur un m\^eme alphabet fini, on a
 \begin{Preuve}[Lemme~\ref{lem:pinsker}, esquisse]
 Soit $A = \{x : P(x) > Q(x)\}$, de sorte que $\TV(P,Q) = P(A) - Q(A)$. L'application
 $x \mapsto \mathbf{1}_A(x)$ transforme $P$ et $Q$ en deux lois de Bernoulli de
-param\`etres $p = P(A)$ et $q = Q(A)$, et la divergence ne peut que d\'ecro\^itre par
+param\`etres $p = P(A)$ et $q = Q(A)$~; la divergence ne peut que d\'ecro\^itre par
 cette transformation. Il suffit donc de montrer, en nats,
 $g(q) = p\ln\frac{p}{q} + (1-p)\ln\frac{1-p}{1-q} - 2(p-q)^2 \geq 0$ pour $q \leq p$.
 On a $g(p) = 0$ et $g'(q) = (q-p)\bigl(\frac{1}{q(1-q)} - 4\bigr) \leq 0$, car
@@ -119,7 +119,7 @@ positive. Il vient $\TV^2 \leq \tfrac12\KL_{\mathrm{nat}} = \tfrac{\ln 2}{2}\KL_
 
 \noindent Dans la preuve du Trilemme CRO \`a la section~\ref{sec:cro_classique}, cette in\'egalit\'e relie la
 confidentialit\'e $\Conf = 1 - \max_{m_0,m_1} \TV(P_{\Sigma|m_0},
-P_{\Sigma|m_1})$ \`a l'information mutuelle $I(M;\Sigma|C)$ via
+P_{\Sigma|m_1})$ \`a l'information mutuelle $I(M;\Sigma|C)$ au moyen de
 l'hypoth\`ese de $\beta$-r\'egularit\'e. Elle permet ainsi de convertir un
 \'ecart entre distributions en une borne sur le produit $\Conf \cdot \Rel \cdot
 \Opp$~\cite{Tsybakov2009}.
@@ -148,7 +148,7 @@ valeurs. D'o\`u $H(X|E,Y) \leq p_e\log_2(k-1)$, ce qui donne~\eqref{eq:fano_ineq
 \end{Preuve}
 
 Une fiabilit\'e \'elev\'ee (faible $p_e$) implique donc une information mutuelle \'elev\'ee.
-La contrapos\'ee est tout aussi utile, puisque si $H(X|Y)$ reste grande, aucun
+La contrapos\'ee est tout aussi utile. Si $H(X|Y)$ reste grande, aucun
 estimateur ne peut retrouver $X$ \`a partir de $Y$ avec pr\'ecision~\cite{HanVerdu}. Dans notre
 cadre, il en d\'ecoule directement pour le Trilemme CRO l'in\'egalit\'e
 \begin{equation}
@@ -178,8 +178,9 @@ $X$ et $Z$ sont ind\'ependants sachant $Y$, donc $I(X;Z|Y) = 0$. Comme
 $I(X;Y|Z) \geq 0$, il reste $I(X;Z) \leq I(X;Y)$.
 \end{Preuve}
 
-\noindent Ce r\'esultat, rarement mobilis\'e en
-cryptographie, intervient directement dans notre analyse~\cite{Smith09,Alvim12}. La
+\noindent Ce r\'esultat, d'usage courant en th\'eorie de l'information et dans
+l'analyse quantitative des fuites~\cite{Smith09,Alvim12}, intervient directement dans
+notre analyse. La
 transformation $M \to (\Sigma, C) \to V = \mathsf{Interpret}(\Sigma, C, K)$ forme
 une cha\^ine de Markov d\`es que les ressources propres $K$ de l'institution sont
 ind\'ependantes du message sachant la preuve et le contexte, que le verdict soit
@@ -243,7 +244,7 @@ I(A;B)_\rho = S(\rho_A) + S(\rho_B) - S(\rho_{AB}).
 \label{eq:qmi}
 \end{equation}
 L'information mutuelle quantique ob\'eit elle aussi \`a une in\'egalit\'e de traitement
-des donn\'ees~\cite{Lindblad}, puisque l'application d'un canal CPTP $\Lambda$ au
+des donn\'ees~\cite{Lindblad}. L'application d'un canal CPTP $\Lambda$ au
 syst\`eme $B$ ne peut que la r\'eduire,
 \begin{equation}
 I(A;B)_\rho \geq I(A; \Lambda(B))_\rho.
@@ -304,7 +305,7 @@ Le logarithme est ici n\'ep\'erien. Soit $P$ le projecteur sur la partie positiv
 de $\rho - \sigma$ et la mesure $\{P, \mathbb{I}-P\}$. Les lois d'issue $p$ et $q$
 v\'erifient $|p(P) - q(P)| = \tfrac12\|\rho-\sigma\|_1$ (preuve du
 Lemme~\ref{lem:holevo_helstrom}), donc $\TV(p,q) = \tfrac12\|\rho-\sigma\|_1$.
-Le Lemme~\ref{lem:pinsker} en nats donne $\TV(p,q)^2 \leq \tfrac12\KL(p\|q)$, et
+Le Lemme~\ref{lem:pinsker} en nats donne $\TV(p,q)^2 \leq \tfrac12\KL(p\|q)$. Par ailleurs
 l'entropie relative d\'ecro\^it par mesure~\cite{Lindblad}, d'o\`u
 $\KL(p\|q) \leq D(\rho\|\sigma)$. On obtient
 $\tfrac14\|\rho-\sigma\|_1^2 \leq \tfrac12 D(\rho\|\sigma)$, ce qui est~\eqref{eq:qpinsker}.
@@ -398,7 +399,7 @@ Deux r\'esultats d'impossibilit\'e quantique \'eclairent les contraintes du Tril
 \begin{boiteArbitre}
 L'arbitre retient l'essentiel. Même équipé d'outils quantiques optimaux,
 il ne tirera jamais d'un état de preuve quantique plus de $\chi$ bits.
-Cette borne découle des lois de la physique, si bien qu'aucun progrès
+Cette borne découle des lois de la physique. Aucun progrès
 des instruments ne la repoussera.
 \end{boiteArbitre}
 
@@ -447,9 +448,9 @@ Plusieurs syst\`emes de preuves compl\`etent les zk-SNARKs dans la palette dispo
 
 \textbf{Bulletproofs.} B\"unz et al.~\cite{Bunz19} ont introduit des preuves \`a divulgation nulle sans trusted setup, avec des tailles logarithmiques en la taille du t\'emoin. Leur construction repose sur un argument de produit scalaire (\emph{inner-product argument}) et sur la difficult\'e du logarithme discret~; elle n'est donc pas post-quantique.
 
-\textbf{STARKs.} Ben-Sasson et al.~\cite{BenSasson18} ont d\'evelopp\'e des preuves transparentes (sans trusted setup) et post-quantiques, bas\'ees sur des codes correcteurs d'erreurs et la technique FRI (Fast Reed-Solomon Interactive Oracle Proof of Proximity).
+\textbf{STARKs.} Ben-Sasson et al.~\cite{BenSasson18} ont d\'evelopp\'e des preuves transparentes (sans trusted setup) et post-quantiques, fond\'ees sur des codes correcteurs d'erreurs et la technique FRI (Fast Reed-Solomon Interactive Oracle Proof of Proximity).
 
-\textbf{Fiat-Shamir.} La transformation de Fiat et Shamir~\cite{FiatShamir87} convertit les preuves interactives en preuves non-interactives via l'application de hachage. Sa s\'ecurit\'e dans le mod\`ele de l'oracle al\'eatoire quantique a \'et\'e analys\'ee, pour les signatures, par Kiltz, Lyubashevsky et Schaffner~\cite{Kiltz2017}.
+\textbf{Fiat-Shamir.} La transformation de Fiat et Shamir~\cite{FiatShamir87} convertit les preuves interactives en preuves non-interactives au moyen d'une fonction de hachage. Sa s\'ecurit\'e dans le mod\`ele de l'oracle al\'eatoire quantique a \'et\'e analys\'ee, pour les signatures, par Kiltz, Lyubashevsky et Schaffner~\cite{Kiltz2017}.
 
 \subsubsection{La transformation de Johnson-Lindenstrauss}
 \label{subsubsec:jl}
@@ -470,7 +471,7 @@ Les fonctions de hachage cryptographique~\cite{Damgard87} servent aux engagement
 \subsubsection{Chiffrement homomorphe}
 \label{subsubsec:fhe}
 
-Le chiffrement compl\`etement homomorphe (FHE), introduit par Gentry~\cite{Gentry09} et am\'elior\'e par Brakerski et Vaikuntanathan~\cite{BrakerskiVaikuntanathan11}, permet le calcul sur donn\'ees chiffr\'ees. Les sch\'emas bas\'es sur LWE~\cite{Regev2009} sont consid\'er\'es comme post-quantiques et utilis\'es dans les protocoles de calcul multipartite s\'ecuris\'e~\cite{Yao82,GMW87,Asharov12}.
+Le chiffrement compl\`etement homomorphe (FHE), introduit par Gentry~\cite{Gentry09} et am\'elior\'e par Brakerski et Vaikuntanathan~\cite{BrakerskiVaikuntanathan11}, permet le calcul sur donn\'ees chiffr\'ees. Les sch\'emas fond\'es sur LWE~\cite{Regev2009} sont consid\'er\'es comme post-quantiques et utilis\'es dans les protocoles de calcul multipartite s\'ecuris\'e~\cite{Yao82,GMW87,Asharov12}.
 \end{sloppypar}
 
 % ----------------------------------------------------------------------------
@@ -478,17 +479,16 @@ Le chiffrement compl\`etement homomorphe (FHE), introduit par Gentry~\cite{Gentr
 \label{subsec:fondements_cognitifs}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
-Le choix de la capacit\'e
-d'extraction institutionnelle $\Delta$ et de l'hypoth\`ese de r\'egularit\'e $\beta$
-s'appuie sur des r\'esultats \'etablis en sciences cognitives et en th\'eorie
-de l'information.
+Le choix de la capacit\'e d'extraction institutionnelle $\Delta$ s'appuie sur des r\'esultats
+\'etablis en sciences cognitives. L'hypoth\`ese de r\'egularit\'e $\beta$ rel\`eve de la th\'eorie de
+l'information, puisqu'elle porte sur les lois de preuve.
 
 \subsubsection{Rationalit\'e born\'ee et capacit\'e de traitement}
 \label{subsubsec:rationalite_bornee}
 
 Selon Herbert Simon~\cite{Simon82,Simon1955}, les d\'ecideurs humains, arbitres compris,
-ne recherchent pas l'optimum. Soumis \`a de s\'ev\`eres contraintes cognitives, ils se contentent d'une solution satisfaisante (\emph{satisficing}),
-c'est-\`a-dire qu'ils retiennent une solution jug\'ee suffisamment bonne en raisonnant sur des
+ne recherchent pas l'optimum. Soumis \`a de s\'ev\`eres contraintes cognitives, ils se contentent d'une solution satisfaisante (\emph{satisficing}).
+Ils retiennent une solution jug\'ee suffisamment bonne. Leur raisonnement porte sur des
 mod\`eles mentaux simplifi\'es \`a $O(10)$--$O(100)$ \'el\'ements distinguables. George Miller~\cite{Miller56}
 a estim\'e la capacit\'e de la m\'emoire de travail \`a $7 \pm 2$
 \emph{chunks} d'information, chiffre que Cowan~\cite{Cowan2001} ram\`ene \`a environ
@@ -500,7 +500,7 @@ ce qui donne
 \Delta_{\text{individu}} \;\lesssim\; 7 \times 3 \;=\; 21 \;\text{bits}.
 \label{eq:delta_individu}
 \end{equation}
-Ericsson et Kintsch~\cite{Ericsson95} ont montr\'e que les experts acc\`edent, via
+Ericsson et Kintsch~\cite{Ericsson95} ont montr\'e que les experts acc\`edent, par
 la m\'emoire \`a long terme, \`a $10^3$--$10^4$ sch\'emas, ajoutant
 $\log_2(10^4) \approx 13$ bits d'indexation. La d\'elib\'eration institutionnelle
 collective amplifie encore cette capacit\'e~\cite{Argyris1978}. Faute de quantification
@@ -509,18 +509,18 @@ dans la litt\'erature, nous retenons pour l'institution l'ordre de grandeur
 \Delta_{\text{institution}} \;\sim\; \text{quelques dizaines de bits}.
 \label{eq:delta_institution}
 \end{equation}
-Ces estimations cumulent des grandeurs h\'et\'erog\`enes, \`a savoir la capacit\'e
+Ces estimations cumulent des grandeurs h\'et\'erog\`enes, comme la capacit\'e
 de la m\'emoire de travail et la taille d'un r\'epertoire de sch\'emas. Elles ne valent
 donc pas d\'emonstration et servent seulement \`a motiver l'\emph{hypoth\`ese de travail}
-d'une capacit\'e de l'ordre de $20$ \`a $80$ bits, qu'il reviendra au programme
-exp\'erimental du chapitre~\ref{chap:experimentation} de mesurer.
+d'une capacit\'e de l'ordre de $20$ \`a $80$ bits. Il reviendra au programme
+exp\'erimental du chapitre~\ref{chap:experimentation} de la mesurer.
 
 \subsubsection{Biais cognitifs et d\'ecision}
 \label{subsubsec:biais_cognitifs}
 
 Kahneman~\cite{Kahneman11} a document\'e les biais syst\'ematiques affectant
 la d\'ecision humaine, parmi lesquels l'aversion \`a la perte, l'ancrage et la disponibilit\'e. Ces biais
-modulent la capacit\'e d'extraction effective, si bien qu'un juge peut disposer de
+modulent la capacit\'e d'extraction effective. Un juge peut ainsi disposer de
 $\Delta$ bits de capacit\'e mais n'en utiliser qu'une fraction selon le contexte
 \'emotionnel ou proc\'edural.
 
@@ -535,7 +535,7 @@ doit \^etre adapt\'ee. Nous la d\'efinissons par
 \end{equation}
 o\`u $\delta_{\mathrm{enh}}$ repr\'esente l'am\'elioration potentielle due aux
 outils quantiques (analyse quantique assist\'ee) et $\delta_{\mathrm{degr}}$
-repr\'esente la d\'egradation due \`a la complexit\'e accrue des preuves PQC~\cite{Chatterjee2021}.
+repr\'esente la d\'egradation due \`a la complexit\'e accrue des preuves PQC~\cite{Chatterjee2021}. La D\'efinition~\ref{def:decomposition_delta_q} en fixe le sens.
 
 Le coefficient de perte d'interpr\'etabilit\'e quantique $\eta_q$ mesure la
 d\'egradation s\'emantique induite par un canal quantique $\Lambda$ sur le
@@ -550,7 +550,7 @@ I(V;\Lambda(\Sigma)|C) \geq I(V;\Sigma|C) - \eta_q\, H(C)
 \label{subsubsec:justification_delta}
 
 L'interpr\`ete institutionnel (arbitre) poss\`ede une connaissance pr\'ealable $K$
-non captur\'ee dans le contexte formel $C$. Comme il n'acc\`ede au message que par la
+non prise en compte par le contexte formel $C$. Comme il n'acc\`ede au message que par la
 preuve, on a $K \perp M \mid (\Sigma, C)$. La r\`egle de cha\^inage appliqu\'ee de deux
 mani\`eres \`a $I(V;M,\Sigma|C)$ donne alors
 \begin{equation}
@@ -570,7 +570,7 @@ fond\'ee par la Proposition~\ref{prop:fondement_extraction}.
 \end{sloppypar}
 
 \begin{boiteArbitre}
-Pour l'arbitre, $\Delta$ le d\'esigne, puisque ce param\`etre mesure ce qu'il tire
+Pour l'arbitre, $\Delta$ le d\'esigne. Ce param\`etre mesure ce qu'il tire
 de la preuve au-del\`a du message. Il s'agit peut-\^etre de quelques dizaines de bits, qu'il faudra mesurer.
 \end{boiteArbitre}
 
@@ -597,14 +597,14 @@ La fiabilit\'e, qui quantifie la r\'ecup\'eration correcte, vaut
 \Rel(\mathcal{P}) = 1 - \Pr[\hat{M} \neq M],
 \label{eq:rel_def}
 \end{equation}
-o\`u $\hat{M}$ est l'estimateur optimal. L'opposabilit\'e capture la
+o\`u $\hat{M}$ est l'estimateur optimal. L'opposabilit\'e mesure la
 r\'eduction relative d'incertitude sur le verdict institutionnel~\cite{MINKA2026CLO}, d\'efinie par
 \begin{equation}
 \Opp(\mathcal{P}, C) = \frac{I(V;\Sigma|C)}{H(V|C)},
 \label{eq:opp_def}
 \end{equation}
-o\`u $V = \mathsf{Interpret}(\Sigma, C)$ est le verdict produit par
-l'interpr\`ete institutionnel.
+o\`u $V = \mathsf{Interpret}(\Sigma, C, K)$ est le verdict de
+l'interpr\`ete institutionnel, dot\'e de ressources propres $K$.
 
 \begin{remark}[Coexistence de deux notations de l'opposabilit\'e]\label{rem:deux_notations}
 Deux notations de l'opposabilit\'e coexistent, renvoyant toutes les deux \`a la m\^eme r\'ealit\'e, mais chacune servant un but pr\'ecis.
@@ -617,7 +617,7 @@ La notation de l'\'equation~\eqref{eq:opp_clo} est celle utilis\'ee dans les d\'
 
 Les m\'etriques CRO s'articulent avec les d\'efinitions cryptographiques classiques.
 
-\textbf{S\'emantique s\'ecurit\'e.} La confidentialit\'e $\Conf$ g\'en\'eralise la s\'ecurit\'e s\'emantique de Goldwasser et Micali~\cite{GoldwasserMicali84}, puisque $\Conf = 1$ impose $\TV(P_{\Sigma|m_0,c},P_{\Sigma|m_1,c}) = 0$ pour tous $(m_0,m_1,c)$. Les lois de la preuve sont alors identiques et l'avantage de tout adversaire est nul (Remarque~\ref{rem:jeu_ind_conf_link}), ce qui est l'indistinguabilit\'e s\'emantique parfaite.
+\textbf{S\'emantique s\'ecurit\'e.} La confidentialit\'e $\Conf$ g\'en\'eralise la s\'ecurit\'e s\'emantique de Goldwasser et Micali~\cite{GoldwasserMicali84}, puisque $\Conf = 1$ impose $\TV(P_{\Sigma|m_0,c},P_{\Sigma|m_1,c}) = 0$ pour tous $(m_0,m_1,c)$. Les lois de la preuve sont alors identiques et l'avantage de tout adversaire est nul (Remarque~\ref{rem:jeu_ind_conf_link}). On retrouve l'indistinguabilit\'e s\'emantique parfaite.
 
 \textbf{Infalsifiabilit\'e existentielle.} La fiabilit\'e de \emph{v\'erification} $\Relver$ (Remarque~\ref{rem:rel_ver}) est reli\'ee \`a la notion d'infalsifiabilit\'e existentielle sous attaque adaptative~\cite{GMR88}, car une signature infalsifiable v\'erifie $\Relver \to 1$. La fiabilit\'e de reconstruction $\Rel$ de l'\'equation~\eqref{eq:rel_def} mesure, elle, la capacit\'e \`a restituer le message.
 
@@ -635,7 +635,7 @@ Les d\'efinitions quantiques g\'en\'eralisent les m\'etriques classiques~\cite{W
 \label{eq:conf_q_def}
 \end{equation}
 
-\textbf{Fiabilit\'e quantique.} La fiabilit\'e $\Rel^q$ est d\'efinie via l'estimateur POVM optimal
+\textbf{Fiabilit\'e quantique.} La fiabilit\'e $\Rel^q$ est d\'efinie par l'estimateur POVM optimal
 maximisant la probabilit\'e de r\'ecup\'eration correcte~\cite{Wilde2017}.
 
 \textbf{Opposabilit\'e quantique.} L'institution obtient le verdict $V$
@@ -644,7 +644,7 @@ maximisant la probabilit\'e de r\'ecup\'eration correcte~\cite{Wilde2017}.
 \Opp^q(\mathcal{P}) = \frac{I(V;\Sigma|C)}{H(V|C)}.
 \label{eq:opp_q_def}
 \end{equation}
-La borne de Holevo joue ici un r\^ole d\'ecisif, puisque aucune mesure ne permet \`a un interpr\`ete
+La borne de Holevo joue ici un r\^ole d\'ecisif. Aucune mesure ne permet \`a un interpr\`ete
 institutionnel d'extraire de l'\'etat de preuve plus que son information de
 Holevo~\cite{Holevo1973}.
 \end{sloppypar}
@@ -689,8 +689,7 @@ pr\'esence d'une seule d\'efaillance. L'impossibilit\'e est conditionn\'ee \`a l
 \label{subsubsec:trilemme_blockchain}
 
 Buterin~\cite{Buterin17} a formalis\'e que les syst\`emes blockchain ne peuvent
-simultan\'ement atteindre d\'ecentralisation, s\'ecurit\'e et \'evolutivit\'e
-(scalability). Ce trilemme, contrairement \`a CAP et FLP, n'est pas issu d'une preuve
+simultan\'ement atteindre d\'ecentralisation, s\'ecurit\'e et passage \`a l'\'echelle. Ce trilemme, contrairement \`a CAP et FLP, n'est pas issu d'une preuve
 formelle mais d'une heuristique d'ing\'enierie~\cite{Nakamoto08,Garay15,Narayanan16}.
 
 \subsubsection{Impossibilit\'es en cryptographie}
@@ -825,7 +824,7 @@ classe, ce que l'arbitre re\c{c}oit comme une reconnaissance.
 
 Il note ensuite la coh\'erence de l'\'edifice. Les g\'en\'eralisations quantiques
 (Holevo, Pinsker quantique, Fano quantique) s'encha\^inent avec la m\^eme rigueur
-que leurs analogues classiques, si bien que le cadre s'\'etend au r\'egime quantique
+que leurs analogues classiques. Le cadre s'\'etend donc au r\'egime quantique
 sans se fracturer.
 
 L'armature analytique repose sur trois in\'egalit\'es dont d\'epend toute la

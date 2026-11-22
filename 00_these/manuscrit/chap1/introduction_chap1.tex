@@ -1,7 +1,7 @@
 % ============================================================================
 % INTRODUCTION DU CHAPITRE 1 — CONTEXTE, \'ETAT DE L'ART ET PROBL\'eMATIQUE
 % source : partie1/introduction_partie1.tex
-% Version : 2.2 — alignée sur la formalisation Lean4 révisée
+% Alignée sur la formalisation Lean4 révisée
 % ============================================================================
 
 % ----------------------------------------------------------------------------
@@ -11,22 +11,22 @@
 
 \begin{sloppypar}
 En quatre d\'ecennies, la cryptographie prouvable a produit des garanties
-d'une grande solidit\'e, qu'il s'agisse de la confidentialit\'e, mesur\'ee par
+d'une grande solidit\'e. C'est le cas de la confidentialit\'e, mesur\'ee par
 l'avantage d'un distingueur polynomial, ou de la fiabilit\'e, \'etablie par
 r\'eduction \`a un probl\`eme calculatoirement difficile. Ces r\'esultats,
 exacts sur le plan math\'ematique, restent pourtant souvent inexploitables
 lorsqu'une institution doit s'en saisir.
 
 Un juge ne raisonne pas comme un distingueur polynomial, pas plus qu'un
-auditeur financier ne v\'erifie un circuit arithm\'etique. Lorsque la preuve
-cryptographique d'une transaction doit convaincre un r\'egulateur, ou qu'une
-attestation zero-knowledge est vers\'ee au dossier d'une instruction p\'enale,
-la question d\'ecisive devient celle de l'interpr\'etation de cette preuve
+auditeur financier ne v\'erifie un circuit arithm\'etique. Prenons la preuve
+cryptographique d'une transaction qui doit convaincre un r\'egulateur, ou une
+attestation zero-knowledge vers\'ee au dossier d'une instruction p\'enale.
+La question d\'ecisive devient alors celle de l'interpr\'etation de cette preuve
 par un acteur institutionnel cognitivement born\'e. Cette th\`ese part de ce d\'eplacement de
 perspective, dont le pr\'esent chapitre pose les fondements.
 
 Trois syst\`emes cryptographiques d\'eploy\'es servent de construits
-illustratifs, \`a savoir Helios pour le vote \'electronique, les zk-SNARKs
+illustratifs, soit Helios pour le vote \'electronique, les zk-SNARKs
 pour la conformit\'e financi\`ere et ECDSA pour les signatures
 contractuelles. Leurs profils estim\'es laissent appara\^itre un motif que
 l'\'etat de l'art interdisciplinaire permettra ensuite de nommer puis de

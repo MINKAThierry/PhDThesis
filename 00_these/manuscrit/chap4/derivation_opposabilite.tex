@@ -49,7 +49,8 @@ fraction d'incertitude institutionnelle r\'esolue par la preuve~:
 \Opp(\mathcal{P}, C) = \frac{I(V;\Sigma|C)}{H(V|C)}
 \label{eq:opp_definition_calcul}
 \end{equation}
-o\`u $V = \mathsf{Interpret}(\Sigma, C)$ d\'esigne le verdict institutionnel,
+o\`u $V = \mathsf{Interpret}(\Sigma, C, K)$ d\'esigne le verdict institutionnel
+(D\'efinition~\ref{def:interp_admissible}),
 $\Sigma$ la preuve cryptographique et $C$ le contexte. Le th\'eor\`eme du goulot
 d'\'etranglement contextuel, \'etabli au m\^eme endroit, borne le num\'erateur
 par $\min\{H(\Sigma|C), H(V|C)\}$ et garantit donc $\Opp \leq 1$, contrainte que chacun des trois calculs ci-dessous doit respecter.
@@ -80,12 +81,12 @@ les m\'etriques $\Conf$ et $\Relver$ pour obtenir le produit CRO.
 \noindent\textbf{Deux \'echelles d'entropie contextuelle.} Une pr\'ecaution de
 notation s'impose avant de calculer. Les valeurs employ\'ees dans les trois
 calculs qui suivent ($8$, $11$ et $20$ bits) d\'esignent l'entropie
-du \emph{contexte d'esp\`ece}, c'est-\`a-dire la richesse informationnelle effectivement
+du \emph{contexte d'esp\`ece}. Il s'agit de la richesse informationnelle effectivement
 mobilis\'ee par l'institution consid\'er\'ee face \`a un litige donn\'e. Elles ne
 doivent pas \^etre confondues avec les plages du
-tableau~\ref{tab:estimations_structurelles_HC}, de $20$ \`a $70$ bits, qui
+tableau~\ref{tab:estimations_structurelles_HC}, de $20$ \`a $70$ bits. Ces plages
 portent sur l'entropie de la \emph{distribution des contextes} d'un domaine
-institutionnel entier et servent au dimensionnement des protocoles de la
+institutionnel entier~; elles servent au dimensionnement des protocoles de la
 section~\ref{sec:protocoles_experimentaux}. Le rapport entre les deux
 \'echelles est celui d'un cas particulier \`a la population dont il est tir\'e.
 La distinction est sans effet sur les valeurs d'opposabilit\'e calcul\'ees
@@ -139,8 +140,8 @@ cryptographique~\guillemotright. Cette cat\'egorisation binaire transmet
 I(V;\Sigma|C) \approx 1 \text{ bit}.
 \label{eq:ivc_helios}
 \end{equation}
-Cette pauvret\'e informationnelle d\'ecoule de la conception m\^eme du protocole,
-puisque la propri\'et\'e \`a divulgation nulle masque le contenu des votes tout en
+Cette pauvret\'e informationnelle d\'ecoule de la conception m\^eme du protocole.
+La propri\'et\'e \`a divulgation nulle masque le contenu des votes tout en
 attestant la correction du calcul. Le juge ne peut
 distinguer ni les nuances proc\'edurales, ni les irr\'egularit\'es partielles, ni
 les anomalies de comportement des trustees \`a partir des preuves seules.
@@ -217,7 +218,7 @@ H(V|C) = \log_2(8) = 3 \text{ bits}.
 \label{eq:hvc_zksnark}
 \end{equation}
 Les d\'ecisions r\'eglementaires financi\`eres sont structurellement plus
-nuanc\'ees que les verdicts \'electoraux, car un r\'egulateur peut approuver sous
+nuanc\'ees que les verdicts \'electoraux. Un r\'egulateur peut approuver sous
 conditions, exiger des mesures correctives sans sanction imm\'ediate ou
 escalader vers l'application de la loi. Ces huit cat\'egories correspondent aux
 pratiques r\'eglementaires document\'ees.
@@ -229,7 +230,7 @@ contraintes R1CS demeurent inaccessibles \`a un r\'egulateur sans formation
 sp\'ecialis\'ee. Deux bits restent n\'eanmoins extractibles~:
 \begin{enumerate}
 \item \textbf{V\'erification calculatoire} ($1$ bit). La preuve passe ou
-      \'echoue les contr\^oles de couplage, ce qui fournit une information binaire accessible via
+      \'echoue les contr\^oles de couplage. Cette information binaire est accessible par
       un v\'erificateur certifi\'e sans comprendre la cryptographie sous-jacente.
 \item \textbf{Cat\'egorisation de conformit\'e} ($1$ bit). Il s'agit d'une classification
       binaire port\'ee par les entr\'ees publiques et les m\'etadonn\'ees du circuit
@@ -242,7 +243,7 @@ I(V;\Sigma|C) \approx 2 \text{ bits}.
 \end{equation}
 L'avantage sur Helios ($2$ contre $1$ bit) tient au contexte plus riche
 ($11$ contre $8$ bits), qui autorise une cat\'egorisation plus fine. L'opacit\'e
-cryptographique reste la m\^eme, puisque la garantie \`a divulgation nulle de
+cryptographique reste la m\^eme. La garantie \`a divulgation nulle de
 Groth16 ne peut \^etre contourn\'ee par l'expertise.
 
 \noindent\textbf{\'Etape 3. Calcul de l'opposabilit\'e.}
@@ -277,7 +278,7 @@ P-256~\cite{Johnson01}.
 
 \noindent\textbf{Contexte institutionnel mod\'elis\'e.} Tribunal civil statuant
 sur un litige contractuel, avec infrastructure PKI \'etablie et
-$H(\mathcal{C}) \approx 20$ bits, d\'ecompos\'es en compr\'ehension PKI
+$H(\mathcal{C}) \approx 20$ bits. Ces bits se d\'ecomposent en compr\'ehension PKI
 ($\approx 2^{10}$ types de certificats, $10$ bits), pr\'ec\'edents
 jurisprudentiels ($\approx 2^{8}$ cat\'egories accumul\'ees en d\'ecennies de
 droit des signatures num\'eriques, $8$ bits) et cadres juridiques (ESIGN, eIDAS et
@@ -300,13 +301,13 @@ plusieurs facettes ind\'ependantes de la preuve num\'erique~:
 H(V|C) \approx 20 \text{ bits}.
 \label{eq:hvc_ecdsa}
 \end{equation}
-Cette valeur co\"incide avec $H(\mathcal{C}) = 20$ bits, ce qui traduit un
+Cette valeur co\"incide avec $H(\mathcal{C}) = 20$ bits. Elle traduit un
 contexte institutionnel calibr\'e pour r\'esoudre exactement le niveau
 d'incertitude d\'ecisionnelle qu'il affronte.
 
 \noindent\textbf{\'Etape 2. Estimation de $I(V;\Sigma|C)$.} Contrairement aux
-preuves \`a divulgation nulle, ECDSA est \emph{transparent par conception}, car
-l'\'equation de v\'erification expose les relations math\'ematiques explicites
+preuves \`a divulgation nulle, ECDSA est \emph{transparent par conception}.
+L'\'equation de v\'erification expose les relations math\'ematiques explicites
 entre cl\'e publique, hachage du message et composants de la signature. Le
 tribunal en extrait environ $18$ bits r\'epartis sur cinq
 dimensions~\cite{MINKA2026CLO}~:
@@ -331,7 +332,7 @@ I(V;\Sigma|C) \approx 3 + 4 + 3 + 3 + 5 = 18 \text{ bits}.
 \label{eq:ivc_ecdsa}
 \end{equation}
 ECDSA ne cherche pas \`a masquer l'information sur le signataire et le
-message, puisqu'un contrat a pr\'ecis\'ement vocation \`a \^etre interpr\'et\'e par des
+message. Un contrat a pr\'ecis\'ement vocation \`a \^etre interpr\'et\'e par des
 tiers. La transparence cryptographique, qui p\'enalise lourdement la
 confidentialit\'e, est exactement ce qui rend le syst\`eme institutionnellement
 puissant. Il s'agit donc d'un compromis d\'elib\'er\'e de conception.
@@ -356,7 +357,7 @@ cryptographique~\cite{MINKA2026CLO}.
 \label{eq:produit_ecdsa}
 \end{equation}
 La faible confidentialit\'e op\'erationnelle ($\Conf \approx 0{,}31$, valeur reprise
-de~\cite{MINKA2026CLO}) traduit la transparence, puisque les documents contractuels sont publics et que seules
+de~\cite{MINKA2026CLO}) traduit la transparence. Les documents contractuels sont publics et seules
 les cl\'es priv\'ees demeurent cach\'ees. La tr\`es haute fiabilit\'e
 ($\Relver \approx 0{,}98$) tient \`a la v\'erification d\'eterministe, la
 contrefa\c{c}on supposant la r\'esolution du probl\`eme ECDLP.
@@ -385,7 +386,8 @@ tableau~\ref{tab:parametres_reference}).
 
 \noindent\textbf{\'Etape 1. Estimation de $H(V|C)$.} L'espace de verdicts
 comporte les m\^emes dimensions qu'ECDSA, mais la granularit\'e est
-l\'eg\`erement r\'eduite par l'inadaptation institutionnelle~:
+nettement r\'eduite par l'inadaptation institutionnelle. L'entropie des verdicts passe
+de $20$~bits pour ECDSA (tableau~\ref{tab:composantes_opposabilite}) \`a
 \begin{equation}
 H(V|C) \approx 10{,}5 \text{ bits}.
 \label{eq:hvc_dilithium}
@@ -409,7 +411,7 @@ I(V;\Sigma|C) \approx 8 \text{ bits}.
 
 \noindent\textbf{Param\`etres post-quantiques.} Pour ML-DSA-65,
 $\lambda = 192$. La signature est une cha\^{\i}ne de bits classique (3\,309 octets),
-donc $\eta_q = 0$ (Remarque~\ref{rem:forme_raffinee_pq}). La capacit\'e d'extraction
+donc $\eta_q = 0$ (Remarque~\ref{rem:interpretation_physique_pq}). La capacit\'e d'extraction
 est fix\'ee, \`a titre illustratif, \`a partir de celle d'ECDSA dans le m\^eme usage
 (tableau~\ref{tab:parametres_reference})~:
 \begin{align}
@@ -430,7 +432,9 @@ quant \`a elle proche de~$1$ (infalsifiabilit\'e sous MLWE/MSIS)~:
 \label{eq:rel_q_dilithium}
 \end{align}
 La formulation initiale de cette \'etude retenait $\Conf^q \approx 0{,}95$, valeur
-difficile \`a concilier avec $\Conf \approx 0{,}31$ attribu\'ee \`a ECDSA dans le m\^eme usage.
+difficile \`a concilier avec $\Conf \approx 0{,}31$ attribu\'ee \`a ECDSA dans le m\^eme usage. Cette
+derni\`ere valeur rel\`eve de l'\'echelle op\'erationnelle~; au sens statistique, ECDSA et ML-DSA-65
+ont tous deux une confidentialit\'e nulle (Remarque~\ref{rem:portee_cas_etude}).
 
 \noindent\textbf{Lecture.} Avec $\Conf^q = 0$ au sens statistique, le produit
 CLO$^q$ est nul et la borne est trivialement respect\'ee. La formulation initiale
@@ -481,6 +485,30 @@ ECDSA (tribunal PKI) & 20 bits & 20 bits & 18 bits & 0{,}90 & 0{,}31 & 0{,}273 \
 \end{tabular}
 \end{table}
 
+\noindent\textbf{Interpr\`ete et institution de calibration.} Le
+tableau~\ref{tab:interprete_calibration} rapproche l'interpr\`ete de chaque d\'erivation
+et l'institution \`a laquelle la calibration attribue $\Delta$.
+
+\begin{table}[htbp]
+\centering
+\caption{Interpr\`ete de la d\'erivation et institution de calibration}
+\label{tab:interprete_calibration}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Syst\`eme} & \textbf{Interpr\`ete de la d\'erivation} & \textbf{Institution de calibration de $\Delta$} \\
+\midrule
+Helios & tribunal de juridiction g\'en\'erale & comit\'e de garants sp\'ecialis\'es ($56$~bits) \\
+zk-SNARK & r\'egulateur financier & r\'egulateur financier ($73$~bits) \\
+ECDSA & tribunal dot\'e d'une expertise PKI & juge dot\'e d'une expertise PKI ($35$~bits) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Lorsque les deux colonnes diff\`erent, l'opposabilit\'e est celle de l'interpr\`ete de la
+d\'erivation et $\Delta$ une capacit\'e d\'eclar\'ee de l'institution de calibration. Leur
+rapprochement reste illustratif (Remarque~\ref{rem:portee_cas_etude}).
+
 \noindent\textbf{Deux \'echelles d'entropie contextuelle.} Les valeurs de
 $H(\mathcal{C})$ de ce tableau d\'ecrivent le contexte d'une \emph{d\'ecision
 particuli\`ere} (\'echelle de l'esp\`ece)~; celles du chapitre~\ref{chap:cadre_formel}
@@ -502,14 +530,14 @@ $\Delta/\lambda$ correspondants~:
 \end{equation}
 Cette mise en regard ne vaut pas validation, pour deux raisons. (i)~Les valeurs de $\Delta$ ont
 \'et\'e initialement fix\'ees par inversion $\Delta := \lambda\cdot(\Conf\cdot\Relver\cdot\Opp)$
-(tableau~\ref{tab:validation_cro_classique}), de sorte que les deux voies ne sont
+(tableau~\ref{tab:validation_cro_classique}). Les deux voies ne sont donc
 pas ind\'ependantes. (ii)~Ces syst\`emes ne satisfont pas les hypoth\`eses du
 th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}). En particulier,
 $H(V|C) = 2 < \gamma = 8{,}6$ pour Helios et $3 < 15{,}5$ pour les zk-SNARKs, avec
 les valeurs de $H(\mathcal{C})$ de cette section. Lus comme des instances, les
 produits d\'epasseraient $\Delta/(\gamma\lambda)$ d'un facteur de l'ordre de $8{,}6$,
 $15{,}5$ et $19$. La mise en regard montre seulement que les ordres de grandeur
-retenus sont mutuellement coh\'erents, ce qui est le r\^ole d'une calibration
+retenus sont mutuellement coh\'erents. Tel est le r\^ole d'une calibration
 illustrative.
 
 % -----------------------------------------------------------------------
@@ -537,7 +565,7 @@ objectifs.
 
 \noindent\textbf{Caract\`ere statique du mod\`ele.} L'analyse traite
 $H(\mathcal{C})$ et $\Delta$ comme des constantes. En r\'ealit\'e, les
-institutions apprennent et s'adaptent, car l'accumulation de pr\'ec\'edents
+institutions apprennent et s'adaptent. L'accumulation de pr\'ec\'edents
 augmente $\Delta$ tandis que le changement technologique modifie $H(\mathcal{C})$. Un
 mod\`ele dynamique reste \`a construire~; sa calibration rel\`everait de l'analyse
 longitudinale pr\'evue au calendrier (tableau~\ref{tab:calendrier_experimental}),
@@ -546,11 +574,11 @@ sur trois \`a cinq ans.
 \begin{boiteArbitre}
 L'arbitre referme ces calculs. Il a vu trois syst\`emes occupant chacun un r\'egime
 propre, avec des chiffres d\'efendus dimension par dimension. Il a vu aussi, \`a la fin,
-deux limites nomm\'ees sans d\'etour, \`a savoir l'uniformit\'e des verdicts dont
-d\'ependent les valeurs ainsi que le caract\`ere statique d'un mod\`ele qui ignore
+deux limites nomm\'ees sans d\'etour. La premi\`ere est l'uniformit\'e des verdicts dont
+d\'ependent les valeurs~; la seconde, le caract\`ere statique d'un mod\`ele qui ignore
 l'apprentissage des institutions.
 
-Il retient que rien n'est cach\'e, puisque les hypoth\`eses sont pos\'ees, les limites
+Il retient que rien n'est cach\'e. Les hypoth\`eses sont pos\'ees, les limites
 dites et les protocoles susceptibles de les lever d\'esign\'es. Il y voit une estimation
 transparente, dont on conna\^it la port\'ee comme les limites.
 

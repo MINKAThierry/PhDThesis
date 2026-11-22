@@ -11,12 +11,12 @@ Le chapitre~\ref{chap:contexte} a expos\'e le paradoxe de l'authenticit\'e
 invisible~\cite{Goodman15,Casey16,Grimmelmann15}, selon lequel les protocoles qui maximisent la protection cryptographique
 induisent une opacit\'e institutionnelle s\'ev\`ere, tandis que les protocoles
 transparents sacrifient la confidentialit\'e~\cite{Bonneau16,Citron14}. La section~\ref{sec:etat_art}
-a fourni les outils n\'ecessaires, th\'eorie de l'information de
-Shannon~\cite{Shannon48,Shannon49,Wyner75}, in\'egalit\'es de Pinsker et
-Fano~\cite{Fano61,Pinsker1964}, th\'eorie de l'information quantique
-(von Neumann, Holevo~\cite{Holevo1973,NielsenChuang2010}), primitives d'obscurcissement (commitments,
-zk-SNARKs~\cite{Groth16,BCTV14,Gennaro13}), trilemmes d'impossibilit\'e (CAP~\cite{Brewer00},
-FLP~\cite{FLP85}), standards post-quantiques NIST~\cite{NISTPQC,Kyber2022,Dilithium2022}, sans encore les articuler 
+a fourni les outils n\'ecessaires. Ce sont la th\'eorie de l'information de
+Shannon~\cite{Shannon48,Shannon49,Wyner75}, les in\'egalit\'es de Pinsker et
+Fano~\cite{Fano61,Pinsker1964} ainsi que la th\'eorie de l'information quantique
+(von Neumann, Holevo~\cite{Holevo1973,NielsenChuang2010}). S'y ajoutent les primitives d'obscurcissement (commitments,
+zk-SNARKs~\cite{Groth16,BCTV14,Gennaro13}), les trilemmes d'impossibilit\'e (CAP~\cite{Brewer00},
+FLP~\cite{FLP85}) et les standards post-quantiques NIST~\cite{NISTPQC,Kyber2022,Dilithium2022}. Ces outils n'\'etaient pas encore articul\'es
 en un cadre unifi\'e.
 
 Nous d\'efinissons ici ce cadre. Le \textbf{cadre CLO (Cryptographic
@@ -79,7 +79,7 @@ et l'espace de verdicts $\mathcal{V}_\lambda$ (d\'ecisions institutionnelles).
 \item $\mathsf{Setup}(1^\lambda) \to (pk, sk)$ : g\'en\'eration de cl\'es publique/secr\`ete
 \item $\mathsf{Prove}(sk, m, c) \to \sigma$ : g\'en\'eration de preuve pour message $m$ et contexte $c$
 \item $\mathsf{Verify}(pk, \sigma, c) \to \{0,1\}$ : v\'erification cryptographique de la preuve
-\item $\mathsf{Interpret}(\sigma, c) \to v$ : \textbf{interpr\'etation institutionnelle} produisant verdict $v \in \mathcal{V}$
+\item $\mathsf{Interpret}(\sigma, c) \to v$ : \textbf{interpr\'etation institutionnelle} produisant verdict $v \in \mathcal{V}$~; l'institution y mobilise aussi ses ressources propres $K$, que la D\'efinition~\ref{def:interp_admissible} rend explicites en \'ecrivant $V = \mathsf{Interpret}(\Sigma, C, K)$
 \end{itemize}
 
 \medskip\noindent o\`u $c$ repr\'esente la distribution du contexte
@@ -91,15 +91,15 @@ expertise disponible, proc\'edures \'etablies).
 $\mathsf{Verify}$ r\'epond \`a la question \emph{\guillemotleft~La preuve est-elle math\'ematiquement
 valide~?\guillemotright} $\mathsf{Interpret}$ r\'epond \`a la question \emph{\guillemotleft~Que signifie cette
 preuve pour ma d\'ecision~?\guillemotright} La tension centrale de la cryptographie
-institutionnelle \'emerge pr\'ecis\'ement de cette dualit\'e, puisqu'une preuve peut
+institutionnelle \'emerge pr\'ecis\'ement de cette dualit\'e. Une preuve peut
 \^etre cryptographiquement impeccable ($\mathsf{Verify}(\sigma) = 1$) mais
-institutionnellement opaque, l'interpr\`ete \'etant incapable d'en extraire
+institutionnellement opaque si l'interpr\`ete est incapable d'en extraire
 $v$ de mani\`ere fiable.
 \end{remark}
 
 \begin{Preuve}[Remarque~\ref{rem:double_couche}]
 Il suffit d'exhiber un tel protocole. Soit $\Sigma$ un engagement parfaitement
-masquant, accept\'e par $\mathsf{Verify}$ avec probabilit\'e $1$, et un verdict
+masquant, accept\'e par $\mathsf{Verify}$ avec probabilit\'e $1$. Soit aussi un verdict
 $V$ qui d\'epend du message, par exemple $V$ \'egal au premier bit de $M$ avec $M$
 uniforme et ind\'ependant de $C$. La loi de $\Sigma$ ne d\'epend pas de $M$, donc
 $\Sigma$ est ind\'ependant de $(V,C)$ et $I(V;\Sigma|C) = 0$, alors que
@@ -213,15 +213,15 @@ $H(V|C) = 1$. On a donc $\mathsf{Verify}(\sigma) = 1$ et $\Opp = 0$.
 \smallskip
 \begin{minipage}{\linewidth}
   \small\textit{Note :} La couche cryptographique (verte) assure la correction
-  math\'ematique via les algorithmes $\mathsf{Prouver}$ et $\mathsf{V\'erifier}$.
+  math\'ematique par les algorithmes $\mathsf{Prouver}$ et $\mathsf{V\'erifier}$.
   La couche institutionnelle (bleue marine) fournit l'interpr\'etation s\'emantique
-  via la fonction $\mathsf{Interpr\'eter}$, qui projette les preuves cryptographiques
-  sur des verdicts juridiquement significatifs en contexte institutionnel.
+  par la fonction $\mathsf{Interpr\'eter}$, qui projette les preuves cryptographiques
+  sur des verdicts ayant une port\'ee juridique en contexte institutionnel.
 \end{minipage}
 
 \end{figure}
 \begin{boiteArbitre}
-L'arbitre reconna\^it dans l'algorithme $\mathsf{Interpret}$ le sien, car les trois
+L'arbitre reconna\^it dans l'algorithme $\mathsf{Interpret}$ le sien. Les trois
 autres prot\`egent le message alors que celui-ci le sert, lui.
 \end{boiteArbitre}
 
@@ -264,8 +264,10 @@ juridiction et les termes du contrat~; $v$ est la validit\'e du contrat et
 l'identification de la partie responsable~\cite{Mason07,Kerr04}. $\mathsf{Verify}$ contr\^ole
 l'\'equation $r = x_1 \bmod n$~; $\mathsf{Interpret}$ engage le juge dans
 la v\'erification des identit\'es, l'examen des termes et le rendu du jugement.
-Les m\'etriques CLO estim\'ees sont $\Conf = 0{,}31$, $\Relver = 0{,}98$, $\Opp = 0{,}90$,
-avec un produit $\Conf\cdot\Relver\cdot\Opp = 0{,}273$.
+Les m\'etriques CLO estim\'ees sur l'\'echelle op\'erationnelle de~\cite{MINKA2026CLO} sont
+$\Conf = 0{,}31$, $\Relver = 0{,}98$, $\Opp = 0{,}90$, avec un produit $\Conf\cdot\Relver\cdot\Opp = 0{,}273$.
+Au sens statistique de la D\'efinition~\ref{def:confidentialite_clo}, un contrat sign\'e en clair a
+une confidentialit\'e nulle (Remarque~\ref{rem:portee_cas_etude}).
 
 Ces trois instanciations couvrent vote \'electronique, r\'egulation financi\`ere
 et litige contractuel~\cite{Nakamoto08,Buterin17}, registre suffisant pour tester la g\'en\'eralit\'e du
@@ -300,7 +302,7 @@ de grandeur des param\`etres institutionnels.
 \label{subsec:trois_dimensions}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
-Nous d\'efinissons les trois m\'etriques fondamentales via la th\'eorie
+Nous d\'efinissons les trois m\'etriques fondamentales par la th\'eorie
 de l'information (section~\ref{sec:etat_art},
 sous-section~\ref{subsec:fondements_info})~\cite{Shannon48,CoverThomas06,HanVerdu}.
 
@@ -331,12 +333,18 @@ sont disjoints. Un observateur passif acquiert alors une certitude.
 Le r\'egime pratique est interm\'ediaire.
 
 Du point de vue des jeux de s\'ecurit\'e, notre d\'efinition majore l'avantage
-de tout distingueur dans IND-CPA~\cite{GoldwasserMicali84,Bellare97}~:
+de tout distingueur dans IND-CPA~\cite{GoldwasserMicali84,Bellare97}. Avec
+l'avantage \'ecrit comme l'\'ecart $|\Pr[b'=b] - 1/2|$, convention du jeu IND-CONF
+(D\'efinition~\ref{def:jeu_ind_conf}), on a
 \begin{equation}
 \mathsf{Adv}^{\text{IND-CPA}}_{\mathcal{D}}(\lambda)
-  \leq \max_{m_0,m_1,c} \TV\!\left(P_{\Sigma|m_0,c},\; P_{\Sigma|m_1,c}\right)
+  \leq \frac{1}{2}\max_{m_0,m_1,c} \TV\!\left(P_{\Sigma|m_0,c},\; P_{\Sigma|m_1,c}\right)
+  = \frac{1 - \Conf(\mathcal{P})}{2}
 \label{eq:adv_ind_cpa}
 \end{equation}
+(Remarque~\ref{rem:jeu_ind_conf_link}). Avec la convention
+$|\Pr[\mathcal{D}=1 \mid m_1] - \Pr[\mathcal{D}=1 \mid m_0]|$, l'avantage double et
+le majorant devient $1 - \Conf(\mathcal{P})$.
 $\Conf$ fournit donc une borne informationnelle sur la s\'ecurit\'e cryptographique.
 
 \subsubsection{La fiabilit\'e comme reconstruction du message}
@@ -358,23 +366,30 @@ La fiabilit\'e mesure la capacit\'e de la preuve \`a restituer le message
 original~\cite{Fano61,CoverThomas06}. C'est cette seule notion que
 contr\^ole l'in\'egalit\'e de Fano. Un \emph{one-time pad} pur atteint
 $\Conf = 1$ mais $\Rel = 2^{-\lambda}$ pour $M$ uniforme (pas de
-r\'ecup\'eration sans cl\'e)~\cite{Shannon49}~; un engagement de
+r\'ecup\'eration sans cl\'e)~\cite{Shannon49}. Un engagement de
 Pedersen~\cite{Pedersen91,ChaumPedersen92} est parfaitement masquant
 ($\Conf = 1$, donc $\Relrec = 2^{-\lambda}$) et calculatoirement liant sous
-DLog~\cite{Damgard87}~; ECDSA~\cite{Johnson01,NIST.FIPS.186-5}, qui publie le message
+DLog~\cite{Damgard87}. ECDSA~\cite{Johnson01,NIST.FIPS.186-5}, qui publie le message
 en clair, a $\Relrec = 1$ et une confidentialit\'e nulle au sens de la
 D\'efinition~\ref{def:confidentialite_clo}.
 
 \begin{remark}[Fiabilit\'e de v\'erification]\label{rem:rel_ver}
-La fiabilit\'e \emph{op\'erationnelle} de~\cite{MINKA2026CLO} est la
-compl\'etude, assortie de la solidit\'e, de la v\'erification~:
+La fiabilit\'e \emph{op\'erationnelle} de~\cite{MINKA2026CLO} r\'eunit la
+compl\'etude de la v\'erification et la solidit\'e de l'ouverture. Nous l'\'ecrivons
 \begin{equation}
-\Relver(\mathcal{P}) = \min_{m,c}\Pr\bigl[\mathsf{Verify}(pk,\mathsf{Prove}(sk,m,c),c)=1\bigr].
+\Relver(\mathcal{P}) = \max\Bigl\{0,\;
+  \min_{m,c}\Pr\bigl[\mathsf{Verify}(pk,\mathsf{Prove}(sk,m,c),c)=1\bigr]
+  - \sup_{\mathcal{A} \in \mathcal{A}_t}\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathcal{P}}(\lambda)\Bigr\}.
 \label{eq:rel_ver}
 \end{equation}
+Le premier terme est la compl\'etude. Le second mesure le d\'efaut de solidit\'e. C'est le
+meilleur gain au jeu BIND-REL (D\'efinition~\ref{def:jeu_bind_rel}) parmi les adversaires
+$\mathcal{A}_t$ dont le temps de calcul ne d\'epasse pas un polyn\^ome $t(\lambda)$ fix\'e. Sans cette
+borne de temps, le supremum vaudrait $1$ pour tout engagement parfaitement masquant, qui
+admet toujours des collisions.
 Les deux notions ne co\"incident pas. Pour $M$ uniforme sur $\{0,1\}^\lambda$,
 $\Conf = 1$ entra\^ine $\Sigma \perp M \mid C$, donc $\Relrec = 2^{-\lambda}$,
-alors que $\Relver$ peut valoir~$1$ (engagement parfaitement masquant). Le
+alors que $\Relver$ peut atteindre $1 - \negl(\lambda)$ (engagement parfaitement masquant). Le
 Trilemme (Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}) porte sur
 $\Relrec$, seule notion \`a laquelle s'applique l'in\'egalit\'e de Fano. Les
 m\'etriques CLO des syst\`emes d\'eploy\'es et des constructions SOTP sont
@@ -386,10 +401,14 @@ exprim\'ees avec $\Relver$~; elles ne sont donc pas des instances du Trilemme
 \label{subsubsec:opposabilite_clo}
 
 \begin{definition}[Opposabilit\'e]\label{def:opposabilite_clo}
+Pour un protocole CLO tel que $H(V|C) > 0$,
 \begin{equation}
 \Opp(\mathcal{P}) = \frac{I(V;\Sigma|C)}{H(V|C)}
 \label{eq:opp_clo}
 \end{equation}
+Si $H(V|C) = 0$, le contexte d\'etermine le verdict et le rapport n'est pas
+d\'efini. Les bornes du produit \'ecartent ce cas par
+l'Hypoth\`ese~\ref{ass:verdicts_efficace}, qui impose $H(V|C) \geq \gamma \geq 1$.
 \end{definition}
 
 L'opposabilit\'e mesure la fraction de l'incertitude du verdict
@@ -401,7 +420,7 @@ l\`eve toute ambigu\"it\'e~; $\Opp = 0$ que la preuve est institutionnellement
 muette~\cite{Zohar15,Grimmelmann15}. L'information mutuelle conditionnelle $I(V;\Sigma|C)$ est born\'ee
 par la taille de l'espace de verdicts, point que le th\'eor\`eme~\ref{thm:goulot_contexte}
 exploitera. La d\'efinition n'est informative que si le verdict n'est pas une
-fonction d\'eterministe de $(\Sigma,C)$, car dans ce cas $H(V|\Sigma,C)=0$ et
+fonction d\'eterministe de $(\Sigma,C)$. Dans le cas contraire $H(V|\Sigma,C)=0$ et
 $\Opp=1$ pour tout protocole (Remarque~\ref{rem:verdict_deterministe}). Le
 cadre retient donc des interpr\'etations admissibles au sens de la
 D\'efinition~\ref{def:interp_admissible}, o\`u le verdict d\'epend aussi des
@@ -414,12 +433,15 @@ ressources propres de l'institution.
 \label{subsec:proprietes_fondamentales}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
-Nous \'etablissons quatre propri\'et\'es structurant les m\'etriques CLO.
-Les deux premi\`eres sont des bornes \'el\'ementaires~; les deux suivantes
-r\'ev\`elent des tensions intrins\`eques.
+Nous \'etablissons quatre propri\'et\'es structurant les m\'etriques CLO. Les
+bornes \'el\'ementaires viennent d'abord. Le lemme de tension entre confidentialit\'e
+et information mutuelle puis le goulot d'\'etranglement contextuel r\'ev\`elent des
+tensions intrins\`eques. Les r\`egles de composition viennent enfin. Le lemme de
+Johnson-Lindenstrauss, rappel\'e en chemin, sert la construction SOTP-Base.
 
 \begin{theorem}[Bornes \'el\'ementaires des m\'etriques CLO]\label{thm:bornes_mesures}
-Pour tout protocole CLO $\mathcal{P}$~:
+Pour tout protocole CLO $\mathcal{P}$, l'opposabilit\'e \'etant prise pour
+$H(V|C) > 0$ (D\'efinition~\ref{def:opposabilite_clo})~:
 \begin{equation}
   0 \leq \Conf(\mathcal{P}),\; \Rel(\mathcal{P}),\; \Opp(\mathcal{P}) \leq 1
   \label{eq:bornes_elementaires}
@@ -435,8 +457,8 @@ reste dans l'intervalle $[0,1]$.
 \end{cmtEtape}
 
 \textbf{Confidentialit\'e.}
-Par d\'efinition, $\Conf(\mathcal{P}) = 1 - \max_{m_0,m_1}
-\TV(P_{\Sigma|M=m_0}, P_{\Sigma|M=m_1})$.
+Par d\'efinition, $\Conf(\mathcal{P}) = 1 - \max_{m_0,m_1,c}
+\TV(P_{\Sigma|M=m_0,C=c}, P_{\Sigma|M=m_1,C=c})$.
 \cmt{La confidentialit\'e est l'oppos\'e de la meilleure distinguabilit\'e.}
 
 Puisque $\TV(P,Q) \in [0,1]$ pour toutes distributions $P$ et $Q$,
@@ -527,7 +549,7 @@ de $\Conf$, il vient
 Ce lemme fournit une \emph{garantie} de confidentialit\'e. Plus
 $I(M;\Sigma|C)$ est petit, plus le minorant de $\Conf$ est proche de~$1$,
 selon une d\'ependance non lin\'eaire (en racine carr\'ee). La tension
-$\Conf$--$\Rel$ elle-m\^eme vient de l'in\'egalit\'e de Fano, puisqu'une fiabilit\'e
+$\Conf$--$\Rel$ elle-m\^eme vient de l'in\'egalit\'e de Fano. Une fiabilit\'e
 de reconstruction \'elev\'ee exige que la preuve contienne de l'information
 sur le message. Un minorant de $\Conf$ ne suffit pas, \`a lui seul, \`a
 formaliser cette tension.
@@ -543,7 +565,7 @@ reconstruction $\Relrec \geq r$ exige donc $I(M;\Sigma|C) \geq r\lambda - 1$,
 c'est-\`a-dire une preuve qui porte de l'information sur le message. Un
 minorant de $\Conf$ ne peut pas, \`a lui seul, exprimer cette contrainte. Le
 protocole qui publie une preuve ind\'ependante de $M$ a $\Conf = 1$ et
-$I(M;\Sigma|C) = 0$, et satisfait donc le minorant avec \'egalit\'e, sans
+$I(M;\Sigma|C) = 0$~; il satisfait donc le minorant avec \'egalit\'e, sans
 renseigner sur ce que co\^ute une fiabilit\'e \'elev\'ee.
 \end{Preuve}
 
@@ -578,9 +600,9 @@ sous-gaussien se traite de m\^eme~\cite{Achlioptas2003}.
 \end{Preuve}
 
 Ce lemme garantit la pr\'eservation des distances euclidiennes sous projection
-al\'eatoire, propri\'et\'e sur laquelle repose la construction SOTP-Base
-(section~\ref{sec:sotp_construction}, sous-section~\ref{subsec:sotp_base}),
-puisque les distances entre repr\'esentations de contextes sont pr\'eserv\'ees \`a un
+al\'eatoire. La construction SOTP-Base repose sur cette propri\'et\'e
+(section~\ref{sec:sotp_construction}, sous-section~\ref{subsec:sotp_base}).
+Les distances entre repr\'esentations de contextes sont pr\'eserv\'ees \`a un
 facteur $1 \pm \varepsilon$ pr\`es apr\`es projection. Que l'interpr\`ete
 institutionnel puisse en extraire autant d'information d\'ecisionnelle
 qu'avant projection est une hypoth\`ese de conception, que le lemme n'\'etablit pas.
@@ -600,7 +622,7 @@ I(V;\Sigma|C) \leq \min\bigl\{H(\Sigma|C),\; H(V|C)\bigr\}
 Montrer que $I(V;\Sigma|C) \leq \min\{H(\Sigma|C),\, H(V|C)\} \leq \alpha H(C)$.
 Autrement dit, la preuve $\Sigma$ ne peut transmettre plus d'information
 sur le verdict que ce qu'elle contient, ni plus que l'incertitude
-initiale sur le verdict, laquelle est plafonn\'ee par la granularit\'e des
+initiale sur ce verdict. Cette incertitude est plafonn\'ee par la granularit\'e des
 verdicts rapport\'ee \`a la richesse du contexte.
 \end{cmtEtape}
 
@@ -733,12 +755,12 @@ composantes est admissible pour la paire, d'o\`u~\eqref{eq:comp_par_rel}.
 Pour l'opposabilit\'e, la cha\^ine $V$--$(\Sigma_1,C)$--$(\Sigma_2,C)$ donne
 $I(V;\Sigma_2|C) \leq I(V;\Sigma_1|C)$, donc
 $\Opp(\mathcal{P}_1\circ\mathcal{P}_2) \leq \Opp(\mathcal{P}_1)$ \`a verdict
-fix\'e. Aucune r\`egle g\'en\'erale ne vaut pour la composition parall\`ele,
-car l'information mutuelle n'est ni sous- ni sur-additive en g\'en\'eral. Les
+fix\'e. Aucune r\`egle g\'en\'erale ne vaut pour la composition parall\`ele.
+L'information mutuelle n'est ni sous- ni sur-additive en g\'en\'eral. Les
 r\`egles de~\cite{MINKA2026CLO} ($\Opp \geq \min$ en s\'equentiel,
 $\Opp \approx$ produit en parall\`ele) sont des heuristiques qui ne sont pas
 reprises ici. La formulation initiale de ce th\'eor\`eme dans~\cite{MINKA2026CLO}
-(minoration par le produit via l'in\'egalit\'e de Fr\'echet, $\Conf \geq \max$
+(minoration par le produit au moyen de l'in\'egalit\'e de Fr\'echet, $\Conf \geq \max$
 en parall\`ele) est remplac\'ee ici par une formulation plus pr\'ecise,
 l'in\'egalit\'e de Fr\'echet donnant $ab \geq a+b-1$.
 \end{remark}
@@ -760,7 +782,7 @@ l'in\'egalit\'e de Fr\'echet.
 
 Ces r\`egles permettent d'analyser des protocoles composites. Ainsi, un syst\`eme
 bancaire publiant conjointement une signature ECDSA (authentification) et une preuve zk-SNARK
-(conformit\'e) h\'erite des bornes ci-dessus, puisque publier les deux preuves ne peut
+(conformit\'e) h\'erite des bornes ci-dessus. Publier les deux preuves ne peut
 qu'abaisser la confidentialit\'e par rapport \`a chacune d'elles.
 
 \subsubsection{Jeux cryptographiques et m\'etriques CLO}
@@ -814,7 +836,7 @@ $(m_0,m_1,c)$~:
 avec \'egalit\'e pour le test de Neyman--Pearson (Helstrom) sur la paire la
 plus distinguable. $\Conf$ est donc la version \emph{statistique} de
 IND-CONF, au sens o\`u $\Conf \geq 1 - \negl(\lambda)$ implique un avantage n\'egligeable
-pour tout adversaire. La r\'eciproque est fausse, car pour des adversaires PPT
+pour tout adversaire. La r\'eciproque est fausse. Pour des adversaires PPT
 l'avantage peut \^etre n\'egligeable (s\'ecurit\'e calculatoire) alors que
 $\Conf$ est petit (chiffrement \`a cl\'e publique, par exemple).
 \cmt{La confidentialit\'e statistique implique la confidentialit\'e calculatoire, pas l'inverse.}
@@ -825,7 +847,7 @@ Soit $\mathcal{A}$ un distingueur qui fixe $(m_0,m_1,c)$, re\c{c}oit $\sigma$ ti
 selon $P_{\Sigma|m_b,c}$ pour un bit $b$ uniforme et r\'epond $b'$. Notons $A$
 l'ensemble des $\sigma$ pour lesquels il r\'epond $0$, en moyennant sur son
 al\'ea. Sa probabilit\'e de succ\`es vaut
-$\tfrac12\bigl(1 + P_{\Sigma|m_0,c}(A) - P_{\Sigma|m_1,c}(A)\bigr)$, et
+$\tfrac12\bigl(1 + P_{\Sigma|m_0,c}(A) - P_{\Sigma|m_1,c}(A)\bigr)$. Or
 $P_{\Sigma|m_0,c}(A) - P_{\Sigma|m_1,c}(A) \leq \TV(P_{\Sigma|m_0,c},P_{\Sigma|m_1,c})$,
 avec \'egalit\'e pour $A = \{\sigma : P_{\Sigma|m_0,c}(\sigma) > P_{\Sigma|m_1,c}(\sigma)\}$,
 qui est le test de Neyman-Pearson. L'avantage est donc au plus la moiti\'e de
@@ -867,14 +889,14 @@ $\mathcal{A}$~:
 \label{rem:jeu_bind_rel_link}
 BIND-REL contr\^ole la \emph{solidit\'e} de l'ouverture, donc la fiabilit\'e
 de v\'erification (Remarque~\ref{rem:rel_ver}). Pour un protocole complet
-dont la probabilit\'e de gain BIND-REL est au plus $\varepsilon_{\mathsf{bind}}$,
+dont le gain BIND-REL de tout adversaire de $\mathcal{A}_t$ est au plus $\varepsilon_{\mathsf{bind}}$,
 une preuve accept\'ee s'ouvre sur un unique message sauf avec probabilit\'e
 $\varepsilon_{\mathsf{bind}}$, de sorte que
 \begin{equation}
 \Relver \geq 1 - \varepsilon_{\mathsf{bind}} - \negl(\lambda).
 \end{equation}
 \cmtFormule{Fiabilit\'e de v\'erification born\'ee inf\'erieurement par $1 - \varepsilon_{\mathsf{bind}}$.}
-BIND-REL ne dit rien de $\Relrec$, puisqu'un engagement parfaitement masquant et
+BIND-REL ne dit rien de $\Relrec$. Un engagement parfaitement masquant et
 calculatoirement liant a $\Relrec = 2^{-\lambda}$.
 \cmt{Lier une preuve \`a un message ne revient pas \`a le r\'ev\'eler.}
 \end{remark}
@@ -883,10 +905,9 @@ calculatoirement liant a $\Relrec = 2^{-\lambda}$.
 Par d\'efinition du jeu, l'\'ev\'enement \og une preuve accept\'ee s'ouvre sur deux
 messages distincts\fg{} est exactement un gain BIND-REL. Il a donc probabilit\'e
 au plus $\varepsilon_{\mathsf{bind}}$ pour tout adversaire, ce qui \'etablit la
-solidit\'e de l'ouverture. Pour un protocole complet, la probabilit\'e
-d'acceptation d'une preuve honn\^ete est au moins $1 - \negl(\lambda)$, et
-retirer l'\'ev\'enement de collision co\^ute au plus $\varepsilon_{\mathsf{bind}}$,
-ce qui donne le minorant de $\Relver$. Pour la derni\`ere affirmation, un
+solidit\'e de l'ouverture. Pour un protocole complet, le premier terme
+de~\eqref{eq:rel_ver} vaut au moins $1 - \negl(\lambda)$ et le second au plus
+$\varepsilon_{\mathsf{bind}}$. Ces deux bornes donnent le minorant de $\Relver$. Pour la derni\`ere affirmation, un
 engagement parfaitement masquant a une loi de $\Sigma$ ind\'ependante de $M$.
 Tout d\'ecodeur qui observe $(\Sigma,C)$ devine alors $M$, uniforme sur
 $\{0,1\}^\lambda$, avec probabilit\'e $2^{-\lambda}$.
@@ -959,8 +980,8 @@ l'entropie, $H(V|\Sigma,C,K) = H(V|\Sigma,C,K,R) \leq H(V|v)$. La r\`egle de cha
 $H(V|\Sigma,C) = H(V|\Sigma,C,K) + I(V;K|\Sigma,C)$, report\'ee dans l'identit\'e,
 donne le minorant. Comme $h$ est croissante sur $[0,1/2]$ et que le second terme
 cro\^it avec $\varepsilon_{\mathsf{ext}}$, le minorant d\'ecro\^it lorsque l'erreur
-augmente. Il tend vers $1 - I(V;K|\Sigma,C)/H(V|C)$ lorsqu'elle tend vers $0$, et
-vers $1$ si de plus l'interpr\`ete ne lit que $(\Sigma,C)$.
+augmente. Il tend vers $1 - I(V;K|\Sigma,C)/H(V|C)$ lorsqu'elle tend vers $0$
+puis vers $1$ si de plus l'interpr\`ete ne lit que $(\Sigma,C)$.
 \end{Preuve}
 
 \end{sloppypar}
@@ -980,7 +1001,7 @@ n\'ecessaires, d\'evelopp\'ees en d\'etail dans la section~\ref{sec:cro_pq}.
 En pr\'esence d'adversaires quantiques, la d\'efinition de confidentialit\'e
 doit consid\'erer les mesures POVM sur les \'etats quantiques de
 preuve~\cite{Watrous2009,Boneh2011,Zhandry}. Comme dans le cas classique, la
-m\'etrique retenue est \emph{statistique}, puisqu'elle quantifie la meilleure
+m\'etrique retenue est \emph{statistique}. Elle quantifie la meilleure
 distinction possible, sans restriction de calcul.
 
 \begin{definition}[Confidentialit\'e quantique]\label{def:conf_quantique_clo}
@@ -1005,8 +1026,8 @@ est diagonal), la distance de trace se r\'eduit \`a la distance de variation tot
 \tfrac{1}{2}\|\rho_\Sigma^{m_0,c} - \rho_\Sigma^{m_1,c}\|_1
 = \mathrm{TV}\!\bigl(P_{\Sigma|m_0,c},\, P_{\Sigma|m_1,c}\bigr)
 \end{equation}
-Donc $\Conf^q$ se r\'eduit \`a $\Conf$ du cadre classique~\cite{MINKA2026CLO}, ce qui fait de la
-d\'efinition une g\'en\'eralisation stricte. Les notions calculatoires
+Donc $\Conf^q$ se r\'eduit \`a $\Conf$ du cadre classique~\cite{MINKA2026CLO}. La
+d\'efinition en est donc une g\'en\'eralisation stricte. Les notions calculatoires
 (adversaires QPT) rel\`event des jeux de s\'ecurit\'e, comme IND-CONF dans le
 cas classique (Remarque~\ref{rem:jeu_ind_conf_link}).
 \end{remark}
@@ -1014,7 +1035,7 @@ cas classique (Remarque~\ref{rem:jeu_ind_conf_link}).
 \begin{Preuve}[Remarque~\ref{rem:compatibilite_conf}]
 Les deux \'etats sont diagonaux dans la m\^eme base, donc leur diff\'erence est
 diagonale, de coefficients $P_{\Sigma|m_0,c}(s) - P_{\Sigma|m_1,c}(s)$. La norme de
-trace d'un op\'erateur diagonal est la somme des modules de ses coefficients, et
+trace d'un op\'erateur diagonal est la somme des modules de ses coefficients~;
 la moiti\'e de cette somme est la variation totale. Les deux confidentialit\'es
 prennent le maximum de la m\^eme quantit\'e sur $(m_0,m_1,c)$ et sont donc \'egales.
 \end{Preuve}
@@ -1025,21 +1046,27 @@ prennent le maximum de la m\^eme quantit\'e sur $(m_0,m_1,c)$ et sont donc \'ega
 \begin{definition}[Perte d'interpr\'etabilit\'e quantique]\label{def:perte_interp_quantique}
 Soit $\Lambda$ une application CPTP repr\'esentant les effets d'un canal
 quantique sur le support de la preuve (stockage, transmission,
-v\'erification). La perte d'interpr\'etabilit\'e quantique $\eta_q \in [0,1]$
+v\'erification). Lorsque $H(C) > 0$, la perte d'interpr\'etabilit\'e quantique $\eta_q$
 est le plus petit r\'eel tel que
 \begin{equation}
 I(V;\Lambda(\Sigma)|C) \;\geq\; I(V;\Sigma|C) - \eta_q\, H(C).
 \label{eq:def_eta_q}
 \end{equation}
+Ce coefficient v\'erifie $0 \leq \eta_q \leq \alpha$
+(Remarque~\ref{rem:encadrement_eta_q}).
 \end{definition}
 
-L'opposabilit\'e apr\`es passage dans le canal est alors
+Notons $\Opp^{\Lambda}$ l'opposabilit\'e apr\`es passage dans le canal. Elle v\'erifie
 \begin{equation}
-\Opp^q(\mathcal{P}) = \frac{I(V;\Lambda(\Sigma)|C)}{H(V|C)} \;\geq\; \Opp(\mathcal{P}) - \eta_q\,\frac{H(C)}{H(V|C)},
+\Opp^{\Lambda}(\mathcal{P}) = \frac{I(V;\Lambda(\Sigma)|C)}{H(V|C)} \;\geq\; \Opp(\mathcal{P}) - \eta_q\,\frac{H(C)}{H(V|C)},
 \label{eq:opp_q}
 \end{equation}
 une minoration qui quantifie la d\'egradation s\'emantique dans les canaux
-quantiques~\cite{Holevo1973,Wilde2017}. Par l'in\'egalit\'e de traitement des
+quantiques~\cite{Holevo1973,Wilde2017}. Le Trilemme quantique porte sur
+l'opposabilit\'e $\Opp^q$ de la D\'efinition~\ref{def:opposabilite_quantique}, o\`u le
+verdict est calcul\'e \`a partir de l'issue de la mesure. Les deux quantit\'es
+co\"incident lorsque $\Lambda$ est l'identit\'e, cas des signatures post-quantiques
+standardis\'ees (Remarque~\ref{rem:interpretation_physique}). Par l'in\'egalit\'e de traitement des
 donn\'ees, $I(V;\Lambda(\Sigma)|C) \leq I(V;\Sigma|C)$. Un canal ne peut donc que
 r\'eduire l'opposabilit\'e, tandis que $\eta_q$ mesure l'ampleur maximale de cette
 r\'eduction, rapport\'ee \`a la richesse du contexte.
@@ -1058,8 +1085,8 @@ positif en raison du bruit (d\'ecoh\'erence, erreurs de portes)~\cite{Holevo1973
 Si $\Lambda$ est l'identit\'e,~\eqref{eq:def_eta_q} est une \'egalit\'e pour
 $\eta_q = 0$, qui est donc le plus petit r\'eel admissible. Si le canal remplace
 tout \'etat par l'\'etat maximalement m\'elang\'e, la sortie ne d\'epend plus de
-$\Sigma$, d'o\`u $I(V;\Lambda(\Sigma)|C) = 0$ et $\eta_q = I(V;\Sigma|C)/H(C)$,
-strictement positif d\`es que la preuve porte de l'information sur le verdict.
+$\Sigma$, d'o\`u $I(V;\Lambda(\Sigma)|C) = 0$ et $\eta_q = I(V;\Sigma|C)/H(C)$.
+Cette valeur est strictement positive d\`es que la preuve porte de l'information sur le verdict.
 \end{Preuve}
 
 Ces extensions seront formalis\'ees et exploit\'ees \`a la section~\ref{sec:cro_pq} pour \'etablir le Trilemme CRO conditionnel quantique.
@@ -1076,7 +1103,7 @@ Il retient trois contributions, dans l'ordre o\`u elles se sont
 construites. Le mod\`ele de protocole d'abord (deux couches et deux questions
 distinctes, portant sur la validit\'e de la preuve puis sur ce qu'elle signifie pour lui).
 Les trois m\'etriques ensuite ($\Conf$, $\Rel$, $\Opp$), dont la derni\`ere
-le concerne directement~; il sait d\'esormais qu'elle
+le concerne directement. Il sait d\'esormais qu'elle
 n'a de sens que si son propre jugement ne se r\'eduit pas \`a un calcul
 m\'ecanique sur la preuve. Le goulot d'\'etranglement contextuel enfin,
 qui lui a appris que le plafond est fix\'e par la finesse de ses verdicts.
