@@ -34,7 +34,7 @@ institutionnelle des garanties cryptographiques, en traitant notamment
 l'\emph{opposabilit\'e} comme une propri\'et\'e de premi\`ere classe. En second lieu,
 les trois m\'etriques ($\Conf$~\ref{def:confidentialite_clo}, $\Rel$~\ref{def:fiabilite_clo}, $\Opp$~\ref{def:opposabilite_clo}) seront d\'efinies ici dans
 leur formulation issue de la th\'eorie de l'information, qui autorise le raisonnement
-asymptotique. Leurs \'equivalents computationnels, \'etablis au moyen de jeux de
+asymptotique. Leurs \'equivalents calculatoires, \'etablis au moyen de jeux de
 s\'ecurit\'e~\cite{GoldwasserMicali84,GMR88}, sont trait\'es \`a la section~\ref{sec:cro_classique}.
 \end{sloppypar}
 
@@ -230,7 +230,7 @@ S(\rho) = -\mathrm{Tr}(\rho \log \rho).
 \end{equation}
 Pour un \'etat pur $|\psi\rangle$, l'entropie est nulle ($S(|\psi\rangle\langle\psi|) = 0$). Elle
 vaut $S(\rho) = \log_2 d$ sur l'\'etat compl\`etement m\'elang\'e $\rho = I/d$. Lorsque
-$\rho$ est diagonale dans la base computationnelle, on retrouve $S(\rho) = H(X)$, o\`u $X$
+$\rho$ est diagonale dans la base de calcul, on retrouve $S(\rho) = H(X)$, o\`u $X$
 suit la distribution form\'ee par les probabilit\'es diagonales. La d\'efinition quantique
 contient donc le cadre classique comme cas particulier~\cite{Wilde2017,Hiai1991}.
 
@@ -338,7 +338,7 @@ $\tfrac12\|\rho - \rho'\|_1 \leq \sqrt{1 - F(\rho,\rho')}$~\cite{Wilde2017} donn
 alors $\|\rho - \rho'\|_1 \leq 2\sqrt{\delta}$.
 \end{Preuve}
 
-Ce lemme capture l'id\'ee qu'une mesure \guillemotleft~douce~\guillemotright (haute probabilit\'e) perturbe
+Ce lemme exprime l'id\'ee qu'une mesure \guillemotleft~douce~\guillemotright (haute probabilit\'e) perturbe
 peu l'\'etat quantique~\cite{OgawaNagaoka}. Dans le contexte institutionnel post-quantique, il borne
 la perte d'interpr\'etabilit\'e $\eta_q$ induite par les effets de canal quantique.
 
@@ -487,7 +487,7 @@ de l'information.
 \label{subsubsec:rationalite_bornee}
 
 Selon Herbert Simon~\cite{Simon82,Simon1955}, les d\'ecideurs humains, arbitres compris,
-ne recherchent pas l'optimum. Soumis \`a de s\'ev\`eres contraintes cognitives, ils \emph{satisficent},
+ne recherchent pas l'optimum. Soumis \`a de s\'ev\`eres contraintes cognitives, ils se contentent d'une solution satisfaisante (\emph{satisficing}),
 c'est-\`a-dire qu'ils retiennent une solution jug\'ee suffisamment bonne en raisonnant sur des
 mod\`eles mentaux simplifi\'es \`a $O(10)$--$O(100)$ \'el\'ements distinguables. George Miller~\cite{Miller56}
 a estim\'e la capacit\'e de la m\'emoire de travail \`a $7 \pm 2$
@@ -738,7 +738,7 @@ biblioth\`eque Mathlib~\cite{Mathlib} pour l'appui math\'ematique.
 Plusieurs projets ont formalis\'e des r\'esultats cryptographiques.
 
 \textbf{EasyCrypt.} Barthe et al.~\cite{BartheEA2013} ont d\'evelopp\'e un assistant
-de preuve sp\'ecialis\'e pour les preuves cryptographiques computationnelles,
+de preuve sp\'ecialis\'e pour les preuves cryptographiques calculatoires,
 utilisant le calcul de relations probabilistes.
 
 \textbf{F* et HACL*.} Le projet Everest~\cite{BhargavanEA2017,FStar,HACL} vise

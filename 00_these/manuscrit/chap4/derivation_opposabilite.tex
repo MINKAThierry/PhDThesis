@@ -58,7 +58,7 @@ syst\`emes.
 
 \noindent\textbf{\'Etape 1. Mod\'elisation de l'espace de verdicts.}
 \'Enum\'erer les d\'ecisions institutionnelles possibles \`a partir des cadres
-l\'egaux et r\'eglementaires pertinents, puis estimer $H(V|C)$ en supposant une
+juridiques et r\'eglementaires pertinents, puis estimer $H(V|C)$ en supposant une
 distribution approximativement uniforme sur ces verdicts. Cette hypoth\`ese
 d'uniformit\'e est une ligne de base conservatrice en l'absence de donn\'ees sur
 la jurisprudence r\'eelle~; ses limites sont discut\'ees \`a la
@@ -228,7 +228,7 @@ validation des param\`etres du trusted setup et la v\'erification des
 contraintes R1CS demeurent inaccessibles \`a un r\'egulateur sans formation
 sp\'ecialis\'ee. Deux bits restent n\'eanmoins extractibles~:
 \begin{enumerate}
-\item \textbf{V\'erification computationnelle} ($1$ bit). La preuve passe ou
+\item \textbf{V\'erification calculatoire} ($1$ bit). La preuve passe ou
       \'echoue les contr\^oles de couplage, ce qui fournit une information binaire accessible via
       un v\'erificateur certifi\'e sans comprendre la cryptographie sous-jacente.
 \item \textbf{Cat\'egorisation de conformit\'e} ($1$ bit). Il s'agit d'une classification
@@ -264,7 +264,7 @@ risque syst\'emique et la priorit\'e d'application, dimensions inaccessibles
 \end{equation}
 Les valeurs $\Conf \approx 0{,}89$ et $\Relver \approx 0{,}96$ sont reprises de
 l'\'echelle op\'erationnelle de~\cite{MINKA2026CLO}. La premi\`ere traduit le caract\`ere \`a
-divulgation nulle computationnel sous hypoth\`eses de couplage, la seconde les
+divulgation nulle calculatoire sous hypoth\`eses de couplage, la seconde les
 exigences du trusted setup. Elles rel\`event de la calibration op\'erationnelle et ne
 d\'ecoulent pas de ces hypoth\`eses.
 
@@ -281,7 +281,7 @@ sur un litige contractuel, avec infrastructure PKI \'etablie et
 $H(\mathcal{C}) \approx 20$ bits, d\'ecompos\'es en compr\'ehension PKI
 ($\approx 2^{10}$ types de certificats, $10$ bits), pr\'ec\'edents
 jurisprudentiels ($\approx 2^{8}$ cat\'egories accumul\'ees en d\'ecennies de
-droit des signatures num\'eriques, $8$ bits) et cadres l\'egaux (ESIGN, eIDAS et
+droit des signatures num\'eriques, $8$ bits) et cadres juridiques (ESIGN, eIDAS et
 r\'eglementations sp\'ecifiques, $2$ bits)~\cite{MINKA2026CLO}.
 
 \noindent\textbf{Formulation CLO.}
@@ -320,7 +320,7 @@ dimensions~\cite{MINKA2026CLO}~:
       algorithmiques et les propri\'et\'es de non-r\'epudiation.
 \item \textbf{Validit\'e temporelle} ($3$ bits), qui recouvre l'horodatage, la p\'eriode de
       validit\'e du certificat et le statut de r\'evocation (CRL/OCSP).
-\item \textbf{\'Evaluation de l'autorit\'e l\'egale} ($3$ bits), qui recouvre l'autorisation du
+\item \textbf{\'Evaluation de l'autorit\'e juridique} ($3$ bits), qui recouvre l'autorisation du
       signataire, les conditions de formation du contrat et la conformit\'e
       juridictionnelle.
 \item \textbf{Pertinence contextuelle} ($5$ bits), qui recouvre l'alignement avec le type de

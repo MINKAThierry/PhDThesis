@@ -57,10 +57,10 @@ protocole ou dans l'institution, limite les compromis accessibles.
 \subsubsection{D\'efinition formelle}
 \label{subsubsec:definition_protocole}
 
-Un protocole d'evidence cryptographique op\'erant en contexte institutionnel
-doit satisfaire deux niveaux de v\'erification fondamentalement distincts,
-\`a savoir la correction math\'ematique (v\'erification cryptographique) et l'extraction
-de signification s\'emantique (interpr\'etation institutionnelle)~\cite{ESIGN00,eIDAS14,Kerr04}. Cette
+Un protocole de preuve cryptographique employ\'e en contexte institutionnel
+doit satisfaire deux niveaux de v\'erification distincts. Le premier est la correction
+math\'ematique (v\'erification cryptographique). Le second est l'extraction du sens
+(interpr\'etation institutionnelle)~\cite{ESIGN00,eIDAS14,Kerr04}. Cette
 dualit\'e, absente des d\'efinitions cryptographiques
 classiques~\cite{GMR85,Goldreich01,GoldwasserMicali84} motive le mod\`ele formel qui suit.
 
@@ -83,7 +83,7 @@ et l'espace de verdicts $\mathcal{V}_\lambda$ (d\'ecisions institutionnelles).
 \end{itemize}
 
 \medskip\noindent o\`u $c$ repr\'esente la distribution du contexte
-institutionnel capturant l'environnement d\'ecisionnel (pr\'ec\'edents l\'egaux,
+institutionnel capturant l'environnement d\'ecisionnel (pr\'ec\'edents juridiques,
 expertise disponible, proc\'edures \'etablies).
 \end{definition}
 
@@ -324,8 +324,8 @@ est la distance en variation totale.
 
 $\Conf = 1$ (confidentialit\'e parfaite au sens de Shannon~\cite{Shannon49,Shannon48})
 signifie que les distributions de preuves sont identiques pour tous
-messages et tout contexte~; m\^eme un adversaire computationnellement
-illimit\'e ne peut distinguer~\cite{Wyner75,WynerZiv76}. \`a l'oppos\'e, $\Conf = 0$ trahit l'existence
+messages et tout contexte~; m\^eme un adversaire calculatoirement
+illimit\'e ne peut distinguer~\cite{Wyner75,WynerZiv76}. \`A l'oppos\'e, $\Conf = 0$ trahit l'existence
 de messages $m_0, m_1$ et d'un contexte $c$ pour lesquels les supports
 sont disjoints, un observateur passif acquiert alors une certitude.
 Le r\'egime pratique est interm\'ediaire.
@@ -392,7 +392,7 @@ exprim\'ees avec $\Relver$~; elles ne sont donc pas des instances du Trilemme
 \end{equation}
 \end{definition}
 
-L'opposabilit\'e capture la fraction de l'incertitude du verdict
+L'opposabilit\'e mesure la fraction de l'incertitude du verdict
 institutionnel $V$ que la preuve $\Sigma$ r\'esout, conditionnellement
 au contexte $C$. Absente de la litt\'erature cryptographique
 classique, cette m\'etrique quantifie

@@ -12,15 +12,15 @@ mutuelle et la distance de variation totale~\cite{MINKA2026CLO}. Cette approche
 permet des r\'esultats g\'en\'eraux (th\'eor\`eme du goulot d'\'etranglement
 contextuel, Trilemme CRO conditionnel), mais ne pr\'ecise pas directement
 \emph{ce qu'un adversaire calculatoirement born\'e peut ou ne peut pas
-faire}. En cryptographie computationnelle, la s\'ecurit\'e s'exprime
-classiquement via des \emph{jeux} (games) entre un challenger et un
-adversaire probabiliste polynomial-time (PPT).
+faire}. En cryptographie calculatoire, la s\'ecurit\'e s'exprime
+classiquement par des \emph{jeux} (games) entre un challenger et un
+adversaire probabiliste en temps polynomial (PPT).
 
 %\begin{cmtEtape}{Pourquoi cette annexe.}
 Le cadre CLO raisonne en bits et en entropies, alors que la cryptographie classique
 raisonne en jeux et en avantages d'adversaires. Cette annexe construit
-le pont entre les deux en capturant chaque m\'etrique du cadre CLO
-par un jeu cryptographique, puis en reliant chaque jeu \`a une hypoth\`ese
+le pont entre les deux. Elle traduit chaque m\'etrique du cadre CLO
+en un jeu cryptographique puis relie chaque jeu \`a une hypoth\`ese
 de duret\'e standard (PRG, DLOG, JL, Groth16).
 %\end{cmtEtape}
 
@@ -141,7 +141,7 @@ La construction $\mathsf{Com}(m, r) = g^m h^r$ exploite l'alg\`ebre des
 groupes cycliques, de sorte que toute collision d'engagements permettrait de calculer
 $\log_g h$, r\'esolvant le logarithme discret.
 \cmt{Le hiding parfait signifie que le message est cach\'e inconditionnellement.}
-\cmt{Par le binding computationnel, ouvrir sur deux messages casserait DLOG.}
+\cmt{Par le binding calculatoire, ouvrir sur deux messages casserait DLOG.}
 
 \begin{definition}[Engagement~de~Pedersen~\cite{Pedersen91}]\label{def:ann_pedersen}
 Soit $\mathbb{G}$ un groupe cyclique d'ordre premier $q$,
@@ -423,9 +423,8 @@ $\Relrec = 2^{-\lambda}$.
 \begin{Preuve}[Remarque~\ref{rem:ann_bind_rel_link}]
 La d\'emonstration est celle de la Remarque~\ref{rem:jeu_bind_rel_link}. Un gain
 BIND-REL est exactement l'\'ev\'enement o\`u une preuve accept\'ee s'ouvre sur deux
-messages distincts, et un engagement parfaitement masquant a une loi
-ind\'ependante de $M$, ce qui laisse au meilleur d\'ecodeur une probabilit\'e de
-succ\`es $2^{-\lambda}$.
+messages distincts. Comme l'engagement est parfaitement masquant, sa loi ne d\'epend
+pas de $M$ et le meilleur d\'ecodeur r\'eussit avec probabilit\'e $2^{-\lambda}$.
 \end{Preuve}
 \end{sloppypar}
 
@@ -448,7 +447,7 @@ institutionnel \`a extraire le bon verdict depuis une preuve. L'\guillemotleft~a
 ici est l'interpr\`ete lui-m\^eme (juge, r\'egulateur), dont on mesure la probabilit\'e
 d'\emph{erreur}. Le verdict de r\'ef\'erence $v^*$ est celui que l'institution rendrait en
 pleine connaissance de cause (D\'efinition~\ref{def:interp_admissible})~;
-l'institution doit rendre une d\'ecision align\'ee sur le contexte l\'egal, au-del\`a
+l'institution doit rendre une d\'ecision align\'ee sur le contexte juridique, au-del\`a
 de la seule v\'erification de la preuve.
 \cmt{Contrairement aux autres jeux, l'adversaire est ici l'interpr\`ete, qui n'est pas malveillant.}
 \cmt{On mesure sa probabilit\'e de se tromper sur le verdict.}
@@ -805,7 +804,7 @@ la variante la plus protectrice pour les contextes \`a haute entropie.
 \begin{Preuve}[Remarque sur la ZK parfaite]
 La divulgation nulle parfaite signifie que, \`a CRS fix\'e, la loi des preuves
 honn\^etes et celle des preuves simul\'ees sans t\'emoin sont \'egales. Leur variation
-totale est nulle, et la preuve de la Remarque~\ref{rem:jeu_ind_conf_link} montre
+totale est nulle. La preuve de la Remarque~\ref{rem:jeu_ind_conf_link} montre alors
 qu'aucun distingueur, m\^eme non born\'e en calcul, n'obtient alors d'avantage. La
 garantie ne repose sur aucune hypoth\`ese calculatoire une fois le CRS fix\'e,
 alors que la confidentialit\'e de SOTP-Low repose sur la s\'ecurit\'e du PRG

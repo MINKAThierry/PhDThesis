@@ -8,12 +8,11 @@
 % ============================================================================
 \begin{sloppypar}
 Cette section sp\'ecifie les six protocoles de mesure destin\'es \`a estimer
-empiriquement les param\`etres du cadre CRO, \`a savoir la capacit\'e
-d'extraction institutionnelle, l'entropie contextuelle, l'opposabilit\'e,
-ainsi que leurs extensions quantiques, en d\'etaillant pour chacun le design,
-la proc\'edure, les m\'etriques et les pr\'edictions falsifiables, avant de
-consolider le calendrier, les ressources et les crit\`eres de validation de
-l'ensemble du programme.
+empiriquement les param\`etres du cadre CRO. Ces param\`etres sont la capacit\'e
+d'extraction institutionnelle, l'entropie contextuelle, l'opposabilit\'e et leurs
+extensions quantiques. Chaque protocole est d\'ecrit par son plan exp\'erimental, sa
+proc\'edure, ses m\'etriques et ses pr\'edictions falsifiables. La section consolide
+ensuite le calendrier, les ressources et les crit\`eres de validation du programme.
 \end{sloppypar}
 
 \begin{boiteArbitre}
@@ -44,7 +43,7 @@ I(V;\Sigma|C) \leq I(M;\Sigma|C) + \Delta
 $\Delta$ est la quantit\'e d'information sur les verdicts qu'un acteur
 institutionnel peut extraire \emph{au-del\`a} de l'information mutuelle brute
 contenue dans la preuve cryptographique. En pratique, $\Delta$ capture la
-connaissance pr\'ealable (pr\'ec\'edents l\'egaux, formation sp\'ecialis\'ee,
+connaissance pr\'ealable (pr\'ec\'edents juridiques, formation sp\'ecialis\'ee,
 proc\'edures institutionnelles, capacit\'e de d\'elib\'eration collective) non
 formalis\'ee dans le contexte $C$.
 \end{definition}
@@ -90,7 +89,7 @@ $I(V;\Sigma|C) - I(M;\Sigma|C) \leq \Delta$. La diff\'erence est donc toujours u
 minorant de $\Delta$, et un minorant n\'egatif n'apporte aucune information.
 \end{Preuve}
 
-\subsubsection{Design exp\'erimental}
+\subsubsection{Plan exp\'erimental}
 \label{subsubsec:design_delta}
 
 \noindent\textbf{Participants.} $N \geq 100$ professionnels des institutions
@@ -215,7 +214,7 @@ La phase d'\textbf{estimation} (lignes~7--9) produit les deux param\`etres et le
 L'estimateur $\hat\Delta = \hat I(V;\Sigma|M,C)$ mesure ce que les acteurs
 tirent de la preuve \emph{au-del\`a} de ce qu'elle dit du message, qu'il s'agisse
 de la mise en forme, des m\'etadonn\'ees ou des indices que l'expertise institutionnelle
-(pr\'ec\'edents l\'egaux, expertise de domaine, proc\'edures internes) rend
+(pr\'ec\'edents juridiques, expertise de domaine, proc\'edures internes) rend
 lisibles. Ce terme co\"{\i}ncide avec celui que la
 Proposition~\ref{prop:fondement_extraction} isole dans la d\'ecomposition de
 $I(V;\Sigma|C)$. L'estimateur $\hat\alpha$ est
@@ -448,7 +447,7 @@ mesur\'ee \`a la pr\'ediction du mod\`ele SOTP~\cite{MINKA2026SOTP}.
 une \'election de d\'el\'egu\'es \'etudiants \`a l'ENSP (\'Ecole Nationale
 Sup\'erieure Polytechnique, Universit\'e de Yaound\'e I).
 
-\subsubsection{Design et participants}
+\subsubsection{Plan et participants}
 \label{subsubsec:design_opp}
 
 \noindent\textbf{Participants.} Commission \'electorale de $n = 10$ trustees
@@ -640,7 +639,7 @@ signatures post-quantiques qui sont des cha\^{\i}nes de bits classiques, cet
 estimateur est identique \`a l'estimateur classique~; il ne diff\`ere que dans le
 sc\'enario hypoth\'etique d'un support ou d'un v\'erificateur quantique.
 
-\subsubsection{Design exp\'erimental}
+\subsubsection{Plan exp\'erimental}
 \label{subsubsec:design_delta_q}
 
 \noindent\textbf{Participants.} $N \geq 80$ professionnels form\'es aux
@@ -853,7 +852,7 @@ quantique (stockage, transmission, v\'erification avec ressources quantiques).
 \label{eq:estimateur_eta_q}
 \end{equation}
 
-\subsubsection{Design exp\'erimental}
+\subsubsection{Plan exp\'erimental}
 \label{subsubsec:design_eta_q}
 
 \noindent\textbf{Principe.} Comparer l'extraction d'information depuis des
@@ -945,7 +944,7 @@ Valider conjointement les param\`etres post-quantiques $(\Delta_q, \eta_q)$ et
 comparer les pr\'edictions du Trilemme CRO post-quantique avec les mesures
 empiriques sur les standards NIST PQC.
 
-\subsubsection{Design int\'egr\'e}
+\subsubsection{Plan int\'egr\'e}
 \label{subsubsec:design_combine}
 
 \begin{algorithm}[H]
@@ -1196,12 +1195,10 @@ du chapitre~\ref{chap:resultats_discussions}.
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre referme le dossier des protocoles. Il n'a rien ex\'ecut\'e, rien
-mesur\'e, rien valid\'e. Il tient une promesse de mesure rigoureuse, chiffr\'ee et falsifiable, qui reste une promesse.
-
-Il a compris que ces protocoles \'etablissent le caract\`ere \emph{testable}
-du cadre, ce qui est moins que sa v\'erit\'e sans \^etre peu. Une th\'eorie qu'on
-ne peut pas tester reste sans prise sur le r\'eel, m\^eme si elle est belle.
+L'arbitre referme le dossier des protocoles. Aucun n'a encore \'et\'e ex\'ecut\'e.
+L'arbitre tient une promesse de mesure chiffr\'ee et falsifiable. Ces protocoles
+\'etablissent le caract\`ere \emph{testable} du cadre sans en \'etablir la validit\'e
+empirique.
 
 Il rel\`eve la transparence du dispositif, dont les pr\'edictions
 sont num\'eriques, les crit\`eres d'invalidation explicites et les

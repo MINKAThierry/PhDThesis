@@ -18,9 +18,9 @@
 
 La mission de la cryptographie s'est profond\'ement transform\'ee. Depuis les
 travaux fondateurs de Diffie et Hellman~\cite{DiffieHellman76}, elle consistait
-\`a prot\'eger des donn\'ees contre des adversaires computationnellement born\'es.
+\`a prot\'eger des donn\'ees contre des adversaires calculatoirement born\'es.
 Les protocoles \'etaient alors jug\'es selon un crit\`ere unique, la
-s\'ecurit\'e computationnelle~\cite{GoldwasserMicali84,Goldreich01}, que le
+s\'ecurit\'e calculatoire~\cite{GoldwasserMicali84,Goldreich01}, que le
 l\'egislateur a fini par prendre en compte. L'Electronic Signatures in Global and National Commerce (ESIGN) Act
 am\'ericain (2000)~\cite{ESIGN00} puis le r\`eglement electronic IDentification, Authentication and trust Services (eIDAS) europ\'een
 (2014)~\cite{eIDAS14} ont ainsi consacr\'e l'\'equivalence juridique des signatures
@@ -81,7 +81,7 @@ Cette th\`ese formalise ces propri\'et\'es ($\Conf$~\ref{def:confidentialite_clo
 
 \medskip
 \begin{boiteQuestion}{Q1. Conciliation}
-\textit{Comment concilier la s\'ecurit\'e cryptographique, qui requiert l'opacit\'e computationnelle, avec l'interpr\'etabilit\'e institutionnelle, qui requiert la transparence s\'emantique~?}
+\textit{Comment concilier la s\'ecurit\'e cryptographique, qui requiert l'opacit\'e calculatoire, avec l'interpr\'etabilit\'e institutionnelle, qui requiert la transparence s\'emantique~?}
 \end{boiteQuestion}
 
 \medskip
@@ -267,7 +267,7 @@ Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3722742), ce r\'esulta
 o\`u $\Delta_q$ est la capacit\'e d'extraction adapt\'ee au quantique et $\eta_q$ la perte d'interpr\'etabilit\'e. Cette perte est nulle pour les preuves qui sont des cha\^ines de bits, dont les signatures ML-DSA et SLH-DSA~\cite{Dilithium2022,SPHINCS2022}.
 
 \paragraph{C4. Nous proposons le paradigme Gold-Iron-Clay et la famille Semantic One-Time Pad (SOTP)~(section~\ref{sec:sotp_construction}).}
-Soumis \`a \emph{IEEE TIT}, ce travail confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte institutionnel \`a trois couches distinctes. Il en tire trois constructions de r\'ef\'erence selon l'entropie du contexte~: SOTP-Low, SOTP-Base, qui utilise une compression Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84}, et SOTP-High, fond\'ee sur Groth16~\cite{Groth16}. Leur confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees par r\'eduction et leur optimalit\'e est conjectur\'ee.
+Soumis \`a \emph{IEEE TIT}, ce travail confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte institutionnel \`a trois couches distinctes. Il en tire trois constructions de r\'ef\'erence selon l'entropie du contexte. SOTP-Low encode le contexte, SOTP-Base le compresse par Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84} et SOTP-High s'appuie sur Groth16~\cite{Groth16}. Leur confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees par r\'eduction et leur optimalit\'e est conjectur\'ee.
 
 \paragraph{C5. Nous certifions m\'ecaniquement le Trilemme en Lean4, du noyau
 alg\'ebrique aux lois de probabilit\'e finies (section~\ref{sec:lean4}).}

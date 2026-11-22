@@ -142,9 +142,9 @@ un maximum d'information sur $V$ depuis $(c, \sigma)$~?\guillemotright}
 
 \smallskip
 \begin{minipage}{\linewidth}
-  \small\textit{Note :} La couche \textbf{Or} (dor\'ee, $\Conf$) assure le
-  masquage cryptographique, la couche \textbf{Fer} (acier, $\Relver$) garantit
-  le liage et la v\'erification fiable, tandis que la couche \textbf{Argile} (terre
+  \small\textit{Note :} La couche \textbf{Gold} (dor\'ee, $\Conf$) assure le
+  masquage cryptographique, la couche \textbf{Iron} (acier, $\Relver$) garantit
+  le liage et la v\'erification fiable, tandis que la couche \textbf{Clay} (terre
   cuite, $\Opp$) pr\'esente le contexte sous une forme interpr\'etable~; elle
   n'accro\^it $\Opp$ que si elle transmet une information que l'institution
   ne d\'etient pas d\'ej\`a (Remarque~\ref{rem:statut_sotp}). Les accolades
@@ -180,7 +180,7 @@ L'ind\'ependance modulaire des couches est n\'ecessaire, car Gold, Iron et Clay
 doivent pouvoir \^etre substitu\'es sans refonte compl\`ete~\cite{canetti2001,Goldreich02}. Remplacer le PRG
 par AES-GCM n'affecte pas Iron ni Clay~; remplacer Pedersen par un
 accumulateur RSA laisse Gold et Clay intacts~; remplacer le hachage
-contextuel par une compression JL n'impacte pas les deux premi\`eres
+contextuel par une compression JL ne modifie pas les deux premi\`eres
 couches. Cette modularit\'e facilite l'adaptation aux \'evolutions
 cryptographiques (post-quantique, homomorphe) et r\'eglementaires~\cite{NISTPQC,Kyber2022,Dilithium2022}.
 \end{sloppypar}
@@ -191,9 +191,9 @@ cryptographiques (post-quantique, homomorphe) et r\'eglementaires~\cite{NISTPQC,
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 Nous montrons que le paradigme Gold-Iron-Clay est instanciable
-dans la classe des protocoles bas\'es XOR, via la construction
-\textbf{Semantic One-Time Pad (S-OTP)}, prototype de la famille SOTP
-\'etendue \`a la section~\ref{sec:sotp_construction}.
+dans la classe des protocoles fond\'es sur le XOR. La construction
+\textbf{Semantic One-Time Pad (S-OTP)} en fournit l'instance. Elle sert de prototype
+\`a la famille SOTP \'etendue \`a la section~\ref{sec:sotp_construction}.
 
 \begin{theorem}[Propri\'et\'es de s\'ecurit\'e S-OTP]\label{thm:proprietes_sotp}
 Sous hypoth\`eses PRG (g\'en\'erateur pseudo-al\'eatoire) et difficult\'e du

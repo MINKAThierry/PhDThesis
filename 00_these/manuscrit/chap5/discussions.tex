@@ -194,7 +194,7 @@ information utile de cette preuve pour rendre un verdict
 inform\'e}~\cite{Simon82,Miller56,Kahneman11}.
 
 Les travaux fondateurs de Goldwasser-Micali-Rackoff~\cite{GMR85} ont
-axiomatis\'e la puissance computationnelle de
+axiomatis\'e la puissance de calcul de
 l'adversaire~\cite{Goldreich01,Bellare97}~; nous axiomatisons ici la
 capacit\'e interpr\'etative de l'interpr\`ete. Il s'agit du m\^eme objet, un acteur
 born\'e, consid\'er\'e selon une sym\'etrie invers\'ee.
@@ -216,7 +216,7 @@ FHE                       & Calcul sur donn\'ees chiffr\'ees
   & Profondeur circuits~\cite{Gentry09,Brakerski2014} \\
 ZKP                       & Preuves sans r\'ev\'elation
   & Taille preuve, compl\'etude~\cite{GMR85,Groth16} \\
-\textbf{Crypto institutionnelle}   & \textbf{Interpr\'etabilit\'e l\'egale}
+\textbf{Crypto institutionnelle}   & \textbf{Interpr\'etabilit\'e juridique}
   & \textbf{Opposabilit\'e $\Opp$}~\cite{MINKA2026CLO,MINKA2026CRO} \\
 \textbf{Crypto PQ institutionnelle} & \textbf{R\'esilience quantique}
   & \textbf{$\Delta_q$, $\eta_q$}~\cite{MINKA2026PQCRO} \\
@@ -384,7 +384,7 @@ en \^etre une instance.
 
 \medskip
 \noindent\textbf{Sch\'ema 2. D\'ependance au contexte institutionnel.}
-L'opposabilit\'e varie significativement avec l'expertise de
+L'opposabilit\'e varie nettement avec l'expertise de
 l'institution. Les r\'egulateurs sp\'ecialis\'es
 ($H(\mathcal{C}) = 11$ bits) extraient plus d'information que les
 tribunaux g\'en\'eraux ($H(\mathcal{C}) = 8$ bits), tandis que les
@@ -621,7 +621,7 @@ L\`a o\`u la strat\'egie par r\'egime ci-dessus indique \emph{quel}
 protocole retenir pour une capacit\'e donn\'ee, l'analyse de sensibilit\'e
 de la sous-section~\ref{subsec:analyse_sensibilite} indique \emph{o\`u
 investir} pour faire \'evoluer cette capacit\'e. Elle se traduit en trois
-recommandations directement actionnables.
+recommandations directement applicables.
 
 \noindent\textit{Recommandation 1 (ad\'equation contexte--protocole).} Le
 choix du protocole doit \^etre guid\'e par le $H(\mathcal{C})$ de
@@ -716,11 +716,11 @@ FIPS~205 (SLH-DSA) & Signature, $\eta_q = 0$ & Haute s\'ecurit\'e
 \end{table}
 
 Pour les institutions \`a faible capacit\'e ($\Delta_q < 30$~bits), les
-standards post-quantiques n\'ecessitent des investissements significatifs
+standards post-quantiques n\'ecessitent des investissements importants
 en formation et outils d'interpr\'etation avant tout d\'eploiement
 effectif.
 
-\subsubsection{Opportunit\'es de standardisation}
+\subsubsection{Possibilit\'es de standardisation}
 \label{subsubsec:opportunites_standardisation}
 
 Trois possibilit\'es de standardisation sont identifi\'ees.
@@ -776,7 +776,7 @@ qualitativement~\cite{MINKA2026CLO}, de sorte que les deux approches se compl\`e
 
 Citron et Pasquale~\cite{Citron2008,Citron14} ont argument\'e que les
 syst\`emes automatis\'es doivent fournir une explicabilit\'e pour
-satisfaire les exigences de due process technologique. Ces travaux
+satisfaire les exigences de proc\'edure r\'eguli\`ere (\emph{due process}) appliqu\'ees \`a la technologie. Ces travaux
 identifient pr\'ecis\'ement les probl\`emes que CLO cherche \`a
 formaliser, mais s'arr\^etent \`a l'analyse
 normative~\cite{Casey11,Kerr04}. CLO leur fournit un outil
@@ -852,7 +852,7 @@ m\'etrique (Remarques~\ref{rem:jeu_bind_rel_link} et~\ref{rem:jeu_ext_opp_link})
 Les r\'eciproques ne sont pas \'etablies et la premi\`ere est fausse en g\'en\'eral, car un
 chiffrement \`a cl\'e publique a $\Conf = 0$ tout en r\'esistant au jeu IND-CONF. Cette
 asym\'etrie est une limitation structurelle. Une garantie information-th\'eorique
-suffit \`a la s\'ecurit\'e computationnelle sans lui \^etre n\'ecessaire, de sorte que les
+suffit \`a la s\'ecurit\'e calculatoire sans lui \^etre n\'ecessaire, de sorte que les
 m\'etriques CLO ne rendent pas compte des protocoles dont la s\'ecurit\'e est seulement
 calculatoire.
 
@@ -898,7 +898,7 @@ L'arbitre dresse l'inventaire de ce qui manque. Certains axiomes sont admis sans
 \^etre d\'eriv\'es, tandis que la couverture Lean4 n'inclut encore ni SOTP ni
 l'extension post-quantique. Six limitations m\'ethodologiques sont
 nomm\'ees sans d\'etour, parmi lesquelles les estimations analytiques, l'entropie non
-standardis\'ee, le r\'ealisme computationnel, le bruit quantique simplifi\'e
+standardis\'ee, le r\'ealisme calculatoire, le bruit quantique simplifi\'e
 et la restriction aux preuves non interactives. Quatre limitations conceptuelles touchent
 aussi le mod\`ele lui-m\^eme, \`a savoir le contexte statique, les verdicts d\'eterministes,
 la r\'egularit\'e suppos\'ee et la port\'ee du t\'emoin.
@@ -1262,7 +1262,7 @@ C6~: Protocoles exp\'erimentaux & Programme de validation falsifiable
 \midrule
 \multicolumn{4}{l}{\textit{Limitations transversales~:}} \\
 L1--L6 & Estimations analytiques~; $H(\mathcal{C})$ non standardis\'e~;
-  r\'ealisme computationnel~; bruit quantique simplifi\'e~;
+  r\'ealisme calculatoire~; bruit quantique simplifi\'e~;
   preuves non interactives
   & \multicolumn{2}{l}{Programme exp\'erimental
     futur} \\
