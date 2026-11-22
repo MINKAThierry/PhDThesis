@@ -73,7 +73,8 @@ La preuve originale~\cite{MINKA2026CRO} utilise les propri\'et\'es
 informationnelles (Fano, Pinsker) sans les expliciter comme conditions
 v\'erifiables du th\'eor\`eme. La formalisation Lean4 les rend
 explicites en les int\'egrant comme champs de la structure
-\texttt{ProtocolInstance}~:
+\texttt{ProtocolInstance}, puis la couche concr\`ete les d\'emontre pour des lois
+finies~:
 \begin{equation}
 \texttt{pinsker} : \TV^2 \leq c_0 \cdot \KL, \qquad
 \texttt{fano} : I \geq \Relrec \cdot \lambda - 1.
@@ -101,7 +102,7 @@ La formalisation compl\`ete de l'optimisation analytique sur
 $[0,\lambda]$ n\'ecessiterait des outils d'analyse r\'eelle non encore
 disponibles dans Mathlib~\cite{MathlibAnalysis,Tsybakov2009,Scerri14}.
 
-\subsubsection{N\'egligeabilit\'e~: une preuve par limite}
+\subsubsection{La n\'egligeabilit\'e prouv\'ee par passage \`a la limite}
 \label{subsubsec:necessite_analyse_cas}
 
 L'\'enonc\'e informel \og $(1/2)^\lambda$ est n\'egligeable\fg{} est tenu
@@ -110,9 +111,7 @@ cryptographique~\cite{Goldreich01,KatzLindell14}. Dans la formalisation, la
 n\'egligeabilit\'e est d\'efinie par un filtre (\og pour tout $c$, \`a partir d'un
 certain rang, $\varepsilon(\lambda)\,\lambda^c \leq 1$\fg)~; la preuve passe par
 la limite $\lambda^c/2^\lambda \to 0$ fournie par Mathlib. Elle n'est pas
-constructive, puisqu'elle ne produit pas de seuil explicite. La formulation initiale
-de ce paragraphe d\'ecrivait une analyse de cas ($c \le 4$ / $c > 4$) et un seuil
-$N(c) = \lceil 2c \rceil + 4$~; la pr\'esente formulation suit le code compil\'e. Le ph\'enom\`ene relev\'e par Scerri~\cite{Scerri14} demeure, car
+constructive, puisqu'elle ne produit pas de seuil explicite. Le ph\'enom\`ene relev\'e par Scerri~\cite{Scerri14} demeure, car
 formaliser un fait asymptotique \og \'evident\fg{} oblige \`a choisir une
 d\'efinition pr\'ecise.
 
@@ -159,8 +158,8 @@ satisfiables et que le r\'egime est n\'ecessaire \`a la borne.
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre s'arr\^ete sur ce que la machine a trouv\'e, soit cinq points que le
-raisonnement \`a la main n'avait pas vus. Des propri\'et\'es
+L'arbitre s'arr\^ete sur ce que la formalisation a fait appara\^itre, soit cinq
+enseignements que la relecture des articles n'avait pas fait voir. Des propri\'et\'es
 informationnelles y deviennent des conditions v\'erifiables, une
 structure de preuve pr\'eserve la borne dominante et un
 fait \og \'evident \fg{} exige une d\'efinition pr\'ecise. S'y ajoutent des constantes que
@@ -425,18 +424,23 @@ tableau~\ref{tab:estimations_structurelles_HC}, distinction \'etablie
 \noindent\textit{Implication pratique.} D\'eployer un zk-SNARK devant un
 tribunal g\'en\'eral ($H(\mathcal{C}) \approx 8$ bits) au lieu d'un
 r\'egulateur sp\'ecialis\'e ($H(\mathcal{C}) \approx 11$ bits)
-r\'eduirait $I(V;\Sigma|C)$ de $2$ bits \`a environ $1$ bit ainsi que
-l'opposabilit\'e de $0{,}67$ \`a environ $0{,}33$.
+r\'eduirait $I(V;\Sigma|C)$ de $2$ bits \`a environ $1$ bit, valeur suppos\'ee pour une
+juridiction moins sp\'ecialis\'ee. Avec les $H(V|C) = \log_2 8 = 3$ bits de verdict de la
+section~\ref{sec:derivation_zksnark}, l'opposabilit\'e passerait de $2/3 \approx 0{,}67$ \`a
+$1/3 \approx 0{,}33$.
 
 \medskip
 \noindent\textbf{Sch\'ema 3. Plafond d'extraction des syst\`emes
-z\'ero-connaissance.} M\^eme avec une entropie contextuelle \'elev\'ee,
+\`a divulgation nulle.} M\^eme avec une entropie contextuelle \'elev\'ee,
 les syst\`emes cryptographiquement opaques limitent fondamentalement
 l'extraction institutionnelle \`a un ou deux bits. Ce plafond manifeste
-l'hypoth\`ese d'extraction born\'ee. En effet, la
-propri\'et\'e z\'ero-connaissance garantit $I(M;\Sigma|C) \approx 0$, de
-sorte que l'hypoth\`ese d'extraction born\'ee donne
-$I(V;\Sigma|C) \leq 0 + \Delta$~; seule la connaissance pr\'ealable
+l'hypoth\`ese d'extraction born\'ee. Lorsque la divulgation nulle est parfaite et que
+les entr\'ees publiques ne d\'ependent que du contexte, on a $I(M;\Sigma|C) = 0$. Le
+simulateur produit en effet, \`a partir des seules entr\'ees publiques, une preuve de
+m\^eme loi que la preuve honn\^ete, si bien que la loi de $\Sigma$ sachant $C$ ne d\'epend
+pas de $M$. Pour une divulgation nulle seulement calculatoire, l'\'egalit\'e ne vaut qu'au
+sens calculatoire et l'argument devient heuristique. Dans le premier cas,
+l'hypoth\`ese d'extraction born\'ee donne $I(V;\Sigma|C) \leq 0 + \Delta$~; seule la connaissance pr\'ealable
 $\Delta$ permet alors une extraction non nulle.
 
 \medskip
@@ -494,9 +498,9 @@ preuve permet \`a l'expertise suppl\'ementaire de se traduire directement
 en capacit\'e d\'ecisionnelle.
 
 \noindent\textbf{Observation 2. Impact limit\'e sur les syst\`emes
-z\'ero-connaissance.} Pour Helios, m\^eme lorsque $\Delta$ passe de
+\`a divulgation nulle.} Pour Helios, m\^eme lorsque $\Delta$ passe de
 $30$ \`a $70$ bits, $\Opp$ ne varie que de $0{,}30$ \`a $0{,}70$. La
-propri\'et\'e z\'ero-connaissance cr\'ee un plafond sur
+propri\'et\'e \`a divulgation nulle cr\'ee un plafond sur
 l'extraction, ind\'ependamment de la capacit\'e institutionnelle, de sorte que
 l'opacit\'e cryptographique ne se compense que partiellement par
 l'expertise pr\'ealable. Ce plafond est compatible avec le goulot
@@ -620,17 +624,20 @@ Des zk-SNARKs, avec un investissement substantiel en formation et infrastructure
 d'expertise.
 \end{definition}
 
-L'impl\'ementation se d\'eroule en trois \'etapes. \textbf{\'Etape~1.
-Profilage institutionnel.} \'Evaluer $\Delta$ par inventaire de la
+L'implémentation se déroule en trois étapes.
+
+\textbf{\'Etape~1. Profilage institutionnel.} \'Evaluer $\Delta$ par inventaire de la
 disponibilit\'e d'experts, tests de charge cognitive sur des preuves
 repr\'esentatives, analyse de d\'ecisions historiques, audit de la
 qualit\'e de documentation~\cite{Miller56,Ericsson95,Simon82}.
+
 \textbf{\'Etape~2. S\'election protocolaire.} Choisir les protocoles
 correspondant au r\'egime mesur\'e~; ne jamais d\'eployer un protocole
 dont le r\'egime cible d\'epasse la capacit\'e actuelle sans planification
-de transition. \textbf{\'Etape~3. Renforcement de capacit\'e.}
-Investir dans la formation, les outils d'aide \`a la d\'ecision et les
-trajectoires de migration progressives.
+de transition.
+
+\textbf{\'Etape~3. Renforcement de capacit\'e.} Investir dans la formation,
+les outils d'aide \`a la d\'ecision et les trajectoires de migration progressives.
 
 \subsubsection{Trois recommandations de conception}
 \label{subsubsec:trois_recommandations}
@@ -644,12 +651,13 @@ recommandations directement actionnables.
 \noindent\textit{Recommandation 1 (ad\'equation contexte--protocole).} Le
 choix du protocole doit \^etre guid\'e par le $H(\mathcal{C})$ de
 l'institution cible. Un tribunal g\'en\'eral ($\Delta \approx 35$ bits) ne
-tire aucun b\'en\'efice de zk-SNARK avanc\'es ($\Opp \approx 0{,}40$)
-l\`a o\`u ECDSA offrirait $\Opp \approx 0{,}90$.
+tire aucun b\'en\'efice de zk-SNARK avanc\'es ($\Opp \approx 0{,}33$, calcul du
+sch\'ema~2 ci-dessus) l\`a o\`u ECDSA offrirait $\Opp \approx 0{,}90$
+(section~\ref{sec:derivation_ecdsa}).
 
 \noindent\textit{Recommandation 2 (investissement en formation).}
 L'investissement en formation institutionnelle ($\Delta$ croissant) a des
-rendements d\'ecroissants pour les syst\`emes z\'ero-connaissance mais
+rendements d\'ecroissants pour les syst\`emes \`a divulgation nulle mais
 croissants pour les syst\`emes transparents. \`A budget de formation
 \'egal, le gain d'opposabilit\'e est plus \'elev\'e sur ECDSA que sur Helios.
 
@@ -756,7 +764,7 @@ pays d'harmoniser leurs exigences r\'eglementaires.
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 
-\subsubsection{Cadres cryptographiques~: ZKP et flux d'information quantitatif}
+\subsubsection{Cadres cryptographiques des ZKP et du flux d'information quantitatif}
 \label{subsubsec:cadres_crypto_zkp}
 
 Les syst\`emes zero-knowledge atteignent une efficacit\'e remarquable
@@ -812,11 +820,12 @@ pr\'edisent effectivement les jugements d'admissibilit\'e r\'eels.
 \subsubsection{Limitations techniques}
 \label{subsubsec:limitations_techniques}
 
-\textbf{Les axiomes de Fano et Pinsker ne sont pas d\'eriv\'es ab initio.}
-Notre formalisation les int\`egre comme propri\'et\'es des instances de
-protocole sans les d\'eriver \`a partir de la th\'eorie des
-probabilit\'es. Une formalisation compl\`ete n\'ecessiterait l'int\'egration
-des biblioth\`eques de mesure-th\'eorie de Mathlib.
+\textbf{Fano et Pinsker ne sont d\'eriv\'es que pour des lois finies.}
+Le noyau alg\'ebrique les int\`egre comme propri\'et\'es des instances de
+protocole. La couche concr\`ete les d\'emontre pour des lois de probabilit\'e finies
+sur $(C, M, \Sigma, V)$ (sous-section~\ref{subsec:lean4_concret}). Une formalisation
+pour des lois quelconques n\'ecessiterait les biblioth\`eques de th\'eorie de la
+mesure de Mathlib.
 
 \textbf{Les constructions SOTP ne sont pas encore couvertes par Lean4.}
 La formalisation couvre le noyau alg\'ebrique du Trilemme, mais pas les
@@ -859,14 +868,18 @@ mais n'ont pas encore fait l'objet d'une publication dans une revue
 \`a comit\'e de lecture.
 
 \paragraph{L4. \'Equivalence formelle incompl\`ete.}
-Les ponts \'etablis entre les deux formalismes montrent que la
-r\'esistance aux jeux \emph{implique} des bornes inf\'erieures sur les
-m\'etriques CLO. La r\'eciproque, selon laquelle une forte opposabilit\'e
-information-th\'eorique impliquerait une r\'esistance aux jeux,
-n'est pas \'etablie. Cette asym\'etrie est une limitation
-structurelle, puisque les garanties information-th\'eoriques sont
-\emph{n\'ecessaires} mais pas \emph{suffisantes} pour la s\'ecurit\'e
-computationnelle.
+Les ponts \'etablis entre les deux formalismes ne vont pas dans le m\^eme sens
+pour les trois m\'etriques. Pour la confidentialit\'e, c'est la m\'etrique qui
+implique la r\'esistance au jeu, puisque l'avantage IND-CONF est major\'e par
+$(1-\Conf)/2$ (Remarque~\ref{rem:jeu_ind_conf_link}). Pour la fiabilit\'e de
+v\'erification et l'opposabilit\'e, c'est la r\'esistance au jeu qui minore la
+m\'etrique (Remarques~\ref{rem:jeu_bind_rel_link} et~\ref{rem:jeu_ext_opp_link}).
+Les r\'eciproques ne sont pas \'etablies et la premi\`ere est fausse en g\'en\'eral, car un
+chiffrement \`a cl\'e publique a $\Conf = 0$ tout en r\'esistant au jeu IND-CONF. Cette
+asym\'etrie est une limitation structurelle. Une garantie information-th\'eorique
+suffit \`a la s\'ecurit\'e computationnelle sans lui \^etre n\'ecessaire, de sorte que les
+m\'etriques CLO ne rendent pas compte des protocoles dont la s\'ecurit\'e est seulement
+calculatoire.
 
 \paragraph{L5. Mod\`eles quantiques simplifi\'es.}
 L'extension quantique utilise principalement le canal d\'epolarisant
@@ -922,7 +935,7 @@ o\`u sont les trous.
 \end{boiteArbitre}
 
 % -----------------------------------------------------------------------
-\subsection{La port\'ee constructive~: de l'impossibilit\'e au guide}
+\subsection{De l'impossibilit\'e au guide de conception}
 \label{subsec:portee_constructive}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -984,7 +997,7 @@ pr\'etendre avoir atteint la limite. L'impossibilit\'e devient ainsi un guide.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{Ce que la formalisation enseigne~: le\c{c}on m\'ethodologique}
+\subsection{La le\c{c}on m\'ethodologique de la formalisation}
 \label{subsec:verification_corrige_lecon}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -1046,8 +1059,7 @@ disciplines constituantes ne contr\^ole l'int\'egralit\'e.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{Le statut des protocoles exp\'erimentaux~: un programme
-falsifiable}
+\subsection{Les protocoles exp\'erimentaux comme programme falsifiable}
 \label{subsec:statut_protocoles_experimentaux}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -1179,15 +1191,16 @@ coh\'erent avec Scerri~\cite{Scerri14}, pour qui revisiter les mod\`eles de
 preuve r\'ev\`ele des probl\`emes fondationnels que ni la th\'eorie pure
 ni l'exp\'erimentation n'identifient.
 
-\subsubsection{L'axiomatisation est une n\'ecessit\'e pragmatique}
+\subsubsection{Poser puis d\'emontrer les r\'esultats profonds}
 \label{subsubsec:axiomatisation_pragmatique}
 
 Tant que les math\'ematiques sous-jacentes ne sont pas enti\`erement
 formalis\'ees dans une biblioth\`eque partag\'ee, int\'egrer les
 r\'esultats profonds comme propri\'et\'es d'instance est une approche
-valide et transparente. La cl\'e est de s\'eparer nettement le noyau
+valide et transparente. Elle permet ensuite de les d\'emontrer dans un cadre
+restreint, ici les lois finies, sans toucher au noyau certifi\'e. La cl\'e est de s\'eparer nettement le noyau
 certifi\'e des fondations accept\'ees comme
-vraies~\cite{BartheEA2013,Doussot23}.
+vraies~\cite{BartheEA2013}.
 
 \subsubsection{Les constantes explicites sont n\'ecessaires}
 \label{subsubsec:constantes_explicites}
@@ -1239,9 +1252,9 @@ de la section suivante les perspectives qui transforment ces contraintes
 en programme.
 \end{boiteArbitre}
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
-\caption{Synth\`ese~: r\'ev\'elations, implications, limitations et
+\caption{Synth\`ese des r\'ev\'elations, implications, limitations et
 le\c{c}ons par contribution}
 \label{tab:synthese_discussions}
 \begin{tabular}{@{}p{1.8cm}p{3cm}p{3cm}p{3.5cm}@{}}
@@ -1263,8 +1276,9 @@ C4~: SOTP & $\Conf$, $\Relver$ prouv\'ees~; opposabilit\'e heuristique~(section~
   & Protocoles de r\'ef\'erence
   & Preuves interactives \\
 C5~: Lean4 & Propri\'et\'es d'instance explicites~;
+  Fano et Pinsker d\'emontr\'es sur lois finies~;
   forme raffin\'ee certifi\'ee~(section~\ref{sec:lean4})~;
-  t\'emoins (mod\`ele abstrait)
+  t\'emoins (mod\`ele abstrait et lois finies)
   & Certification m\'ecanique
   & Extension SOTP et PQ \\
 C6~: Protocoles exp\'erimentaux & Programme de validation falsifiable

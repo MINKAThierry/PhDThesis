@@ -104,6 +104,19 @@ Pour toutes distributions $P$ et $Q$ sur un m\^eme alphabet fini, on a
 \end{equation}
 \end{lemma}
 
+\begin{Preuve}[Lemme~\ref{lem:pinsker}, esquisse]
+Soit $A = \{x : P(x) > Q(x)\}$, de sorte que $\TV(P,Q) = P(A) - Q(A)$. L'application
+$x \mapsto \mathbf{1}_A(x)$ transforme $P$ et $Q$ en deux lois de Bernoulli de
+param\`etres $p = P(A)$ et $q = Q(A)$, et la divergence ne peut que d\'ecro\^itre par
+cette transformation. Il suffit donc de montrer, en nats,
+$g(q) = p\ln\frac{p}{q} + (1-p)\ln\frac{1-p}{1-q} - 2(p-q)^2 \geq 0$ pour $q \leq p$.
+On a $g(p) = 0$ et $g'(q) = (q-p)\bigl(\frac{1}{q(1-q)} - 4\bigr) \leq 0$, car
+$q(1-q) \leq 1/4$. La fonction $g$ d\'ecro\^it donc jusqu'\`a $q = p$ et reste
+positive. Il vient $\TV^2 \leq \tfrac12\KL_{\mathrm{nat}} = \tfrac{\ln 2}{2}\KL_{\mathrm{bit}}
+\leq c_0\KL_{\mathrm{bit}}$, la derni\`ere in\'egalit\'e venant de $(\ln 2)^2 < 1$
+(Remarque~\ref{rem:constante_c0}).
+\end{Preuve}
+
 \noindent Dans la preuve du Trilemme CRO \`a la section~\ref{sec:cro_classique}, cette in\'egalit\'e relie la
 confidentialit\'e $\Conf = 1 - \max_{m_0,m_1} \TV(P_{\Sigma|m_0},
 P_{\Sigma|m_1})$ \`a l'information mutuelle $I(M;\Sigma|C)$ via
@@ -115,8 +128,9 @@ l'hypoth\`ese de $\beta$-r\'egularit\'e. Elle permet ainsi de convertir un
 \label{subsubsec:fano_classique}
 
 \begin{lemma}[Lemme de Fano~\cite{Fano61,CoverThomas06}]\label{lem:fano}
-Soit $X$ une variable al\'eatoire sur un alphabet fini de cardinalit\'e $k$,
-$\hat{X}$ un estimateur et $p_e = \Pr[X \neq \hat{X}]$. On a alors
+Soit $X$ une variable al\'eatoire sur un alphabet fini de cardinalit\'e $k$, $Y$
+une observation, $\hat{X} = g(Y)$ un estimateur et $p_e = \Pr[X \neq \hat{X}]$.
+On a alors
 \begin{equation}
 H(X|Y) \leq h(p_e) + p_e \log_2(k-1),
 \label{eq:fano_inequality}
@@ -124,6 +138,14 @@ H(X|Y) \leq h(p_e) + p_e \log_2(k-1),
 o\`u $h(p) = -p\log_2 p - (1-p)\log_2(1-p)$ est la fonction d'entropie
 binaire.
 \end{lemma}
+
+\begin{Preuve}[Lemme~\ref{lem:fano}]
+Soit $E = \mathbf{1}[X \neq \hat X]$. On d\'eveloppe $H(E, X \mid Y)$ de deux fa\c{c}ons.
+D'une part $H(E,X|Y) = H(X|Y) + H(E|X,Y) = H(X|Y)$, car $E$ est une fonction de
+$(X,Y)$. D'autre part $H(E,X|Y) = H(E|Y) + H(X|E,Y)$. On a $H(E|Y) \leq H(E) = h(p_e)$.
+Si $E = 0$, $X = g(Y)$ est d\'etermin\'e. Si $E = 1$, $X$ prend au plus $k-1$
+valeurs. D'o\`u $H(X|E,Y) \leq p_e\log_2(k-1)$, ce qui donne~\eqref{eq:fano_inequality}.
+\end{Preuve}
 
 Une fiabilit\'e \'elev\'ee (faible $p_e$) implique donc une information mutuelle \'elev\'ee.
 La contrapos\'ee est tout aussi utile, puisque si $H(X|Y)$ reste grande, aucun
@@ -133,6 +155,10 @@ cadre, il en d\'ecoule directement pour le Trilemme CRO l'in\'egalit\'e
 1 - \Rel \;\geq\; \frac{H(M|C) - I(M;\Sigma|C) - 1}{\log_2 |\mathcal{M}|}.
 \label{eq:rel_fano_bound}
 \end{equation}
+En effet, avec $X = M$, $Y = (\Sigma,C)$ et $p_e = 1 - \Rel$, le Lemme~\ref{lem:fano}
+et les majorations $h(p_e) \leq 1$ et $\log_2(k-1) \leq \log_2|\mathcal{M}|$ donnent
+$H(M|\Sigma,C) \leq 1 + (1-\Rel)\log_2|\mathcal{M}|$. Comme
+$H(M|\Sigma,C) = H(M|C) - I(M;\Sigma|C)$, on obtient~\eqref{eq:rel_fano_bound}.
 
 \subsubsection{L'in\'egalit\'e de traitement des donn\'ees}
 \label{subsubsec:dpi}
@@ -144,6 +170,13 @@ I(X;Z) \;\leq\; I(X;Y).
 \label{eq:dpi}
 \end{equation}
 \end{lemma}
+
+\begin{Preuve}[Lemme~\ref{lem:dpi}]
+La r\`egle de cha\^ine appliqu\'ee \`a $I(X;Y,Z)$ de deux fa\c{c}ons donne
+$I(X;Z) + I(X;Y|Z) = I(X;Y) + I(X;Z|Y)$. La propri\'et\'e de Markov signifie que
+$X$ et $Z$ sont ind\'ependants sachant $Y$, donc $I(X;Z|Y) = 0$. Comme
+$I(X;Y|Z) \geq 0$, il reste $I(X;Z) \leq I(X;Y)$.
+\end{Preuve}
 
 \noindent Ce r\'esultat, rarement mobilis\'e en
 cryptographie, intervient directement dans notre analyse~\cite{Smith09,Alvim12}. La
@@ -170,7 +203,7 @@ de l'opposabilit\'e, con\c{c}ue comme un ratio de r\'eduction d'incertitude, s'e
 
 Le th\'eor\`eme de codage source-canal~\cite{Shannon48,CoverThomas06} \'etablit que
 la transmission fiable d'une source $X$ sur un canal de capacit\'e $C$ est possible
-si et seulement si $H(X) < C$. Transpos\'e au contexte institutionnel, ce r\'esultat conduit \`a
+si $H(X) < C$ et impossible si $H(X) > C$. Transpos\'e au contexte institutionnel, ce r\'esultat conduit \`a
 mod\'eliser l'interpr\`ete comme un canal de capacit\'e born\'ee $\Delta$, qui limite
 la quantit\'e d'information qu'il peut extraire~\cite{WynerZiv76,Maurer1999}.
 \end{sloppypar}
@@ -266,6 +299,17 @@ o\`u $D(\rho\|\sigma) = \mathrm{Tr}(\rho\log\rho - \rho\log\sigma)$ est l'entrop
 relative quantique.
 \end{lemma}
 
+\begin{Preuve}[Lemme~\ref{lem:pinsker_quantique_etat_art}, esquisse]
+Le logarithme est ici n\'ep\'erien. Soit $P$ le projecteur sur la partie positive
+de $\rho - \sigma$ et la mesure $\{P, \mathbb{I}-P\}$. Les lois d'issue $p$ et $q$
+v\'erifient $|p(P) - q(P)| = \tfrac12\|\rho-\sigma\|_1$ (preuve du
+Lemme~\ref{lem:holevo_helstrom}), donc $\TV(p,q) = \tfrac12\|\rho-\sigma\|_1$.
+Le Lemme~\ref{lem:pinsker} en nats donne $\TV(p,q)^2 \leq \tfrac12\KL(p\|q)$, et
+l'entropie relative d\'ecro\^it par mesure~\cite{Lindblad}, d'o\`u
+$\KL(p\|q) \leq D(\rho\|\sigma)$. On obtient
+$\tfrac14\|\rho-\sigma\|_1^2 \leq \tfrac12 D(\rho\|\sigma)$, ce qui est~\eqref{eq:qpinsker}.
+\end{Preuve}
+
 Cette in\'egalit\'e sera utilis\'ee dans la section~\ref{sec:cro_pq} (Lemme~\ref{lem:pinsker_quantique}) pour borner la
 confidentialit\'e quantique $\Conf^q$ en fonction de l'information mutuelle
 quantique $I(M;\Sigma|C)$~\cite{Ohya1993}.
@@ -283,6 +327,17 @@ post-mesure satisfait
 \end{equation}
 \end{lemma}
 
+\begin{Preuve}[Lemme~\ref{lem:mesure_douce_etat_art}]
+L'\'etat post-mesure est $\rho' = \sqrt{M_m}\,\rho\sqrt{M_m}/p_m$. Comme
+$\sqrt{\rho}\rho'\sqrt{\rho} = (\sqrt{\rho}\sqrt{M_m}\sqrt{\rho})^2/p_m$ avec
+$\sqrt{\rho}\sqrt{M_m}\sqrt{\rho} \geq 0$, la fid\'elit\'e vaut
+$F(\rho,\rho') = (\mathrm{Tr}\,\rho\sqrt{M_m})^2/p_m$. De $0 \leq M_m \leq \mathbb{I}$
+on d\'eduit $\sqrt{M_m} \geq M_m$, donc $\mathrm{Tr}\,\rho\sqrt{M_m} \geq p_m$ et
+$F(\rho,\rho') \geq p_m \geq 1 - \delta$. L'in\'egalit\'e de Fuchs-van de Graaf
+$\tfrac12\|\rho - \rho'\|_1 \leq \sqrt{1 - F(\rho,\rho')}$~\cite{Wilde2017} donne
+alors $\|\rho - \rho'\|_1 \leq 2\sqrt{\delta}$.
+\end{Preuve}
+
 Ce lemme capture l'id\'ee qu'une mesure \guillemotleft~douce~\guillemotright (haute probabilit\'e) perturbe
 peu l'\'etat quantique~\cite{OgawaNagaoka}. Dans le contexte institutionnel post-quantique, il borne
 la perte d'interpr\'etabilit\'e $\eta_q$ induite par les effets de canal quantique.
@@ -298,6 +353,13 @@ S(X|\hat{X}) \leq h(p_e) + p_e \log_2(|\mathcal{X}| - 1).
 \label{eq:qfano}
 \end{equation}
 \end{lemma}
+
+\begin{Preuve}[Lemme~\ref{lem:fano_quantique_etat_art}]
+Le registre $X$ est classique et l'issue $\hat X$ de la mesure l'est aussi. Le
+couple $(X,\hat X)$ suit donc une loi jointe classique et
+$S(X|\hat X) = H(X|\hat X)$. Le Lemme~\ref{lem:fano}, appliqu\'e avec
+l'observation $Y = \hat X$ et l'estimateur identit\'e, donne la majoration.
+\end{Preuve}
 
 Cette g\'en\'eralisation du lemme de Fano classique est utilis\'ee dans la section~\ref{sec:cro_pq} (Lemme~\ref{lem:fano_quantique}) pour borner la fiabilit\'e quantique $\Rel^q$~\cite{Hayashi}.
 
@@ -412,7 +474,7 @@ Le chiffrement compl\`etement homomorphe (FHE), introduit par Gentry~\cite{Gentr
 \end{sloppypar}
 
 % ----------------------------------------------------------------------------
-\subsection{Fondements cognitifs~: rationalit\'e born\'ee et param\`etre~$\Delta$}
+\subsection{Fondements cognitifs du param\`etre~$\Delta$ dans la rationalit\'e born\'ee}
 \label{subsec:fondements_cognitifs}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
@@ -462,7 +524,7 @@ modulent la capacit\'e d'extraction effective, si bien qu'un juge peut disposer 
 $\Delta$ bits de capacit\'e mais n'en utiliser qu'une fraction selon le contexte
 \'emotionnel ou proc\'edural.
 
-\subsubsection{Extension quantique~: $\Delta_q$ et $\eta_q$}
+\subsubsection{Extension quantique par les param\`etres $\Delta_q$ et $\eta_q$}
 \label{subsubsec:extension_quantique_delta}
 
 Dans le contexte post-quantique, la capacit\'e d'extraction institutionnelle
@@ -555,7 +617,7 @@ La notation de l'\'equation~\eqref{eq:opp_clo} est celle utilis\'ee dans les d\'
 
 Les m\'etriques CRO s'articulent avec les d\'efinitions cryptographiques classiques.
 
-\textbf{S\'emantique s\'ecurit\'e.} La confidentialit\'e $\Conf$ g\'en\'eralise la s\'ecurit\'e s\'emantique de Goldwasser et Micali~\cite{GoldwasserMicali84}, puisque $\Conf = 1$ implique l'indistinguabilit\'e s\'emantique parfaite.
+\textbf{S\'emantique s\'ecurit\'e.} La confidentialit\'e $\Conf$ g\'en\'eralise la s\'ecurit\'e s\'emantique de Goldwasser et Micali~\cite{GoldwasserMicali84}, puisque $\Conf = 1$ impose $\TV(P_{\Sigma|m_0,c},P_{\Sigma|m_1,c}) = 0$ pour tous $(m_0,m_1,c)$. Les lois de la preuve sont alors identiques et l'avantage de tout adversaire est nul (Remarque~\ref{rem:jeu_ind_conf_link}), ce qui est l'indistinguabilit\'e s\'emantique parfaite.
 
 \textbf{Infalsifiabilit\'e existentielle.} La fiabilit\'e de \emph{v\'erification} $\Relver$ (Remarque~\ref{rem:rel_ver}) est reli\'ee \`a la notion d'infalsifiabilit\'e existentielle sous attaque adaptative~\cite{GMR88}, car une signature infalsifiable v\'erifie $\Relver \to 1$. La fiabilit\'e de reconstruction $\Rel$ de l'\'equation~\eqref{eq:rel_def} mesure, elle, la capacit\'e \`a restituer le message.
 
@@ -701,8 +763,9 @@ Lean4 a \'et\'e retenu \`a l'issue d'une comparaison syst\'ematique sur quatre c
 \textbf{Couverture math\'ematique.} Mathlib (v4.34.0) fournit l'analyse r\'eelle,
 les probabilit\'es et la divergence de Kullback--Leibler
 (\texttt{InformationTheory.KullbackLeibler})~\cite{Mathlib}~; les in\'egalit\'es
-de Pinsker et de Fano n'y sont pas formalis\'ees et sont donc pos\'ees comme
-propri\'et\'es des instances de protocole (section~\ref{sec:lean4}).
+de Pinsker et de Fano n'y sont pas formalis\'ees. La formalisation les pose comme
+propri\'et\'es des instances dans son noyau alg\'ebrique et les d\'emontre pour des lois
+finies dans sa couche concr\`ete (section~\ref{sec:lean4}).
 
 \textbf{Proximit\'e syntaxique.} La syntaxe de Lean4 reste lisible par un
 math\'ematicien sans formation sp\'ecialis\'ee en v\'erification formelle~\cite{moura2015lean}.

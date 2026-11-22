@@ -280,10 +280,13 @@ d'adaptation, si bien qu'ils constituent des hypoth\`eses de travail.
 \label{sec:tableau_comparatif_principal}
 % -----------------------------------------------------------------------
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Produits CLO illustratifs, classiques et post-quantiques ($\lambda = 128$)}
 \label{tab:comparaison_produits_cro}
+\small 
+\setlength{\tabcolsep}{4pt} 
+\begin{adjustbox}{max width=\linewidth} 
 \begin{tabular}{@{}llcccc@{}}
 \toprule
 \textbf{Type} & \textbf{Syst\`eme} & $\Delta/\Delta_q$ & $\eta_q$ (sc\'enario) &
@@ -309,11 +312,11 @@ Classique $\to$ PQC & RSA $\to$ SLH-DSA & 40 $\to$ 25 & 0 $\to$ 0{,}08 &
   $0{,}35 \to 0{,}30$ & $-14\%$ \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 
-\smallskip
+\vspace{0.2cm} 
 {\footnotesize $^\dagger$Hors champ (m\'ecanisme d'encapsulation de cl\'e).\par}
-\end{table}
-
+\end{table} 
 \noindent\textbf{Observation.} La p\'enalit\'e d'adaptation ($\Delta_q < \Delta$)
 abaisse la borne. Le terme $\eta_q H(C)$, qui n'intervient que dans le sc\'enario
 d'un support quantique, la rel\`eve l\'eg\`erement. Le produit
@@ -395,7 +398,9 @@ pas tir\'es d'une mesure.
 \label{subsec:resultats_classiques_bootstrap}
 
 Un coefficient de variation de $20\,\%$ sur $\Delta$ se propage int\'egralement
-\`a $\Delta/\lambda$, dont l'intervalle \`a $95\,\%$ vaut environ $[0{,}17;\,0{,}38]$
+\`a $\Delta/\lambda$, puisque $\lambda$ est fix\'e. Sous une loi normale,
+l'intervalle \`a $95\,\%$ a pour demi-largeur $1{,}96 \times 20\,\% \approx 39\,\%$ de la
+valeur centrale. Cet intervalle vaut environ $[0{,}17;\,0{,}38]$
 (ECDSA), $[0{,}27;\,0{,}61]$ (Helios) et $[0{,}35;\,0{,}79]$ (zk-SNARKs). Cette
 largeur traduit l'incertitude sur les param\`etres institutionnels~; elle
 rappelle qu'en l'absence de donn\'ees, les valeurs de ce chapitre sont des
@@ -411,6 +416,15 @@ Ces intervalles ne sont pas compatibles avec le coefficient de variation annonc\
 \texttt{06\_calcul/python/verifications.py} du d\'ep\^ot)~; la comparaison portait
 sur des valeurs identiques. La pr\'esente formulation ne les reprend pas.
 \end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:ic_anterieurs}]
+Avec un coefficient de variation de $20\,\%$, la demi-largeur attendue est
+d'environ $39\,\%$ de la valeur centrale, comme calcul\'e ci-dessus. Une demi-largeur
+de $1{,}8\,\%$ correspondrait \`a un coefficient de variation de
+$1{,}8/1{,}96 \approx 0{,}9\,\%$, plus de vingt fois inf\'erieur \`a celui qui est annonc\'e.
+Le tirage de $200\,000$ \'echantillons du script cit\'e retrouve la demi-largeur de
+$39\,\%$.
+\end{Preuve}
 
 \subsubsection{R\'esultats quantiques}
 \label{subsec:resultats_quantiques_bootstrap}
@@ -442,7 +456,7 @@ publications sans apporter de confirmation ind\'ependante.
 
 \begin{table}[htbp]
 \centering
-\caption{Rep\`eres pour $\Delta$~: coh\'erence avec nos travaux ant\'erieurs}
+\caption{Coh\'erence des rep\`eres pour $\Delta$ avec nos travaux ant\'erieurs}
 \label{tab:benchmarks_classiques}
 \begin{tabular}{@{}lcll@{}}
 \toprule
@@ -610,7 +624,7 @@ Le tableau~\ref{tab:synthese_validation} r\'ecapitule ce que cette section
 \textbf{Statut} \\
 \midrule
 Plausibilit\'e des $\Delta$ & Intervalle cognitif $[20,80]$ & 3/3 & 2/2 & Ordre de grandeur \\
-Hypoth\`ese~2$'$ & $H(V|C) \geq \gamma$ & 1/3 (ECDSA) & --- & Hors champ sinon \\
+Hypoth\`ese~\ref{ass:verdicts_efficace} & $H(V|C) \geq \gamma$ & 1/3 (ECDSA) & --- & Hors champ sinon \\
 Produit $\leq$ borne & --- & non applicable & d\'epass\'ee & Syst\`emes hors champ \\
 Incertitude & IC~95\,\% de $\Delta/\lambda$ & $\pm 39\,\%$ & $\pm 49\,\%$ & CV suppos\'e \\
 \bottomrule
@@ -641,12 +655,7 @@ Incertitude & IC~95\,\% de $\Delta/\lambda$ & $\pm 39\,\%$ & $\pm 49\,\%$ & CV s
 \subsubsection{D\'ep\^ot}
 \label{subsec:depot}
 
-\begin{center}
-\url{https://github.com/MINKAThierry/PhDThesis}\\
-(version 1.0.0, archiv\'ee sous le DOI \texttt{10.5281/zenodo.XXXXXXX})
-\end{center}
-
-Le d\'ep\^ot~\cite{CROTrilemmaDepot} s'organise en huit r\'epertoires, d\'ecrits au
+Le d\'ep\^ot~\cite{CROTrilemmaDepot} (\url{https://github.com/MINKAThierry/PhDThesis}) s'organise en huit r\'epertoires, d\'ecrits au
 tableau~\ref{tab:depot_structure}. Chacun contient un fichier \texttt{README} bilingue
 (fran\c{c}ais et anglais) qui indique le statut de son contenu, publi\'e, pr\'eprint ou
 proposition de th\`ese.

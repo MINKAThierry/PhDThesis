@@ -14,7 +14,7 @@ pourtant encore d'atteindre simultan\'ement $\Conf = \Rel = \Opp = 0{,}9$. Il
 reste donc \`a d\'eterminer o\`u s'arr\^ete le r\'ealisable.
 
 Nous bornons ici la r\'eponse, sous forme du \textbf{Trilemme CRO
-conditionnel classique}~\cite{MINKA2025CRO,MINKA2026CRO}. Ce r\'esultat, premi\`ere caract\'erisation quantitative
+conditionnel classique}~\cite{MINKA2025CRO,MINKA2026CRO}. Ce r\'esultat, \`a notre connaissance la premi\`ere caract\'erisation quantitative
 des limites fondamentales de la cryptographie institutionnelle dans le r\'egime
 classique, borne sup\'erieurement le produit $\Conf \cdot \Rel \cdot \Opp$ en fonction de la capacit\'e
 d'extraction institutionnelle~$\Delta$, de la granularit\'e des verdicts~$\alpha$ et
@@ -172,6 +172,39 @@ $I(V;M|C) \leq I(M;\Sigma|C)$.
 \cmt{L'institution ne peut pas apprendre sur le message plus que la preuve n'en contient~; elle peut en revanche lire dans la preuve des traits qui ne sont pas le message.}
 \end{Preuve}
 
+\begin{remark}[$\Delta$ est une capacit\'e de l'institution]
+\label{rem:delta_capacite}
+$\Delta$ est une propri\'et\'e de l'institution et non d'un protocole particulier. La
+plus petite valeur qui satisfait l'Hypoth\`ese~\ref{ass:extraction_bornee} est
+\begin{equation}
+\Delta^* = \sup_{\mathcal{P}} \Bigl(I_{\mathcal{P}}(V;\Sigma|C) - I_{\mathcal{P}}(M;\Sigma|C)\Bigr),
+\label{eq:delta_capacite}
+\end{equation}
+o\`u le supremum porte sur les protocoles CLO et les lois de message consid\'er\'es.
+La d\'efinition est analogue \`a celle de la capacit\'e d'un canal, maximum de l'information
+mutuelle sur les lois d'entr\'ee~\cite{CoverThomas06}. Si la classe contient un protocole
+de diff\'erence n\'egative, on pose $\Delta^* = \max\{0, \sup\}$, puisque $\Delta \geq 0$. La
+capacit\'e v\'erifie de plus $\Delta^* \leq \gamma + 1$. La diff\'erence calcul\'ee sur un
+protocole donn\'e ne fournit donc qu'un minorant de $\Delta^*$. L'estimateur du
+chapitre~\ref{chap:experimentation} co\"incide avec cette diff\'erence pour les preuves
+parfaitement masquantes (Remarque~\ref{rem:estimateur_masquant}).
+\end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:delta_capacite}]
+L'Hypoth\`ese~\ref{ass:extraction_bornee} est \'enonc\'ee pour tout protocole CLO. Elle
+\'equivaut donc \`a
+$\Delta \geq I_{\mathcal{P}}(V;\Sigma|C) - I_{\mathcal{P}}(M;\Sigma|C)$ pour tout $\mathcal{P}$,
+c'est-\`a-dire \`a $\Delta \geq \Delta^*$. La plus petite valeur admissible est ainsi
+$\Delta^*$, qui ne d\'epend que de l'institution et de la classe de protocoles. Pour
+un protocole $\mathcal{P}_0$ fix\'e, la diff\'erence calcul\'ee sur $\mathcal{P}_0$ est l'un
+des termes du supremum et lui est donc inf\'erieure ou \'egale. Enfin la
+Proposition~\ref{prop:fondement_extraction} majore chaque terme par
+$I_{\mathcal{P}}(V;\Sigma|M,C)$, si bien que $\Delta^*$ est au plus l'information que
+l'institution peut tirer d'une preuve au-del\`a du message. Pour la majoration, chaque
+diff\'erence est au plus $I_{\mathcal{P}}(V;\Sigma|C) \leq H(V|C) \leq \log_2|\mathcal{V}_\lambda|
+\leq \alpha H(C) = \gamma + 1$ par l'Hypoth\`ese~\ref{ass:verdicts_efficace}.
+\end{Preuve}
+
 \begin{assumption}[Verdict efficace]
 \label{ass:verdicts_efficace}
 La taille de l'espace de verdict satisfait $|\mathcal{V}_\lambda| \leq
@@ -193,8 +226,18 @@ propri\'et\'e d'\textbf{efficacit\'e} du verdict, qui doit \^etre
 postul\'ee explicitement. Elle formalise l'id\'ee qu'une institution
 exploitant effectivement le contexte disponible distingue au moins
 $\gamma$ bits de verdicts. Pour les param\`etres institutionnels typiques
-($H(C) \geq 10$ bits, $\alpha \approx 1$), on a $\gamma \geq 9$.
+($H(C) \geq 10$ bits, $\alpha = 1$), on a $\gamma \geq 9$.
 \end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:statut_verdict_efficace}]
+Un exemple suffit \`a s\'eparer les deux propri\'et\'es. Pour un verdict constant
+$V = v_0$, on a $|\mathcal{V}_\lambda| = 1 \leq 2^{\alpha H(C)}$ quel que soit
+$\alpha > 0$, alors que $H(V|C) = 0 < \alpha H(C) - 1$ d\`es que $\alpha H(C) > 1$.
+La borne sup\'erieure sur la taille est donc satisfaite sans que la borne
+inf\'erieure le soit. La valeur num\'erique vient de ce que
+$\gamma = \alpha H(C) - 1$ cro\^it avec $H(C)$ et vaut $10 - 1 = 9$ pour
+$\alpha = 1$ et $H(C) = 10$.
+\end{Preuve}
 
 \begin{assumption}[R\'egularit\'e]
 \label{ass:regularite}
@@ -286,7 +329,7 @@ $\lambda \to \infty$.
 \end{tikzpicture}
 \caption[Borne raffin\'ee du Trilemme CRO et borne de Fano]{%
   Majorants de $\Conf \cdot \Rel \cdot \Opp$ en fonction de $\lambda$
-  ($\kappa = 1$)~: borne raffin\'ee~\eqref{eq:trilemme_cro_raffine} pour
+  ($\kappa = 1$), avec la borne raffin\'ee~\eqref{eq:trilemme_cro_raffine} pour
   $\Delta = 5$, $\alpha = 1$, $H(\mathcal{C}) = 20$ bits ($\gamma = 19$, trait
   plein) et borne de Fano $(1+\kappa/\lambda)/\lambda$ (tirets). L'\'ecart entre
   les deux mesure l'effet de la capacit\'e institutionnelle lorsque
@@ -319,7 +362,7 @@ Pour tout protocole $\beta$-r\'egulier (Hypoth\`ese~\ref{ass:regularite}) :
 o\`u $c_0 = 1/(2\ln 2) \approx 0{,}721$ est la constante de Pinsker.
 \end{lemma}
 
-\begin{proof}
+\begin{Preuve}
 Par le Lemme~\ref{lem:compromis_conf_mi} (Pinsker) et
 l'Hypoth\`ese~\ref{ass:regularite}, pour tous $m_0, m_1 \in
 \mathcal{M}_\lambda$ et $c \in \mathcal{C}_\lambda$, on a
@@ -328,7 +371,7 @@ l'Hypoth\`ese~\ref{ass:regularite}, pour tous $m_0, m_1 \in
 \end{equation}
 En prenant le maximum sur $(m_0, m_1, c)$ et en appliquant la
 D\'efinition~\ref{def:confidentialite_clo}, on obtient~\eqref{eq:lemma4}.
-\end{proof}
+\end{Preuve}
 
 \begin{remark}[Interpr\'etation du Lemme~\ref{lem:confidentiality_guarantee}]
 \label{rem:interp_lemme4}
@@ -340,6 +383,17 @@ $\Conf(\mathcal{P}) \geq 1 - \sqrt{c_0 \beta \kappa/\lambda} \to 1$
 quand $\lambda \to \infty$.
 \end{remark}
 
+\begin{Preuve}[Remarque~\ref{rem:interp_lemme4}]
+La fonction $t \mapsto 1 - \sqrt{c_0 \beta t}$ d\'ecro\^it sur $\mathbb{R}_+$.
+L'in\'egalit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$ et le
+Lemme~\ref{lem:confidentiality_guarantee} donnent donc
+$\Conf(\mathcal{P}) \geq 1 - \sqrt{c_0 \beta \kappa/\lambda}$. Les constantes
+$c_0$, $\beta$ et $\kappa$ ne d\'ependent pas de $\lambda$, si bien que
+$\sqrt{c_0 \beta \kappa/\lambda}$ tend vers $0$. Comme
+$\Conf(\mathcal{P}) \leq 1$ (Th\'eor\`eme~\ref{thm:bornes_mesures}), l'encadrement
+entra\^ine $\Conf(\mathcal{P}) \to 1$.
+\end{Preuve}
+
 \begin{remark}[Constante $c_0$]
 \label{rem:constante_c0}
 Avec des divergences en bits, la constante de Pinsker serr\'ee est
@@ -349,6 +403,18 @@ grande. Toute in\'egalit\'e \'enonc\'ee avec $c_0$ reste donc valide sans \^etre
 serr\'ee. Le qualificatif \og serr\'ee\fg{} employ\'e dans l'article publi\'e
 s'entend en ce sens.
 \end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:constante_c0}]
+Mesur\'ee en nats, l'in\'egalit\'e de Pinsker s'\'ecrit
+$\TV(P,Q) \leq \sqrt{\KL_{\mathrm{nat}}(P\|Q)/2}$~\cite{CoverThomas06}. La
+conversion $\KL_{\mathrm{nat}} = (\ln 2)\,\KL_{\mathrm{bit}}$ la transforme en
+$\TV(P,Q) \leq \sqrt{\tfrac{\ln 2}{2}\,\KL_{\mathrm{bit}}(P\|Q)}$, ce qui donne
+la constante serr\'ee $(\ln 2)/2$. On a de plus
+$\frac{\ln 2}{2} < \frac{1}{2\ln 2}$, puisque cette in\'egalit\'e \'equivaut \`a
+$(\ln 2)^2 < 1$. La racine carr\'ee \'etant croissante,
+$\sqrt{\tfrac{\ln 2}{2}\KL} \leq \sqrt{c_0 \KL}$ et toute majoration \'ecrite
+avec $c_0$ reste vraie.
+\end{Preuve}
 
 \begin{theorem}[Trilemme CRO conditionnel classique]
 \label{thm:trilemme_cro_conditionnel}
@@ -552,6 +618,35 @@ $\Opp$~; (4)~la borne sur les verdicts ach\`eve cette contrainte~;
 
 \end{Preuve}
 
+\begin{remark}[La forme publi\'ee comme corollaire]
+\label{rem:corollaire_publie}
+La forme publi\'ee dans~\cite{MINKA2026CRO},
+$\Conf \cdot \Rel \cdot \Opp \leq \Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$,
+d\'ecoule de la forme explicite~\eqref{eq:trilemme_cro_explicite} sous
+l'Hypoth\`ese~\ref{ass:regime} explicit\'ee. La d\'erivation utilise l'Hypoth\`ese~\ref{ass:regime}.
+L'article la d\'eduisait d'une optimisation qui ne la fournit pas
+(Remarque~\ref{rem:statut_regime}). Pos\'ee explicitement, elle rend la d\'erivation
+valide. Sans elle, la forme publi\'ee ne tient pas uniform\'ement en $\lambda$, comme le
+montre le t\'emoin de la Remarque~\ref{rem:scope_trilemme_classique}, dont le produit
+reste voisin de $1/4$ pour tout $\lambda$ alors que $\Delta = 0$.
+\end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:corollaire_publie}]
+L'Hypoth\`ese~\ref{ass:verdicts_efficace} donne
+$\gamma \geq 1$, donc $1/\gamma \leq 1$. Le membre de droite
+de~\eqref{eq:trilemme_cro_explicite} \'etant positif, il vient
+\begin{equation}
+\Conf \cdot \Rel \cdot \Opp \leq \frac{\Delta}{\lambda}
++ \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}.
+\end{equation}
+Pour $\lambda \geq 1$, on a $\kappa^2/\lambda^3 \leq \kappa^2/\lambda^2$. La constante
+$K = \kappa(\Delta+1) + \kappa^2$, ind\'ependante de $\lambda$, majore donc la somme des
+deux derniers termes par $K/\lambda^2$, ce qui donne le terme $O(\lambda^{-2})$. Ajouter
+au majorant une fonction n\'egligeable positive, par exemple $2^{-\lambda}$, ne fait
+que l'affaiblir. On obtient ainsi exactement la forme publi\'ee, qui est l'\'enonc\'e
+certifi\'e par le Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}.
+\end{Preuve}
+
 \begin{remark}[Quand la capacit\'e institutionnelle est-elle contraignante~?]
 \label{rem:activite_delta}
 Le facteur $\min\{1,(\kappa/\lambda+\Delta)/\gamma\}$ est strictement
@@ -577,6 +672,214 @@ en Lean (\texttt{trilemma\_refined}, \texttt{refined\_bound\_is\_fano\_when\_del
 \texttt{deterministic\_forces\_capacity}, section~\ref{sec:lean4}).
 \end{remark}
 
+\begin{Preuve}[Remarque~\ref{rem:activite_delta}]
+Pour l'\'equivalence, on note que $\min\{1,x\} < 1$ si et seulement si $x < 1$.
+Comme $\gamma \geq 1 > 0$, la condition $(\kappa/\lambda+\Delta)/\gamma < 1$
+\'equivaut \`a $\Delta < \gamma - \kappa/\lambda$. En rempla\c{c}ant $\gamma$ par
+$\alpha H(\mathcal{C}) - 1$ puis en divisant par $\alpha > 0$, on obtient
+$H(\mathcal{C}) > (\Delta + 1 + \kappa/\lambda)/\alpha = H^\sharp$. Dans le r\'egime
+compl\'ementaire le minimum vaut $1$ et~\eqref{eq:trilemme_cro_raffine} se r\'eduit
+\`a $(1+\kappa/\lambda)/\lambda$, qui est la borne de Fano. Pour le verdict
+d\'eterministe $V = f(\Sigma, C)$, on a $H(V|\Sigma,C) = 0$, donc
+$I(V;\Sigma|C) = H(V|C) - H(V|\Sigma,C) = H(V|C) \geq \gamma$ par
+l'Hypoth\`ese~\ref{ass:verdicts_efficace}. L'Hypoth\`ese~\ref{ass:extraction_bornee}
+donne alors $\gamma \leq I(M;\Sigma|C) + \Delta$, soit
+$\Delta \geq \gamma - I(M;\Sigma|C)$. Sous l'Hypoth\`ese~\ref{ass:regime}, il en
+r\'esulte $\Delta \geq \gamma - \kappa/\lambda$, ce qui exclut la
+condition~\eqref{eq:seuil_activite}.
+\end{Preuve}
+
+\begin{proposition}[Borne aigu\"e sur la fiabilit\'e de reconstruction]
+\label{prop:borne_aigue}
+Sous l'Hypoth\`ese~\ref{ass:regime}, pour tout protocole CLO o\`u $M$ est uniforme sur
+$\{0,1\}^\lambda$ et ind\'ependant de $C$, avec $\lambda \geq 4$, on a
+\begin{equation}
+\Relrec \leq \frac{2\kappa}{\lambda(\lambda-3)} + 2^{-\lambda/2}.
+\label{eq:fano_aigu}
+\end{equation}
+Sous les Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace}
+et~\ref{ass:regime}, il en d\'ecoule
+\begin{equation}
+\Conf \cdot \Relrec \cdot \Opp \leq \left(\frac{2\kappa}{\lambda(\lambda-3)} + 2^{-\lambda/2}\right)
+\min\left\{1,\; \frac{\kappa/\lambda + \Delta}{\gamma}\right\}.
+\label{eq:trilemme_aigu}
+\end{equation}
+\end{proposition}
+
+\begin{Preuve}[Proposition~\ref{prop:borne_aigue}]
+Soit $\hat M = \mathsf{Dec}(\Sigma,C)$ un d\'ecodeur et $p = \Pr[\hat M = M]$. Les
+logarithmes sont en base $2$.
+
+\emph{\'Etape 1, r\'eduction \`a deux issues.} L'information mutuelle est une
+divergence, $I(M;\hat M) = \KL(P_{M\hat M}\,\|\,P_M \otimes P_{\hat M})$. Sous la loi
+produit, $M$ est uniforme et ind\'ependant de $\hat M$, donc l'\'ev\'enement
+$\{\hat M = M\}$ a probabilit\'e $q = 2^{-\lambda}$. L'application
+$(m,\hat m) \mapsto \mathbf{1}[\hat m = m]$ ne peut que diminuer la divergence, d'o\`u
+$I(M;\hat M) \geq d(p\,\|\,q)$, o\`u $d$ est la divergence entre lois de Bernoulli.
+
+\emph{\'Etape 2, minoration de $d$.} On a
+$d(p\|q) = p\log\frac{p}{q} + (1-p)\log\frac{1-p}{1-q} \geq p\log\frac{p}{q} + (1-p)\log(1-p)$,
+car $1 - q \leq 1$. Le membre de droite vaut $p\lambda - h(p)$.
+
+\emph{\'Etape 3, majoration de $h$.} De $\ln\frac{1}{1-p} \leq \frac{p}{1-p}$ on tire
+$(1-p)\log\frac{1}{1-p} \leq p\log e$, donc $h(p) \leq p\log\frac{e}{p}$.
+
+\emph{\'Etape 4, utilisation du r\'egime.} La cha\^ine $M \to (\Sigma,C) \to \hat M$ et
+le Lemme~\ref{lem:dpi} donnent $I(M;\hat M) \leq I(M;\Sigma,C)$. Comme $M \perp C$,
+$I(M;\Sigma,C) = I(M;\Sigma|C) \leq \kappa/\lambda$. En r\'eunissant les \'etapes,
+$p\bigl(\lambda - \log\frac{e}{p}\bigr) \leq \kappa/\lambda$.
+
+\emph{\'Etape 5, deux cas.} Si $p < 2^{-\lambda/2}$, la borne~\eqref{eq:fano_aigu}
+est v\'erifi\'ee. Sinon $\log\frac1p \leq \lambda/2$ et, comme $\log e < 1{,}5$, la
+parenth\`ese vaut au moins $\lambda/2 - 1{,}5 = (\lambda-3)/2 > 0$. Il vient
+$p \leq 2\kappa/(\lambda(\lambda-3))$. Le d\'ecodeur \'etant quelconque, la borne vaut
+pour $\Relrec$.
+
+\emph{\'Etape 6, produit.} On a $\Conf \leq 1$. Comme $I(V;\Sigma|C) \leq H(V|C)$, on a
+$\Opp \leq 1$. Les Hypoth\`eses~\ref{ass:extraction_bornee} et~\ref{ass:verdicts_efficace}
+donnent $\Opp \leq (I(M;\Sigma|C) + \Delta)/\gamma \leq (\kappa/\lambda + \Delta)/\gamma$.
+Le produit est donc major\'e par $\Relrec \cdot \min\{1, (\kappa/\lambda+\Delta)/\gamma\}$,
+puis par~\eqref{eq:trilemme_aigu}.
+\end{Preuve}
+
+\begin{remark}[Port\'ee de la borne aigu\"e]
+\label{rem:borne_aigue_portee}
+La borne~\eqref{eq:trilemme_aigu} compl\`ete le Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}
+sans le remplacer. Son terme dominant est d'ordre $\kappa/\lambda^2$ au lieu de
+$\Delta/(\gamma\lambda)$. Le facteur institutionnel
+$\min\{1,(\kappa/\lambda+\Delta)/\gamma\}$ y reste entier, de sorte que $\Delta$, $\alpha$
+et $\gamma$ y jouent le m\^eme r\^ole. La forme~\eqref{eq:trilemme_cro_explicite} et la
+forme publi\'ee restent vraies et deviennent plus l\^aches d'un facteur de l'ordre de
+$\lambda$. L'ordre $\lambda^{-2}$ de~\eqref{eq:fano_aigu} ne peut pas \^etre am\'elior\'e.
+Pour tout $\kappa$ tel que $\lambda^2 2^{-\lambda} \leq \kappa \leq \lambda^2$, il existe en effet un protocole qui
+satisfait l'Hypoth\`ese~\ref{ass:regime} et dont la fiabilit\'e de reconstruction vaut
+$\kappa/\lambda^2$. Pour $\kappa \in \{1,4\}$ et $\lambda \in \{64,128,256\}$, ce protocole
+satisfait aussi les Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regularite}
+avec $\Delta = 1$, $\gamma = 1$ et $\beta \leq 1{,}03$, et son produit vaut
+$\kappa/\lambda^2$ \`a un facteur $1 - \kappa/\lambda^2$ pr\`es. La
+borne~\eqref{eq:trilemme_aigu} y est atteinte \`a un facteur compris entre $2{,}02$ et
+$2{,}11$. L'ordre $\lambda^{-2}$ est donc exact. La constante $2$ ne l'est pas, car elle vient
+de la coupure \`a $2^{-\lambda/2}$ dans la preuve, alors que la relation
+$p(\lambda - \log_2(e/p)) \leq \kappa/\lambda$ donne asymptotiquement
+$\Relrec \leq (\kappa/\lambda^2)(1 + o(1))$. Dans ce protocole le facteur institutionnel vaut
+$1$, car $\Delta = \gamma = 1$. La Remarque~\ref{rem:temoin_combine} montre que la borne
+reste atteinte \`a un facteur voisin de $2$ lorsque ce facteur est actif. Ce compl\'ement est
+d\'emontr\'e ici sur papier. Il n'est pas encore certifi\'e en Lean.
+\end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:borne_aigue_portee}]
+On reprend le protocole de la Remarque~\ref{rem:scope_trilemme_classique} en
+rempla\c{c}ant la probabilit\'e $1/2$ par $\rho$. Avec probabilit\'e $\rho$ il publie
+$\Sigma = M$, sinon une cha\^ine uniforme ind\'ependante. On pose
+$b = (1-\rho)2^{-\lambda}$ et $a = \rho + b$. La loi de $\Sigma$ sachant $M = m$ charge
+$m$ avec la masse $a$ et chacune des autres cha\^ines avec la masse $b$. On choisit
+$\rho$ tel que $a = \kappa/\lambda^2$, ce qui est possible d\`es que
+$\kappa/\lambda^2 \geq 2^{-\lambda}$.
+
+La loi marginale de $\Sigma$ est uniforme, donc $H(\Sigma) = \lambda$. Comme
+$(2^\lambda-1)b = 1-a$ et $-\log b = \lambda - \log(1-\rho)$, on a
+$H(\Sigma|M) = -a\log a + (1-a)\bigl(\lambda - \log(1-\rho)\bigr)$, d'o\`u
+$I(M;\Sigma) = a\lambda + a\log a + (1-a)\log(1-\rho) \leq a\lambda = \kappa/\lambda$, car
+les deux derniers termes sont n\'egatifs. Le contexte \'etant ind\'ependant,
+l'Hypoth\`ese~\ref{ass:regime} est satisfaite. Le d\'ecodeur $\hat M = \Sigma$ est celui
+du maximum a posteriori, d'o\`u $\Relrec = a = \kappa/\lambda^2$. Deux lois
+conditionnelles distinctes ne diff\`erent qu'en deux points, d'o\`u
+$\TV = a - b = \rho$ et $\Conf = 1 - \rho \geq 1 - \kappa/\lambda^2$. Avec $C$ form\'e
+de deux bits uniformes, $\alpha = 1$ et $V$ \'egal au premier bit de $\Sigma$, on a
+$\gamma = 1 = H(V|C)$, $|\mathcal{V}_\lambda| = 2$ et $I(V;\Sigma|C) = 1$, donc $\Opp = 1$.
+L'extraction born\'ee $1 \leq I(M;\Sigma|C) + \Delta$ tient avec $\Delta = 1$. Enfin
+$\KL(P_{\Sigma|m_0}\|P_{\Sigma|m_1}) = (a-b)\log(a/b)$. Le quotient par
+$I(M;\Sigma|C)$, calcul\'e num\'eriquement pour $\kappa \in \{1,4\}$ et
+$\lambda \in \{64,128,256\}$, vaut au plus $1{,}03$ et d\'ecro\^it avec $\lambda$. Le produit
+vaut $(1-\rho)\,\kappa/\lambda^2$. Le majorant~\eqref{eq:trilemme_aigu} vaut ici
+$2\kappa/(\lambda(\lambda-3)) + 2^{-\lambda/2}$, soit entre $2{,}02$ et $2{,}11$ fois le
+produit sur les m\^emes valeurs.
+\end{Preuve}
+
+\begin{remark}[Un t\'emoin r\'ealisable du facteur institutionnel]
+\label{rem:temoin_realisable}
+Pour tous entiers $\Delta$ et $\gamma$ avec $0 \leq \Delta \leq \gamma$ et $\gamma \geq 1$, il
+existe une loi explicite qui satisfait les Hypoth\`eses~\ref{ass:extraction_bornee}
+\`a~\ref{ass:regime} avec $\kappa = 0$ et pour laquelle $\Conf = 1$ et
+$\Opp = \Delta/\gamma$. La majoration $\Opp \leq (\kappa/\lambda + \Delta)/\gamma$ de la
+preuve de la Proposition~\ref{prop:borne_aigue} y est une \'egalit\'e. Ce t\'emoin
+\'etablit l'existence et ne d\'ecrit pas un protocole d\'eploy\'e. Les $\Delta$ bits qu'il
+transmet figurent des attributs d'esp\`ece de la preuve, comme l'horodatage ou la
+qualit\'e du signataire, que l'institution lit sans qu'ils r\'ev\`elent le message.
+\end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:temoin_realisable}]
+On prend $\alpha = 1$ et $C$ uniforme sur $\gamma + 1$ bits, de sorte que
+$\alpha H(C) - 1 = \gamma$, et $M$ uniforme sur $\{0,1\}^\lambda$. Soit $\mathbb{G}$ un
+groupe d'ordre premier $q > 2^\lambda$, de g\'en\'erateurs $g$ et $h \neq 1$. On tire $R$
+uniforme dans $\mathbb{Z}_q$, $B$ uniforme sur $\{0,1\}^\Delta$ et $K$ uniforme sur
+$\{0,1\}^{\gamma-\Delta}$, ind\'ependants entre eux et de $(M,C)$. On pose
+$\Sigma = (g^M h^R, B)$ et $V = (B, K)$.
+
+\emph{Confidentialit\'e et r\'egime.} Pour tout $m$, $g^m h^R$ est uniforme sur
+$\mathbb{G}$, car $h$ engendre $\mathbb{G}$. La loi de $\Sigma$ ne d\'epend donc pas de $M$,
+d'o\`u $\TV = 0$, $\Conf = 1$, $I(M;\Sigma|C) = 0$ et $\KL = 0$. Le r\'egime tient avec
+$\kappa = 0$ et la r\'egularit\'e avec tout $\beta$.
+
+\emph{Interpr\'etation admissible.} $V$ est une fonction de $(\Sigma, K)$ et $K$ est
+ind\'ependant de $(M, C, \Sigma)$, donc $K \perp M \mid (\Sigma, C)$.
+
+\emph{Verdict efficace.} $B$ et $K$ \'etant ind\'ependants et ind\'ependants de $C$,
+$H(V|C) = \Delta + (\gamma - \Delta) = \gamma$. L'espace des verdicts compte $2^\gamma$
+\'el\'ements, au plus $2^{\alpha H(C)} = 2^{\gamma+1}$.
+
+\emph{Opposabilit\'e.} Sachant $(\Sigma, C)$, $B$ est connu et $K$ reste uniforme, d'o\`u
+$H(V|\Sigma,C) = \gamma - \Delta$ et $I(V;\Sigma|C) = \Delta$. Il vient
+$\Opp = \Delta/\gamma$. L'extraction born\'ee s'\'ecrit $\Delta \leq 0 + \Delta$ et tient
+avec \'egalit\'e, de m\^eme que $\Opp \leq (\kappa/\lambda + \Delta)/\gamma$ avec $\kappa = 0$.
+\end{Preuve}
+
+\begin{remark}[T\'emoin combin\'e o\`u le facteur institutionnel est actif]
+\label{rem:temoin_combine}
+Pour tous entiers $1 \leq \Delta < \gamma$, tout $\kappa$ tel que
+$\lambda^2 2^{-\lambda} \leq \kappa \leq \lambda^2$ et tout $\lambda \geq 64$, il existe une loi
+qui satisfait les Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regime} et dont le
+produit vaut $(1-\rho)\,\frac{\kappa}{\lambda^2}\,\frac{\Delta}{\gamma}$ avec
+$\rho \leq \kappa/\lambda^2$. Elle combine le protocole de la
+Remarque~\ref{rem:borne_aigue_portee} et le t\'emoin de la
+Remarque~\ref{rem:temoin_realisable}. Pour $\kappa \in \{1,4\}$,
+$\lambda \in \{64,128,256\}$ et $(\Delta,\gamma) \in \{(5,19),(10,40)\}$, la
+borne~\eqref{eq:trilemme_aigu} y est atteinte \`a un facteur compris entre $2{,}02$ et
+$2{,}13$. L'ordre $\lambda^{-2}$ et le facteur institutionnel $\Delta/\gamma$ y sont donc
+atteints ensemble.
+\end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:temoin_combine}]
+On prend $\alpha = 1$, $C$ uniforme sur $\gamma + 1$ bits, $M$ uniforme sur
+$\{0,1\}^\lambda$, et $\Sigma_\rho$ le protocole de la Remarque~\ref{rem:borne_aigue_portee},
+qui r\'ev\`ele $M$ avec probabilit\'e $\rho$. On tire $B$ uniforme sur $\{0,1\}^\Delta$ et $K$
+uniforme sur $\{0,1\}^{\gamma-\Delta}$, ind\'ependants entre eux et de $(M, C, \Sigma_\rho)$, et
+l'on pose $\Sigma = (\Sigma_\rho, B)$ et $V = (B, K)$.
+
+\emph{Confidentialit\'e, fiabilit\'e et r\'egime.} $B$ est ind\'ependant de $(M, \Sigma_\rho)$ et
+sa loi ne d\'epend pas du message. La variation totale et la divergence entre les lois de
+$\Sigma$ pour deux messages sont donc celles de $\Sigma_\rho$, d'o\`u $\Conf = 1 - \rho$ et la
+m\^eme constante $\beta \leq 1{,}03$. Pour la m\^eme raison $I(M;\Sigma|C) = I(M;\Sigma_\rho)
+\leq \kappa/\lambda$, et le meilleur d\'ecodeur n'utilise que $\Sigma_\rho$, d'o\`u
+$\Relrec = \kappa/\lambda^2$.
+
+\emph{Verdict.} Comme dans la Remarque~\ref{rem:temoin_realisable}, $V$ est une fonction de
+$(\Sigma, K)$ avec $K \perp (M, C, \Sigma)$, donc l'interpr\'etation est admissible. On a
+$H(V|C) = \Delta + (\gamma - \Delta) = \gamma$, l'espace des verdicts compte
+$2^\gamma \leq 2^{\alpha H(C)} = 2^{\gamma+1}$ \'el\'ements, et $H(V|\Sigma, C) = \gamma - \Delta$
+puisque $B$ est lu dans $\Sigma$ et $K$ reste uniforme. D'o\`u $I(V;\Sigma|C) = \Delta$ et
+$\Opp = \Delta/\gamma$. L'extraction born\'ee $\Delta \leq I(M;\Sigma|C) + \Delta$ est
+imm\'ediate.
+
+\emph{Produit et rapport.} Le produit vaut $(1-\rho)(\kappa/\lambda^2)(\Delta/\gamma)$. Comme
+$\Delta < \gamma$ et $\kappa/\lambda$ est petit, le facteur
+$\min\{1, (\kappa/\lambda + \Delta)/\gamma\}$ de~\eqref{eq:trilemme_aigu} vaut
+$(\kappa/\lambda + \Delta)/\gamma$. Le rapport de la borne au produit vaut donc
+$\frac{2\kappa/(\lambda(\lambda-3)) + 2^{-\lambda/2}}{(1-\rho)\kappa/\lambda^2}
+\cdot \frac{\kappa/\lambda + \Delta}{\Delta}$. Le calcul num\'erique sur les valeurs annonc\'ees
+donne un rapport compris entre $2{,}02$ et $2{,}13$.
+\end{Preuve}
+
 \begin{remark}[Port\'ee du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}]
 \label{rem:scope_trilemme_classique}
 L'Hypoth\`ese~\ref{ass:regime} est n\'ecessaire. Sans borne sur
@@ -596,12 +899,56 @@ $I(M;\Sigma|C) = \lambda/2 - 1 + O(\lambda 2^{-\lambda})$ se situe hors
 du r\'egime~\eqref{eq:regime}.
 \end{remark}
 
+\begin{Preuve}[Remarque~\ref{rem:scope_trilemme_classique}]
+Soit $M$ uniforme sur $\{0,1\}^\lambda$. Avec probabilit\'e $1/2$ le protocole
+publie $\Sigma = M$, sinon il publie $\Sigma$ uniforme et ind\'ependant de $M$. On
+pose $q = 2^{-\lambda-1}$ et $p = 1/2 + q$. Alors $P(\Sigma = s \mid M = m)$ vaut
+$p$ si $s = m$ et $q$ sinon, avec $p - q = 1/2$.
+
+\emph{Confidentialit\'e.} Pour $m_0 \neq m_1$, les deux lois ne diff\`erent qu'en
+$m_0$ et $m_1$, d'o\`u $\TV = \tfrac12(|p-q|+|q-p|) = 1/2$ et $\Conf = 1/2$.
+
+\emph{Fiabilit\'e.} La loi a priori \'etant uniforme, le d\'ecodeur du maximum a
+posteriori r\'epond $\hat m = \Sigma$ et r\'eussit avec probabilit\'e
+$p = 1/2 + 2^{-\lambda-1}$.
+
+\emph{Information mutuelle.} La loi marginale de $\Sigma$ est uniforme, car
+$P(\Sigma=s) = 2^{-\lambda}\bigl(p + (2^\lambda-1)q\bigr) = 2^{-\lambda}$, donc
+$H(\Sigma) = \lambda$. Comme $(2^\lambda-1)q = 1-p$, on a
+$H(\Sigma|M) = -p\log_2 p + (1-p)(\lambda+1)$, puis
+$I(M;\Sigma) = \lambda - (1-p)(\lambda+1) + p\log_2 p = \lambda/2 - 1 + O(\lambda 2^{-\lambda})$.
+Le contexte \'etant ind\'ependant, $I(M;\Sigma|C) = I(M;\Sigma)$.
+
+\emph{R\'egularit\'e.} Pour $m_0 \neq m_1$,
+$\KL(P_{\Sigma|m_0}\|P_{\Sigma|m_1}) = (p-q)\log_2(p/q) = \tfrac12\log_2(1+2^\lambda)$.
+Le quotient par $I(M;\Sigma|C)$ vaut $\lambda/(\lambda-2)$ aux termes en
+$2^{-\lambda}$ pr\`es, valeur d\'ecroissante en $\lambda$ et \'egale \`a
+$64/62 \approx 1{,}032$ pour $\lambda = 64$. L'Hypoth\`ese~\ref{ass:regularite}
+tient donc avec $\beta \leq 1{,}04$.
+
+\emph{Opposabilit\'e.} $\Sigma$ \'etant uniforme, son premier bit $V$ l'est aussi
+et reste ind\'ependant de $C$, d'o\`u $H(V|C) = 1$. Comme $V$ est une fonction de
+$\Sigma$, $I(V;\Sigma|C) = H(V|C) = 1$ et $\Opp = 1$. Les conditions
+$\gamma = 2 - 1 = 1$, $H(V|C) = 1 \geq \gamma$ et $|\mathcal{V}_\lambda| = 2 \leq 2^{2}$
+v\'erifient l'Hypoth\`ese~\ref{ass:verdicts_efficace}, et
+$1 \leq \lambda/2 - 1$ pour $\lambda \geq 64$ v\'erifie
+l'Hypoth\`ese~\ref{ass:extraction_bornee} avec $\Delta = 0$.
+
+Le produit vaut $\tfrac12\bigl(\tfrac12 + 2^{-\lambda-1}\bigr) = 1/4 + 2^{-\lambda-2}$,
+qui ne tend pas vers $0$. La borne~\eqref{eq:trilemme_cro_conditionnel}, qui
+vaudrait ici $O(\lambda^{-2}) + \negl(\lambda)$, est donc fausse pour ce
+protocole, dont l'information $\lambda/2 - 1$ d\'epasse $\kappa/\lambda$ pour tout
+$\kappa$ fix\'e d\`es que $\lambda$ est assez grand.
+\end{Preuve}
+
 \begin{remark}[Statut de v\'erification]
 \label{rem:statut_verification_classique}
 Le noyau alg\'ebrique de cette preuve est certifi\'e m\'ecaniquement en
 Lean4 \`a la section~\ref{sec:lean4}. Les in\'egalit\'es de Fano et de
 Pinsker, ainsi que les hypoth\`eses institutionnelles, y sont
-formalis\'ees comme propri\'et\'es des instances de protocole. Le
+formalis\'ees comme propri\'et\'es des instances de protocole. Fano et Pinsker
+y sont en outre d\'emontr\'es pour des lois de probabilit\'e finies
+(sous-section~\ref{subsec:lean4_concret}). Le
 d\'etail des formulations alternatives issues de la certification est pr\'esent\'e \`a la
 section~\ref{subsec:lean4_erreurs}.
 \end{remark}
@@ -615,6 +962,16 @@ Pour $\lambda \geq 128$, $\beta = O(1)$, $\gamma = O(1)$~\cite{Goldreich01,KatzL
 \end{equation}
 
 \end{corollary}
+
+\begin{Preuve}[Corollaire~\ref{cor:forme_simplifiee}]
+Par la Remarque~\ref{rem:corollaire_publie},
+$\Conf \cdot \Rel \cdot \Opp \leq \Delta/\lambda + K/\lambda^2$ avec
+$K = \kappa(\Delta+1) + \kappa^2$, constante ind\'ependante de $\lambda$. Pour
+$\Delta > 0$ ce majorant s'\'ecrit $\frac{\Delta}{\lambda}\bigl(1 + \frac{K}{\Delta\lambda}\bigr)$
+et le facteur entre parenth\`eses tend vers $1$, ce qui est le sens de $\lesssim$.
+Pour $\kappa = 1$, $\Delta = 5$ et $\lambda = 128$, il vaut
+$1 + 7/640 \approx 1{,}011$.
+\end{Preuve}
 
 Pour $\Delta = 5$ bits, $\alpha = 1$, $H(\mathcal{C}) = 20$ bits
 ($\gamma = 19$), $\kappa = 1$ et $\lambda = 128$, la
@@ -685,7 +1042,7 @@ sont plus fins que ce qu'il sait extraire.
 
 \end{tikzpicture}
 \caption[Triangle du Trilemme CRO]{%
-  Triangle du Trilemme CRO : trois propri\'et\'es de s\'ecurit\'e concurrentes.%
+  Le triangle du Trilemme CRO et ses trois propri\'et\'es de s\'ecurit\'e concurrentes.%
 }\label{fig:trilemma_triangle}
 
 \smallskip
@@ -720,6 +1077,19 @@ parfaitement masquants et les preuves \`a divulgation nulle de connaissance
 sont les exemples canoniques.
 \end{remark}
 
+\begin{Preuve}[Remarque~\ref{rem:portee_cas_etude}]
+Pour $\kappa = 1$ et $\lambda = 128$, $(1+\kappa/\lambda)/\lambda = 129/128^2
+\approx 7{,}9\cdot10^{-3}$. Un exemple montre qu'un syst\`eme d\'eploy\'e peut sortir
+du domaine du th\'eor\`eme. La v\'erification d'une signature ECDSA prend le
+message en entr\'ee, si bien que la preuve transmise contient $M$ et que
+$I(M;\Sigma|C) = H(M|C) = \lambda$ lorsque $M \perp C$. Cette valeur d\'epasse
+$\kappa/\lambda$ d\`es que $\lambda^2 > \kappa$, de sorte que
+l'Hypoth\`ese~\ref{ass:regime} \'echoue. \`A l'inverse, un engagement parfaitement
+masquant produit une loi de $\Sigma$ ind\'ependante de $M$, et une preuve \`a
+divulgation nulle parfaite admet un simulateur qui produit la m\^eme loi sans
+conna\^itre $M$. Dans les deux cas $I(M;\Sigma|C) = 0 \leq \kappa/\lambda$.
+\end{Preuve}
+
 % -----------------------------------------------------------------------
 \subsection{R\'egimes op\'erationnels}
 \label{subsec:regimes_operationnels}
@@ -731,7 +1101,7 @@ Remarque~\ref{rem:activite_delta}. Ce seuil, d\'eriv\'e du th\'eor\`eme,
 compare la richesse du contexte, pond\'er\'ee par la granularit\'e des
 verdicts, \`a la capacit\'e d'extraction de l'institution.
 
-\subsubsection{R\'egime \`a contexte rare~: $H(\mathcal{C}) \leq H^\sharp$}
+\subsubsection{R\'egime \`a contexte rare o\`u $H(\mathcal{C}) \leq H^\sharp$}
 \label{subsubsec:regime_faible_contexte}
 
 La capacit\'e institutionnelle couvre la richesse du contexte~; le produit est
@@ -744,7 +1114,7 @@ bits, $\alpha = 1{,}2$, $\Delta \approx 56$ bits pour un comit\'e de garants
 sp\'ecialis\'es~\cite{Goodman15}, soit $H^\sharp \approx 48$) rel\`event de ce
 r\'egime. La capacit\'e d'extraction n'y est pas la contrainte liante.
 
-\subsubsection{R\'egime \`a contexte riche~: $H(\mathcal{C}) > H^\sharp$}
+\subsubsection{R\'egime \`a contexte riche o\`u $H(\mathcal{C}) > H^\sharp$}
 \label{subsubsec:regime_haute_contexte}
 \label{subsubsec:regime_transition}
 
@@ -799,7 +1169,7 @@ capacit\'e $\Delta$~\cite{Adida08,Groth16,Johnson01}.
 % -----------------------------------------------------------------------
 \begin{table}[htbp]
 \centering
-\caption{Calibration illustrative~: capacit\'es implicites sur l'\'echelle CLO}
+\caption{Calibration illustrative des capacit\'es implicites sur l'\'echelle CLO}
 \label{tab:validation_cro_classique}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -898,8 +1268,9 @@ seulement les ordres de grandeur~; les capacit\'es $\Delta$ qui en
 d\'ecoulent ($35$ \`a $73$ bits) restent plausibles au regard de la
 litt\'erature cognitive.
 
-La borne est n\'ecessaire sans \^etre encore prouv\'ee serr\'ee de mani\`ere
-g\'en\'erale. La section suivante l'\'etendra au r\'egime quantique.
+L'ordre $\lambda^{-2}$ de la borne aigu\"e est atteint \`a un facteur deux pr\`es et le
+facteur $\Delta/\gamma$ est r\'ealis\'e par une loi explicite~; la constante exacte reste
+ouverte. La section suivante l'\'etendra au r\'egime quantique.
 
 Il veut voir si les constructions tiennent ce que le th\'eor\`eme promet.
 \end{boiteArbitre}

@@ -1,5 +1,5 @@
 % ============================================================================
-% CODE LEAN4 COMPLET ET ANNOTÉ — Version 2.2
+% CODE LEAN4 COMPLET ET ANNOTÉ — Version 3.3
 % Annexe de thèse — Formalisation du Trilemme CRO conditionnel
 % ============================================================================
 
@@ -8,20 +8,23 @@
 
 \begin{sloppypar}
 Cette annexe pr\'esente le code Lean4 complet de la formalisation du
-Trilemme CRO conditionnel, dans sa version 2.2 (octobre 2026), qui reprend
-\`a l'identique les \'enonc\'es de la version~2.1 et ajoute les extensions de la
-sous-section~\ref{subsec:lean4_extensions}.
+Trilemme CRO conditionnel, dans sa version 3.3 (22 novembre 2026). Elle prend en compte les extensions de la
+sous-section~\ref{subsec:lean4_extensions} et ajoute une couche concr\`ete o\`u les in\'egalit\'es de Pinsker et de Fano sont d\'emontr\'ees pour de vraies lois finies (sous-section~\ref{subsec:lean4_concret}).
 
 \medskip
 \noindent\textbf{Caract\'eristiques du code.} Le fichier compile sans erreur
-ni \texttt{sorry} sur \url{https://live.lean-lang.org} (projet Mathlib, version
-courante, v\'erification d'octobre 2026). Le d\'ep\^ot
-compagnon~\cite{CROTrilemmaDepot} le fournit aussi dans un projet Lake, avec des
+ni \texttt{sorry} et sans avertissement. La version 3.3 a \'et\'e v\'erifi\'ee le 22 novembre 2026 avec Lean~v4.35.0 et
+Mathlib~v4.35.0, compil\'es depuis les sources, en rempla\c{c}ant \texttt{import Mathlib} par les
+modules effectivement utilis\'es (journal \texttt{results/lean\_build\_v3.3.log} du d\'ep\^ot).
+La version 2.2 avait \'et\'e v\'erifi\'ee sur \url{https://live.lean-lang.org} en octobre 2026.
+La version 3.2, avec \texttt{import Mathlib} complet, y a \'et\'e v\'erifi\'ee le 22 novembre 2026, les dix-huit \texttt{\#print axioms} n'affichant que les trois axiomes standards. La version 3.3 n'en diff\`ere que par des pr\'ecisions de documentation, l'affaiblissement de deux hypoth\`eses asymptotiques et le retrait d'un param\`etre libre du Lemme~4 concret. Le d\'ep\^ot
+de la th\`ese~\cite{CROTrilemmaDepot} le fournit aussi dans un projet Lake, avec des
 versions de Lean et de Mathlib fig\'ees (r\'epertoire
 \texttt{05\_formalisation\_lean/}). Il ne contient aucun axiome ad
-hoc, car les bornes informationnelles (Pinsker, Fano) sont des propri\'et\'es des
-instances de protocole tandis que les hypoth\`eses institutionnelles
-(Hypoth\`eses~1, 2$'$, 3, 4) sont des hypoth\`eses explicites des
+hoc. Dans le noyau alg\'ebrique, les bornes informationnelles (Pinsker, Fano) sont des propri\'et\'es des
+instances de protocole. Dans la couche concr\`ete, ce sont des th\'eor\`emes d\'emontr\'es pour des lois
+finies. Les hypoth\`eses institutionnelles
+(Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace}, \ref{ass:regularite} et~\ref{ass:regime}) sont des hypoth\`eses explicites des
 th\'eor\`emes. Toutes les preuves ne d\'ependent que des trois axiomes
 standards de Lean/Mathlib, \`a savoir \texttt{propext}, \texttt{Classical.choice}
 et \texttt{Quot.sound}.
@@ -35,7 +38,7 @@ section~\ref{sec:lean4_reproduction}), on proc\`ede comme suit.
       courante de Mathlib.
 \item Localement, ex\'ecuter \texttt{lake exe cache get \&\& lake build} dans le
       r\'epertoire \texttt{05\_formalisation\_lean/} du d\'ep\^ot.
-\item Dans les deux cas, le r\'esultat attendu ne comporte ni erreur ni \texttt{sorry}. Chacun des dix
+\item Dans les deux cas, le r\'esultat attendu ne comporte ni erreur ni \texttt{sorry}. Chacun des dix-huit
       \texttt{\#print axioms} du bloc final affiche uniquement
       \texttt{[propext, Classical.choice, Quot.sound]}.
 \end{enumerate}
@@ -47,7 +50,7 @@ section~\ref{sec:lean4_reproduction}), on proc\`ede comme suit.
 % ----------------------------------------------------------------------------
 
 \begin{sloppypar}
-Le code est organis\'e en dix sections qui suivent la structure
+Le code est organis\'e en onze sections qui suivent la structure
 math\'ematique du Trilemme CRO.
 \begin{enumerate}
 \item \textbf{Constante de Pinsker} $c_0 = 1/(2\ln 2)$ et ses propri\'et\'es.
@@ -64,6 +67,11 @@ math\'ematique du Trilemme CRO.
       de coh\'erence et de port\'ee.
 \item \textbf{R\'egimes de capacit\'e institutionnelle} (classification indicative).
 \item \textbf{Extensions v2.2}, soit le verdict d\'eterministe et la forme raffin\'ee.
+\item \textbf{Couche concr\`ete} (version~3.3) avec l'in\'egalit\'e log-somme, l'entropie binaire,
+      Pinsker binaire et fini, l'information mutuelle, Fano fini, la structure
+      \texttt{CLOModel}, les trilemmes \'enonc\'es sur de vraies lois avec $\gamma = \alpha H(C) - 1$
+      calcul\'e \`a partir de la loi de $C$, et une famille de lois t\'emoins \texttt{famModel}
+      qui satisfait toutes les hypoth\`eses pour tout $\lambda$.
 \item \textbf{Bloc de v\'erification} (\texttt{\#check}, \texttt{\#print axioms}).
 \end{enumerate}
 
@@ -117,31 +125,41 @@ utilis\'es.
 \begin{sloppypar}
 Le code ci-dessous est la version compl\`ete et autonome de la
 formalisation, identique au fichier \texttt{05\_formalisation\_lean/ConditionalCRO.lean} du
-d\'ep\^ot~\cite{CROTrilemmaDepot}. Il peut \^etre copi\'e int\'egralement dans
+d\'ep\^ot~\cite{CROTrilemmaDepot}, dont l'en-t\^ete porte en outre les noms des auteurs. Il peut \^etre copi\'e int\'egralement dans
 \url{https://live.lean-lang.org} pour v\'erification.
 \end{sloppypar}
 
-\begin{lstlisting}[caption={Formalisation Lean4 du Trilemme CRO conditionnel (version 2.2)}, label={lst:lean4_complet}, language=Lean4]
+\begin{lstlisting}[caption={Formalisation Lean4 du Trilemme CRO conditionnel (version 3.3)}, label={lst:lean4_complet}, language=Lean4]
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 2.2 (octobre 2026) — fichier unique, autonome.
-
-  Auteurs : Thierry Emmanuel MINKA Mi Nguidjoï,
-            Flavien Serge Mani Onana,
-            Thomas Djotio Ndié
-  LIMSI — École Nationale Supérieure Polytechnique, Université de Yaoundé I
+  Version 3.3 (22 novembre 2026).
 
   MODE D'EMPLOI POUR L'ÉVALUATEUR
   1. Ouvrir https://live.lean-lang.org (projet Mathlib, choix par défaut).
   2. Coller l'intégralité de ce fichier et attendre la fin de la vérification.
   3. Résultat attendu : aucune erreur, aucun `sorry`. Le bloc final
      (`#print axioms`) n'affiche que propext, Classical.choice, Quot.sound.
+  La version 3.2 a été vérifiée le 22 novembre 2026 sur live.lean-lang.org avec
+  `import Mathlib` complet (dix-huit `#print axioms` standards). La version 3.3
+  (précisions sur c₀, hypothèses du noyau abstrait, minoration de H(C)) a été
+  vérifiée localement avec Lean 4.35.0 et Mathlib v4.35.0, sans erreur ni
+  avertissement.
 
   ARCHITECTURE
-  • Couche « théorie de l'information » : Pinsker (Lemme 1) et Fano
-    (Lemme 2, étape 1) sont des résultats classiques [Cover & Thomas] ; ils
-    sont intégrés comme propriétés de toute instance de protocole.
+  • Noyau algébrique (sections 1 à 9) : les grandeurs d'un protocole sont des
+    réels liés par Pinsker (Lemme 1) et Fano (Lemme 2, étape 1), posés comme
+    propriétés d'une instance abstraite (`ProtocolInstance`).
+  • Couche concrète (section 10) : Pinsker et Fano y sont DÉMONTRÉS pour de
+    vraies lois de probabilité finies sur (C, M, Σ, V), avec M uniforme sur 2^λ
+    valeurs et indépendant de C, et une interprétation admissible (noyau de
+    verdict ne dépendant que de (Σ, C)). H(C) est l'entropie de la loi et
+    γ = α·H(C) − 1. Le trilemme (formes explicite, raffinée, asymptotique)
+    n'utilise ni Pinsker ni l'Hypothèse 3 ni les supports communs, qui ne servent
+    qu'au Lemme 4. L'inégalité I(V;Σ|C) ≤ H(V|C) y est démontrée. Une famille de
+    lois concrètes (`famModel`) satisfait toutes les hypothèses pour tout λ, et le
+    théorème asymptotique s'y applique.
+  • Bloc de vérification (section 11).
   • Couche « cryptographie institutionnelle » : les Hypothèses 1 (extraction
     bornée par Δ), 2′ (verdict efficace, γ = αH(C) − 1), 3 (β-régularité)
     et 4 (régime de préservation de la confidentialité, I ≤ κ/λ) sont des
@@ -222,7 +240,7 @@ def gamma (p : InstitutionalParams) : ℝ := p.α * p.H - 1
 
 -- Familles canoniques (valeurs empiriques de l'article CLO)
 noncomputable def HeliosParams : InstitutionalParams :=
-  { H := 50, Δ := 56, α := 1.2, β := 1.4,
+  { H := 40, Δ := 56, α := 1.2, β := 1.4,
     hH_nonneg := by norm_num, hΔ_nonneg := by norm_num,
     hα_pos    := by norm_num, hβ_ge_one := by norm_num }
 
@@ -294,9 +312,11 @@ theorem lemma4_confidentiality_guarantee {lam : ℕ} (P : ProtocolInstance lam)
 
 /-! ## 6. Théorème 1 : Trilemme CRO conditionnel -/
 
-/-- **Théorème 1, forme explicite.** Sous les Hypothèses 1, 2′, 3 et 4
+/-- **Théorème 1, forme explicite.** Sous les Hypothèses 1, 2′ et 4
     (I(M;Σ|C) ≤ κ/λ), pour λ ≥ 1 :
-    Conf·Rel·Opp ≤ (1/γ)·(Δ/λ + κ(Δ+1)/λ² + κ²/λ³). -/
+    Conf·Rel·Opp ≤ (1/γ)·(Δ/λ + κ(Δ+1)/λ² + κ²/λ³).
+    La structure `InstitutionalAssumptions` contient aussi l'Hypothèse 3 (A3), que
+    cette preuve n'utilise pas ; A3 ne sert qu'au Lemme 4. -/
 theorem trilemma_explicit {lam : ℕ} (P : ProtocolInstance lam)
     (hA : InstitutionalAssumptions P) (κ : ℝ) (hκ : 0 ≤ κ)
     (hlam : 1 ≤ lam) (hA4 : P.I ≤ κ / lam) :
@@ -344,7 +364,7 @@ theorem trilemma_explicit {lam : ℕ} (P : ProtocolInstance lam)
         field_simp
         ring
 
-/-- **Théorème 1, forme publiée.** Comme γ ≥ 1 :
+/-- **Théorème 1, forme publiée.** Comme γ ≥ 1 (Hypothèse 3 non utilisée) :
     Conf·Rel·Opp ≤ Δ/λ + κ(Δ+1)/λ² + κ²/λ³. -/
 theorem trilemma_instance {lam : ℕ} (P : ProtocolInstance lam)
     (hA : InstitutionalAssumptions P) (κ : ℝ) (hκ : 0 ≤ κ)
@@ -371,16 +391,19 @@ structure ProtocolFamily where
   hparams : ∀ lam, (inst lam).params = params
 
 /-- **Théorème 1 (Trilemme CRO conditionnel), forme asymptotique.**
-    Sous les Hypothèses 1, 2′, 3 et 4, il existe K et ε négligeable tels que,
-    pour tout λ ≥ 64 : Conf·Rel·Opp ≤ Δ/λ + K/λ² + ε(λ). -/
+    Sous les Hypothèses 1, 2′ et 4, demandées pour λ ≥ 64, il existe K et ε
+    négligeable tels que, pour tout λ ≥ 64 : Conf·Rel·Opp ≤ Δ/λ + K/λ² + ε(λ).
+    L'Hypothèse 3, portée par `InstitutionalAssumptions`, n'est pas utilisée.
+    Le terme ε = 2^(−λ) garde la forme publiée ; la borne tient aussi sans lui.
+    Le seuil 64 reprend celui de la thèse ; la preuve n'utilise que λ ≥ 1. -/
 theorem conditional_CRO_trilemma (F : ProtocolFamily) (κ : ℝ) (hκ : 0 ≤ κ)
-    (hA : ∀ lam, InstitutionalAssumptions (F.inst lam))
-    (hA4 : ∀ lam, (F.inst lam).I ≤ κ / lam) :
+    (hA : ∀ lam, 64 ≤ lam → InstitutionalAssumptions (F.inst lam))
+    (hA4 : ∀ lam, 64 ≤ lam → (F.inst lam).I ≤ κ / lam) :
     ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
       (F.inst lam).Conf * (F.inst lam).Rel * (F.inst lam).Opp ≤
         F.params.Δ / lam + K / (lam : ℝ) ^ 2 + ε lam := by
   refine ⟨κ * (F.params.Δ + 1) + κ ^ 2, ε₀, negligible_eps0, fun lam hlam => ?_⟩
-  have h := trilemma_instance (F.inst lam) (hA lam) κ hκ (by omega) (hA4 lam)
+  have h := trilemma_instance (F.inst lam) (hA lam hlam) κ hκ (by omega) (hA4 lam hlam)
   rw [F.hparams lam] at h
   have hl : (1 : ℝ) ≤ lam := by exact_mod_cast (by omega : 1 ≤ lam)
   have hl0 : (0 : ℝ) < lam := by linarith
@@ -557,9 +580,1080 @@ theorem refined_bound_is_fano_when_delta_ge_gamma {lam : ℕ} (P : ProtocolInsta
   rw [le_div_iff₀ hγ0]; linarith
 
 
+/-! ## 10. Couche concrète : lois de probabilité finies
+
+Cette section supprime l'axiomatisation des inégalités de Pinsker et de Fano.
+Les champs `pinsker` et `fano` d'une `ProtocolInstance` y deviennent des
+théorèmes, démontrés pour de vraies lois finies sur (C, M, Σ, V). Les seules
+hypothèses restantes sont les hypothèses institutionnelles de la thèse. -/
+
+open Finset
+
+/-! ### 10.1 Inégalité élémentaire et inégalité log-somme -/
+
+/-- Pour a ≥ 0, b ≥ 0 (a > 0 ⇒ b > 0) et t > 0 : a·log t + a − b·t ≤ a·log(a/b). -/
+lemma term_ineq {a b t : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : 0 < a → 0 < b) (ht : 0 < t) :
+    a * Real.log t + a - b * t ≤ a * Real.log (a / b) := by
+  rcases ha.lt_or_eq with ha' | ha'
+  · have hb' := hab ha'
+    have hx : 0 < a / (b * t) := by positivity
+    have h1 := Real.one_sub_inv_le_log_of_pos hx
+    have e : Real.log (a / (b * t)) = Real.log (a / b) - Real.log t := by
+      rw [← div_div, Real.log_div (by positivity) ht.ne']
+    rw [e, inv_div] at h1
+    have h3 := mul_le_mul_of_nonneg_left h1 ha
+    have h4 : a * (1 - b * t / a) = a - b * t := by field_simp
+    nlinarith [h3, h4]
+  · subst ha'
+    nlinarith [mul_nonneg hb ht.le]
+
+/-- **Inégalité log-somme.** (Σa)·log(Σa/Σb) ≤ Σ a·log(a/b). -/
+lemma log_sum_ineq {ι : Type*} (s : Finset ι) (a b : ι → ℝ) (ha : ∀ i ∈ s, 0 ≤ a i)
+    (hb : ∀ i ∈ s, 0 ≤ b i) (hab : ∀ i ∈ s, 0 < a i → 0 < b i) :
+    (∑ i ∈ s, a i) * Real.log ((∑ i ∈ s, a i) / ∑ i ∈ s, b i)
+      ≤ ∑ i ∈ s, a i * Real.log (a i / b i) := by
+  have hA : 0 ≤ ∑ i ∈ s, a i := sum_nonneg ha
+  rcases hA.lt_or_eq with hA' | hA'
+  · have hB : 0 < ∑ i ∈ s, b i := by
+      obtain ⟨i, hi, hai⟩ : ∃ i ∈ s, 0 < a i := by
+        by_contra h
+        push Not at h
+        have : ∑ i ∈ s, a i ≤ 0 := sum_nonpos h
+        linarith
+      exact lt_of_lt_of_le (hab i hi hai) (single_le_sum hb hi)
+    have ht : 0 < (∑ i ∈ s, a i) / ∑ i ∈ s, b i := div_pos hA' hB
+    have key := sum_le_sum (fun i hi => term_ineq (ha i hi) (hb i hi) (hab i hi) ht)
+    simp only [sum_sub_distrib, sum_add_distrib, ← sum_mul] at key
+    have e : (∑ i ∈ s, b i) * ((∑ i ∈ s, a i) / ∑ i ∈ s, b i) = ∑ i ∈ s, a i := by
+      field_simp
+    linarith
+  · rw [← hA']
+    simp only [zero_mul]
+    have : ∀ i ∈ s, a i = 0 := (sum_eq_zero_iff_of_nonneg ha).1 hA'.symm
+    rw [sum_eq_zero (fun i hi => by rw [this i hi, zero_mul])]
+
+/-- Entropie binaire (en nats) au plus log 2 : p·log p + (1−p)·log(1−p) ≥ −log 2. -/
+lemma binEnt_le_log_two {p : ℝ} (hp0 : 0 ≤ p) (hp1 : p ≤ 1) :
+    -Real.log 2 ≤ p * Real.log p + (1 - p) * Real.log (1 - p) := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  -- a·log(2a) ≥ a − 1/2 pour a ≥ 0
+  have aux : ∀ a : ℝ, 0 ≤ a → a - 1 / 2 ≤ a * Real.log 2 + a * Real.log a := by
+    intro a ha
+    rcases ha.lt_or_eq with ha' | ha'
+    · have h := Real.one_sub_inv_le_log_of_pos (by positivity : 0 < 2 * a)
+      rw [Real.log_mul (by norm_num) ha'.ne'] at h
+      have h2 := mul_le_mul_of_nonneg_left h ha
+      have h3 : a * (1 - (2 * a)⁻¹) = a - 1 / 2 := by field_simp
+      nlinarith [h2, h3]
+    · subst ha'; norm_num
+  have e1 := aux p hp0
+  have e2 := aux (1 - p) (by linarith)
+  nlinarith [e1, e2]
+
+/-! ### 10.2 Pinsker binaire puis Pinsker fini -/
+
+/-- φ(t) = −p log t − (1−p) log(1−t) − 2(p−t)² décroît sur [q, p] (0 < q, p < 1). -/
+lemma pinsker_aux {p q : ℝ} (hq : 0 < q) (hqp : q ≤ p) (hp1 : p < 1) :
+    -p * Real.log p - (1 - p) * Real.log (1 - p) - 2 * (p - p) ^ 2
+      ≤ -p * Real.log q - (1 - p) * Real.log (1 - q) - 2 * (p - q) ^ 2 := by
+  let φ : ℝ → ℝ := fun t => -p * Real.log t - (1 - p) * Real.log (1 - t) - 2 * (p - t) ^ 2
+  have hanti : AntitoneOn φ (Set.Icc q p) := by
+    apply antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc q p)
+      (f' := fun t => -p / t + (1 - p) / (1 - t) + 4 * (p - t))
+    · intro t ht
+      have ht0 : t ≠ 0 := by linarith [ht.1]
+      have ht1 : 1 - t ≠ 0 := by linarith [ht.2]
+      apply ContinuousAt.continuousWithinAt
+      have c1 : ContinuousAt Real.log t := Real.continuousAt_log ht0
+      have c2 : ContinuousAt (fun x => Real.log (1 - x)) t :=
+        (Real.continuousAt_log ht1).comp (continuousAt_const.sub continuousAt_id)
+      exact ((continuousAt_const.mul c1).sub (continuousAt_const.mul c2)).sub
+        (continuousAt_const.mul ((continuousAt_const.sub continuousAt_id).pow 2))
+    · intro t ht
+      rw [interior_Icc] at ht
+      have ht0 : 0 < t := by linarith [ht.1]
+      have ht1 : 0 < 1 - t := by linarith [ht.2]
+      have d1 : HasDerivAt Real.log t⁻¹ t := Real.hasDerivAt_log ht0.ne'
+      have d2 : HasDerivAt (fun x => Real.log (1 - x)) ((-1) / (1 - t)) t :=
+        ((hasDerivAt_id t).const_sub 1).log ht1.ne'
+      have hA : HasDerivAt (fun x => p - x) (-1) t := by
+        simpa using (hasDerivAt_id t).const_sub p
+      have d3 : HasDerivAt (fun x => (p - x) ^ 2) (2 * (p - t) * (-1)) t := by
+        have := hA.mul hA
+        convert this using 1
+        · funext x; simp only [Pi.mul_apply]; ring
+        · ring
+      have d := ((d1.const_mul (-p)).sub (d2.const_mul (1 - p))).sub (d3.const_mul 2)
+      apply HasDerivAt.hasDerivWithinAt
+      convert d using 1
+      field_simp
+      ring
+    · intro t ht
+      rw [interior_Icc] at ht
+      have ht0 : 0 < t := by linarith [ht.1]
+      have ht1 : 0 < 1 - t := by linarith [ht.2]
+      have hpt : 0 ≤ p - t := by linarith [ht.2]
+      have key : (-p / t + (1 - p) / (1 - t) + 4 * (p - t)) * (t * (1 - t))
+          = (p - t) * (4 * t * (1 - t) - 1) := by field_simp; ring
+      have hneg : (p - t) * (4 * t * (1 - t) - 1) ≤ 0 :=
+        mul_nonpos_of_nonneg_of_nonpos hpt (by nlinarith [sq_nonneg (2 * t - 1)])
+      have hpos : 0 < t * (1 - t) := mul_pos ht0 ht1
+      by_contra hc
+      push Not at hc
+      have : 0 < (-p / t + (1 - p) / (1 - t) + 4 * (p - t)) * (t * (1 - t)) :=
+        mul_pos hc hpos
+      linarith
+  have := hanti ⟨le_refl q, hqp⟩ ⟨hqp, le_refl p⟩ hqp
+  simpa [φ] using this
+
+/-- Même résultat pour p = 1 : φ₁(t) = −log t − 2(1−t)² décroît sur [q, 1]. -/
+lemma pinsker_aux_one {q : ℝ} (hq : 0 < q) (hq1 : q ≤ 1) :
+    2 * (1 - q) ^ 2 ≤ -Real.log q := by
+  let φ : ℝ → ℝ := fun t => -Real.log t - 2 * (1 - t) ^ 2
+  have hanti : AntitoneOn φ (Set.Icc q 1) := by
+    apply antitoneOn_of_hasDerivWithinAt_nonpos (convex_Icc q 1)
+      (f' := fun t => -1 / t + 4 * (1 - t))
+    · intro t ht
+      have ht0 : t ≠ 0 := by linarith [ht.1]
+      apply ContinuousAt.continuousWithinAt
+      exact ((Real.continuousAt_log ht0).neg).sub
+        (continuousAt_const.mul ((continuousAt_const.sub continuousAt_id).pow 2))
+    · intro t ht
+      rw [interior_Icc] at ht
+      have ht0 : 0 < t := by linarith [ht.1]
+      have d1 : HasDerivAt Real.log t⁻¹ t := Real.hasDerivAt_log ht0.ne'
+      have hA : HasDerivAt (fun x => 1 - x) (-1) t := by
+        simpa using (hasDerivAt_id t).const_sub (1 : ℝ)
+      have d3 : HasDerivAt (fun x => (1 - x) ^ 2) (2 * (1 - t) * (-1)) t := by
+        have := hA.mul hA
+        convert this using 1
+        · funext x; simp only [Pi.mul_apply]; ring
+        · ring
+      have d := d1.neg.sub (d3.const_mul 2)
+      apply HasDerivAt.hasDerivWithinAt
+      convert d using 1
+      field_simp
+      ring
+    · intro t ht
+      rw [interior_Icc] at ht
+      have ht0 : 0 < t := by linarith [ht.1]
+      have ht1 : 0 < 1 - t := by linarith [ht.2]
+      have key : (-1 / t + 4 * (1 - t)) * t = 4 * t * (1 - t) - 1 := by field_simp; ring
+      have hneg : 4 * t * (1 - t) - 1 ≤ 0 := by nlinarith [sq_nonneg (2 * t - 1)]
+      by_contra hc
+      push Not at hc
+      have : 0 < (-1 / t + 4 * (1 - t)) * t := mul_pos hc ht0
+      linarith
+  have := hanti ⟨le_refl q, hq1⟩ ⟨hq1, le_refl 1⟩ hq1
+  simpa [φ] using this
+
+/-- **Pinsker binaire (nats).** Pour 0 ≤ q ≤ p ≤ 1, avec q = 0 ⇒ p = 0 :
+    2(p − q)² ≤ p·log(p/q) + (1−p)·log((1−p)/(1−q)). -/
+lemma pinsker_binary {p q : ℝ} (hq0 : 0 ≤ q) (hqp : q ≤ p) (hp1 : p ≤ 1)
+    (hz : q = 0 → p = 0) :
+    2 * (p - q) ^ 2 ≤ p * Real.log (p / q) + (1 - p) * Real.log ((1 - p) / (1 - q)) := by
+  rcases hq0.lt_or_eq with hq | hq
+  · rcases hp1.lt_or_eq with hp | hp
+    · have h := pinsker_aux hq hqp hp
+      have hp0 : 0 < p := lt_of_lt_of_le hq hqp
+      rw [Real.log_div hp0.ne' hq.ne', Real.log_div (by linarith) (by linarith)]
+      nlinarith [h]
+    · subst hp
+      have h := pinsker_aux_one hq (by linarith)
+      simp only [sub_self, zero_mul, add_zero, one_mul, div_eq_mul_inv, one_mul]
+      rw [Real.log_inv]
+      linarith
+  · subst hq
+    have hp := hz rfl
+    subst hp
+    simp
+
+/-- Variation totale (forme partie positive) et divergence de Kullback-Leibler (nats). -/
+noncomputable def tv {α : Type*} [Fintype α] (P Q : α → ℝ) : ℝ := ∑ a, max (P a - Q a) 0
+
+/-- Divergence de Kullback-Leibler (nats). Elle n'est la vraie divergence que si
+    P ≪ Q ; sinon les conventions log 0 = 0 et x/0 = 0 la sous-estiment. -/
+noncomputable def klN {α : Type*} [Fintype α] (P Q : α → ℝ) : ℝ :=
+  ∑ a, P a * Real.log (P a / Q a)
+
+/-- **Pinsker fini (nats).** tv² ≤ ½·KL, pour deux lois avec P ≪ Q. -/
+theorem pinsker_finite {α : Type*} [Fintype α] (P Q : α → ℝ)
+    (hP : ∀ a, 0 ≤ P a) (hQ : ∀ a, 0 ≤ Q a) (hP1 : ∑ a, P a = 1) (hQ1 : ∑ a, Q a = 1)
+    (hac : ∀ a, 0 < P a → 0 < Q a) :
+    tv P Q ^ 2 ≤ klN P Q / 2 := by
+  classical
+  set A := (univ : Finset α).filter (fun a => Q a < P a) with hAdef
+  set p := ∑ a ∈ A, P a with hp
+  set q := ∑ a ∈ A, Q a with hq
+  have htv : tv P Q = p - q := by
+    unfold tv
+    rw [hp, hq, ← sum_sub_distrib, sum_filter]
+    apply sum_congr rfl
+    intro a _
+    split_ifs with h
+    · exact max_eq_left (by linarith)
+    · exact max_eq_right (by linarith [not_lt.mp h])
+  have hpc : ∑ a ∈ univ.filter (fun a => ¬ (Q a < P a)), P a = 1 - p := by
+    rw [← hP1, ← sum_filter_add_sum_filter_not univ (fun a => Q a < P a) P]; ring
+  have hqc : ∑ a ∈ univ.filter (fun a => ¬ (Q a < P a)), Q a = 1 - q := by
+    rw [← hQ1, ← sum_filter_add_sum_filter_not univ (fun a => Q a < P a) Q]; ring
+  have l1 := log_sum_ineq A P Q (fun a _ => hP a) (fun a _ => hQ a) (fun a _ => hac a)
+  have l2 := log_sum_ineq (univ.filter (fun a => ¬ (Q a < P a))) P Q (fun a _ => hP a)
+    (fun a _ => hQ a) (fun a _ => hac a)
+  rw [hpc, hqc] at l2
+  have hsplit : klN P Q = ∑ a ∈ A, P a * Real.log (P a / Q a) +
+      ∑ a ∈ univ.filter (fun a => ¬ (Q a < P a)), P a * Real.log (P a / Q a) := by
+    unfold klN; rw [sum_filter_add_sum_filter_not]
+  have hqp : q ≤ p := sum_le_sum (fun a ha => (mem_filter.1 ha).2.le)
+  have hq0 : 0 ≤ q := sum_nonneg (fun a _ => hQ a)
+  have hp1 : p ≤ 1 := by
+    rw [← hP1]; exact sum_le_sum_of_subset_of_nonneg (filter_subset _ _) (fun a _ _ => hP a)
+  have hz : q = 0 → p = 0 := by
+    intro hq0'
+    have hQA : ∀ a ∈ A, Q a = 0 := (sum_eq_zero_iff_of_nonneg (fun a _ => hQ a)).1 hq0'
+    apply sum_eq_zero
+    intro a ha
+    by_contra hne
+    have hpos : 0 < P a := lt_of_le_of_ne (hP a) (Ne.symm hne)
+    have := hac a hpos
+    rw [hQA a ha] at this
+    exact lt_irrefl _ this
+  have hb := pinsker_binary hq0 hqp hp1 hz
+  rw [htv]
+  linarith
+
+/-! ### 10.3 Information mutuelle : positivité, majoration par l'entropie, Fano -/
+
+/-- Information mutuelle (nats) d'une loi jointe w sur α × β. -/
+noncomputable def miN {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ) : ℝ :=
+  ∑ a, ∑ b, w a b * Real.log (w a b / ((∑ b', w a b') * (∑ a', w a' b)))
+
+/-- Entropie (nats) de la seconde marginale de w. -/
+noncomputable def entN2 {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ) : ℝ :=
+  -∑ b, (∑ a, w a b) * Real.log (∑ a, w a b)
+
+/-- Positivité de l'information mutuelle, pour une masse totale entre 0 et 1. -/
+theorem miN_nonneg {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ)
+    (hw : ∀ a b, 0 ≤ w a b) (hS1 : ∑ a, ∑ b, w a b ≤ 1) : 0 ≤ miN w := by
+  classical
+  -- log-somme sur α × β
+  let a2 : α × β → ℝ := fun x => w x.1 x.2
+  let b2 : α × β → ℝ := fun x => (∑ b', w x.1 b') * (∑ a', w a' x.2)
+  have hb2 : ∀ x ∈ (univ : Finset (α × β)), 0 ≤ b2 x := fun x _ =>
+    mul_nonneg (sum_nonneg fun _ _ => hw _ _) (sum_nonneg fun _ _ => hw _ _)
+  have hab : ∀ x ∈ (univ : Finset (α × β)), 0 < a2 x → 0 < b2 x := by
+    intro x _ hx
+    have h1 : w x.1 x.2 ≤ ∑ b', w x.1 b' :=
+      single_le_sum (f := fun b' => w x.1 b') (fun _ _ => hw _ _) (mem_univ x.2)
+    have h2 : w x.1 x.2 ≤ ∑ a', w a' x.2 :=
+      single_le_sum (f := fun a' => w a' x.2) (fun _ _ => hw _ _) (mem_univ x.1)
+    exact mul_pos (lt_of_lt_of_le hx h1) (lt_of_lt_of_le hx h2)
+  have l := log_sum_ineq univ a2 b2 (fun x _ => hw _ _) hb2 hab
+  have eA : ∑ x, a2 x = ∑ a, ∑ b, w a b := Fintype.sum_prod_type _
+  have eB : ∑ x, b2 x = (∑ a, ∑ b, w a b) * (∑ a, ∑ b, w a b) := by
+    rw [Fintype.sum_prod_type]
+    simp only [b2]
+    rw [← sum_mul_sum]
+    congr 1
+    exact Finset.sum_comm
+  have eM : ∑ x, a2 x * Real.log (a2 x / b2 x) = miN w := by
+    unfold miN; rw [Fintype.sum_prod_type]
+  rw [eA, eB, eM] at l
+  set S := ∑ a, ∑ b, w a b with hS
+  have hS0 : 0 ≤ S := sum_nonneg fun _ _ => sum_nonneg fun _ _ => hw _ _
+  rcases hS0.lt_or_eq with hS' | hS'
+  · have e : S / (S * S) = S⁻¹ := by field_simp
+    rw [e, Real.log_inv] at l
+    have : Real.log S ≤ 0 := Real.log_nonpos hS0 hS1
+    nlinarith
+  · rw [← hS'] at l; simpa using l
+
+/-- L'information mutuelle est majorée par l'entropie de la seconde variable. -/
+theorem miN_le_entN2 {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ)
+    (hw : ∀ a b, 0 ≤ w a b) : miN w ≤ entN2 w := by
+  classical
+  have key : ∀ a b, w a b * Real.log (w a b / ((∑ b', w a b') * (∑ a', w a' b)))
+      ≤ w a b * (-Real.log (∑ a', w a' b)) := by
+    intro a b
+    rcases (hw a b).lt_or_eq with h | h
+    · have h1 : w a b ≤ ∑ b', w a b' :=
+        single_le_sum (f := fun b' => w a b') (fun _ _ => hw _ _) (mem_univ b)
+      have h2 : w a b ≤ ∑ a', w a' b :=
+        single_le_sum (f := fun a' => w a' b) (fun _ _ => hw _ _) (mem_univ a)
+      have hA : 0 < ∑ b', w a b' := lt_of_lt_of_le h h1
+      have hB : 0 < ∑ a', w a' b := lt_of_lt_of_le h h2
+      apply mul_le_mul_of_nonneg_left _ h.le
+      rw [Real.log_div h.ne' (by positivity), Real.log_mul hA.ne' hB.ne']
+      have : Real.log (w a b) ≤ Real.log (∑ b', w a b') := Real.log_le_log h h1
+      linarith
+    · rw [← h]; simp
+  calc miN w ≤ ∑ a, ∑ b, w a b * (-Real.log (∑ a', w a' b)) :=
+        sum_le_sum fun a _ => sum_le_sum fun b _ => key a b
+    _ = entN2 w := by
+        unfold entN2
+        rw [Finset.sum_comm]
+        simp only [← sum_mul, mul_neg, sum_neg_distrib]
+
+/-- **Fano fini (nats).** Si la loi jointe w de (M, Σ) a une première marginale
+    uniforme sur N valeurs, tout décodeur d de probabilité de succès p vérifie
+    p·log N − log 2 ≤ I(M;Σ). -/
+theorem fano_finite {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (w : α → β → ℝ) (hw : ∀ a b, 0 ≤ w a b) (hS1 : ∑ a, ∑ b, w a b = 1)
+    (hunif : ∀ a, ∑ b, w a b = 1 / (Fintype.card α : ℝ)) (d : β → α) :
+    (∑ b, w (d b) b) * Real.log (Fintype.card α) - Real.log 2 ≤ miN w := by
+  classical
+  set N : ℝ := (Fintype.card α : ℝ) with hN
+  have hN1 : (1 : ℝ) ≤ N := by
+    have : 0 < Fintype.card α := by
+      by_contra h
+      push Not at h
+      have h0 : Fintype.card α = 0 := by omega
+      have := Fintype.card_eq_zero_iff.1 h0
+      simp at hS1
+    have h' : 1 ≤ Fintype.card α := this
+    rw [hN]
+    exact_mod_cast h'
+  have hN0 : 0 < N := by linarith
+  set p := ∑ b, w (d b) b with hp
+  -- passage aux couples
+  let a2 : α × β → ℝ := fun x => w x.1 x.2
+  let b2 : α × β → ℝ := fun x => (∑ b', w x.1 b') * (∑ a', w a' x.2)
+  have hb2 : ∀ x : α × β, b2 x = (1 / N) * (∑ a', w a' x.2) := by
+    intro x; simp only [b2, hunif x.1]
+  have hb2n : ∀ x ∈ (univ : Finset (α × β)), 0 ≤ b2 x := fun x _ =>
+    mul_nonneg (sum_nonneg fun _ _ => hw _ _) (sum_nonneg fun _ _ => hw _ _)
+  have hab : ∀ x ∈ (univ : Finset (α × β)), 0 < a2 x → 0 < b2 x := by
+    intro x _ hx
+    have h1 : w x.1 x.2 ≤ ∑ b', w x.1 b' :=
+      single_le_sum (f := fun b' => w x.1 b') (fun _ _ => hw _ _) (mem_univ x.2)
+    have h2 : w x.1 x.2 ≤ ∑ a', w a' x.2 :=
+      single_le_sum (f := fun a' => w a' x.2) (fun _ _ => hw _ _) (mem_univ x.1)
+    exact mul_pos (lt_of_lt_of_le hx h1) (lt_of_lt_of_le hx h2)
+  set A := (univ : Finset (α × β)).filter (fun x => x.1 = d x.2) with hA
+  set Ac := (univ : Finset (α × β)).filter (fun x => ¬ (x.1 = d x.2)) with hAc
+  -- masses de A
+  have hpA : ∑ x ∈ A, a2 x = p := by
+    rw [hA, sum_filter, Fintype.sum_prod_type, Finset.sum_comm]
+    apply sum_congr rfl
+    intro b _
+    simp only [a2]
+    rw [sum_ite_eq']
+    simp
+  have hqB : ∑ b, ∑ a', w a' b = 1 := by rw [Finset.sum_comm]; exact hS1
+  have hrA : ∑ x ∈ A, b2 x = 1 / N := by
+    rw [hA, sum_filter, Fintype.sum_prod_type, Finset.sum_comm]
+    simp only [hb2]
+    have : ∀ b : β, (∑ a : α, if a = d b then 1 / N * ∑ a', w a' b else 0)
+        = 1 / N * ∑ a', w a' b := by
+      intro b; rw [sum_ite_eq']; simp
+    simp only [this]
+    rw [← mul_sum, hqB, mul_one]
+  have htot_a : ∑ x : α × β, a2 x = 1 := by rw [Fintype.sum_prod_type]; exact hS1
+  have htot_b : ∑ x : α × β, b2 x = 1 := by
+    rw [Fintype.sum_prod_type]
+    simp only [hb2]
+    rw [sum_const, card_univ, nsmul_eq_mul, ← mul_sum, hqB, ← hN]
+    field_simp
+  have hpAc : ∑ x ∈ Ac, a2 x = 1 - p := by
+    have h := sum_filter_add_sum_filter_not (univ : Finset (α × β)) (fun x => x.1 = d x.2) a2
+    rw [← hA, ← hAc, hpA, htot_a] at h
+    linarith
+  have hrAc : ∑ x ∈ Ac, b2 x = 1 - 1 / N := by
+    have h := sum_filter_add_sum_filter_not (univ : Finset (α × β)) (fun x => x.1 = d x.2) b2
+    rw [← hA, ← hAc, hrA, htot_b] at h
+    linarith
+  have l1 := log_sum_ineq A a2 b2 (fun x _ => hw _ _) (fun x hx => hb2n x (mem_univ x))
+    (fun x hx => hab x (mem_univ x))
+  have l2 := log_sum_ineq Ac a2 b2 (fun x _ => hw _ _) (fun x hx => hb2n x (mem_univ x))
+    (fun x hx => hab x (mem_univ x))
+  rw [hpA, hrA] at l1
+  rw [hpAc, hrAc] at l2
+  have hsplit : miN w = ∑ x ∈ A, a2 x * Real.log (a2 x / b2 x) +
+      ∑ x ∈ Ac, a2 x * Real.log (a2 x / b2 x) := by
+    rw [hA, hAc, sum_filter_add_sum_filter_not]
+    unfold miN; rw [Fintype.sum_prod_type]
+  have hp0 : 0 ≤ p := sum_nonneg fun _ _ => hw _ _
+  have hp1 : p ≤ 1 := by
+    rw [← hpA, ← htot_a]
+    exact sum_le_sum_of_subset_of_nonneg (filter_subset _ _) (fun x _ _ => hw _ _)
+  -- minoration du premier bloc : p log(p/(1/N)) = p log N + p log p
+  have e1 : p * Real.log N + p * Real.log p ≤ p * Real.log (p / (1 / N)) := by
+    rcases hp0.lt_or_eq with h | h
+    · rw [div_div_eq_mul_div, div_one, Real.log_mul h.ne' hN0.ne']; linarith
+    · rw [← h]; simp
+  -- minoration du second bloc : (1−p) log((1−p)/(1−1/N)) ≥ (1−p) log(1−p)
+  have e2 : (1 - p) * Real.log (1 - p) ≤ (1 - p) * Real.log ((1 - p) / (1 - 1 / N)) := by
+    rcases (sub_nonneg.2 hp1).lt_or_eq with h | h
+    · apply mul_le_mul_of_nonneg_left _ h.le
+      rcases (sub_nonneg.2 (div_le_one_of_le₀ hN1 hN0.le : 1 / N ≤ 1)).lt_or_eq with h' | h'
+      · apply Real.log_le_log h
+        rw [le_div_iff₀ h']
+        nlinarith [div_pos one_pos hN0]
+      · rw [← h', div_zero, Real.log_zero]
+        exact Real.log_nonpos h.le (by linarith)
+    · rw [← h]; simp
+  have hb := binEnt_le_log_two hp0 hp1
+  rw [hsplit]
+  linarith
+
+/-! ### 10.4 Modèle CLO concret
+
+Loi jointe finie de (C, M, Σ) et interprétation admissible : le verdict est tiré
+selon un noyau `ker c s` qui ne dépend que de (Σ, C), ce qui encode
+K ⊥ M | (Σ, C) (Définition de l'interprétation admissible). -/
+
+structure CLOModel (lam : ℕ) (M C S V : Type*) [Fintype M] [Fintype C] [Fintype S]
+    [Fintype V] where
+  P : C → M → S → ℝ
+  P_nonneg : ∀ c m s, 0 ≤ P c m s
+  P_sum : ∑ c, ∑ m, ∑ s, P c m s = 1
+  /-- M a 2^λ valeurs, donc H(M) = λ bits. -/
+  card_M : Fintype.card M = 2 ^ lam
+  /-- M est uniforme et indépendant de C. -/
+  unif : ∀ c m, ∑ s, P c m s = (∑ m', ∑ s, P c m' s) / (Fintype.card M : ℝ)
+  ker : C → S → V → ℝ
+  ker_nonneg : ∀ c s v, 0 ≤ ker c s v
+  ker_sum : ∀ c s, ∑ v, ker c s v = 1
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  [DecidableEq M] [Nonempty M] [Nonempty C] (X : CLOModel lam M C S V)
+
+/-- Supports communs : les lois de Σ pour deux messages ont le même support, ce qui
+    équivaut à la finitude des divergences de l'Hypothèse 3. Elle ne sert qu'à Pinsker
+    et au Lemme 4, pas au trilemme. -/
+abbrev CommonSupport : Prop := ∀ c m₀ m₁ s, 0 < X.P c m₀ s → 0 < X.P c m₁ s
+
+/-- Loi de C. -/
+noncomputable def pC (c : C) : ℝ := ∑ m, ∑ s, X.P c m s
+
+/-- H(C) en bits, calculée à partir de la loi. -/
+noncomputable def HC : ℝ := (-∑ c, X.pC c * Real.log (X.pC c)) / Real.log 2
+
+/-- Loi de (M, Σ) sachant C = c. -/
+noncomputable def qMS (c : C) (m : M) (s : S) : ℝ := X.P c m s / X.pC c
+
+/-- Loi de Σ sachant (M, C) = (m, c). -/
+noncomputable def qS (c : C) (m : M) (s : S) : ℝ := X.P c m s / ∑ s', X.P c m s'
+
+/-- Loi de (Σ, V) sachant C = c. -/
+noncomputable def qSV (c : C) (s : S) (v : V) : ℝ := (∑ m, X.qMS c m s) * X.ker c s v
+
+/-- I(M;Σ|C) en bits. -/
+noncomputable def I : ℝ := (∑ c, X.pC c * miN (X.qMS c)) / Real.log 2
+
+/-- I(V;Σ|C) en bits. -/
+noncomputable def IV : ℝ := (∑ c, X.pC c * miN (X.qSV c)) / Real.log 2
+
+/-- H(V|C) en bits. -/
+noncomputable def HV : ℝ := (∑ c, X.pC c * entN2 (X.qSV c)) / Real.log 2
+
+/-- Variation totale et divergence (bits) entre les lois de Σ pour deux messages. -/
+noncomputable def TV (x : C × M × M) : ℝ := tv (X.qS x.1 x.2.1) (X.qS x.1 x.2.2)
+
+/-- Divergence (bits). Avec les conventions de Lean (log 0 = 0, x/0 = 0), elle
+    sous-estime la vraie divergence, qui vaut +∞, lorsque les supports diffèrent.
+    Elle n'est donc utilisée que sous `CommonSupport` (Pinsker, Lemme 4). -/
+noncomputable def KL (x : C × M × M) : ℝ := klN (X.qS x.1 x.2.1) (X.qS x.1 x.2.2) / Real.log 2
+
+noncomputable def TVmax : ℝ := (univ : Finset (C × M × M)).sup' univ_nonempty X.TV
+
+noncomputable def KLmax : ℝ := (univ : Finset (C × M × M)).sup' univ_nonempty X.KL
+
+/-- Conf = 1 − max TV. -/
+noncomputable def Conf : ℝ := 1 - X.TVmax
+
+/-- Fiabilité d'un décodeur D(c, σ) : probabilité de retrouver M. -/
+noncomputable def Rel (D : C → S → M) : ℝ := ∑ c, ∑ m, ∑ s, if D c s = m then X.P c m s else 0
+
+/-- Opp = I(V;Σ|C)/H(V|C). -/
+noncomputable def Opp : ℝ := X.IV / X.HV
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma pC_nonneg (c : C) : 0 ≤ X.pC c :=
+  sum_nonneg fun _ _ => sum_nonneg fun _ _ => X.P_nonneg _ _ _
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma sum_pC : ∑ c, X.pC c = 1 := X.P_sum
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma P_le_pC (c : C) (m : M) (s : S) : X.P c m s ≤ X.pC c := by
+  unfold pC
+  calc X.P c m s ≤ ∑ s', X.P c m s' :=
+        single_le_sum (f := fun s' => X.P c m s') (fun _ _ => X.P_nonneg _ _ _) (mem_univ s)
+    _ ≤ ∑ m', ∑ s', X.P c m' s' :=
+        single_le_sum (f := fun m' => ∑ s', X.P c m' s')
+          (fun _ _ => sum_nonneg fun _ _ => X.P_nonneg _ _ _) (mem_univ m)
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma P_eq_zero_of_pC (c : C) (h : X.pC c = 0) (m : M) (s : S) : X.P c m s = 0 :=
+  le_antisymm (h ▸ X.P_le_pC c m s) (X.P_nonneg c m s)
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma qMS_nonneg (c : C) (m : M) (s : S) : 0 ≤ X.qMS c m s :=
+  div_nonneg (X.P_nonneg _ _ _) (X.pC_nonneg c)
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma qMS_sum (c : C) (hc : 0 < X.pC c) : ∑ m, ∑ s, X.qMS c m s = 1 := by
+  unfold qMS
+  simp only [← sum_div]
+  exact div_self hc.ne'
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma qMS_sum_le (c : C) : ∑ m, ∑ s, X.qMS c m s ≤ 1 := by
+  rcases (X.pC_nonneg c).lt_or_eq with h | h
+  · exact (X.qMS_sum c h).le
+  · unfold qMS; rw [← h]; simp
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma qSV_nonneg (c : C) (s : S) (v : V) : 0 ≤ X.qSV c s v :=
+  mul_nonneg (sum_nonneg fun _ _ => X.qMS_nonneg _ _ _) (X.ker_nonneg _ _ _)
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma qSV_sum_le (c : C) : ∑ s, ∑ v, X.qSV c s v ≤ 1 := by
+  unfold qSV
+  simp only [← mul_sum, X.ker_sum, mul_one]
+  rw [Finset.sum_comm]
+  exact X.qMS_sum_le c
+
+lemma log_two_pos' : 0 < Real.log 2 := Real.log_pos (by norm_num)
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma I_nonneg : 0 ≤ X.I :=
+  div_nonneg (sum_nonneg fun c _ => mul_nonneg (X.pC_nonneg c)
+    (miN_nonneg _ (X.qMS_nonneg c) (X.qMS_sum_le c))) log_two_pos'.le
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma IV_nonneg : 0 ≤ X.IV :=
+  div_nonneg (sum_nonneg fun c _ => mul_nonneg (X.pC_nonneg c)
+    (miN_nonneg _ (X.qSV_nonneg c) (X.qSV_sum_le c))) log_two_pos'.le
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+/-- I(V;Σ|C) ≤ H(V|C), démontré (et non supposé). -/
+lemma IV_le_HV : X.IV ≤ X.HV := by
+  unfold IV HV
+  apply div_le_div_of_nonneg_right _ log_two_pos'.le
+  exact sum_le_sum fun c _ => mul_le_mul_of_nonneg_left
+    (miN_le_entN2 _ (X.qSV_nonneg c)) (X.pC_nonneg c)
+
+lemma tv_nonneg {α : Type*} [Fintype α] (P Q : α → ℝ) : 0 ≤ tv P Q :=
+  sum_nonneg fun _ _ => le_max_right _ _
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma TV_nonneg (x : C × M × M) : 0 ≤ X.TV x := tv_nonneg _ _
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma qS_nonneg (c : C) (m : M) (s : S) : 0 ≤ X.qS c m s :=
+  div_nonneg (X.P_nonneg _ _ _) (sum_nonneg fun _ _ => X.P_nonneg _ _ _)
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma qS_sum_le (c : C) (m : M) : ∑ s, X.qS c m s ≤ 1 := by
+  unfold qS
+  rw [← sum_div]
+  rcases (sum_nonneg fun s _ => X.P_nonneg c m s : 0 ≤ ∑ s, X.P c m s).lt_or_eq with h | h
+  · rw [div_self h.ne']
+  · rw [← h]; simp
+
+omit [DecidableEq M] [Nonempty M] [Nonempty C] in
+lemma TV_le_one (x : C × M × M) : X.TV x ≤ 1 := by
+  unfold TV tv
+  calc ∑ s, max (X.qS x.1 x.2.1 s - X.qS x.1 x.2.2 s) 0 ≤ ∑ s, X.qS x.1 x.2.1 s :=
+        sum_le_sum fun s _ => max_le (by linarith [X.qS_nonneg x.1 x.2.2 s]) (X.qS_nonneg _ _ _)
+    _ ≤ 1 := X.qS_sum_le _ _
+
+omit [DecidableEq M] in
+lemma TVmax_mem : ∃ x, X.TVmax = X.TV x := by
+  obtain ⟨x, _, hx⟩ := exists_mem_eq_sup' (univ_nonempty (α := C × M × M)) X.TV
+  exact ⟨x, hx⟩
+
+omit [DecidableEq M] in
+lemma TVmax_nonneg : 0 ≤ X.TVmax := by
+  obtain ⟨x, hx⟩ := X.TVmax_mem; rw [hx]; exact X.TV_nonneg x
+
+omit [DecidableEq M] in
+lemma TVmax_le_one : X.TVmax ≤ 1 := by
+  obtain ⟨x, hx⟩ := X.TVmax_mem; rw [hx]; exact X.TV_le_one x
+
+omit [DecidableEq M] in
+/-- **Pinsker démontré** pour les lois conditionnelles du modèle (bits).
+    La preuve établit d'abord TV² ≤ ½·KL en nats (`pinsker_finite`), soit
+    TV² ≤ (ln 2/2)·KL en bits, qui est la forme la plus fine. Elle en déduit la
+    forme avec c₀ = 1/(2 ln 2), plus faible d'un facteur 1/(ln 2)² ≈ 2,08, car
+    (ln 2)² < 1. Le Lemme 4 énoncé avec c₀ reste donc vrai. -/
+lemma pinsker_model (hsupp : X.CommonSupport) : X.TVmax ^ 2 ≤ c0 * X.KLmax := by
+  obtain ⟨x, hx⟩ := X.TVmax_mem
+  rw [hx]
+  have hKL : X.KL x ≤ X.KLmax := le_sup' X.KL (mem_univ x)
+  obtain ⟨c, m₀, m₁⟩ := x
+  have hl2 := log_two_pos'
+  -- cas d'une masse nulle : les deux lois conditionnelles sont nulles
+  have hsum : ∀ m, (∑ s, X.P c m s) = X.pC c / (Fintype.card M : ℝ) := fun m => X.unif c m
+  have hcard : (0 : ℝ) < Fintype.card M := by exact_mod_cast Fintype.card_pos
+  rcases (X.pC_nonneg c).lt_or_eq with hc | hc
+  · have hden : ∀ m, 0 < ∑ s, X.P c m s := fun m => by rw [hsum m]; positivity
+    have h1 : ∀ m, ∑ s, X.qS c m s = 1 := fun m => by
+      unfold qS; rw [← sum_div, div_self (hden m).ne']
+    have hac : ∀ s, 0 < X.qS c m₀ s → 0 < X.qS c m₁ s := by
+      intro s hs
+      have : 0 < X.P c m₀ s := by
+        unfold qS at hs
+        rcases (X.P_nonneg c m₀ s).lt_or_eq with h | h
+        · exact h
+        · rw [← h, zero_div] at hs; exact absurd hs (lt_irrefl 0)
+      exact div_pos (hsupp c m₀ m₁ s this) (hden m₁)
+    have hp := pinsker_finite (X.qS c m₀) (X.qS c m₁) (X.qS_nonneg c m₀) (X.qS_nonneg c m₁)
+      (h1 m₀) (h1 m₁) hac
+    have hKLn : 0 ≤ klN (X.qS c m₀) (X.qS c m₁) := by
+      have := sq_nonneg (tv (X.qS c m₀) (X.qS c m₁)); linarith
+    -- ½·KL_nats ≤ c₀·KL_bits car (log 2)² < 1
+    have hlt : Real.log 2 < 1 := by
+      have := Real.log_lt_sub_one_of_pos (by norm_num : (0 : ℝ) < 2) (by norm_num)
+      linarith
+    have hconv : klN (X.qS c m₀) (X.qS c m₁) / 2 ≤ c0 * X.KL (c, m₀, m₁) := by
+      unfold KL c0
+      rw [show (1 / (2 * Real.log 2)) * (klN (X.qS c m₀) (X.qS c m₁) / Real.log 2)
+          = klN (X.qS c m₀) (X.qS c m₁) / (2 * Real.log 2 ^ 2) by field_simp]
+      apply div_le_div_of_nonneg_left hKLn (by positivity)
+      nlinarith
+    have hc0 := c0_pos
+    calc X.TV (c, m₀, m₁) ^ 2 ≤ klN (X.qS c m₀) (X.qS c m₁) / 2 := hp
+      _ ≤ c0 * X.KL (c, m₀, m₁) := hconv
+      _ ≤ c0 * X.KLmax := mul_le_mul_of_nonneg_left hKL hc0.le
+  · -- masse nulle : TV = 0 et KL = 0
+    have hz : ∀ m s, X.qS c m s = 0 := by
+      intro m s; unfold qS; rw [X.P_eq_zero_of_pC c hc.symm m s, zero_div]
+    have hTV0 : X.TV (c, m₀, m₁) = 0 := by unfold TV tv; simp [hz]
+    have hKL0 : X.KL (c, m₀, m₁) = 0 := by unfold KL klN; simp [hz]
+    rw [hTV0]
+    have : 0 ≤ X.KLmax := hKL0 ▸ hKL
+    have hc0 := c0_pos
+    nlinarith
+
+omit [Nonempty C] in
+/-- **Fano démontré** : I(M;Σ|C) ≥ Rel(D)·λ − 1, pour tout décodeur D. -/
+lemma fano_model (D : C → S → M) : X.Rel D * lam - 1 ≤ X.I := by
+  have hl2 := log_two_pos'
+  have hcard : (Fintype.card M : ℝ) = 2 ^ lam := by exact_mod_cast X.card_M
+  have hlogN : Real.log (Fintype.card M : ℝ) = lam * Real.log 2 := by
+    rw [hcard, Real.log_pow]
+  -- contribution de chaque contexte
+  have hc : ∀ c, X.pC c * (∑ s, X.qMS c (D c s) s) * (lam * Real.log 2) - X.pC c * Real.log 2
+      ≤ X.pC c * miN (X.qMS c) := by
+    intro c
+    rcases (X.pC_nonneg c).lt_or_eq with h | h
+    · have hu : ∀ m, ∑ s, X.qMS c m s = 1 / (Fintype.card M : ℝ) := by
+        intro m
+        unfold qMS
+        rw [← sum_div, X.unif c m]
+        have hpos : X.pC c ≠ 0 := h.ne'
+        unfold pC at hpos ⊢
+        field_simp
+      have hf := fano_finite (X.qMS c) (X.qMS_nonneg c) (X.qMS_sum c h) hu (D c)
+      rw [hlogN] at hf
+      have := mul_le_mul_of_nonneg_left hf h.le
+      nlinarith
+    · rw [← h]; simp
+  have hsum := sum_le_sum fun c (_ : c ∈ (univ : Finset C)) => hc c
+  rw [sum_sub_distrib, ← sum_mul, ← sum_mul, X.sum_pC, one_mul] at hsum
+  -- Σ_c pC·Σ_s qMS(D c s) = Rel
+  have hrel : ∑ c, X.pC c * (∑ s, X.qMS c (D c s) s) = X.Rel D := by
+    unfold Rel
+    apply sum_congr rfl
+    intro c _
+    rw [Finset.sum_comm]
+    have : ∀ s, (∑ m, if D c s = m then X.P c m s else 0) = X.P c (D c s) s := by
+      intro s; rw [sum_ite_eq]; simp
+    simp only [this]
+    unfold qMS
+    rcases (X.pC_nonneg c).lt_or_eq with h | h
+    · rw [mul_sum]; apply sum_congr rfl; intro s _; field_simp
+    · simp [← h, X.P_eq_zero_of_pC c h.symm]
+  have e : (∑ c, X.pC c * (∑ s, X.qMS c (D c s) s)) * (lam * Real.log 2)
+      = X.Rel D * lam * Real.log 2 := by
+    rw [hrel]; ring
+  rw [e] at hsum
+  unfold I
+  rw [le_div_iff₀ hl2]
+  nlinarith
+
+omit [Nonempty M] [Nonempty C] in
+/-- Rel(D) ∈ [0, 1]. -/
+lemma Rel_mem (D : C → S → M) : 0 ≤ X.Rel D ∧ X.Rel D ≤ 1 := by
+  constructor
+  · exact sum_nonneg fun _ _ => sum_nonneg fun _ _ => sum_nonneg fun _ _ => by
+      split_ifs <;> simp [X.P_nonneg]
+  · rw [← X.P_sum]
+    exact sum_le_sum fun _ _ => sum_le_sum fun _ _ => sum_le_sum fun _ _ => by
+      split_ifs <;> simp [X.P_nonneg]
+
+/-- Le modèle concret fournit une `ProtocolInstance` : Pinsker et Fano y sont
+    des théorèmes et non des champs supposés. -/
+noncomputable def toInstance (prm : InstitutionalParams) (D : C → S → M)
+    (hs : X.CommonSupport) : ProtocolInstance lam :=
+  { params := prm, Conf := X.Conf, Rel := X.Rel D, Opp := X.Opp, I := X.I,
+    IV := X.IV, HV := X.HV, TVmax := X.TVmax, KLmax := X.KLmax,
+    hConf := rfl, hOpp := rfl, hTV := ⟨X.TVmax_nonneg, X.TVmax_le_one⟩,
+    hRel := X.Rel_mem D, hI := X.I_nonneg, hIV := X.IV_nonneg,
+    pinsker := X.pinsker_model hs,
+    fano := X.fano_model D }
+
+end CLOModel
+
+/-! ### 10.5 Noyau du produit sans Pinsker ni Hypothèse 3
+
+Le produit Conf·Rel·Opp n'utilise que Conf ≤ 1, Fano, les Hypothèses 1 et 2′ et le
+régime. Pinsker et l'Hypothèse 3 ne servent qu'au Lemme 4. -/
+
+/-- Forme explicite, pour des réels quelconques satisfaisant les seules relations utiles. -/
+theorem product_bound_explicit {Conf Rel Opp I IV HV Δ γ κ : ℝ} {lam : ℕ}
+    (hC1 : Conf ≤ 1) (hR0 : 0 ≤ Rel) (hfano : Rel * lam - 1 ≤ I) (hI : 0 ≤ I)
+    (hIV : 0 ≤ IV) (hOpp : Opp = IV / HV)
+    (A1 : IV ≤ I + Δ) (A2 : γ ≤ HV) (A2γ : 1 ≤ γ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam)
+    (A4 : I ≤ κ / lam) :
+    Conf * Rel * Opp ≤
+      (1 / γ) * (Δ / lam + κ * (Δ + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3) := by
+  have hl : (1 : ℝ) ≤ lam := by exact_mod_cast hlam
+  have hl0 : (0 : ℝ) < lam := by linarith
+  have hγ0 : 0 < γ := by linarith
+  have hHV : 0 < HV := by linarith
+  have hκl : 0 ≤ κ / lam := div_nonneg hκ hl0.le
+  have hR : Rel ≤ (I + 1) / lam := by rw [le_div_iff₀ hl0]; linarith
+  have hO0 : 0 ≤ Opp := by rw [hOpp]; exact div_nonneg hIV hHV.le
+  have hO : Opp ≤ (I + Δ) / γ := by
+    rw [hOpp, div_le_div_iff₀ hHV hγ0]
+    have e1 := mul_le_mul_of_nonneg_right A1 hγ0.le
+    have e2 := mul_le_mul_of_nonneg_left A2 (by linarith : (0 : ℝ) ≤ I + Δ)
+    linarith
+  have hRx : (I + 1) / lam ≤ (κ / lam + 1) / lam := by
+    rw [div_le_div_iff_of_pos_right hl0]; linarith
+  have hOx : (I + Δ) / γ ≤ (κ / lam + Δ) / γ := by
+    rw [div_le_div_iff_of_pos_right hγ0]; linarith
+  have hb0 : 0 ≤ (I + 1) / lam := div_nonneg (by linarith) hl0.le
+  have hb0' : 0 ≤ (κ / lam + 1) / lam := div_nonneg (by linarith) hl0.le
+  have hl0' : (lam : ℝ) ≠ 0 := hl0.ne'
+  have hγ' : γ ≠ 0 := hγ0.ne'
+  calc Conf * Rel * Opp
+      ≤ 1 * ((I + 1) / lam) * ((I + Δ) / γ) :=
+        mul_le_mul (mul_le_mul hC1 hR hR0 zero_le_one) hO hO0 (by rw [one_mul]; exact hb0)
+    _ ≤ 1 * ((κ / lam + 1) / lam) * ((κ / lam + Δ) / γ) :=
+        mul_le_mul (by rw [one_mul, one_mul]; exact hRx) hOx
+          (div_nonneg (by linarith) hγ0.le) (by rw [one_mul]; exact hb0')
+    _ = (1 / γ) * (Δ / lam + κ * (Δ + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3) := by
+        field_simp
+        ring
+
+/-- Forme raffinée, pour des réels quelconques. -/
+theorem product_bound_refined {Conf Rel Opp I IV HV Δ γ κ : ℝ} {lam : ℕ}
+    (hC1 : Conf ≤ 1) (hR0 : 0 ≤ Rel) (hfano : Rel * lam - 1 ≤ I)
+    (hIV : 0 ≤ IV) (hOpp : Opp = IV / HV)
+    (A1 : IV ≤ I + Δ) (A2 : γ ≤ HV) (A2γ : 1 ≤ γ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam)
+    (A4 : I ≤ κ / lam) (hIVHV : IV ≤ HV) :
+    Conf * Rel * Opp ≤ ((κ / lam + 1) / lam) * min 1 ((κ / lam + Δ) / γ) := by
+  have hl0 : (0 : ℝ) < lam := by exact_mod_cast hlam
+  have hγ0 : 0 < γ := by linarith
+  have hHV : 0 < HV := by linarith
+  have hκl : 0 ≤ κ / lam := div_nonneg hκ hl0.le
+  have hR : Rel ≤ (κ / lam + 1) / lam := by rw [le_div_iff₀ hl0]; linarith
+  have hO0 : 0 ≤ Opp := by rw [hOpp]; exact div_nonneg hIV hHV.le
+  have hO1 : Opp ≤ 1 := by rw [hOpp, div_le_one hHV]; exact hIVHV
+  have hO2 : Opp ≤ (κ / lam + Δ) / γ := by
+    rw [hOpp, div_le_div_iff₀ hHV hγ0]
+    have e1 := mul_le_mul_of_nonneg_right A1 hγ0.le
+    have e2 := mul_le_mul_of_nonneg_left A2 (by linarith : (0 : ℝ) ≤ κ / lam + Δ)
+    have e3 : I * γ ≤ κ / lam * γ := mul_le_mul_of_nonneg_right A4 hγ0.le
+    nlinarith
+  have hOm : Opp ≤ min 1 ((κ / lam + Δ) / γ) := le_min hO1 hO2
+  calc Conf * Rel * Opp ≤ 1 * ((κ / lam + 1) / lam) * min 1 ((κ / lam + Δ) / γ) :=
+        mul_le_mul (mul_le_mul hC1 hR hR0 zero_le_one) hOm hO0
+          (by rw [one_mul]; exact div_nonneg (by linarith) hl0.le)
+    _ = _ := by ring
+
+/-- Passage de la forme explicite à la forme asymptotique, pour une suite quelconque. -/
+theorem asymptotic_of_explicit (f : ℕ → ℝ) {Δ γ κ : ℝ} (hΔ : 0 ≤ Δ) (hγ : 1 ≤ γ)
+    (hκ : 0 ≤ κ) (hf : ∀ lam : ℕ, 64 ≤ lam →
+      f lam ≤ (1 / γ) * (Δ / lam + κ * (Δ + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3)) :
+    ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
+      f lam ≤ Δ / lam + K / (lam : ℝ) ^ 2 + ε lam := by
+  refine ⟨κ * (Δ + 1) + κ ^ 2, ε₀, negligible_eps0, fun lam hlam => ?_⟩
+  have hl : (1 : ℝ) ≤ lam := by exact_mod_cast (by omega : 1 ≤ lam)
+  have hl0 : (0 : ℝ) < lam := by linarith
+  have h := hf lam hlam
+  have hB : 0 ≤ Δ / lam + κ * (Δ + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3 := by
+    have hl2 : (0 : ℝ) < (lam : ℝ) ^ 2 := by positivity
+    have hl3 : (0 : ℝ) < (lam : ℝ) ^ 3 := by positivity
+    exact add_nonneg (add_nonneg (div_nonneg hΔ hl0.le)
+      (div_nonneg (mul_nonneg hκ (by linarith)) hl2.le)) (div_nonneg (sq_nonneg κ) hl3.le)
+  have hγ1 : 1 / γ ≤ 1 := by rw [div_le_one (by linarith)]; exact hγ
+  have h1 := h.trans (mul_le_of_le_one_left hB hγ1)
+  have hε := ε₀_nonneg lam
+  have h3 : κ ^ 2 / (lam : ℝ) ^ 3 ≤ κ ^ 2 / (lam : ℝ) ^ 2 := by
+    have e : κ ^ 2 / (lam : ℝ) ^ 3 = κ ^ 2 / (lam : ℝ) ^ 2 * (1 / lam) := by field_simp
+    rw [e]
+    exact mul_le_of_le_one_right (by positivity) (by rw [div_le_one hl0]; exact hl)
+  have hK : (κ * (Δ + 1) + κ ^ 2) / (lam : ℝ) ^ 2 =
+      κ * (Δ + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 2 := add_div _ _ _
+  linarith
+
+/-! ### 10.6 Trilemme CRO sur de vraies lois
+
+Dans cette couche, H(C) est l'entropie de la loi de C et γ = α·H(C) − 1. -/
+
+/-- Entropie de C positive. -/
+lemma CLOModel.HC_nonneg {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S]
+    [Fintype V] (X : CLOModel lam M C S V) : 0 ≤ X.HC := by
+  unfold CLOModel.HC
+  apply div_nonneg _ (Real.log_pos (by norm_num)).le
+  rw [neg_nonneg]
+  apply sum_nonpos
+  intro c _
+  have h0 := X.pC_nonneg c
+  have h1 : X.pC c ≤ 1 := by
+    rw [← X.sum_pC]
+    exact single_le_sum (f := X.pC) (fun c _ => X.pC_nonneg c) (mem_univ c)
+  exact mul_nonpos_of_nonneg_of_nonpos h0 (Real.log_nonpos h0 h1)
+
+open CLOModel in
+set_option linter.unusedVariables false in
+/-- **Théorème 1 (forme explicite), sans axiomatisation de Fano ni de Pinsker.**
+    Pour toute loi finie (C, M, Σ, V) avec M uniforme sur 2^λ valeurs et indépendant
+    de C, toute interprétation admissible et tout décodeur D, avec γ = α·H(C) − 1,
+    sous les Hypothèses 1, 2′ et 4 :
+    Conf·Rel(D)·Opp ≤ (1/γ)·(Δ/λ + κ(Δ+1)/λ² + κ²/λ³).
+    L'hypothèse `hcard` (taille de l'espace des verdicts, Hypothèse 2′) figure par
+    fidélité ; la preuve ne l'utilise pas. L'Hypothèse 3 et les supports communs
+    n'interviennent pas. -/
+theorem trilemma_explicit_concrete {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
+    [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C]
+    (X : CLOModel lam M C S V) (D : C → S → M) (Δ α : ℝ)
+    (hcard : Real.log (Fintype.card V) / Real.log 2 ≤ α * X.HC)
+    (A1 : X.IV ≤ X.I + Δ) (A2 : α * X.HC - 1 ≤ X.HV) (A2γ : 1 ≤ α * X.HC - 1)
+    (κ : ℝ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam) (A4 : X.I ≤ κ / lam) :
+    X.Conf * X.Rel D * X.Opp ≤
+      (1 / (α * X.HC - 1)) * (Δ / lam + κ * (Δ + 1) / (lam : ℝ) ^ 2
+        + κ ^ 2 / (lam : ℝ) ^ 3) :=
+  product_bound_explicit (by unfold Conf; linarith [X.TVmax_nonneg]) (X.Rel_mem D).1
+    (X.fano_model D) X.I_nonneg X.IV_nonneg rfl A1 A2 A2γ hκ hlam A4
+
+open CLOModel in
+set_option linter.unusedVariables false in
+/-- **Forme raffinée concrète.** L'inégalité I(V;Σ|C) ≤ H(V|C) y est démontrée.
+    L'hypothèse `hcard` figure par fidélité à l'Hypothèse 2′ ; la preuve ne l'utilise
+    pas. -/
+theorem trilemma_refined_concrete {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
+    [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C]
+    (X : CLOModel lam M C S V) (D : C → S → M) (Δ α : ℝ)
+    (hcard : Real.log (Fintype.card V) / Real.log 2 ≤ α * X.HC)
+    (A1 : X.IV ≤ X.I + Δ) (A2 : α * X.HC - 1 ≤ X.HV) (A2γ : 1 ≤ α * X.HC - 1)
+    (κ : ℝ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam) (A4 : X.I ≤ κ / lam) :
+    X.Conf * X.Rel D * X.Opp ≤
+      ((κ / lam + 1) / lam) * min 1 ((κ / lam + Δ) / (α * X.HC - 1)) :=
+  product_bound_refined (by unfold Conf; linarith [X.TVmax_nonneg]) (X.Rel_mem D).1
+    (X.fano_model D) X.IV_nonneg rfl A1 A2 A2γ hκ hlam A4 X.IV_le_HV
+
+open CLOModel in
+/-- **Lemme 4 concret** : Conf ≥ 1 − √(c₀·β·I(M;Σ|C)). Il utilise Pinsker, donc les
+    supports communs, et l'Hypothèse 3 avec la constante β ≥ 1. Les paramètres de
+    l'instance sont H = H(C) tirée de la loi et β ; Δ et α n'interviennent pas. -/
+theorem lemma4_concrete {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
+    [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C]
+    (X : CLOModel lam M C S V) (β : ℝ) (hβ : 1 ≤ β) (D : C → S → M)
+    (hs : X.CommonSupport) (A3 : X.KLmax ≤ β * X.I) :
+    1 - Real.sqrt (c0 * β * X.I) ≤ X.Conf :=
+  lemma4_confidentiality_guarantee
+    (X.toInstance ⟨X.HC, 0, 1, β, X.HC_nonneg, le_rfl, one_pos, hβ⟩ D hs) A3
+
+open CLOModel in
+/-- **Théorème 1 (forme asymptotique), sur de vraies lois.** Famille de modèles indexée
+    par λ, avec C et V fixes et une entropie H(C) minorée par H₀, d'où
+    γ = α·H(C) − 1 ≥ α·H₀ − 1. Sous les hypothèses pour λ ≥ 64, il existe K et ε
+    négligeable tels que Conf·Rel·Opp ≤ Δ/λ + K/λ² + ε(λ) pour λ ≥ 64.
+    L'hypothèse `hcard` figure par fidélité à l'Hypothèse 2′ ; la preuve ne s'en sert
+    que pour la transmettre à la forme explicite, qui ne l'utilise pas. Le terme ε
+    garde la forme publiée et le seuil 64 celui de la thèse. -/
+theorem conditional_CRO_trilemma_concrete {M S : ℕ → Type} {C V : Type}
+    [∀ l, Fintype (M l)] [∀ l, DecidableEq (M l)] [∀ l, Nonempty (M l)]
+    [∀ l, Fintype (S l)] [Fintype C] [Fintype V] [Nonempty C]
+    (X : ∀ lam, CLOModel lam (M lam) C (S lam) V) (D : ∀ lam, C → S lam → M lam)
+    (Δ α H₀ κ : ℝ) (hα : 0 < α) (hΔ : 0 ≤ Δ) (hκ : 0 ≤ κ) (A2γ : 1 ≤ α * H₀ - 1)
+    (hHC : ∀ lam, 64 ≤ lam → H₀ ≤ (X lam).HC)
+    (hcard : ∀ lam, 64 ≤ lam → Real.log (Fintype.card V) / Real.log 2 ≤ α * (X lam).HC)
+    (A1 : ∀ lam, 64 ≤ lam → (X lam).IV ≤ (X lam).I + Δ)
+    (A2 : ∀ lam, 64 ≤ lam → α * (X lam).HC - 1 ≤ (X lam).HV)
+    (A4 : ∀ lam, 64 ≤ lam → (X lam).I ≤ κ / lam) :
+    ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
+      (X lam).Conf * (X lam).Rel (D lam) * (X lam).Opp ≤
+        Δ / lam + K / (lam : ℝ) ^ 2 + ε lam := by
+  apply asymptotic_of_explicit _ hΔ A2γ hκ
+  intro lam hlam
+  have hγ : α * H₀ - 1 ≤ α * (X lam).HC - 1 := by
+    have := mul_le_mul_of_nonneg_left (hHC lam hlam) hα.le; linarith
+  have h := trilemma_explicit_concrete (X lam) (D lam) Δ α (hcard lam hlam)
+    (A1 lam hlam) (A2 lam hlam) (A2γ.trans hγ) κ hκ (by omega) (A4 lam hlam)
+  have hl : (1 : ℝ) ≤ lam := by exact_mod_cast (by omega : 1 ≤ lam)
+  have hl0 : (0 : ℝ) < lam := by linarith
+  have hB : 0 ≤ Δ / lam + κ * (Δ + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3 := by positivity
+  have hinv : 1 / (α * (X lam).HC - 1) ≤ 1 / (α * H₀ - 1) :=
+    one_div_le_one_div_of_le (by linarith) hγ
+  exact h.trans (mul_le_mul_of_nonneg_right hinv hB)
+
+/-! ### 10.7 Une famille de lois concrètes satisfait toutes les hypothèses
+
+Témoin de non-vacuité pour tout λ : M uniforme sur 2^λ valeurs, C et Σ deux bits
+uniformes, les trois indépendants, et un verdict qui recopie la preuve. Toutes les
+hypothèses des théorèmes concrets, y compris les supports communs et l'Hypothèse 3,
+sont satisfaites, et le théorème asymptotique s'applique à cette famille. -/
+
+/-- Loi uniforme sur (C, M, Σ) ∈ {0,1} × {0,1}^λ × {0,1} et verdict V = Σ. -/
+noncomputable def famModel (l : ℕ) : CLOModel l (Fin (2 ^ l)) (Fin 2) (Fin 2) (Fin 2) where
+  P := fun _ _ _ => 1 / (4 * 2 ^ l)
+  P_nonneg := fun _ _ _ => by positivity
+  P_sum := by
+    simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+    push_cast
+    field_simp
+    norm_num
+  card_M := by simp
+  unif := fun _ _ => by
+    simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+    push_cast
+    field_simp
+  ker := fun _ s v => if v = s then 1 else 0
+  ker_nonneg := fun _ _ _ => by split_ifs <;> norm_num
+  ker_sum := fun _ s => by simp
+
+namespace CLOModel
+
+lemma fam_P (l : ℕ) (c : Fin 2) (m : Fin (2 ^ l)) (s : Fin 2) :
+    (famModel l).P c m s = 1 / (4 * 2 ^ l) := rfl
+
+lemma fam_ker (l : ℕ) (c s v : Fin 2) :
+    (famModel l).ker c s v = if v = s then 1 else 0 := rfl
+
+lemma fam_pC (l : ℕ) (c : Fin 2) : (famModel l).pC c = 1 / 2 := by
+  simp only [pC, fam_P, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+  norm_num
+
+lemma fam_rowM (l : ℕ) (c : Fin 2) (m : Fin (2 ^ l)) :
+    ∑ s, (famModel l).qMS c m s = 1 / 2 ^ l := by
+  simp only [qMS, fam_P, fam_pC, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  field_simp
+  norm_num
+
+lemma fam_colS (l : ℕ) (c : Fin 2) (s : Fin 2) :
+    ∑ m, (famModel l).qMS c m s = 1 / 2 := by
+  simp only [qMS, fam_P, fam_pC, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+  norm_num
+
+lemma fam_I (l : ℕ) : (famModel l).I = 0 := by
+  have h : ∀ c, miN ((famModel l).qMS c) = 0 := by
+    intro c
+    unfold miN
+    apply sum_eq_zero
+    intro m _
+    apply sum_eq_zero
+    intro s _
+    rw [fam_rowM, fam_colS]
+    have e : (famModel l).qMS c m s / (1 / 2 ^ l * (1 / 2)) = 1 := by
+      simp only [qMS, fam_P, fam_pC]
+      field_simp
+      ring
+    rw [e, Real.log_one, mul_zero]
+  simp [I, h]
+
+lemma fam_qSV (l : ℕ) (c s v : Fin 2) :
+    (famModel l).qSV c s v = if v = s then 1 / 2 else 0 := by
+  simp only [qSV, fam_colS, fam_ker]
+  split_ifs <;> norm_num
+
+lemma fam_IV (l : ℕ) : (famModel l).IV = 1 := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  have h : ∀ c, miN ((famModel l).qSV c) = Real.log 2 := by
+    intro c
+    simp only [miN, fam_qSV, Fin.sum_univ_two]
+    norm_num
+    ring
+  simp only [IV, h, fam_pC, Fin.sum_univ_two]
+  field_simp
+  ring
+
+lemma fam_HV (l : ℕ) : (famModel l).HV = 1 := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  have h : ∀ c, entN2 ((famModel l).qSV c) = Real.log 2 := by
+    intro c
+    simp only [entN2, fam_qSV, Fin.sum_univ_two]
+    norm_num
+    simp only [one_div, Real.log_inv]
+    ring
+  simp only [HV, h, fam_pC, Fin.sum_univ_two]
+  field_simp
+  ring
+
+lemma fam_HC (l : ℕ) : (famModel l).HC = 1 := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  simp only [HC, fam_pC, Fin.sum_univ_two]
+  simp only [one_div, Real.log_inv]
+  field_simp
+  ring
+
+lemma fam_support (l : ℕ) : (famModel l).CommonSupport := fun c _ m₁ s _ => by
+  rw [fam_P]; positivity
+
+lemma fam_KLmax (l : ℕ) : (famModel l).KLmax ≤ 0 := by
+  apply Finset.sup'_le
+  intro x _
+  have e : ∀ m s, (famModel l).qS x.1 m s = 1 / 2 := by
+    intro m s
+    simp only [qS, fam_P, Fin.sum_univ_two]
+    field_simp
+    ring
+  simp [KL, klN, e]
+
+end CLOModel
+
+open CLOModel in
+/-- **Non-vacuité sur de vraies lois.** Pour tout λ, le modèle `famModel λ` satisfait
+    toutes les hypothèses des théorèmes concrets avec Δ = 1, α = 2, β = 1 et κ = 0
+    (d'où H(C) = 1 et γ = 1) : taille de l'espace des verdicts, Hypothèses 1, 2′, 3
+    et 4, supports communs. -/
+theorem concrete_assumptions_satisfiable (l : ℕ) :
+    Real.log (Fintype.card (Fin 2)) / Real.log 2 ≤ 2 * (famModel l).HC ∧
+    (famModel l).IV ≤ (famModel l).I + 1 ∧
+    2 * (famModel l).HC - 1 ≤ (famModel l).HV ∧
+    1 ≤ 2 * (famModel l).HC - 1 ∧
+    (famModel l).KLmax ≤ 1 * (famModel l).I ∧
+    (famModel l).I ≤ 0 / l ∧
+    (famModel l).CommonSupport := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, fam_support l⟩
+  · rw [fam_HC]; simp [div_self hl2.ne']
+  · rw [fam_IV, fam_I]; norm_num
+  · rw [fam_HC, fam_HV]; norm_num
+  · rw [fam_HC]; norm_num
+  · rw [fam_I, mul_zero]; exact fam_KLmax l
+  · rw [fam_I]; simp
+
+open CLOModel in
+/-- Le théorème asymptotique concret s'applique effectivement à la famille témoin. -/
+theorem concrete_asymptotic_applies :
+    ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
+      (famModel lam).Conf * (famModel lam).Rel (fun _ _ => ⟨0, by positivity⟩) *
+        (famModel lam).Opp ≤ 1 / lam + K / (lam : ℝ) ^ 2 + ε lam :=
+  conditional_CRO_trilemma_concrete famModel (fun _ _ _ => ⟨0, by positivity⟩) 1 2 1 0
+    (by norm_num) (by norm_num) le_rfl (by norm_num) (fun l _ => (fam_HC l).ge)
+    (fun l _ => (concrete_assumptions_satisfiable l).1)
+    (fun l _ => (concrete_assumptions_satisfiable l).2.1)
+    (fun l _ => (concrete_assumptions_satisfiable l).2.2.1)
+    (fun l _ => by rw [fam_I]; simp)
+
+
 end ConditionalCRO
 
-/-! ## 10. Bloc de vérification pour l'évaluateur
+/-! ## 11. Bloc de vérification pour l'évaluateur
 
 Chaque `#print axioms` doit afficher uniquement
 `[propext, Classical.choice, Quot.sound]` : ni `sorryAx`, ni axiome ad hoc. -/
@@ -576,6 +1670,14 @@ Chaque `#print axioms` doit afficher uniquement
 #print axioms ConditionalCRO.deterministic_forces_capacity
 #print axioms ConditionalCRO.trilemma_refined
 #print axioms ConditionalCRO.refined_bound_is_fano_when_delta_ge_gamma
+#print axioms ConditionalCRO.pinsker_finite
+#print axioms ConditionalCRO.fano_finite
+#print axioms ConditionalCRO.trilemma_explicit_concrete
+#print axioms ConditionalCRO.trilemma_refined_concrete
+#print axioms ConditionalCRO.lemma4_concrete
+#print axioms ConditionalCRO.conditional_CRO_trilemma_concrete
+#print axioms ConditionalCRO.concrete_assumptions_satisfiable
+#print axioms ConditionalCRO.concrete_asymptotic_applies
 \end{lstlisting}
 
 % ----------------------------------------------------------------------------
@@ -586,15 +1688,14 @@ Chaque `#print axioms` doit afficher uniquement
 \begin{sloppypar}
 Le tableau~\ref{tab:lean4_status} r\'ecapitule le statut de v\'erification
 de chaque composant de la formalisation, tel qu'il ressort de la
-version~2.2 du fichier \texttt{ConditionalCRO.lean}, v\'erifi\'ee sur
-\url{https://live.lean-lang.org}~; la sortie de r\'ef\'erence du projet local est
-\texttt{05\_formalisation\_lean/results/lean\_build.log} du
+version~3.3 du fichier \texttt{ConditionalCRO.lean}~; la sortie de r\'ef\'erence est
+\texttt{05\_formalisation\_lean/results/lean\_build\_v3.3.log} du
 d\'ep\^ot~\cite{CROTrilemmaDepot}.
 \end{sloppypar}
 
 \begin{table}[htbp]
 \centering
-\caption{Statut de v\'erification des composants Lean4 (version~2.2)}
+\caption{Statut de v\'erification des composants Lean4 (version~3.3)}
 \label{tab:lean4_status}
 \begin{tabular}{@{}p{7.2cm}p{3cm}p{3cm}@{}}
 \toprule
@@ -626,6 +1727,12 @@ Classification des r\'egimes (3 th\'eor\`emes)
   & $\checkmark$ V\'erifi\'e & \texttt{norm\_num} \\
 Extensions v2.2 (4 th\'eor\`emes)
   & $\checkmark$ V\'erifi\'e & Entier \\
+Pinsker fini et Fano fini d\'emontr\'es (v3.2)
+  & $\checkmark$ V\'erifi\'e & Lois finies \\
+Trilemmes et Lemme~4 sur lois concr\`etes (v3.2)
+  & $\checkmark$ V\'erifi\'e & 4 th\'eor\`emes \\
+Famille de lois t\'emoins et application du th\'eor\`eme asymptotique (v3.2)
+  & $\checkmark$ V\'erifi\'e & Tout $\lambda$ \\
 \midrule
 \textbf{Total} & \textbf{0 sorry} & \textbf{0 axiome ad hoc} \\
 \bottomrule
@@ -677,7 +1784,7 @@ fichiers \texttt{lean-toolchain}, \texttt{lakefile.toml} et
 \item Ouvrir \url{https://live.lean-lang.org} et choisir le projet \og Mathlib\fg.
 \item Coller l'int\'egralit\'e du Listing~\ref{lst:lean4_complet} et attendre la
       fin de la v\'erification. Le site utilise la version courante de Mathlib~;
-      le fichier y a \'et\'e v\'erifi\'e en octobre 2026.
+      la version~2.2 y a \'et\'e v\'erifi\'ee en octobre 2026 et la version~3.2 le 22 novembre 2026.
 \end{enumerate}
 
 \medskip
@@ -686,13 +1793,13 @@ fichiers \texttt{lean-toolchain}, \texttt{lakefile.toml} et
 \item Aucune erreur de compilation.
 \item Aucun \texttt{sorry} (pas de \texttt{sorryAx} dans les listes d'axiomes).
 \item Aucun axiome \emph{ad hoc} d\'eclar\'e.
-\item Chacun des dix \texttt{\#print axioms} affiche exactement
+\item Chacun des dix-huit \texttt{\#print axioms} affiche exactement
       \texttt{[propext, Classical.choice, Quot.sound]}.
 \end{itemize}
 
 \medskip
 \noindent\textbf{D\'ep\^ot.} Le d\'ep\^ot contient aussi les scripts et donn\'ees
-du chapitre~\ref{chap:experimentation}, une batterie de tests qui recalcule
+du chapitre~\ref{chap:experimentation}, des tests qui recalculent
 les valeurs num\'eriques cit\'ees dans cette th\`ese ainsi qu'une int\'egration continue
 qui recompile la formalisation \`a chaque modification.
 \end{sloppypar}

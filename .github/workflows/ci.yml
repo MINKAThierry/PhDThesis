@@ -1,0 +1,29 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install numpy scipy mpmath pytest
+      - run: cd 06_calcul && python -m pytest -q tests
+      - run: cd 04_sotp/reference_low_base && python -m pytest -q tests
+      - run: cd 07_protocoles_terrain/analyse && python -m pytest -q tests
+      - run: pip install cryptography && cd 07_protocoles_terrain/P1_delta/stimuli && python generer_exemples.py --check
+      - run: pip install dilithium-py==1.4.0 slh-dsa==0.2.5 && cd 07_protocoles_terrain/P5_delta_q/stimuli && python generer_signatures_pqc.py --check
+      - run: cd 07_protocoles_terrain/P3_opp_helios/formation && python generer_bulletins_exercice.py --check
+  sotp-high:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "20"}
+      - run: cd 04_sotp/high && bash scripts/run_all.sh
+  lean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with: {lake-package-directory: "05_formalisation_lean", use-mathlib-cache: true}

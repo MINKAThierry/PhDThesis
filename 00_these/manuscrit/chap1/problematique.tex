@@ -43,7 +43,7 @@ qu'il attendait.
 \end{boiteArbitre}
 
 % ----------------------------------------------------------------------------
-\subsection{Le paradoxe de l'authenticit\'e invisible~: formulation approfondie}
+\subsection{Formulation approfondie du paradoxe de l'authenticit\'e invisible}
 \label{subsec:paradoxe_authenticite}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
@@ -56,7 +56,7 @@ confidentialit\'e nulle. La seconde rassemble les fondements pos\'es \`a la sect
 Shannon~\cite{Shannon48,Shannon49,CoverThomas06}, de la th\'eorie quantique~\cite{Wilde2017,Holevo1973}, des primitives d'obscurcissement~\cite{Pedersen91,Groth16} ou des trilemmes
 CAP/FLP/Blockchain~\cite{GilbertLynch02,Buterin17,Nakamoto08}. Nous formalisons maintenant cette tension comme probl\'ematique centrale.
 
-\subsubsection{Le foss\'e cryptographie-institution~: analyse structurelle}
+\subsubsection{Analyse structurelle du foss\'e entre cryptographie et institution}
 \label{subsubsec:fosse_crypto_institution}
 
 Les syst\`emes cryptographiques con\c{c}us pour la s\'ecurit\'e math\'ematique
@@ -66,7 +66,7 @@ meilleure impl\'ementation ni par une formation suppl\'ementaire des
 utilisateurs, car elle proc\`ede d'une \textbf{incompatibilit\'e structurelle}
 entre deux paradigmes de v\'erification.
 
-\paragraph{Paradigme cryptographique~: v\'erification algorithmique.}
+\paragraph{Le paradigme cryptographique de la v\'erification algorithmique.}
 \label{par:paradigme_crypto}
 
 La recherche cryptographique classique, depuis les travaux de
@@ -104,7 +104,7 @@ Elles ne fournissent en revanche aucune m\'etrique des propri\'et\'es
 l\'egitime \`a comprendre ce que le syst\`eme
 certifie~\cite{Smith09,Alvim12,ClarksonSchneider10}.
 
-\paragraph{Paradigme institutionnel~: v\'erification substantielle.}
+\paragraph{Le paradigme institutionnel de la v\'erification substantielle.}
 \label{par:paradigme_institutionnel}
 
 Les tribunaux, les organes de r\'egulation et les audits publics exigent quant
@@ -143,7 +143,7 @@ preuves zero-knowledge sont con\c{c}ues pour ne rien r\'ev\'eler
 au-del\`a de la validit\'e de l'assertion~; cette propri\'et\'e, pr\'ecieuse pour
 la confidentialit\'e, prive en revanche l'analyse r\'etrospective de sa mati\`ere~\cite{Androulaki13,Meiklejohn13}.
 Lors d'une crise syst\'emique comparable \`a celle de 2008~\cite{FCIC2011}, la reconstitution des
-m\'ecanismes de contagion devient ainsi structurellement impossible. La troisi\`eme manifestation est l'impossibilit\'e d'attribuer les responsabilit\'es.
+m\'ecanismes de contagion serait ainsi fortement entrav\'ee. La troisi\`eme manifestation est l'impossibilit\'e d'attribuer les responsabilit\'es.
 Lorsqu'une preuve est rejet\'ee ou qu'une fraude est suspect\'ee, l'opacit\'e
 cryptographique emp\^eche d'identifier les acteurs qui ont produit des preuves incorrectes ou
 malveillantes~\cite{FinckMoscon19,DeFilippi16}. La figure suivante illustre ce compromis.
@@ -162,11 +162,11 @@ malveillantes~\cite{FinckMoscon19,DeFilippi16}. La figure suivante illustre ce c
 
 % Trois syst\`emes
 \node[box] (helios) at (0,4)
-    {\textbf{Helios}\\$\Conf \approx 0{,}95$ (\'elev\'e)\\$\Opp \approx 0{,}50$ (faible)};
+    {\textbf{Helios}\\$\Conf \approx 0{,}92$ (\'elev\'e)\\$\Opp \approx 0{,}50$ (faible)};
 \node[box] (zksnark) at (5,4)
-    {\textbf{zk-SNARKs}\\$\Conf \approx 0{,}98$ (\'elev\'e)\\$\Opp \approx 0{,}67$ (mod\'er\'e)};
+    {\textbf{zk-SNARKs}\\$\Conf \approx 0{,}89$ (\'elev\'e)\\$\Opp \approx 0{,}67$ (mod\'er\'e)};
 \node[box] (ecdsa) at (10,4)
-    {\textbf{ECDSA}\\$\Conf \approx 0{,}00$ (faible)\\$\Opp \approx 0{,}90$ (\'elev\'e)};
+    {\textbf{ECDSA}\\$\Conf \approx 0{,}31$ (faible)\\$\Opp \approx 0{,}90$ (\'elev\'e)};
 
 % Propri\'et\'es
 \node[box, fill=enspblue!12, draw=enspblue] (conf) at (0,0)
@@ -176,12 +176,12 @@ malveillantes~\cite{FinckMoscon19,DeFilippi16}. La figure suivante illustre ce c
 
 % Fl\`eches
 \draw[arrow] (helios)  -- (conf)
-    node[midway, left,  font=\footnotesize] {$\Conf \cdot \Opp \approx 0{,}48$};
+    node[midway, left,  font=\footnotesize] {$\Conf \cdot \Opp \approx 0{,}46$};
 \draw[arrow] (zksnark) -- (conf)
     node[midway, left,  font=\footnotesize, xshift=2cm]
-        {$\Conf \cdot \Opp \approx 0{,}66$};
+        {$\Conf \cdot \Opp \approx 0{,}60$};
 \draw[arrow] (ecdsa)   -- (opp)
-    node[midway, right, font=\footnotesize] {$\Conf \cdot \Opp \approx 0$};
+    node[midway, right, font=\footnotesize] {$\Conf \cdot \Opp \approx 0{,}28$};
 
 % Tension fondamentale
 \draw[lienTension, <->] (conf) -- (opp)
@@ -195,8 +195,8 @@ malveillantes~\cite{FinckMoscon19,DeFilippi16}. La figure suivante illustre ce c
     {Acc\`es institutionnel fort};
 
 \end{tikzpicture}
-\caption[Paradoxe de l'authenticit\'e invisible~: compromis confidentialit\'e--opposabilit\'e]{%
-  Paradoxe de l'authenticit\'e invisible~: compromis entre confidentialit\'e et
+\caption[Le paradoxe de l'authenticit\'e invisible, compromis confidentialit\'e--opposabilit\'e]{%
+  Le paradoxe de l'authenticit\'e invisible, compromis entre confidentialit\'e et
   opposabilit\'e dans les syst\`emes cryptographiques d\'eploy\'es.%
 }
 
@@ -242,7 +242,7 @@ telles que la d\'ecoh\'erence ou le bruit de mesure, qui alt\`erent l'interpr\'e
 preuves transmises~\cite{Zurek2003,Wootters1982}. Ce sont ces effets quantiques~\cite{Mayers1997,Lo1997,Unruh2016} qui conduisent \`a introduire
 les param\`etres $\Delta_q$ et $\eta_q$, formalis\'es \`a la section~\ref{sec:cro_pq}.
 
-\subsubsection{Formulation math\'ematique~: implications pr\'eliminaires}
+\subsubsection{Premi\`eres implications de la formulation math\'ematique}
 \label{subsubsec:formulation_mathematique}
 
 Quatre conclusions de l'analyse pr\'ec\'edente structurent notre programme
@@ -263,8 +263,8 @@ entre~20 et~80 bits selon la th\'eorie de la rationalit\'e
 born\'ee~\cite{Simon82,Simon1955,Miller56,Cowan2001,Ericsson95}, elle est syst\'ematiquement inf\'erieure au param\`etre de s\'ecurit\'e cryptographique $\lambda \in [128,256]$ bits.
 
 Les compromis observ\'es laissent aussi pr\'esager des bornes fondamentales.
-Malgr\'e des d\'ecennies d'optimisation, aucun syst\`eme
-d\'eploy\'e n'atteint un produit $\Conf \cdot \Rel \cdot \Opp > 0{,}6$.
+Aucune des trois estimations illustratives de la section~\ref{sec:contexte} n'atteint
+un produit $\Conf \cdot \Rel \cdot \Opp > 0{,}6$.
 Le fait que tous plafonnent au m\^eme niveau s'accorde avec l'existence de contraintes th\'eoriques
 comparables au th\'eor\`eme~CAP~\cite{Brewer00,GilbertLynch02} ou au trilemme
 blockchain~\cite{Buterin17,Garay15}.
@@ -310,12 +310,12 @@ est difficile \`a auditer~\guillemotright, restent des anecdotes. Leur transform
 en m\'etriques quantitatives ($\Opp = I(V;\Sigma|C)/H(V|C)$) est la
 condition pr\'ealable \`a toute th\'eorie~\cite{Clarkson05,Smith09,Alvim12}.
 
-\paragraph{Contribution~C1~: cadre CLO (Cryptographic Legal Opposability).}
+\paragraph{Contribution~C1, le cadre CLO (Cryptographic Legal Opposability).}
 Nous d\'efinissons trois mesures issues de la th\'eorie de l'information,
 \`a savoir la confidentialit\'e $\Conf$, la fiabilit\'e $\Rel$ et l'opposabilit\'e $\Opp$ (voir
 \'equations~\eqref{eq:conf_def}--\eqref{eq:opp_def} de la section~\ref{subsec:definitions_preliminaires_cro}). Le cadre \'etablit le Th\'eor\`eme du Goulot
 d'\'etranglement Contextuel $I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$,
-fournit des r\`egles de composition (s\'equentielle et parall\`ele) et
+fournit des r\`egles de composition s\'equentielle et parall\`ele pour $\Conf$ et $\Rel$, s\'equentielle seulement pour $\Opp$ (Remarque~\ref{rem:composition_opp}), et
 propose la construction Semantic One-Time Pad (S-OTP). Les \'etudes de cas
 illustratives portant sur Helios ($\Conf \cdot \Relver \cdot \Opp \approx
 0{,}437$), zk-SNARKs ($\approx 0{,}572$) et ECDSA ($\approx 0{,}273$), sur
@@ -340,7 +340,7 @@ rigoureusement prouv\'e, conditionnant l'impossibilit\'e \`a des param\`etres
 institutionnels explicites, \`a l'image du th\'eor\`eme~CAP conditionn\'e
 aux partitions r\'eseau~\cite{GilbertLynch02,ChandraHadzilacos96}.
 
-\paragraph{Contribution~C2~: Trilemme CRO conditionnel.}
+\paragraph{Contribution~C2, le Trilemme CRO conditionnel.}
 Nous \'etablissons une borne sup\'erieure sur le produit
 $\Conf \cdot \Rel \cdot \Opp$ en fonction des param\`etres institutionnels
 $\Delta$ (capacit\'e d'extraction), $\alpha$ (granularit\'e des verdicts),
@@ -353,7 +353,8 @@ $\beta$ (r\'egularit\'e du protocole)~\cite{Tsybakov2009}, sous la forme
 \end{equation}
 o\`u $\lambda$ est le param\`etre de s\'ecurit\'e. La forme publi\'ee
 dans~\cite{MINKA2026CRO}, $\Conf \cdot \Rel \cdot \Opp \leq \Delta/\lambda +
-O(\lambda^{-2}) + \negl(\lambda)$, en est un corollaire affaibli ($\gamma \geq 1$).
+O(\lambda^{-2}) + \negl(\lambda)$, en est un corollaire affaibli sous l'Hypoth\`ese~\ref{ass:regime}
+explicit\'ee, puisque $\gamma \geq 1$ (Remarque~\ref{rem:corollaire_publie}).
 Une forme raffin\'ee identifie le r\'egime, $H(\mathcal{C}) > (\Delta + 1 +
 \kappa/\lambda)/\alpha$, dans lequel la capacit\'e institutionnelle $\Delta$
 devient la contrainte liante \`a la place de la seule in\'egalit\'e de Fano. Une
@@ -379,7 +380,7 @@ introduisent une perte d'interpr\'etabilit\'e suppl\'ementaire~\cite{Schumacher1
 questions sont urgentes car les institutions doivent d\`es maintenant
 choisir des protocoles adapt\'es \`a l'\`ere post-quantique.
 
-\paragraph{Contribution~C3~: Trilemme CRO post-quantique.}
+\paragraph{Contribution~C3, le Trilemme CRO post-quantique.}
 Nous \'etendons le Trilemme CRO aux contextes quantiques~\cite{Holevo1973,Wilde2017} en \'etablissant la borne
 \begin{equation}
 \label{eq:pqcro_bound_intro}
@@ -412,7 +413,7 @@ conjecture de m\'ethode. Sa saturation par des constructions explicites permet d
 une caract\'erisation fondamentale des limites de la cryptographie
 institutionnelle~\cite{Gennaro13,Parno13,BCTV14}.
 
-\paragraph{Contribution~C4~: famille SOTP.}
+\paragraph{Contribution~C4, la famille SOTP.}
 Nous proposons trois constructions de r\'ef\'erence, chacune adapt\'ee \`a un
 r\'egime de richesse contextuelle. Sous des conventions explicites, elles r\'ealisent
 des compromis \'elev\'es sur l'\'echelle op\'erationnelle CLO
@@ -443,14 +444,15 @@ Lorsque les r\'esultats engagent directement des enjeux soci\'etaux, comme la s\
 \'electorale ou la r\'egulation financi\`ere, le niveau d'assurance requis d\'epasse
 celui qu'offrent des preuves informelles~\cite{BartheEA2013,BhargavanEA2017}.
 
-\paragraph{Contribution~C5~: formalisation Lean4.}
+\paragraph{Contribution~C5, la formalisation Lean4.}
 Le noyau alg\'ebrique du Trilemme~CRO est v\'erifi\'e m\'ecaniquement
 dans l'assistant de preuve Lean4~\cite{Lean4,moura2015lean} (version~4.34.0,
 biblioth\`eque Mathlib~\cite{Mathlib} v4.34.0). La formalisation apporte
 quatre contributions. Elle fournit d'abord un mod\`ele formel de familles de protocoles,
 $\mathtt{ProtocolFamily}$, qui capture la nature asymptotique du th\'eor\`eme.
 Elle s\'epare ensuite explicitement le noyau v\'erifi\'e des in\'egalit\'es de Pinsker
-et de Fano, pos\'ees comme propri\'et\'es des instances~\cite{AbadiRogaway00,BanaComon12}.
+et de Fano, pos\'ees comme propri\'et\'es des instances~\cite{AbadiRogaway00,BanaComon12},
+puis d\'emontre ces deux in\'egalit\'es pour des lois de probabilit\'e finies.
 Elle a aussi conduit \`a expliciter l'Hypoth\`ese de r\'egime $I(M;\Sigma|C) \leq \kappa/\lambda$
 et \`a pr\'eciser trois \'enonc\'es publi\'es. Elle certifie enfin la
 forme raffin\'ee, qui d\'elimite le r\'egime o\`u la capacit\'e institutionnelle
@@ -480,7 +482,7 @@ les bornes restent muettes sur les syst\`emes r\'eels~\cite{Popper1934}. Un
 r\'esultat n'acquiert sa port\'ee scientifique qu'\`a la condition d'\^etre
 r\'efutable, ce qui oblige \`a pr\'eciser les mesures par lesquelles il pourrait l'\^etre.
 
-\paragraph{Contribution~C6~: programme exp\'erimental et validation r\'etrospective.}
+\paragraph{Contribution~C6, le programme exp\'erimental et la validation r\'etrospective.}
 Nous sp\'ecifions six protocoles op\'erationnels consacr\'es respectivement
 \`a la capacit\'e d'extraction institutionnelle, \`a l'entropie contextuelle,
 \`a l'opposabilit\'e sur syst\`emes d\'eploy\'es, \`a l'estimation conjointe de la
@@ -505,44 +507,28 @@ le mod\`ele sont en revanche explicitement \'enonc\'es.
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
 
-\subsubsection{Coh\'erence du programme~: le cycle \textbf{F}$\to$\textbf{B}$\to$\textbf{E}$\to$\textbf{S}$\to$\textbf{C}$\to$\textbf{X}}
+\subsubsection{Coh\'erence de l'encha\^inement \textbf{F}$\to$\textbf{B}$\to$\textbf{E}$\to$\textbf{S}$\to$\textbf{C}$\to$\textbf{X} des objectifs}
 \label{subsubsec:cycle_FBESCX}
 
-Les six contributions sont interd\'ependantes et s'encha\^inent selon le
-cycle logique
-\begin{equation}
-\label{eq:cycle_recherche}
-\resizebox{0.95\textwidth}{!}{$ \underbrace{\text{Obj~\ref{obj:obj1_unification} (CLO)}}_{\mathbf{F}}
-\xrightarrow{\text{d\'efinitions}}
-\underbrace{\text{Obj~\ref{obj:obj2_impossibilite} (CRO)}}_{\mathbf{B}}
-\xrightarrow{\text{borne classique}}
-\underbrace{\text{Obj~\ref{obj:obj3_postquantique} (PQ-CRO)}}_{\mathbf{E}}
-\xrightarrow{\text{extension}}
-\underbrace{\text{Obj~\ref{obj:obj4_saturation} (SOTP)}}_{\mathbf{S}}
-\xrightarrow{\text{saturation}}
-\underbrace{\text{Obj~\ref{obj:obj5_verification} (Lean4)}}_{\mathbf{C}}
-\xrightarrow{\text{certification}}
-\underbrace{\text{Obj~\ref{obj:obj6_experimentation} (Exp\'erimentation)}}_{\mathbf{X}}
-\xrightarrow{\text{mesure}}
-\text{Obj~\ref{obj:obj2_impossibilite}}
- $}
-\end{equation}
+La figure~\ref{fig:cycle_recherche} de l'introduction g\'en\'erale repr\'esente ce cycle.
+
+
 Chaque d\'ependance est fonctionnelle. Les d\'efinitions formelles de
-$\Conf$, $\Rel$, $\Opp$ (Obj~\ref{obj:obj1_unification}) sont n\'ecessaires pour \'enoncer
-le Trilemme~CRO (Obj~\ref{obj:obj2_impossibilite}), car sans op\'erationnalisation
+$\Conf$, $\Rel$, $\Opp$~Objectif~1~(\ref{obj:obj1_unification}) sont n\'ecessaires pour \'enoncer
+le Trilemme~CRO~Objectif~2~(\ref{obj:obj2_impossibilite}), car sans op\'erationnalisation
 de l'opposabilit\'e au sens de la th\'eorie de l'information, le trilemme resterait une
-conjecture informelle~\cite{ClarksonSchneider10}. La borne d'impossibilit\'e classique (Obj~\ref{obj:obj2_impossibilite}) fournit
-le point de d\'epart que l'extension post-quantique (Obj~\ref{obj:obj3_postquantique}) g\'en\'eralise avec
-les param\`etres $\Delta_q$ et $\eta_q$~\cite{NielsenChuang2010,Wilde2017}. Les bornes classiques (Obj~\ref{obj:obj2_impossibilite})
-et quantiques (Obj~\ref{obj:obj3_postquantique}) fournissent les cibles asymptotiques que les
-constructions SOTP (Obj~\ref{obj:obj4_saturation}) visent. Sans ces bornes, SOTP ne serait qu'une
+conjecture informelle~\cite{ClarksonSchneider10}. La borne d'impossibilit\'e classique~Objectif~2~(~\ref{obj:obj2_impossibilite}) fournit
+le point de d\'epart que l'extension post-quantique~Objectif~3~(\ref{obj:obj3_postquantique}) g\'en\'eralise avec
+les param\`etres $\Delta_q$ et $\eta_q$~\cite{NielsenChuang2010,Wilde2017}. Les bornes classiques~Objectif~2~(\ref{obj:obj2_impossibilite})
+et quantiques~Objectif 3~(\ref{obj:obj3_postquantique}) fournissent les cibles asymptotiques que les
+constructions SOTP~Objectif~4~(\ref{obj:obj4_saturation}) visent. Sans ces bornes, SOTP ne serait qu'une
 collection de protocoles ad~hoc~\cite{JohnsonLindenstrauss84,Groth16}. La
 question de savoir si la borne~CRO est asymptotiquement serr\'ee reste
 ouverte. Elle est formul\'ee comme conjecture au chapitre~\ref{chap:constructions}. La complexit\'e de la cha\^ine de
-raisonnement justifie l'investissement dans la v\'erification formelle (Obj~\ref{obj:obj5_verification}),
+raisonnement justifie l'investissement dans la v\'erification formelle~Objectif~5~(\ref{obj:obj5_verification}),
 car la certification m\'ecanis\'ee s'impose pour des th\'eor\`emes aux implications
-soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. Enfin, la formalisation Lean4~(Obj~\ref{obj:obj5_verification}) alimente
-Obj~\ref{obj:obj1_unification} par r\'etroaction, puisqu'elle a impos\'e d'expliciter l'Hypoth\`ese de r\'egime
+soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. Enfin, la formalisation Lean4~Objectif~5~(\ref{obj:obj5_verification}) alimente
+Objectif~1~(\ref{obj:obj1_unification}) par r\'etroaction, puisqu'elle a impos\'e d'expliciter l'Hypoth\`ese de r\'egime
 et de pr\'eciser trois \'enonc\'es publi\'es, ce qui a conduit \`a une forme
 raffin\'ee du trilemme~\cite{Zellagui2018}.
 

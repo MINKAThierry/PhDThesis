@@ -1,10 +1,11 @@
 # PDF of the thesis
 
-> **Status: PROPOSAL: thesis submitted, defence pending** · Source: build of the sources in [`../manuscrit/`](../manuscrit/) (19 October 2026) and of the submitted version (28 September 2026)
+> **Status: PROPOSAL — thesis submitted, defence pending** · Source: build of the sources in [`../manuscrit/`](../manuscrit/) (16 November 2026) and of the submitted version (28 September 2026)
 
 | File | Contents |
 |---|---|
-| `MaThèse.pdf` | Final version (247 pages), built with LuaLaTeX on 19 October 2026 from the sources in [`../manuscrit/`](../manuscrit/) |
+| `MaThèse.pdf` | Final version (248 pages), built with LuaLaTeX on 16 November 2026 from the sources in [`../manuscrit/`](../manuscrit/) |
+| `these_version_depot.pdf` | Version submitted on 28 September 2026 (262 pages), kept for reference |
 
 [Version française](README_fr.md)
 

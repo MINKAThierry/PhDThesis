@@ -80,7 +80,7 @@ section~\ref{sec:derivation_opposabilite}.
 
 \begin{table}[htbp]
 \centering
-\caption{Calibration illustrative~: heuristiques SOTP et produits CLO
+\caption{Calibration illustrative des heuristiques SOTP et des produits CLO
 (syst\`emes classiques, $\lambda = 128$)}
 \label{tab:coherence_classiques}
 \small
@@ -99,10 +99,7 @@ zk-SNARKs conformit\'e & SOTP-High & 70 & $0{,}037$ & $0{,}572$ \\
 Les deux colonnes ne mesurent pas la m\^eme chose. Les valeurs SOTP sont des
 illustrations de l'heuristique de conception de chaque variante~; les produits
 CLO sont calcul\'es avec la fiabilit\'e de v\'erification, \`a l'\'echelle
-op\'erationnelle. La formulation initiale de ce tableau affichait des
-\og pr\'edictions\fg{} ($0{,}205$--$0{,}273$, $0{,}430$, $0{,}568$) et des \'ecarts de
-$0$ \`a $1{,}6\,\%$, obtenus par ajustement des param\`etres sur les produits CLO.
-La pr\'esente formulation ne les reprend pas.
+op\'erationnelle.
 
 \subsubsection{Syst\`emes post-quantiques}
 \label{subsubsec:resultats_postquantiques}
@@ -127,10 +124,6 @@ SLH-DSA & $0$ / $0{,}08$ & 25 & $0{,}201$ & $0{,}30$ & oui \\
 \end{tabular}
 \end{table}
 
-La formulation initiale de ce tableau retenait un autre jeu de valeurs
-($\Delta_q \in [54, 97]$~bits, $\lambda \in \{192, 256\}$) et des r\'egimes
-\og Q-Ready\fg{} et \og Q-Enhanced\fg{} non d\'efinis, distincts de ceux du
-chapitre~\ref{chap:experimentation}. La table unique de r\'ef\'erence les remplace.
 \label{eq:decomposition_delta_q_validation}
 
 \subsubsection{Analyse comparative}
@@ -243,10 +236,7 @@ de la borne, sur un protocole qui satisfait les hypoth\`eses et avec des
 param\`etres mesur\'es, r\'efute l'une des hypoth\`eses. Les crit\`eres retenus
 sont donc ceux du tableau~\ref{tab:criteres_refutation}, qui portent sur
 chaque hypoth\`ese (extraction born\'ee, admissibilit\'e de l'interpr\`ete,
-richesse des verdicts, perte $\eta_q$) et sur la borne elle-m\^eme. Les crit\`eres
-majoritaires de la formulation initiale (\og la borne n'est pas viol\'ee pour au
-moins 2 des 3 standards\fg{}, \og 4 des 5 pr\'edictions \`a $\pm 20\,\%$\fg{}) ne
-sont pas repris.
+richesse des verdicts, perte $\eta_q$) et sur la borne elle-m\^eme. 
 Si les capacit\'es mesur\'ees s'\'ecartent syst\'ematiquement des plages
 attendues, le mod\`ele d'extraction born\'ee devra \^etre r\'evis\'e~; ce
 r\'esultat serait lui-m\^eme instructif pour la cryptographie institutionnelle.
@@ -276,7 +266,7 @@ Les r\'esultats sont pr\'esent\'es selon leur \'etape dans la progression
 canonique F$\to$B$\to$E$\to$S$\to$C$\to$X,
 puis selon leur niveau de certitude.
 
-\subsubsection{\'Etape F~: les th\'eor\`emes du cadre CLO}
+\subsubsection{Les th\'eor\`emes du cadre CLO (\'etape F)}
 \label{subsubsec:resultats_etape_F}
 
 Nous rappelons les d\'efinitions \'etablies par la
@@ -303,7 +293,7 @@ $\Conf(\mathcal{P}_1 \| \mathcal{P}_2) \leq \min\{\Conf(\mathcal{P}_1),\Conf(\ma
 $\Relrec(\mathcal{P}_1 \| \mathcal{P}_2) \geq \max\{\Relrec(\mathcal{P}_1),\Relrec(\mathcal{P}_2)\}$.
 Cette formulation pr\'ecise les formulations initiales de ce r\'esultat.
 
-\subsubsection{\'Etape B~: les th\'eor\`emes du Trilemme CRO classique}
+\subsubsection{Les th\'eor\`emes du Trilemme CRO classique (\'etape B)}
 \label{subsubsec:resultats_etape_B}
 
 Nous rappelons les bornes \'etablies par la
@@ -336,11 +326,11 @@ La borne~\eqref{eq:trilemme_cro_resultat_corrige} est valide
 sous l'Hypoth\`ese~\ref{ass:regime} (r\'egime de pr\'eservation
 de la confidentialit\'e). Elle est structurellement identique \`a celle
 v\'erifi\'ee m\'ecaniquement dans l'annexe~\ref{chap:annexe_lean4}. La borne
-publi\'ee $\Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$ s'obtient
-comme cas particulier.
+publi\'ee $\Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$ s'en d\'eduit comme
+corollaire sous l'Hypoth\`ese~\ref{ass:regime} explicit\'ee (Remarque~\ref{rem:corollaire_publie}).
 \end{remark}
 
-\subsubsection{\'Etape E~: les th\'eor\`emes du Trilemme CRO post-quantique}
+\subsubsection{Les th\'eor\`emes du Trilemme CRO post-quantique (\'etape E)}
 \label{subsubsec:resultats_etape_E}
 
 Nous rappelons l'extension quantique \'etablie \`a la
@@ -362,7 +352,8 @@ cha\^{\i}ne de bits classique.
 Le terme $\eta_q H(C)/\lambda$ n'appara\^it pas dans la borne explicite.
 Il est d'ordre $\lambda^{-1}$, de sorte qu'aucun terme en
 $O(\lambda^{-2})$ ne l'absorbe~; il est simplement absent de cette borne. Il figure uniquement dans
-la majoration affaiblie, obtenue en ajoutant une quantit\'e positive,
+la majoration affaiblie, obtenue en ajoutant une quantit\'e positive
+(Remarque~\ref{rem:corollaire_publie_pq}),
 o\`u il rend visible le co\^ut s\'emantique du canal. La borne principale
 est donc structurellement identique \`a la borne classique, avec
 $\Delta_q$ \`a la place de $\Delta$, sous
@@ -370,7 +361,7 @@ l'Hypoth\`ese~\ref{ass:regime_quantique} (r\'egime de pr\'eservation de
 la confidentialit\'e quantique).
 \end{remark}
 
-\subsubsection{\'Etape S~: les constructions SOTP}
+\subsubsection{Les constructions SOTP (\'etape S)}
 \label{subsubsec:resultats_etape_S}
 
 Nous \'etablissons les propri\'et\'es cryptographiques des trois
@@ -391,7 +382,7 @@ ces heuristiques et ne distinguait pas fiabilit\'e de reconstruction et fiabilit
 de v\'erification (Remarque~\ref{rem:statut_optimalite}).
 \label{eq:optimalite_resultat}
 
-\subsubsection{\'Etape C~: la formalisation Lean4}
+\subsubsection{La formalisation Lean4 (\'etape C)}
 \label{subsubsec:resultats_etape_C}
 
 Nous v\'erifions m\'ecaniquement le noyau alg\'ebrique du Trilemme
@@ -424,7 +415,8 @@ La formalisation \'etablit la borne
 enti\`erement v\'erifi\'ee sans \texttt{sorry} ni axiome d\'eclar\'e (seuls les
 axiomes standard \texttt{propext}, \texttt{Classical.choice} et
 \texttt{Quot.sound} apparaissent). Fano et Pinsker, absents de Mathlib, sont
-pos\'es comme propri\'et\'es des instances de protocole~; l'extraction born\'ee et
+pos\'es comme propri\'et\'es des instances dans le noyau alg\'ebrique et d\'emontr\'es
+pour des lois de probabilit\'e finies dans la couche concr\`ete~; l'extraction born\'ee et
 le r\'egime de confidentialit\'e sont des hypoth\`eses du th\'eor\`eme. La
 certification porte donc sur la d\'erivation~; les pr\'emisses restent des hypoth\`eses.
 
@@ -477,17 +469,32 @@ formels class\'es selon leur niveau de certitude.
 \caption{Bilan des r\'esultats formels et couverture Lean4}
 \label{tab:hierarchie_certitude}
 \small
-\begin{tabular}{p{3.2cm}p{3cm}cp{2.8cm}c}
+\setlength{\tabcolsep}{4pt}     % ← réduit les marges inter-colonnes
+\begin{tabular}{@{}p{2.8cm}p{2.8cm}c p{2.5cm}p{2.6cm}@{}}
 \toprule
 \textbf{Cat\'egorie} & \textbf{Niveau de certitude} & \textbf{Nb} &
 \textbf{Statut de v\'erification} & \textbf{Couvert. Lean4} \\
 \midrule
-Trilemme (forme raffin\'ee), Lemme~\ref{lem:confidentiality_guarantee}, Proposition~\ref{prop:fondement_extraction} & Prouv\'es sous Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regime} & 3 & Preuves papier & \textbf{Oui} (noyau, annexe~\ref{chap:annexe_lean4}) \\
-Goulot, composition, bornes \'el\'ementaires (Sec.~\ref{sec:clo}) & Prouv\'es (formulations pr\'ecis\'ees) & 3 & Preuves papier & Non (verdict d\'eterministe~: oui) \\
-Trilemme PQ (Sec.~\ref{sec:cro_pq}) & Sous Hypoth\`eses~\ref{ass:extraction_quantique}--\ref{ass:regime_quantique} & 1 & Preuve papier & Non \\
-Propri\'et\'es SOTP ($\Conf$, $\Relver$) & Prouv\'ees sous PRG et DLog (q-PKE pour High) & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Non \\
-Minorations d'opposabilit\'e SOTP, optimalit\'e & Heuristiques / conjecture & --- & Non prouv\'ees & Non \\
-Valeurs num\'eriques des syst\`emes d\'eploy\'es & Calibration illustrative & --- & Non mesur\'ees & --- \\
+Trilemme (forme raffin\'ee), Lemme~\ref{lem:confidentiality_guarantee}, Proposition~\ref{prop:fondement_extraction} 
+  & Prouv\'es sous Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regime} 
+  & 3 & Preuves papier 
+  & \textbf{Oui} (noyau, annexe~\ref{chap:annexe_lean4}) \\
+Goulot, composition, bornes \'el\'ementaires (Sec.~\ref{sec:clo}) 
+  & Prouv\'es (formulations pr\'ecis\'ees) 
+  & 3 & Preuves papier 
+  & Non (verdict d\'eterministe~: oui) \\
+Trilemme PQ (Sec.~\ref{sec:cro_pq}) 
+  & Sous Hypoth\`eses~\ref{ass:extraction_quantique}--\ref{ass:regime_quantique} 
+  & 1 & Preuve papier & Non \\
+Propri\'et\'es SOTP ($\Conf$, $\Relver$) 
+  & Prouv\'ees sous PRG et DLog (q-PKE pour High) 
+  & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Non \\
+Minorations d'opposabilit\'e SOTP, optimalit\'e 
+  & Heuristiques / conjecture 
+  & --- & Non prouv\'ees & Non \\
+Valeurs num\'eriques des syst\`emes d\'eploy\'es 
+  & Calibration illustrative 
+  & --- & Non mesur\'ees & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -518,7 +525,7 @@ illustratif.
 
 Pour les signatures post-quantiques r\'eelles, $\eta_q = 0$ et ce terme
 dispara\^it. Dans le sc\'enario hypoth\'etique d'un support quantique
-($\eta_q \approx 0{,}08$), il ne repr\'esente que $2$ \`a $5\,\%$ de la
+($\eta_q \approx 0{,}08$), il ne repr\'esente que $2$ \`a $3\,\%$ de la
 majoration, de sorte que la capacit\'e d'extraction reste le terme dominant. Les produits
 illustratifs d\'epassent la majoration~; ces syst\`emes ne sont pas des
 instances du th\'eor\`eme (section~\ref{sec:comparaison_produits_cro}).

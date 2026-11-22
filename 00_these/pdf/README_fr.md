@@ -1,10 +1,11 @@
 # PDF de la thèse
 
-> **Statut : PROPOSITION: thèse déposée, soutenance à venir** · Source : compilation des sources de [`../manuscrit/`](../manuscrit/) (19 octobre 2026) et de la version déposée (28 septembre 2026)
+> **Statut : PROPOSITION — thèse déposée, soutenance à venir** · Source : compilation des sources de [`../manuscrit/`](../manuscrit/) (16 novembre 2026) et de la version déposée (28 septembre 2026)
 
 | Fichier | Contenu |
 |---|---|
-| `MaThèse.pdf` | Version finale (247 pages), compilée avec LuaLaTeX le 19 octobre 2026 à partir des sources de [`../manuscrit/`](../manuscrit/) |
+| `MaThèse.pdf` | Version finale (248 pages), compilée avec LuaLaTeX le 16 novembre 2026 à partir des sources de [`../manuscrit/`](../manuscrit/) |
+| `these_version_depot.pdf` | Version déposée le 28 septembre 2026 (262 pages), conservée pour référence |
 
 [English version](README_en.md)
 

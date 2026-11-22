@@ -1,0 +1,30 @@
+Vérification de ConditionalCRO.lean, version 3.0 (22 novembre 2026)
+Chaîne d'outils : Lean 4.35.0 (eb6cafb), Mathlib v4.35.0 (56a0058) compilé depuis les sources.
+Fichier testé : ConditionalCRO.lean avec « import Mathlib » remplacé par les modules nécessaires :
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
+import Mathlib.Analysis.SpecificLimits.Normed
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.Analysis.Complex.ExponentialBounds
+import Mathlib.Algebra.BigOperators.Field
+
+Commande : lake env lean Test3.lean
+Erreurs : 0   sorry : 0
+
+'ConditionalCRO.lemma4_confidentiality_guarantee' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_explicit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.conditional_CRO_trilemma' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.assumptions_consistent_and_bound_attained' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.regime_assumption_necessary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.zkSNARK_regime_at_256' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.opp_eq_one_of_deterministic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.deterministic_forces_capacity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_refined' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.refined_bound_is_fano_when_delta_ge_gamma' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.pinsker_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.fano_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_explicit_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.lemma4_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_refined_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.conditional_CRO_trilemma_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]

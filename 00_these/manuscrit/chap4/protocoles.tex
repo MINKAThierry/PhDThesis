@@ -24,8 +24,7 @@ doit juger.
 \end{boiteArbitre}
 
 % -----------------------------------------------------------------------
-\subsection{Protocole de mesure de $\Delta$~:
-          capacit\'e d'extraction institutionnelle}
+\subsection{Protocole de mesure de la capacit\'e d'extraction institutionnelle $\Delta$}
 \label{subsec:protocole_delta}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -64,7 +63,9 @@ les petits \'echantillons), calcul\'e sur les triplets $(v_i, \sigma_i, m_i)$
 recueillis \`a contexte $c$ fix\'e. Le message $m_i$ est connu de
 l'exp\'erimentateur (v\'erit\'e terrain) mais non des participants. $\hat{\Delta}$ estime
 la plus petite capacit\'e compatible avec l'Hypoth\`ese~\ref{ass:extraction_bornee}
-sous la condition~\eqref{eq:extraction_bornee_forte}. L'estimateur est biais\'e
+sous la condition~\eqref{eq:extraction_bornee_forte}, pour le protocole \'etudi\'e. Pour
+une preuve parfaitement masquante, cette quantit\'e minore la capacit\'e $\Delta^*$ de
+l'institution (Remarques~\ref{rem:delta_capacite} et~\ref{rem:estimateur_masquant}). L'estimateur est biais\'e
 positivement en petit \'echantillon~; l'intervalle de confiance est obtenu par
 bootstrap non param\'etrique \emph{sur les participants}.
 
@@ -77,6 +78,17 @@ $I(V;\Sigma|C) \leq \log_2|\mathcal{V}_\lambda|$) et ne fournit qu'une borne
 inf\'erieure sur $\Delta$. La formulation retenue
 est~\eqref{eq:estimateur_delta}.
 \end{remark}
+
+\begin{Preuve}[Remarque sur la formulation initiale de l'estimateur]
+Pour un protocole fiable, Fano donne $I(M;\Sigma|C) \geq \Relrec\cdot\lambda - 1$,
+proche de $\lambda - 1$ lorsque $\Relrec$ est proche de $1$. Le verdict v\'erifie
+$I(V;\Sigma|C) \leq H(V|C) \leq \log_2|\mathcal{V}_\lambda| \leq \alpha H(\mathcal{C})$.
+D\`es que $\alpha H(\mathcal{C}) < \Relrec\cdot\lambda - 1$, par exemple $20 < 126$ pour
+$\Relrec = 1$ et $\lambda = 128$, la diff\'erence est n\'egative. Par ailleurs
+l'Hypoth\`ese~\ref{ass:extraction_bornee} s'\'ecrit
+$I(V;\Sigma|C) - I(M;\Sigma|C) \leq \Delta$. La diff\'erence est donc toujours un
+minorant de $\Delta$, et un minorant n\'egatif n'apporte aucune information.
+\end{Preuve}
 
 \subsubsection{Design exp\'erimental}
 \label{subsubsec:design_delta}
@@ -163,6 +175,7 @@ l'Algorithme~\ref{alg:estimation_delta}.
 \State Associer \`a chaque r\'eponse le message $m$ connu de l'exp\'erimentateur
 \State Tester l'admissibilit\'e $V \perp M \mid (\Sigma, C)$ (test de permutation)
 \State Estimer $\hat\Delta = \hat I(V;\Sigma \mid M, C)$ (\'equation~\eqref{eq:estimateur_delta})
+\State Estimer le minorant par traits~\eqref{eq:minorant_traits} sur le plan factoriel
 \State Estimer $\hat\alpha = \log_2|\mathcal{V}| / H(C)$
 \State Valider par fiabilit\'e test-retest et coh\'erence inter-\'evaluateurs
 \end{algorithmic}
@@ -198,7 +211,7 @@ d'admissibilit\'e de la D\'efinition~\ref{def:interp_admissible}. Si $V$
 d\'epend encore de $M$ une fois $(\Sigma,C)$ connus, les participants ont
 acc\`es \`a une information hors preuve de sorte que l'\'etude sort du cadre.
 
-La phase d'\textbf{estimation} (lignes~7--8) produit les deux param\`etres.
+La phase d'\textbf{estimation} (lignes~7--9) produit les deux param\`etres et le minorant par traits de la section~\ref{subsubsec:plan_factoriel_delta}.
 L'estimateur $\hat\Delta = \hat I(V;\Sigma|M,C)$ mesure ce que les acteurs
 tirent de la preuve \emph{au-del\`a} de ce qu'elle dit du message, qu'il s'agisse
 de la mise en forme, des m\'etadonn\'ees ou des indices que l'expertise institutionnelle
@@ -213,7 +226,7 @@ d\'efinition~\ref{def:alpha_granularite}. Les deux estimateurs sont donc
 acquis par des voies distinctes, ce qui permet de les valider
 s\'epar\'ement.
 
-La phase de \textbf{validation} (ligne~9) contr\^ole la fiabilit\'e de la
+La phase de \textbf{validation} (ligne~10) contr\^ole la fiabilit\'e de la
 mesure. Elle combine la stabilit\'e test-retest, qui
 v\'erifie que les m\^emes acteurs produisent des r\'eponses coh\'erentes
 lorsqu'ils sont r\'einterrog\'es apr\`es un d\'elai, avec la coh\'erence
@@ -227,6 +240,88 @@ contr\^ol\'ee, sans pr\'etendre \`a une valeur exacte. Le cadre CRO n'en demande
 pas davantage, puisque $\Delta$ y intervient
 comme constante du th\'eor\`eme et doit \^etre mesur\'e avec une incertitude
 born\'ee pour que les pr\'edictions aient un sens op\'erationnel.
+
+\begin{remark}[Estimateur et capacit\'e pour une preuve masquante]
+\label{rem:estimateur_masquant}
+Pour tout protocole, $I(V;\Sigma|M,C) \geq I(V;\Sigma|C) - I(M;\Sigma|C)$. Si la preuve est
+parfaitement masquante, $I(M;\Sigma|C) = 0$, il y a \'egalit\'e et l'estimateur
+vise la diff\'erence qui d\'efinit $\Delta^*$ dans~\eqref{eq:delta_capacite}. Il en
+fournit alors un minorant.
+\end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:estimateur_masquant}]
+La Proposition~\ref{prop:fondement_extraction} donne
+$I(V;\Sigma|C) = I(V;M|C) + I(V;\Sigma|M,C)$ et $I(V;M|C) \leq I(M;\Sigma|C)$. D'o\`u
+$I(V;\Sigma|C) - I(M;\Sigma|C) \leq I(V;\Sigma|M,C)$. Si $I(M;\Sigma|C) = 0$, alors
+$I(V;M|C) = 0$ et $I(V;\Sigma|C) = I(V;\Sigma|M,C)$, ce qui est l'\'egalit\'e. Cette
+diff\'erence est l'un des termes du supremum~\eqref{eq:delta_capacite} et lui est donc
+inf\'erieure ou \'egale.
+\end{Preuve}
+
+\subsubsection{Plan factoriel et minorant par traits}
+\label{subsubsec:plan_factoriel_delta}
+
+L'estimation directe de $I(V;\Sigma|M,C)$ se heurte \`a la taille des supports. Une
+information de $\Delta$ bits suppose un espace de verdicts d'au moins $2^\Delta$
+valeurs, car $I(V;\Sigma|M,C) \leq H(V|M,C) \leq \log_2|\mathcal{V}_\lambda|$. Or un
+estimateur par substitution n'est fiable que si le nombre d'observations d\'epasse
+largement la taille du support, son biais \'etant de l'ordre de
+$(|\mathrm{supp}|-1)/(2N\ln 2)$ pour $N$ observations~\cite{Paninski2003}. Pour quelques
+dizaines de bits, aucun \'echantillon r\'ealiste ne suffit. Le protocole contourne
+cette difficult\'e par un plan factoriel qui produit un minorant estimable.
+
+\noindent\textbf{Plan.} On fixe $k$ traits binaires de la preuve
+$T_1, \dots, T_k$, fonctions de $\Sigma$, qui ne r\'ev\`elent pas le message
+(horodatage pr\'esent ou absent, qualit\'e du signataire, m\'etadonn\'ees, mise en forme).
+Le plan factoriel complet fait varier ces traits sur les $2^k$ combinaisons,
+ind\'ependamment entre eux, du message et du contexte. Le verdict est recueilli
+item par item, $V = (V_1, \dots, V_{30})$, gr\^ace au questionnaire de $30$ items.
+
+\begin{proposition}[Minorant par traits]
+\label{prop:minorant_traits}
+Si $T = (T_1,\dots,T_k)$ est une fonction de $\Sigma$ et si les $T_j$ sont mutuellement
+ind\'ependants sachant $(M,C)$, alors pour toute statistique $g_j$ du verdict
+\begin{equation}
+\sum_{j=1}^{k} I\bigl(g_j(V);T_j \mid M,C\bigr) \;\leq\; \sum_{j=1}^{k} I(V;T_j \mid M,C)
+\;\leq\; I(V;\Sigma \mid M,C).
+\label{eq:minorant_traits}
+\end{equation}
+Chaque terme est au plus $H(T_j) \leq 1$ bit, de sorte que le minorant ne d\'epasse pas
+$k$ bits.
+\end{proposition}
+
+\begin{Preuve}[Proposition~\ref{prop:minorant_traits}]
+Tous les termes sont conditionnels \`a $(M,C)$, que l'on omet dans les notations.
+\emph{Premi\`ere in\'egalit\'e.} $g_j(V)$ est une fonction de $V$, donc
+$I(g_j(V);T_j) \leq I(V;T_j)$ par le Lemme~\ref{lem:dpi}.
+\emph{Seconde in\'egalit\'e.} La r\`egle de cha\^ine donne
+$I(V;T) = \sum_j I(V;T_j \mid T_1,\dots,T_{j-1})$. Pour chaque $j$,
+$I(V;T_j \mid T_{<j}) = I(V,T_{<j};T_j) - I(T_{<j};T_j)$. Le second terme est nul par
+ind\'ependance des traits, et $I(V,T_{<j};T_j) \geq I(V;T_j)$. D'o\`u
+$I(V;T) \geq \sum_j I(V;T_j)$. Enfin $T$ est une fonction de $\Sigma$, donc
+$I(V;\Sigma) = I(V;\Sigma,T) \geq I(V;T)$. La borne de $k$ bits vient de
+$I(V;T_j) \leq H(T_j) \leq 1$.
+\end{Preuve}
+
+\noindent\textbf{Estimation.} Chaque terme $I(g_j(V);T_j|M,C)$ porte sur un trait binaire
+et sur une statistique \`a petit support, par exemple la r\'eponse \`a un item ou un score
+agr\'eg\'e. Il s'estime donc avec les effectifs du protocole. La somme des contributions
+par trait est un minorant de $I(V;\Sigma|M,C)$ et, pour une preuve parfaitement
+masquante, de $\Delta^*$ (Remarque~\ref{rem:estimateur_masquant}). Deux pr\'ecautions
+s'imposent. L'estimateur par substitution de l'information mutuelle est biais\'e vers le
+haut, de sorte que la somme des $k$ estimations n'est un minorant qu'apr\`es correction du
+biais (Miller-Madow) ou validation par un test de permutation sur chaque trait. De plus,
+la loi sur laquelle porte ce minorant est celle des preuves du plan factoriel, dont les
+traits sont tir\'es ind\'ependamment, et non celle du protocole d'origine. L'ind\'ependance des traits
+est indispensable \`a la seconde in\'egalit\'e. Elle est garantie par le plan complet et
+ne l'est pas par un plan fractionnaire, qui n'assure en g\'en\'eral que l'ind\'ependance
+deux \`a deux.
+
+\noindent\textbf{Effet de plateau.} Le minorant ne d\'epasse pas $k$ bits. Avec quelques
+traits, il reste tr\`es inf\'erieur aux valeurs de $25$ \`a $65$ bits du
+tableau~\ref{tab:stratification_delta}. Ces valeurs ne peuvent donc pas \^etre r\'efut\'ees
+par ce protocole et conservent le statut d'ordres de grandeur issus de la
+calibration.
 
 \subsubsection{Pr\'edictions v\'erifiables}
 \label{subsubsec:predictions_delta}
@@ -242,6 +337,13 @@ falsifiables~\cite{MINKA2026CRO,MINKA2026SOTP}~:
 \item Facteur d'amplification institutionnelle $1{,}8$ \`a $3{,}7$ fois par
       rapport \`a la capacit\'e individuelle Miller ($\approx 20$ bits)
 \end{enumerate}
+Les pr\'edictions~1, 2, 3 et~5 portent sur des valeurs absolues que le minorant par
+traits ne peut pas atteindre (effet de plateau de la
+section~\ref{subsubsec:plan_factoriel_delta}). Les pr\'edictions pr\'eenregistr\'ees comme
+r\'efutables sont donc ordinales. Elles portent sur l'ordre entre groupes, juges
+sp\'ecialis\'es au-dessus des g\'en\'eralistes et r\'egulateurs seniors au-dessus des juniors,
+et sur la croissance du minorant avec l'exp\'erience. Une inversion significative de
+cet ordre r\'efuterait le mod\`ele de capacit\'e institutionnelle.
 \end{sloppypar}
 
 \begin{boiteArbitre}
@@ -251,8 +353,7 @@ r\'egulateur senior. Il y voit des paris, qui peuvent donc \^etre perdus.
 \end{boiteArbitre}
 
 % -----------------------------------------------------------------------
-\subsection{Protocole de mesure de $H(\mathcal{C})$~:
-          entropie contextuelle}
+\subsection{Protocole de mesure de l'entropie contextuelle $H(\mathcal{C})$}
 \label{subsec:protocole_HC}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -275,7 +376,7 @@ tandis que les d\'erivations de la section~\ref{sec:derivation_opposabilite}
 mobilisent l'entropie du contexte d'esp\`ece. Les deux grandeurs portent le
 m\^eme symbole et ne prennent pas les m\^emes valeurs.
 
-\subsubsection{Approche 1~: d\'ecomposition structurelle}
+\subsubsection{Premi\`ere approche par d\'ecomposition structurelle}
 \label{subsubsec:approche_structurelle}
 
 \noindent\textbf{Principe.} Identifier les dimensions ind\'ependantes du
@@ -303,7 +404,7 @@ Signature contractuelle & Parties, clauses, juridiction & 20--40 bits \\
 \end{tabular}
 \end{table}
 
-\subsubsection{Approche 2~: mod\'elisation probabiliste par MDS}
+\subsubsection{Deuxi\`eme approche par mod\'elisation probabiliste MDS}
 \label{subsubsec:approche_MDS}
 
 \noindent\textbf{Design.} Pr\'esenter un ensemble de $n_{\text{ctx}} = 100$
@@ -318,7 +419,7 @@ contextes vari\'es \`a un panel de 5--10 experts en leur demandant une
 \item Estimation $H(\mathcal{C}) \approx \log_2 V_{\mathrm{eff}}$
 \end{enumerate}
 
-\subsubsection{Approche 3~: consensus d'experts par m\'ethode Delphi}
+\subsubsection{Troisi\`eme approche par consensus d'experts selon la m\'ethode Delphi}
 \label{subsubsec:approche_delphi}
 
 \noindent\textbf{Principe.} La m\'ethode Delphi est une technique
@@ -331,8 +432,7 @@ anonymis\'e. Le processus s'arr\^ete lorsque l'IQR devient inf\'erieur \`a $5$ b
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{Protocole de mesure de $\Opp$~:
-          opposabilit\'e sur syst\`emes d\'eploy\'es}
+\subsection{Protocole de mesure de l'opposabilit\'e $\Opp$ sur des syst\`emes d\'eploy\'es}
 \label{subsec:protocole_opp}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -361,7 +461,7 @@ g\'en\'erant $\approx 500$ preuves cryptographiques.
 \label{subsubsec:procedure_opp}
 
 \noindent\textbf{Phase 1. Formation trustees (4 h).}
-Formation structur\'ee sur Helios et les preuves z\'ero-connaissance.
+Formation structur\'ee sur Helios et les preuves \`a divulgation nulle.
 
 \noindent\textbf{Phase 2. \'Election r\'eelle.}
 D\'eploiement standard de Helios.
@@ -503,8 +603,7 @@ standardis\'e, r\'eutilisable au-del\`a du cas d'esp\`ece.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{Protocole de mesure de $\Delta_q$~:
-          capacit\'e d'extraction quantique}
+\subsection{Protocole de mesure de la capacit\'e d'extraction quantique $\Delta_q$}
 \label{subsec:protocole_delta_q}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -720,8 +819,7 @@ s\'emantique.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{Protocole de mesure de $\eta_q$~:
-          coefficient de perte d'interpr\'etabilit\'e quantique}
+\subsection{Protocole de mesure du coefficient $\eta_q$ de perte d'interpr\'etabilit\'e quantique}
 \label{subsec:protocole_eta_q}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -990,7 +1088,7 @@ th\'eorie, d\'ej\`a coh\'erente, devient ainsi v\'erifiable.
 
 \begin{table}[htbp]
 \centering
-\caption{Programme exp\'erimental complet~: calendrier et ressources}
+\caption{Calendrier et ressources du programme exp\'erimental complet}
 \label{tab:programme_experimental}
 \begin{threeparttable}
 \begin{tabular}{@{}lllcc@{}}
@@ -1031,6 +1129,9 @@ mise en \oe uvre effective de chaque protocole.
 \centering
 \caption{Calendrier du programme exp\'erimental}
 \label{tab:calendrier_experimental}
+\small 
+\setlength{\tabcolsep}{4pt} 
+\begin{adjustbox}{max width=\linewidth} 
 \begin{tabular}{@{}lcccccc@{}}
 \toprule
 \textbf{Activit\'e} & \textbf{M1--M6} & \textbf{M7--M12} & \textbf{M13--M18} &
@@ -1045,8 +1146,8 @@ Validation PQC (\S\ref{subsec:protocole_combine}) & & & & & $\times\times$ & $\t
 Analyse longitudinale & & & & & & $\times\times$ \\
 \bottomrule
 \end{tabular}
+\end{adjustbox}
 \end{table}
-
 \subsubsection{Statut de d\'eploiement du programme}
 \label{subsubsec:statut_deploiement}
 
@@ -1063,8 +1164,9 @@ et~\ref{subsec:protocole_eta_q}).
 
 Ce choix d\'ecoule du positionnement \'epist\'emologique retenu au
 chapitre~\ref{chap:cadre_formel}, selon lequel ce travail est d'abord th\'eorique. La
-certification m\'ecanique en Lean4 garantit la correction de la d\'erivation \`a
-partir des hypoth\`eses. La v\'erit\'e des hypoth\`eses elles-m\^emes rel\`eve de la
+certification m\'ecanique en Lean4 garantit la correction de la d\'erivation du noyau
+alg\'ebrique \`a partir des hypoth\`eses, Fano et Pinsker y \'etant pos\'es comme
+propri\'et\'es des instances puis d\'emontr\'es pour des lois finies. La v\'erit\'e des hypoth\`eses elles-m\^emes rel\`eve de la
 validation comportementale, que seules des mesures peuvent \'etablir. Trois pr\'ealables
 non techniques conditionnent aussi le d\'eploiement, \`a savoir l'accord des
 juridictions et r\'egulateurs approch\'es, l'approbation d'un comit\'e

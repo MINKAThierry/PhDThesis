@@ -4,7 +4,7 @@
 % Version : 2.2 — alignée sur la formalisation Lean4 (section~\ref{sec:lean4})
 % ============================================================================
 
-\section{LA FAMILLE SOTP~: UNE CONSTRUCTION PAR R\'EGIME}
+\section{LA FAMILLE SOTP ET SA CONSTRUCTION PAR R\'EGIME}
 \label{sec:sotp_construction}
 \begin{sloppypar}
 Le Trilemme CRO conditionnel classique~(section~\ref{sec:cro_classique}) \'etablit
@@ -60,7 +60,7 @@ une question ouverte. La borne sert d\'esormais de carte au concepteur.
 \end{boiteArbitre}
 
 % -----------------------------------------------------------------------
-\subsection{Philosophie de conception~: paradigme Gold-Iron-Clay}
+\subsection{Le paradigme Gold-Iron-Clay comme philosophie de conception}
 \label{subsec:philosophie_sotp}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -143,7 +143,7 @@ migrations quantiques et l'adaptation aux \'evolutions r\'eglementaires.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{SOTP-Low~: r\'egime \`a contexte rare}
+\subsection{SOTP-Low pour le r\'egime \`a contexte rare}
 \label{subsec:sotp_low}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -288,7 +288,19 @@ pour $\Delta \geq 4$). Sa justification rigoureuse, dans un mod\`ele \`a context
 priv\'e, est une perspective (chapitre~\ref{chap:resultats_discussions}).
 \end{remark}
 
-\begin{Preuve}[Proposition~\ref{thm:saturation_sotp_low}~: propri\'et\'es cryptographiques de SOTP-Low]\label{prv:saturation_sotp_low}
+\begin{Preuve}[Remarque~\ref{rem:facteur_limitant_low}, justification des trois raisons]
+(i)~Une fonction $f(C)$ du contexte v\'erifie $H(f(C)|C) = 0$, donc
+$I(V;f(C)|C) \leq H(f(C)|C) = 0$. (ii)~L'Hypoth\`ese~\ref{ass:verdicts_efficace} donne
+$H(V|C) \leq \log_2|\mathcal{V}_\lambda| \leq \alpha H(\mathcal{C})$, valeur tr\`es
+inf\'erieure \`a $\lambda$ dans les r\'egimes \'etudi\'es (par exemple $\alpha H(\mathcal{C}) = 20$
+contre $\lambda = 128$). (iii)~Pour $\Delta \leq H(\mathcal{C})$, la minoration vaut
+$0{,}75\,\Delta/\lambda$ et le terme principal du majorant
+explicite~\eqref{eq:trilemme_cro_explicite} vaut $\Delta/(\gamma\lambda)$. La premi\`ere
+quantit\'e d\'epasse la seconde si et seulement si $0{,}75 > 1/\gamma$, soit
+$\gamma > 4/3$. Enfin $1 - 1/\Delta \geq 3/4$ \'equivaut \`a $\Delta \geq 4$.
+\end{Preuve}
+
+\begin{Preuve}[Proposition~\ref{thm:saturation_sotp_low}, propri\'et\'es cryptographiques de SOTP-Low]\label{prv:saturation_sotp_low}
 
 \begin{cmtEtape}{Vue d'ensemble.}
 SOTP-Low est constitu\'e de trois couches, Gold (masquage par PRG),
@@ -355,7 +367,7 @@ $\Relver(\mathrm{SOTP\text{-}Low}) = 1 - \negl(\lambda)$.
 \cmt{C'est ici que le tirage de $s$ dans $\mathbb{Z}_q$ est indispensable.}
 \end{Preuve}
 
-\subsubsection{Support de validation~: signatures ECDSA}
+\subsubsection{Validation sur les signatures ECDSA}
 \label{subsubsec:validation_ecdsa}
 
 \`A titre d'illustration, sans valeur de validation (les m\'etriques CLO d'ECDSA sont
@@ -368,7 +380,7 @@ CLO d'ECDSA ($0{,}273$).
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{SOTP-Base~: r\'egime de transition}
+\subsection{SOTP-Base pour le r\'egime de transition}
 \label{subsec:sotp_base}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -397,7 +409,7 @@ lemme ne garantit pas.
 \label{subsubsec:construction_base}
 
 \begin{algorithm}[H]
-\caption{SOTP-Base~: construction avec compression JL}
+\caption{Construction de SOTP-Base avec compression JL}
 \label{alg:sotp_base}
 \begin{algorithmic}[1]
 \State \textbf{Param\`etres} : $\lambda$, $H^*(\lambda) \leq H(\mathcal{C}) \leq \lambda/\log\lambda$, $\varepsilon = 0{,}1$
@@ -512,7 +524,7 @@ $0{,}5 \cdot \min\{\Delta/d, \Delta/(\beta\log_2 d)\}$ est conserv\'ee comme
 heuristique de dimensionnement de la couche Clay.
 \end{remark}
 
-\subsubsection{Support de validation~: vote \'electronique Helios}
+\subsubsection{Validation sur le vote \'electronique Helios}
 \label{subsubsec:validation_helios}
 
 \`A titre d'illustration, l'heuristique de SOTP-Base pour les param\`etres
@@ -525,7 +537,7 @@ choix de dimensionnement, distinct de la r\`egle $d = \lceil 4\Delta H(\mathcal{
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{SOTP-High~: r\'egime \`a contexte riche}
+\subsection{SOTP-High pour le r\'egime \`a contexte riche}
 \label{subsec:sotp_high}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -556,7 +568,7 @@ entropique du hachage compressant le contexte en 256 bits.
 \label{subsubsec:construction_high}
 
 \begin{algorithm}[H]
-\caption{SOTP-High~: construction avec zk-SNARKs Groth16}
+\caption{Construction de SOTP-High avec zk-SNARKs Groth16}
 \label{alg:sotp_high}
 \begin{algorithmic}[1]
 \State \textbf{Param\`etres} : $\lambda$, $H(\mathcal{C}) > \lambda/\log\lambda$, circuit $\mathcal{C}_{\text{circuit}}$
@@ -582,9 +594,10 @@ entropique du hachage compressant le contexte en 256 bits.
 
 SOTP-High est la construction la plus complexe des trois. Elle est
 con\c{c}ue pour le r\'egime o\`u le contexte institutionnel est
-arbitrairement riche, $H(\mathcal{C}) > \lambda/\log\lambda$, ce qui
-rend impossible toute repr\'esentation fid\`ele du contexte dans la
-preuve sans r\'ev\'eler de l'information confidentielle. La solution
+arbitrairement riche, $H(\mathcal{C}) > \lambda/\log\lambda$. Dans ce r\'egime, une
+repr\'esentation fid\`ele du contexte dans la preuve deviendrait trop volumineuse ou
+r\'ev\'elerait de l'information confidentielle. Ce seuil est une motivation de
+conception et non un r\'esultat d\'emontr\'e. La solution
 adopt\'ee s'\'ecarte donc de SOTP-Low et SOTP-Base. Au lieu de transmettre le contexte ou sa compression, on transmet une
 \emph{preuve de connaissance} du contexte via un zk-SNARK Groth16.
 
@@ -659,6 +672,22 @@ place de confiance honn\^ete~\cite{Bowe2017}~:
 \end{enumerate}
 \end{proposition}
 
+\begin{Preuve}[Proposition~\ref{thm:saturation_sotp_high}]
+(1)~Avec un CRS honn\^ete, Groth16 est \`a divulgation nulle parfaite~\cite{Groth16},
+c'est-\`a-dire qu'un simulateur qui conna\^it la trappe produit, sans le t\'emoin,
+des preuves de m\^eme loi que les preuves honn\^etes. L'engagement $c_m$ est un
+engagement de Pedersen, dont la loi est uniforme sur $\mathbb{G}$ quel que soit $m$
+d\`es que l'al\'ea l'est. Le couple $(\pi, c_m)$ a donc la m\^eme loi que le couple
+form\'e d'un engagement uniforme et d'une preuve simul\'ee \`a partir des seules
+entr\'ees publiques, loi qui ne d\'epend pas de $m$. (2)~La compl\'etude de Groth16 est
+parfaite, de sorte qu'une preuve honn\^ete est toujours accept\'ee. La
+\emph{knowledge soundness}, sous q-SDH et q-PKE, fournit pour tout prouveur PPT
+qui fait accepter $\sigma$ un extracteur qui produit un t\'emoin de la relation, sauf
+avec probabilit\'e n\'egligeable. Le liant de $c_m$, sous DLog, interdit que deux
+t\'emoins extraits portent sur des messages distincts. La fiabilit\'e de v\'erification
+vaut donc $1 - \negl(\lambda)$.
+\end{Preuve}
+
 \begin{remark}[Heuristique de conception de SOTP-High (non prouv\'ee)]
 \label{rem:heuristique_sotp_high}
 La formulation initiale de ce r\'esultat \'enon\c{c}ait
@@ -674,7 +703,19 @@ conserv\'ee comme heuristique de conception~; $\beta$ y d\'esigne la constante d
 r\'egularit\'e du protocole (D\'efinition~\ref{def:beta_regularite}).
 \end{remark}
 
-\subsubsection{Support de validation~: conformit\'e zk-SNARKs}
+\begin{Preuve}[Remarque~\ref{rem:heuristique_sotp_high}, justification]
+Le condens\'e et les m\'etadonn\'ees sont des fonctions $f(C)$, d'o\`u $I(V;f(C)|C) = 0$
+comme dans la Remarque~\ref{rem:facteur_limitant_low}. Un groupe qui offre $\lambda$
+bits de s\'ecurit\'e contre l'algorithme rho de Pollard, dont le co\^ut est de l'ordre
+de $\sqrt{q}$, doit avoir un ordre $q \geq 2^{2\lambda}$. Chaque \'el\'ement s'\'ecrit donc
+sur au moins $2\lambda$ bits et trois \'el\'ements sur au moins $6\lambda$ bits, ce qui est
+$\Theta(\lambda)$. Si le v\'erificateur pouvait calculer le t\'emoin \`a partir de la
+preuve, il le calculerait aussi \`a partir d'une preuve simul\'ee, produite sans
+t\'emoin et de m\^eme loi. Pour une instance qui admet deux t\'emoins distincts, la sortie
+ne pourrait pas \^etre correcte pour les deux, ce qui contredit la divulgation nulle.
+\end{Preuve}
+
+\subsubsection{Validation sur la conformit\'e par zk-SNARKs}
 \label{subsubsec:validation_snark}
 
 Pour les param\`etres analytiques $\Delta = 73$ bits, $\alpha = 1{,}5$, $\beta = 1{,}5$,
@@ -905,6 +946,15 @@ les heuristiques de conception, $1/0{,}75 \approx 1{,}33$ (SOTP-Low), $1/0{,}5 =
 (SOTP-Base) et $1/0{,}45 \approx 2{,}2$ (SOTP-High), fixent l'ordre de grandeur
 de $C_R$ vis\'e.
 \end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:statut_optimalite}, raisons (i) et (ii)]
+(i)~Avec $\mathcal{P}' = \text{SOTP}$, la forme multiplicative donne $p \leq C_R\,p$ pour
+le produit $p > 0$ de la variante, ce qui impose $C_R \geq 1$. Avec un facteur
+$c < 1$ et sans terme additif, elle donnerait $p \leq c\,p < p$, ce qui est impossible.
+(ii)~Les produits sont major\'es par $(1+\kappa/\lambda)/\lambda = O(1/\lambda)$
+(Remarque~\ref{rem:activite_delta}). Un terme additif $o(1)$ comme $\lambda^{-1/2}$
+d\'epasse cette quantit\'e pour $\lambda$ grand et rend l'in\'egalit\'e vide.
+\end{Preuve}
 
 \begin{boiteArbitre}
 L'arbitre comprend que la recherche du meilleur protocole peut

@@ -2,7 +2,7 @@
 % CHAPITRE 3 - LE SEMANTIC ONE-TIME PAD (bloc issu de clo.tex)
 % ============================================================================
 
-\section{LE SEMANTIC ONE-TIME PAD~: CONSTRUCTION DE BASE}
+\section{LE SEMANTIC ONE-TIME PAD COMME CONSTRUCTION DE BASE}
 \label{sec:sotp_base}
 
 % Bloc issu de clo.tex : paradigme Gold-Iron-Clay, S-OTP de base, metriques CLO atteintes
@@ -135,8 +135,8 @@ un maximum d'information sur $V$ depuis $(c, \sigma)$~?\guillemotright}
         {$\Opp$};
 
 \end{tikzpicture}
-\caption[Paradigme Gold-Iron-Clay (or, fer, argile)~: architecture \`a trois couches]{%
-  Paradigme Gold-Iron-Clay (or, fer, argile)~: architecture \`a trois couches pour les protocoles
+\caption[Le paradigme Gold-Iron-Clay (or, fer, argile), architecture \`a trois couches]{%
+  Le paradigme Gold-Iron-Clay (or, fer, argile), architecture \`a trois couches pour les protocoles
   cryptographiques institutionnels.%
 }\label{fig:gold_iron_clay}
 
@@ -186,7 +186,7 @@ cryptographiques (post-quantique, homomorphe) et r\'eglementaires~\cite{NISTPQC,
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{Construction~: le Semantic One-Time Pad (S-OTP)}
+\subsection{Construction du Semantic One-Time Pad (S-OTP)}
 \label{subsec:construction_sotp}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -218,7 +218,7 @@ priv\'e). L'expression $H(\mathcal{C})/\lambda$ de~\cite{MINKA2026CLO} correspon
 convention $H(h|C) = H(\mathcal{C})$ et $H(V|C) \approx \lambda$.
 \end{remark}
 
-\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}~: Confidentialit\'e]\label{prv:sotp_conf}
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}, confidentialit\'e]\label{prv:sotp_conf}
 
 \begin{cmtEtape}{Objectif.}
 Montrer que $\Conf(\text{S-OTP}) = 1 - \negl(\lambda)$. Le masquage
@@ -249,7 +249,7 @@ sans hypoth\`ese calculatoire~\cite{Pedersen91}. Il en r\'esulte que
 \cmt{Pedersen cache parfaitement $M^*$, inconditionnellement~; seul le caract\`ere liant repose sur DLog.}
 \end{Preuve}
 
-\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}~: Fiabilit\'e]\label{prv:sotp_rel}
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}, fiabilit\'e]\label{prv:sotp_rel}
 
 \begin{cmtEtape}{Objectif.}
 Montrer que $\Relver(\text{S-OTP}) = 1 - \negl(\lambda)$. Il faut
@@ -278,7 +278,7 @@ $\Relver(\text{S-OTP}) = 1 - \negl(\lambda)$.
 \cmt{Cela \'equivaut \`a r\'esoudre le logarithme discret, ce qui est difficile.}
 \end{Preuve}
 
-\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}~: Opposabilit\'e]\label{prv:sotp_opp}
+\begin{Preuve}[Th\'eor\`eme~\ref{thm:proprietes_sotp}, opposabilit\'e]\label{prv:sotp_opp}
 
 \begin{cmtEtape}{Objectif.}
 Montrer que $\Opp(\text{S-OTP}) \leq H(h|C)/H(V|C)$.
@@ -304,7 +304,7 @@ En divisant par $H(V|C)$, on obtient
 \cmt{Si $h$ est une fonction de $C$, alors $H(h|C) = 0$ (voir la Remarque~\ref{rem:portee_sotp}).}
 \end{Preuve}
 
-\begin{remark}[Optimalit\'e de S-OTP dans la classe OTP~: argument heuristique]\label{thm:optimalite_sotp}
+\begin{remark}[Argument heuristique d'optimalit\'e de S-OTP dans la classe OTP]\label{thm:optimalite_sotp}
 Parmi les protocoles qui masquent le message par un one-time pad et
 n'encodent le contexte que dans une composante auxiliaire $h$, S-OTP
 semble r\'ealiser le meilleur compromis, puisque tout protocole de ce type
@@ -312,8 +312,8 @@ consacre $|m| = \lambda$ bits d'al\'ea au masquage pour la s\'ecurit\'e
 parfaite et voit son opposabilit\'e born\'ee par $H(h|C)/H(V|C)$ (m\^eme argument
 que ci-dessus). Une preuve d'optimalit\'e demanderait de d\'efinir
 formellement la classe OTP et d'y d\'emontrer une borne sup\'erieure
-uniforme~; nous la laissons ouverte. Toute construction atteignant une
-opposabilit\'e sup\'erieure doit soit (i) abandonner la confidentialit\'e
+uniforme~; nous la laissons ouverte. Selon cet argument heuristique, une
+construction atteignant une opposabilit\'e sup\'erieure devrait soit (i) abandonner la confidentialit\'e
 information-th\'eorique au profit d'hypoth\`eses calculatoires, soit (ii) utiliser
 des protocoles interactifs multi-tours, soit (iii) employer des primitives
 diff\'erentes, au-del\`a du paradigme OTP.
@@ -347,7 +347,8 @@ $\Relrec \leq (1+\kappa/\lambda)/\lambda$ (Remarque~\ref{rem:rel_ver}),
 tandis que~\cite{MINKA2026CLO} donne un produit de l'ordre de $H(\mathcal{C})/\lambda$.
 Ce produit \'elev\'e n'est r\'ealisable qu'en r\'egime contexte rare ($H(\mathcal{C}) \leq \Delta$).
 D\`es que le contexte s'enrichit ($H(\mathcal{C}) \gg \Delta$), l'opposabilit\'e
-s'effondre \`a $\Opp \approx \Delta / H(\mathcal{C}) \ll 1$, ce qui motive
+est major\'ee par $(\kappa/\lambda + \Delta)/\gamma \approx \Delta/(\alpha H(\mathcal{C})) \ll 1$
+(preuve de la Proposition~\ref{prop:borne_aigue}, \'etape~6), ce qui motive
 les variantes SOTP-Base et SOTP-High de la section~\ref{sec:sotp_construction}.
 
 \begin{boiteArbitre}

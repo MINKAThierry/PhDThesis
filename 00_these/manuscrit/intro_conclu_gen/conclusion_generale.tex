@@ -62,7 +62,7 @@ $\Delta/(\gamma\lambda)$~; les autres sont en $O(\lambda^{-2})$. La forme raffin
 \eqref{eq:trilemme_cro_raffine} identifie le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la
 capacit\'e d'extraction institutionnelle est la contrainte liante, la puissance
 de calcul de l'adversaire passant au second plan. La formulation
-publi\'ee~\cite{MINKA2026CRO} s'obtient comme cas particulier.
+publi\'ee~\cite{MINKA2026CRO} s'en d\'eduit comme corollaire sous l'Hypoth\`ese~\ref{ass:regime} explicit\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue en conservant le terme entropique de l'in\'egalit\'e de Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}).
 
 \textbf{Obj~\ref{obj:obj3_postquantique}. Extension quantique.} Les bornes CRO
 se pr\'eservent-elles face aux adversaires quantiques~? Nous avons \'etabli
@@ -80,15 +80,20 @@ bornes~? La famille SOTP propose une construction par r\'egime, SOTP-Low,
 SOTP-Base (projection Johnson-Lindenstrauss) et SOTP-High (Groth16). Leur
 confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees sous
 des hypoth\`eses standard~; leur opposabilit\'e est guid\'ee par une heuristique
-de conception, tandis que leur optimalit\'e demeure conjecturale
-(Conjecture~\ref{conj:optimalite_universelle}). Cet objectif est donc
+de conception, tandis que leur optimalit\'e demeure une conjecture
+(Conjecture~\ref{conj:optimalite_universelle}). La couche Clay est un format de
+pr\'esentation du contexte public et n'apporte aucune information au verdict
+(Remarque~\ref{rem:facteur_limitant_low}). Le t\'emoin de la
+Remarque~\ref{rem:temoin_realisable} montre en revanche qu'\`a confidentialit\'e parfaite
+l'opposabilit\'e peut atteindre le plafond $\Delta/\gamma$. Cet objectif est donc
 partiellement atteint.
 
 \textbf{Obj~\ref{obj:obj5_verification}. V\'erification.} Comment certifier la
 correction d'un th\'eor\`eme complexe~? La formalisation Lean4 a
 certifi\'e m\'ecaniquement le noyau alg\'ebrique du th\'eor\`eme
 (section~\ref{sec:lean4}), ainsi que la forme raffin\'ee de la borne. Fano et
-Pinsker y sont pos\'es comme propri\'et\'es des instances de protocole~; les
+Pinsker y sont pos\'es comme propri\'et\'es des instances de protocole, puis
+d\'emontr\'es pour des lois de probabilit\'e finies dans une couche concr\`ete~; les
 hypoth\`eses institutionnelles y sont aussi explicit\'ees. La formalisation a produit
 deux t\'emoins, l'un de coh\'erence (un point du mod\`ele abstrait o\`u la
 borne est atteinte, non r\'ealisable par un protocole), l'autre de port\'ee
@@ -154,14 +159,14 @@ X (eXp\'erimenter) & C6~: Programme de validation & Protocoles exp\'erimentaux s
 \end{tabular}
 \end{table}
 
-\textbf{C1. Cadre CLO}~\cite{MINKA2026CLO}. Premier cadre unifi\'e
+\textbf{C1. Cadre CLO}~\cite{MINKA2026CLO}. Premier cadre unifi\'e, \`a notre connaissance,
 formalisant $\Conf$, $\Rel$ et $\Opp$ via la th\'eorie de l'information, avec
 la distinction entre fiabilit\'e de reconstruction et de v\'erification.
 Le th\'eor\`eme du goulot d'\'etranglement contextuel \'etablit que
 $I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$~; un verdict d\'eterministe donne $\Opp = 1$.
 
 \textbf{C2. Trilemme CRO conditionnel}~\cite{MINKA2026CRO}. Premi\`ere
-borne prouv\'ee sur les compromis $(\Conf, \Rel, \Opp)$, conditionnelle
+borne prouv\'ee, \`a notre connaissance, sur les compromis $(\Conf, \Rel, \Opp)$, conditionnelle
 aux param\`etres $(\Delta, \alpha, \beta)$ et au r\'egime de
 confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La forme explicite
 est $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$~;
@@ -179,9 +184,10 @@ confidentialit\'e et fiabilit\'e de v\'erification prouv\'ees sous PRG, DLog et
 q-PKE~; opposabilit\'e guid\'ee par une heuristique de conception~; optimalit\'e
 conjectur\'ee. Introduction du paradigme Gold-Iron-Clay.
 
-\textbf{C5. Formalisation Lean4}. Certification m\'ecanis\'ee
-du noyau alg\'ebrique et de la forme raffin\'ee. Fano et Pinsker pos\'es comme
-propri\'et\'es d'instance, explicitation des hypoth\`eses institutionnelles
+\textbf{C5. Formalisation Lean4, du noyau alg\'ebrique aux lois finies}. Certification m\'ecanis\'ee
+du noyau alg\'ebrique et de la forme raffin\'ee. Fano et Pinsker, pos\'es comme
+propri\'et\'es d'instance dans le noyau, d\'emontr\'es pour des lois de probabilit\'e finies
+dans la couche concr\`ete, explicitation des hypoth\`eses institutionnelles
 et production de deux t\'emoins, l'un de coh\'erence (mod\`ele abstrait), l'autre de
 port\'ee. Les formulations alternatives issues de
 la certification sont pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
@@ -204,7 +210,7 @@ SOTP~(section~\ref{subsec:portee_constructive}).
 \textbf{Apport m\'ethodologique (la le\c{c}on de la formalisation).}
 La formalisation Lean4 a conduit \`a des formulations plus pr\'ecises de trois
 \'etapes des preuves publi\'ees (sens d'une in\'egalit\'e, statut de
-l'Hypoth\`ese~2, r\'esolution d'une optimisation). Elle a \'etabli par un cas
+l'Hypoth\`ese~\ref{ass:verdicts_efficace}, r\'esolution d'une optimisation). Elle a \'etabli par un cas
 limite la n\'ecessit\'e du r\'egime de confidentialit\'e. La le\c{c}on, selon
 laquelle la formalisation gagne \`a pr\'ec\'eder la publication, est d\'evelopp\'ee
 \`a la sous-section~\ref{subsec:verification_corrige_lecon}. Les formulations
@@ -380,7 +386,7 @@ confirmation empirique reste \`a apporter.
 L'arbitre le rappelait, \emph{«~La rigueur ne se suppose pas. Elle se
 v\'erifie.~»} Cette th\`ese a v\'erifi\'e et pr\'ecis\'e ses r\'esultats, document\'e
 ces pr\'ecisions et sp\'ecifi\'e comment tester ce qui reste \`a
-\'etablir. En cela, la science se distingue de la sp\'eculation.
+\'etablir. 
 
 \end{sloppypar}
 
@@ -389,7 +395,7 @@ ces pr\'ecisions et sp\'ecifi\'e comment tester ce qui reste \`a
 % ----------------------------------------------------------------------------
 \begin{boiteArbitre}
 L'arbitre referme le dossier sans avoir r\'esolu le paradoxe, puisque le Trilemme
-CRO \'etablit qu'aucun protocole ne peut le r\'esoudre enti\`erement, que
+CRO \'etablit que, sous ses hypoth\`eses, aucun protocole ne peut le r\'esoudre enti\`erement, que
 ce soit en environnement classique~\cite{MINKA2026CRO} ou
 quantique~\cite{MINKA2026PQCRO}. Il dispose toutefois d\'esormais de ce
 que la cryptographie classique ne lui avait jamais offert, \`a savoir une

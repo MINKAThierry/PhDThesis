@@ -68,10 +68,12 @@ l'\'etat de leur validation.
 
 \begin{table}[htbp]
 \centering
-\caption{Param\`etres institutionnels~: protocole de mesure et statut de validation}
+\caption{Protocole de mesure et statut de validation des param\`etres institutionnels}
 \label{tab:parametres_mesure}
 \small
-\begin{tabular}{@{}lllll@{}}
+\setlength{\tabcolsep}{4pt} % Réduit l'espacement entre les colonnes
+\begin{adjustbox}{max width=\linewidth} % Sécurité anti-dépassement
+\begin{tabularx}{\linewidth}{@{}p{2.6cm} p{2.6cm} >{\raggedright\arraybackslash}X p{2.6cm} l@{}}
 \toprule
 \textbf{Contribution} & \textbf{Param\`etres} & \textbf{Protocole de mesure} &
 \textbf{Statut de validation} & \textbf{Type} \\
@@ -89,7 +91,8 @@ C4 (Famille SOTP)
   & \S\ref{subsec:protocole_opp}
   & Calibration illustrative & R\'etrospectif \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
+\end{adjustbox}
 \end{table}
 
 La section~\ref{subsec:protocole_delta} d\'etaille la mesure de $\Delta$,

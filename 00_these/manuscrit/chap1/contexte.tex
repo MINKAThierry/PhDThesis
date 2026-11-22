@@ -77,7 +77,7 @@ vers la m\^eme contrainte.
 \end{boiteArbitre}
 
 % ----------------------------------------------------------------------------
-\subsection{Note de m\'ethodologie~: statut des exemples illustratifs}
+\subsection{Statut m\'ethodologique des exemples illustratifs}
 \label{subsec:note_methodo}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
@@ -108,13 +108,13 @@ parcourent l'ensemble des compromis possibles entre confidentialit\'e et
 opposabilit\'e, depuis les syst\`emes tr\`es confidentiels mais peu opposables
 (Helios, zk-SNARKs) jusqu'\`a un syst\`eme tr\`es opposable dont la confidentialit\'e
 est quasi nulle (ECDSA). Pris ensemble, ils font appara\^itre une r\'egularit\'e,
-puisque aucun protocole d\'eploy\'e n'atteint un produit $\Conf \cdot \Rel \cdot \Opp$
-sup\'erieur \`a $0{,}57$. Cette observation laisse supposer l'existence d'une
+puisque aucune des trois estimations n'atteint un produit $\Conf \cdot \Rel \cdot \Opp$
+sup\'erieur \`a $0{,}58$. Cette observation laisse supposer l'existence d'une
 contrainte de fond.
 \end{sloppypar}
 
 % ----------------------------------------------------------------------------
-\subsubsection{Vote \'electronique~: le cas Helios}
+\subsubsection{Le vote \'electronique avec Helios}
 \label{subsubsec:cas_helios}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
@@ -181,7 +181,7 @@ n'est pas une instance du Trilemme CRO (Remarque~\ref{rem:portee_cas_etude}).
 \end{sloppypar}
 
 % ----------------------------------------------------------------------------
-\subsubsection{Conformit\'e financi\`ere~: les zk-SNARKs}
+\subsubsection{La conformit\'e financi\`ere par les zk-SNARKs}
 \label{subsubsec:cas_zksnark}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
@@ -200,7 +200,7 @@ sans divulguer les transactions sous-jacentes~\cite{Garratt19}.
 
 Cette succinctit\'e a toutefois un co\^ut~\cite{Bitansky2017}, car une preuve qui ne r\'ev\`ele rien du t\'emoin
 interdit aussi \`a un r\'egulateur d'auditer apr\`es coup une transaction suspecte.
-Lors d'une crise syst\'emique comparable \`a celle des \textit{subprimes} de 2008~\cite{FCIC2011}, l'analyse de la contagion deviendrait impossible, l'opacit\'e
+Lors d'une crise syst\'emique comparable \`a celle des \textit{subprimes} de 2008~\cite{FCIC2011}, l'analyse de la contagion serait fortement entrav\'ee, l'opacit\'e
 qui prot\`ege les clients faisant alors obstacle \`a l'investigation~\cite{Androulaki13,Meiklejohn13}. Le probl\`eme rel\`eve d'un vide de
 contr\^ole~\cite{FinckMoscon19,DeFilippi16} bien plus que d'une d\'efaillance d'impl\'ementation.
 
@@ -236,7 +236,7 @@ d'analyse, d'\'equipes d'experts et de cadres r\'eglementaires d\'etaill\'es~\ci
 \end{sloppypar}
 
 % ----------------------------------------------------------------------------
-\subsubsection{Signatures contractuelles~: ECDSA comme r\'ef\'erence d'opposabilit\'e}
+\subsubsection{Les signatures contractuelles ECDSA comme r\'ef\'erence d'opposabilit\'e}
 \label{subsubsec:cas_ecdsa}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
@@ -292,20 +292,20 @@ $0{,}273$ \`a $0{,}572$, ce qui sugg\`ere l'existence d'une contrainte
 qui d\'epend des param\`etres
 institutionnels ($\Delta$, $\alpha$, $\beta$)~\cite{Simon82,Cowan2001}.
 
-La cryptographie classique ne dispose d'aucun outil pour formaliser cette
+La cryptographie classique ne dispose, \`a notre connaissance, d'aucun outil pour formaliser cette
 contrainte~\cite{AbadiRogaway00}, car elle mesure l'avantage de l'adversaire~\cite{Goldreich01} sans rien dire de l'utilit\'e institutionnelle. La litt\'erature sur l'\emph{usable
 security}~\cite{Bonneau12,Cranor05,Herley09,Dhamija06,Schechter07} \'etudie l'utilisabilit\'e, mais
 qualitativement, sans m\'etriques quantifiables. L'informatique
 juridique~\cite{Kerr04,Casey11,Mason07} analyse l'admissibilit\'e des preuves,
 mais via la jurisprudence, sans formalisme math\'ematique.
 
-Aucune de ces trois disciplines, qui s'ignorent largement, ne propose donc de
+\`A notre connaissance, aucune de ces trois disciplines, qui s'ignorent largement, ne propose donc de
 m\'etrique de l'opposabilit\'e~\cite{Smith09,Alvim12}. La section~\ref{subsec:trois_dimensions} s'attache \`a combler ce manque.
 \end{sloppypar}
 
 \begin{table}[htbp]
 \centering
-\caption{Profils CLO estimés~: trois systèmes représentatifs.
+\caption{Profils CLO estimés de trois systèmes représentatifs.
 Toutes les valeurs sont des estimations paramétriques analytiques publiées
 dans les travaux CLO~\cite{MINKA2026CLO} et CRO~\cite{MINKA2026CRO}, sur l'\'echelle
 op\'erationnelle CLO (fiabilit\'e de v\'erification $\Relver$, Remarque~\ref{rem:rel_ver}).}
@@ -322,7 +322,7 @@ ECDSA (contrats)    & $0{,}31$ & $0{,}98$ & $0{,}90$ & $0{,}273$ \\
 \end{table}
 
 % ----------------------------------------------------------------------------
-\subsection{Extension quantique~: les standards NIST PQC}
+\subsection{L'extension quantique et les standards NIST PQC}
 \label{subsec:extension_quantique_contexte}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}

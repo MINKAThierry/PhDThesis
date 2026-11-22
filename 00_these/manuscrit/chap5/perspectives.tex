@@ -43,7 +43,7 @@ Un programme \`a horizons structur\'es conclut la section
 Le voyage de l'arbitre ne s'arr\^ete pas avec cette th\`ese. Les fondations
 sont pos\'ees (m\'etriques, bornes, constructions, certification,
 protocoles) mais le programme ouvert est plus vaste que ce qui vient
-d'\^etre r\'esolu. Il reste \`a obtenir une borne dont le terme dominant serait en $O(\lambda^{-2})$,
+d'\^etre r\'esolu. Il reste \`a certifier en Lean la borne aigu\"e de la Proposition~\ref{prop:borne_aigue},
 \`a \'etablir l'optimalit\'e des constructions SOTP, \`a calibrer empiriquement les param\`etres
 quantiques~$\Delta_q$ et~$\eta_q$ ainsi qu'\`a \'etendre les constructions
 au calcul homomorphe et multi-parties. L'arbitre de demain
@@ -87,12 +87,12 @@ hypoth\`eses du mod\`ele.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{Axe I. Fondations computationnelles~: AIIP et le CASH Toolkit}
+\subsection{Axe I. Fondations computationnelles avec AIIP et le CASH Toolkit}
 \label{subsec:axe1_aiip_cash}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 
-\subsubsection{Le probl\`eme AIIP~: hypoth\`ese de duret\'e post-quantique}
+\subsubsection{Le probl\`eme AIIP comme hypoth\`ese de duret\'e post-quantique}
 \label{subsubsec:probleme_aiip}
 
 Toute discipline cryptographique repose sur des hypoth\`eses de duret\'e dont
@@ -127,7 +127,7 @@ point-count~\cite{Schoof85,Kedlaya2001}, variantes
 quantiques~(Grover~\cite{Grover96}, MNFS quantique~\cite{Jeppesen2022}))
 reste \`a conduire.
 
-\subsubsection{Le CASH Toolkit~: primitives align\'ees sur les propri\'et\'es CLO}
+\subsubsection{Le CASH Toolkit et ses primitives align\'ees sur les propri\'et\'es CLO}
 \label{subsubsec:cash_toolkit}
 
 Le \textbf{CASH Toolkit} (\textit{Chaotic Affine Secure Hash}) regroupe trois
@@ -183,7 +183,7 @@ th\'eorique du toolkit.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
-\subsection{Axe II. Voie protocolaire~: Q2CSI, ZK-NR et l'instanciation de l'esprit SOTP}
+\subsection{Axe II. Voie protocolaire par Q2CSI, ZK-NR et l'instanciation de l'esprit SOTP}
 \label{subsec:axe2_q2csi_zknr}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
@@ -213,7 +213,7 @@ construction abstraite. Ce sch\'ema repose sur la s\'eparation dialectique des c
 fuites contextuelles et la compatibilit\'e avec les adversaires
 quantiques~\cite{Unruh2010,Unruh2015}.
 
-\subsubsection{La s\'erie ZK-NR~: instanciation composable par zero-knowledge}
+\subsubsection{L'instanciation composable par zero-knowledge de la s\'erie ZK-NR}
 \label{subsubsec:zk_nr}
 
 La s\'erie \textbf{ZK-NR} (\textit{Zero-Knowledge Non-Repudiation}) protocol
@@ -258,7 +258,7 @@ agr\'eg\'ees~\cite{Bunz2018}~?
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 
-\subsubsection{Borne forte sur le produit CRO~: vers la caract\'erisation compl\`ete}
+\subsubsection{Vers une caract\'erisation compl\`ete par une borne forte sur le produit CRO}
 \label{subsubsec:borne_forte}
 
 Le Trilemme CRO classique~(Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel})
@@ -276,7 +276,7 @@ termes correctifs en $O(\lambda^{-2})$, sous l'Hypoth\`ese~\ref{ass:regime}
 \label{eq:borne_forte_quantique}
 \end{equation}
 o\`u $\Delta_q$ repr\'esente la capacit\'e d'extraction institutionnelle
-adapt\'ee au quantum et $\eta_q$ le coefficient de perte d'interpr\'etabilit\'e
+adapt\'ee au quantique et $\eta_q$ le coefficient de perte d'interpr\'etabilit\'e
 quantique.
 
 \begin{remark}[Statut d'une borne forte en $O(\lambda^{-2})$]
@@ -284,15 +284,28 @@ quantique.
 La borne~\eqref{eq:borne_forte_classique}, v\'erifi\'ee dans
 l'annexe~\ref{chap:annexe_lean4}, a un terme dominant $\Delta/(\gamma\lambda)$ en
 $O(\lambda^{-1})$~; seuls ses termes correctifs, $\kappa(\Delta+1)/\lambda^2$ et
-$\kappa^2/\lambda^3$, sont d'ordre $\lambda^{-2}$ et $\lambda^{-3}$. Une borne dont
-le terme dominant serait en $O(\lambda^{-2})$ reste une question ouverte.
-La forme raffin\'ee~\eqref{eq:trilemme_cro_raffine} montre d'ailleurs qu'en
-r\'egime \og rare\fg{} la borne est gouvern\'ee par Fano, en $1/\lambda$, ind\'ependamment
-de $\Delta$. Les autres probl\`emes ouverts concernent l'extension de la
-formalisation \`a SOTP et au cadre post-quantique ainsi que la d\'erivation dans
-Mathlib des in\'egalit\'es de Fano et Pinsker, aujourd'hui pos\'ees comme
-propri\'et\'es des instances.
+$\kappa^2/\lambda^3$, sont d'ordre $\lambda^{-2}$ et $\lambda^{-3}$. Ce terme en
+$\lambda^{-1}$ vient de la majoration de l'entropie binaire par $1$ dans l'\'etape de
+Fano. En conservant ce terme, la Proposition~\ref{prop:borne_aigue} donne une borne
+dont le terme dominant est d'ordre $\kappa/\lambda^2$, avec le m\^eme facteur
+institutionnel. La Remarque~\ref{rem:borne_aigue_portee} montre que cet ordre ne
+peut pas \^etre am\'elior\'e. La question ouverte porte d\'esormais sur sa certification
+en Lean. Les autres probl\`emes ouverts concernent l'extension de la
+formalisation \`a SOTP et au cadre post-quantique ainsi que la d\'erivation des
+in\'egalit\'es de Fano et Pinsker pour des lois quelconques, la formalisation ne les
+d\'emontrant aujourd'hui que pour des lois de probabilit\'e finies.
 \end{remark}
+
+\begin{Preuve}[Remarque~\ref{rem:borne_forte_statut}]
+Pour $\Delta > 0$ et $\kappa$ fix\'e, $\lambda \cdot \Delta/(\gamma\lambda) = \Delta/\gamma$ ne
+tend pas vers $0$, si bien que le terme dominant de~\eqref{eq:borne_forte_classique}
+est d'ordre exactement $\lambda^{-1}$. Les deux autres termes, multipli\'es par
+$\lambda^2$ et $\lambda^3$, restent born\'es. La borne de Fano
+$\Relrec \leq (I(M;\Sigma|C)+1)/\lambda$ provient de $h(p_e) \leq 1$
+(preuve du Lemme~\ref{lem:fano}), d'o\`u le terme en $1/\lambda$. La suite de
+l'\'enonc\'e est d\'emontr\'ee dans la preuve de la Proposition~\ref{prop:borne_aigue} et
+dans celle de la Remarque~\ref{rem:borne_aigue_portee}.
+\end{Preuve}
 
 La formalisation de l'optimisation analytique sur l'intervalle complet
 $[0, \lambda]$ reste un probl\`eme ouvert, car elle n\'ecessite des outils
@@ -313,8 +326,12 @@ d\'eterminer quels profils sont r\'ealisables et quels sont les arbitrages
 Pareto-optimaux~\cite{Boyd2004}.
 
 Deux conjectures guident l'exploration. La premi\`ere, dite de \emph{convexit\'e}, pose que $\mathcal{R}$
-est convexe dans $[0,1]^3$, car la composition probabiliste de deux protocoles
-g\'en\`ere un troisi\`eme avec m\'etriques interpol\'ees~\cite{MINKA2026CLO}.
+est convexe dans $[0,1]^3$. Le m\'elange probabiliste de deux protocoles ne suffit pas \`a
+l'\'etablir. L'in\'egalit\'e triangulaire donne
+$\TV(tP+(1-t)P', tQ+(1-t)Q') \leq t\,\TV(P,Q) + (1-t)\,\TV(P',Q')$, d'o\`u une
+confidentialit\'e du m\'elange au moins \'egale \`a $t\Conf + (1-t)\Conf'$. En revanche
+l'opposabilit\'e, rapport de deux quantit\'es d'information, n'est pas une fonction
+lin\'eaire du param\`etre de m\'elange~\cite{MINKA2026CLO}.
 La seconde, dite de \emph{fronti\`ere poly\'edrale}, pose que la fronti\`ere de Pareto de $\mathcal{R}$
 est d\'efinie par un syst\`eme fini d'in\'egalit\'es lin\'eaires issues de
 Fano~\cite{Fano61}, Pinsker~\cite{Pinsker1964} et du principe de traitement
@@ -399,10 +416,11 @@ La formalisation Lean4 du noyau alg\'ebrique du Trilemme CRO
 le d\'eveloppement du sous-domaine.
 
 \paragraph{Propri\'et\'es informationnelles comme conditions v\'erifiables.}
-La formalisation int\`egre Fano et Pinsker comme champs explicites de la
+Dans son noyau, la formalisation int\`egre Fano et Pinsker comme champs explicites de la
 structure \texttt{ProtocolInstance} tandis qu'elle traite l'extraction born\'ee et le r\'egime de
 confidentialit\'e comme hypoth\`eses du th\'eor\`eme. Ce choix transforme des
 propri\'et\'es profondes en conditions v\'erifiables \`a chaque instance,
+conditions que la couche concr\`ete remplit pour toute loi finie,
 clarifiant le statut \'epist\'emique du th\'eor\`eme.
 
 \paragraph{Coh\'erence et port\'ee du th\'eor\`eme.}
@@ -411,7 +429,7 @@ la n\'ecessit\'e des hypoth\`eses. Le \emph{t\'emoin de coh\'erence} atteint
 exactement la borne th\'eorique pour une instance du mod\`ele abstrait,
 confirmant que les hypoth\`eses formelles sont compatibles (ce point n'est
 pas r\'ealisable par un protocole, Remarque~\ref{rem:portee_temoin}). Le \emph{t\'emoin de port\'ee} v\'erifie
-les Hypoth\`eses 1, 2$'$ et 3 mais s'\'ecarte du r\'egime de confidentialit\'e,
+les Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace} et~\ref{ass:regularite} mais s'\'ecarte du r\'egime de confidentialit\'e,
 atteignant $1/4$ constant, ce qui \'etablit que ce r\'egime est n\'ecessaire
 \`a la borne. Le cas limite complet est document\'e \`a la
 sous-section~\ref{subsec:lean4_erreurs}.
@@ -422,7 +440,7 @@ L'extension aux constructions SOTP compl\`etes et aux r\'esultats
 post-quantiques constitue une direction de recherche future, estim\'ee \`a
 un investissement substantiel mais r\'ealiste pour une \'equipe d\'edi\'ee.
 
-\subsubsection{Extension de la formalisation Lean4~: SOTP et PQ}
+\subsubsection{Extension de la formalisation Lean4 \`a SOTP et au cadre post-quantique}
 \label{subsubsec:extension_lean4_sotp_pq}
 
 La formalisation Lean4 actuelle (annexe~\ref{chap:annexe_lean4}) couvre
@@ -530,7 +548,7 @@ chercheur isol\'e que d'un programme qui se donne des
 \'ech\'eances.
 \end{boiteArbitre}
 
-\subsubsection{Horizon court terme (1--3 ans)~: consolidation des fondations}
+\subsubsection{Consolidation des fondations \`a court terme (1--3 ans)}
 \label{subsubsec:horizon_court_terme}
 
 Cinq t\^aches conditionnent les horizons ult\'erieurs. D'abord,
@@ -569,7 +587,7 @@ le point d'entr\'ee naturel, puisqu'il valide $\Opp$ sur un syst\`eme
 r\'eellement d\'eploy\'e et fournit le premier point de calibration du
 cadre.
 
-\subsubsection{Horizon moyen terme (3--5 ans)~: \'elargissement du domaine}
+\subsubsection{\'Elargissement du domaine \`a moyen terme (3--5 ans)}
 \label{subsubsec:horizon_moyen_terme}
 
 La th\'eorie CLO computationnelle, d\'efinitions de
@@ -589,7 +607,7 @@ standardisation, int\'egration de l'opposabilit\'e dans les standards NIST
 post-quantiques, cadrage d'un futur standard ISO/IEC, peut d\'ebuter sur cet
 horizon.
 
-\subsubsection{Horizon long terme (5--10 ans)~: sous-domaine \'etabli}
+\subsubsection{Un sous-domaine \'etabli \`a long terme (5--10 ans)}
 \label{subsubsec:horizon_long_terme}
 
 La vision d\'ecennale est celle d'un sous-domaine reconnu dans les
@@ -657,8 +675,8 @@ programme longitudinal repr\'esente une direction de recherche \`a 3--5 ans.
 \begin{boiteArbitre}
 L'arbitre retient que le voyage ne s'arr\^ete pas ici. Les bornes existent
 sous hypoth\`eses, tandis que les constructions ont des propri\'et\'es prouv\'ees et une
-opposabilit\'e encore heuristique. Une borne de terme dominant
-$O(\lambda^{-2})$ reste ouverte, de m\^eme que les extensions au calcul homomorphe
+opposabilit\'e encore heuristique. La borne aigu\"e de terme dominant
+$O(\lambda^{-2})$ reste \`a certifier en Lean, de m\^eme que les extensions au calcul homomorphe
 et multi-parties~; les param\`etres quantiques
 $\Delta_q$ et $\eta_q$ restent quant \`a eux \`a calibrer sur des acteurs r\'eels. Ce qui a
 \'et\'e construit est prouv\'e l\`a o\`u il est dit prouv\'e et conjectur\'e l\`a o\`u il est dit conjectur\'e.

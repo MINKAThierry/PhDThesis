@@ -93,13 +93,13 @@ ci-dessous, o\`u $H(\mathcal{C})$ n'intervient pas dans le quotient, mais elle
 conditionne l'interpr\'etation des \'ecarts entre syst\`emes.
 
 % -----------------------------------------------------------------------
-\subsection{Helios~: vote \'electronique en contentieux \'electoral}
+\subsection{Helios et le vote \'electronique en contentieux \'electoral}
 \label{sec:derivation_helios}
 % -----------------------------------------------------------------------
 
 \noindent\textbf{Protocole.} Helios~\cite{Adida08} est un syst\`eme de vote
 ouvert reposant sur le chiffrement ElGamal et sur des preuves
-z\'ero-connaissance construites sur des groupes de logarithme discret de
+\`a divulgation nulle construites sur des groupes de logarithme discret de
 $2048$ bits.
 
 \noindent\textbf{Contexte institutionnel mod\'elis\'e.} Tribunal de juridiction
@@ -112,7 +112,7 @@ distinguables multipli\'ees par $16$ contextes proc\'eduraux distincts.
 \item Messages~: votes individuels $v \in \{1,\ldots,K\}$
 \item Preuves~: $\sigma = (\mathsf{Enc}(v), \pi_{\text{valid}}, \pi_{\text{tally}})$,
       o\`u $\mathsf{Enc}$ d\'esigne un chiffrement ElGamal et $\pi$ des preuves
-      z\'ero-connaissance de type Fiat-Shamir
+      \`a divulgation nulle de type Fiat-Shamir
 \item Verdicts~: $\mathcal{V} = \{$\'election valide, \'election invalide,
       recomptage ordonn\'e, investigation demand\'ee$\}$
 \end{itemize}
@@ -140,7 +140,7 @@ I(V;\Sigma|C) \approx 1 \text{ bit}.
 \label{eq:ivc_helios}
 \end{equation}
 Cette pauvret\'e informationnelle d\'ecoule de la conception m\^eme du protocole,
-puisque la propri\'et\'e z\'ero-connaissance masque le contenu des votes tout en
+puisque la propri\'et\'e \`a divulgation nulle masque le contenu des votes tout en
 attestant la correction du calcul. Le juge ne peut
 distinguer ni les nuances proc\'edurales, ni les irr\'egularit\'es partielles, ni
 les anomalies de comportement des trustees \`a partir des preuves seules.
@@ -151,8 +151,8 @@ les anomalies de comportement des trustees \`a partir des preuves seules.
 = \frac{1 \text{ bit}}{2 \text{ bits}} = 0{,}50
 \label{eq:opp_helios}
 \end{equation}
-Les preuves cryptographiques r\'esolvent exactement la moiti\'e de
-l'incertitude institutionnelle. Le bit r\'esiduel rel\`eve du raisonnement
+Sous les hypoth\`eses de cette d\'erivation, les preuves cryptographiques r\'esolvent la
+moiti\'e de l'incertitude institutionnelle. Le bit r\'esiduel rel\`eve du raisonnement
 juridique sur la conformit\'e proc\'edurale, l'interpr\'etation de l'intention
 des \'electeurs et le droit \'electoral de la juridiction. La r\'ealit\'e
 institutionnelle de cet \'ecart est document\'ee par les incidents IACR~2025 et
@@ -168,17 +168,18 @@ $\Opp_{\mathrm{emp}}$ sur une \'election r\'eellement d\'eploy\'ee.
 \approx 0{,}92 \times 0{,}95 \times 0{,}50 \approx 0{,}437
 \label{eq:produit_helios}
 \end{equation}
-La confidentialit\'e $\Conf \approx 0{,}92$ d\'ecoule de la s\'ecurit\'e
-s\'emantique d'ElGamal sous l'hypoth\`ese DDH~; la fiabilit\'e
-$\Relver \approx 0{,}95$, de la soundness des preuves ZK
-($< 2^{-80}$)~\cite{MINKA2026CLO}.
+Les valeurs $\Conf \approx 0{,}92$ et $\Relver \approx 0{,}95$ sont reprises de
+l'\'echelle op\'erationnelle de~\cite{MINKA2026CLO}. Elles s'appuient sur la s\'ecurit\'e
+s\'emantique d'ElGamal sous l'hypoth\`ese DDH et sur la soundness des preuves ZK
+($< 2^{-80}$). Ces garanties calculatoires ne fixent pas \`a elles seules une valeur
+num\'erique, qui rel\`eve de la calibration op\'erationnelle.
 
 % -----------------------------------------------------------------------
-\subsection{zk-SNARK Groth16~: conformit\'e r\'eglementaire}
+\subsection{Le zk-SNARK Groth16 en conformit\'e r\'eglementaire}
 \label{sec:derivation_zksnark}
 % -----------------------------------------------------------------------
 
-\noindent\textbf{Protocole.} Preuves z\'ero-connaissance pour la
+\noindent\textbf{Protocole.} Preuves \`a divulgation nulle pour la
 v\'erification de conformit\'e pr\'eservant la vie priv\'ee. Une institution
 financi\`ere y prouve que l'ensemble de ses transactions satisfait les r\`egles de
 lutte contre le blanchiment sans en r\'ev\'eler le d\'etail. Construction
@@ -242,7 +243,7 @@ I(V;\Sigma|C) \approx 2 \text{ bits}.
 \end{equation}
 L'avantage sur Helios ($2$ contre $1$ bit) tient au contexte plus riche
 ($11$ contre $8$ bits), qui autorise une cat\'egorisation plus fine. L'opacit\'e
-cryptographique reste la m\^eme, puisque la garantie z\'ero-connaissance de
+cryptographique reste la m\^eme, puisque la garantie \`a divulgation nulle de
 Groth16 ne peut \^etre contourn\'ee par l'expertise.
 
 \noindent\textbf{\'Etape 3. Calcul de l'opposabilit\'e.}
@@ -261,13 +262,14 @@ risque syst\'emique et la priorit\'e d'application, dimensions inaccessibles
 \approx 0{,}89 \times 0{,}96 \times 0{,}67 \approx 0{,}572
 \label{eq:produit_zksnark}
 \end{equation}
-La confidentialit\'e $\Conf \approx 0{,}89$ refl\`ete le z\'ero-connaissance
-computationnel sous hypoth\`eses de couplage~; la fiabilit\'e
-$\Relver \approx 0{,}96$ est l\'eg\`erement inf\'erieure \`a l'unit\'e en raison des
-exigences du trusted setup~\cite{MINKA2026CLO}.
+Les valeurs $\Conf \approx 0{,}89$ et $\Relver \approx 0{,}96$ sont reprises de
+l'\'echelle op\'erationnelle de~\cite{MINKA2026CLO}. La premi\`ere traduit le caract\`ere \`a
+divulgation nulle computationnel sous hypoth\`eses de couplage, la seconde les
+exigences du trusted setup. Elles rel\`event de la calibration op\'erationnelle et ne
+d\'ecoulent pas de ces hypoth\`eses.
 
 % -----------------------------------------------------------------------
-\subsection{ECDSA~: litige contractuel avec infrastructure PKI}
+\subsection{ECDSA dans un litige contractuel avec infrastructure PKI}
 \label{sec:derivation_ecdsa}
 % -----------------------------------------------------------------------
 
@@ -304,7 +306,7 @@ contexte institutionnel calibr\'e pour r\'esoudre exactement le niveau
 d'incertitude d\'ecisionnelle qu'il affronte.
 
 \noindent\textbf{\'Etape 2. Estimation de $I(V;\Sigma|C)$.} Contrairement aux
-preuves z\'ero-connaissance, ECDSA est \emph{transparent par conception}, car
+preuves \`a divulgation nulle, ECDSA est \emph{transparent par conception}, car
 l'\'equation de v\'erification expose les relations math\'ematiques explicites
 entre cl\'e publique, hachage du message et composants de la signature. Le
 tribunal en extrait environ $18$ bits r\'epartis sur cinq
@@ -354,14 +356,14 @@ cryptographique~\cite{MINKA2026CLO}.
 \approx 0{,}31 \times 0{,}98 \times 0{,}90 \approx 0{,}273
 \label{eq:produit_ecdsa}
 \end{equation}
-La faible confidentialit\'e ($\Conf \approx 0{,}31$) est la cons\'equence
-directe de la transparence, puisque les documents contractuels sont publics et que seules
+La faible confidentialit\'e op\'erationnelle ($\Conf \approx 0{,}31$, valeur reprise
+de~\cite{MINKA2026CLO}) traduit la transparence, puisque les documents contractuels sont publics et que seules
 les cl\'es priv\'ees demeurent cach\'ees. La tr\`es haute fiabilit\'e
 ($\Relver \approx 0{,}98$) tient \`a la v\'erification d\'eterministe, la
 contrefa\c{c}on supposant la r\'esolution du probl\`eme ECDLP.
 
 % -----------------------------------------------------------------------
-\subsection{\'Etude de cas~: ML-DSA-65 (Dilithium-3) en contexte judiciaire}
+\subsection{\'Etude de cas de ML-DSA-65 (Dilithium-3) en contexte judiciaire}
 \label{sec:etude_cas_dilithium}
 % -----------------------------------------------------------------------
 

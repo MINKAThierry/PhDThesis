@@ -68,7 +68,7 @@ La cryptographie classique mesure l'\emph{avantage de l'adversaire}~\cite{GMR88,
 d\'efini \`a partir d'un distingueur polynomial confront\'e \`a un d\'efi.
 La v\'erification institutionnelle repose sur d'autres exigences, \`a savoir l'intelligibilit\'e
 pour un juge, l'auditabilit\'e r\'etrospective par un contr\^oleur et la tra\c{c}abilit\'e par un r\'egulateur~\cite{Citron14,Casey11}.
-Aucune m\'etrique ne rend compte de ces propri\'et\'es dans la litt\'erature cryptographique
+\`A notre connaissance, aucune m\'etrique ne rend compte de ces propri\'et\'es dans la litt\'erature cryptographique
 classique~\cite{GMR85,Goldreich01}.
 
 Ces constats conduisent \`a la probl\'ematique centrale de cette th\`ese, formul\'ee dans l'encadr\'e ci-dessous.
@@ -170,7 +170,7 @@ Cette th\`ese s'adresse \`a plusieurs publics, dont les points d'entr\'ee diff\`
 \begin{itemize}
 \item \textbf{Cryptographes.} Les sections~\ref{sec:cro_classique} et~\ref{sec:sotp_construction} contiennent des preuves originales utilisant des techniques standard (Fano~\cite{Fano61}, Pinsker~\cite{Pinsker1964}, r\'eductions cryptographiques~\cite{Shoup01,Damgard87}).
 
-\item \textbf{Chercheurs en s\'ecurit\'e formelle.} La section~\ref{sec:lean4} fournit une formalisation compl\`ete avec axiomatisation explicite~\cite{BartheEA2013,Lochbihler2016,Affeldt2015}.
+\item \textbf{Chercheurs en s\'ecurit\'e formelle.} La section~\ref{sec:lean4} fournit une formalisation compl\`ete, avec un noyau alg\'ebrique aux hypoth\`eses explicites et une couche o\`u Fano et Pinsker sont d\'emontr\'es pour des lois finies~\cite{BartheEA2013,Lochbihler2016,Affeldt2015}.
 
 \item \textbf{Juristes et r\'egulateurs.} La section~\ref{sec:clo} montre l'applicabilit\'e aux syst\`emes de vote~\cite{Adida08,Benaloh94}, de conformit\'e~\cite{FATF12,AMLD4} et de preuve num\'erique~\cite{Mason07,Casey16}.
 
@@ -221,7 +221,7 @@ Publi\'e dans \emph{IEEE Access} (DOI: 10.1109/ACCESS.2026.3669065), ce r\'esult
   \frac{\Delta}{\gamma\lambda} + O(\lambda^{-2}),
   \qquad \gamma = \alpha H(\mathcal{C}) - 1,
 \end{equation}
-conditionnelle \`a la capacit\'e d'extraction institutionnelle $\Delta$, \`a la granularit\'e des verdicts $\alpha$, \`a la r\'egularit\'e du protocole $\beta$ ainsi qu'au r\'egime de confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La forme publi\'ee dans~\cite{MINKA2026CRO}, $\Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$, en est un corollaire. Une forme raffin\'ee identifie exactement le r\'egime o\`u la capacit\'e institutionnelle est la contrainte liante. L'hypoth\`ese d'extraction born\'ee re\c{c}oit aussi un fondement informationnel exact. Une calibration illustrative situe $\Delta$ dans quelques dizaines de bits, ordre de grandeur plausible au regard de la rationalit\'e born\'ee de Simon~\cite{Simon82,Simon1955} et des limites de m\'emoire de travail~\cite{Miller56,Cowan2001}. Cette impossibilit\'e reste
+conditionnelle \`a la capacit\'e d'extraction institutionnelle $\Delta$, \`a la granularit\'e des verdicts $\alpha$, \`a la r\'egularit\'e du protocole $\beta$ ainsi qu'au r\'egime de confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La forme publi\'ee dans~\cite{MINKA2026CRO}, $\Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$, en est un corollaire sous l'Hypoth\`ese~\ref{ass:regime} explicit\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue en conservant le terme entropique de l'in\'egalit\'e de Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}). Une forme raffin\'ee identifie exactement le r\'egime o\`u la capacit\'e institutionnelle est la contrainte liante. L'hypoth\`ese d'extraction born\'ee re\c{c}oit aussi un fondement informationnel exact. Une calibration illustrative situe $\Delta$ dans quelques dizaines de bits, ordre de grandeur plausible au regard de la rationalit\'e born\'ee de Simon~\cite{Simon82,Simon1955} et des limites de m\'emoire de travail~\cite{Miller56,Cowan2001}. Cette impossibilit\'e reste
 conditionnelle, \`a la mani\`ere de CAP, qui d\'epend des partitions r\'eseau~\cite{Brewer00,GilbertLynch02}, de FLP,
 qui d\'epend de l'asynchronie~\cite{FLP85}, ou du th\'eor\`eme d'Arrow, qui suppose des pr\'ef\'erences rationnelles~\cite{Arrow50}.
 
@@ -244,15 +244,17 @@ d'entropie contextuelle $H(\mathcal{C})$~:
 \end{itemize}
 Leurs propri\'et\'es cryptographiques (confidentialit\'e, fiabilit\'e de v\'erification) sont prouv\'ees sous des hypoth\`eses standard~; l'existence de constructions approchant la borne du Trilemme est formul\'ee comme conjecture. Ces constructions transforment l'impossibilit\'e en guide de conception~\cite{Gennaro13,Parno13,BCTV14}.
 
-\paragraph{C5. Nous certifions m\'ecaniquement le noyau alg\'ebrique du
-Trilemme en Lean4 (section~\ref{sec:lean4}).}
+\paragraph{C5. Nous certifions m\'ecaniquement le Trilemme en Lean4, du noyau
+alg\'ebrique aux lois de probabilit\'e finies (section~\ref{sec:lean4}).}
 Soumis \`a \emph{Journal of Automated Reasoning}, cet article pr\'esente
-la premi\`ere formalisation Lean4 compl\`ete d'un th\'eor\`eme
+la premi\`ere formalisation du noyau alg\'ebrique par Lean4 d'un th\'eor\`eme
 d'impossibilit\'e en cryptographie institutionnelle~\cite{moura2015lean,Lean4,Mathlib}.
-Enti\`erement v\'erifi\'ee sans \texttt{sorry}, la formalisation int\`egre
-les quatre ingr\'edients informationnels (Fano, Pinsker, extraction
-born\'ee, r\'egularit\'e) comme propri\'et\'es des instances de protocole
-tout en explicitant les hypoth\`eses institutionnelles. Elle \'etablit
+Enti\`erement v\'erifi\'ee sans \texttt{sorry}, la formalisation pose dans son
+noyau alg\'ebrique les quatre ingr\'edients informationnels (Fano, Pinsker, extraction
+born\'ee, r\'egularit\'e) comme propri\'et\'es des instances de protocole,
+tout en explicitant les hypoth\`eses institutionnelles. La th\`ese y ajoute une couche
+concr\`ete o\`u Fano et Pinsker sont d\'emontr\'es pour des lois de probabilit\'e finies,
+de sorte que le trilemme y porte sur de vraies lois. Elle \'etablit
 formellement la borne $\Delta/(\gamma\lambda) + O(\lambda^{-2})$ et sa forme
 raffin\'ee puis fournit deux t\'emoins de coh\'erence et de port\'ee. Le d\'eveloppement
 constitue \'egalement une biblioth\`eque Lean4 r\'eutilisable, publi\'ee avec une version fig\'ee de Lean et
@@ -292,21 +294,8 @@ programme n'ayant pas encore \'et\'e d\'eploy\'e dans le cadre de cette
 th\`ese, son statut est explicit\'e \`a la
 sous-section~\ref{subsubsec:statut_deploiement}.
 \medskip
-Ces six contributions forment le cycle repr\'esent\'e ci-dessous.
-\begin{equation}
-\label{eq:progression_FBESCX}
-  \underbrace{\text{CLO}}_{\text{Formalisation}}
-  \;\xrightarrow{\quad}\;
-  \underbrace{\text{CRO}}_{\text{Bornes classiques}}
-  \;\xrightarrow{\quad}\;
-  \underbrace{\text{PQ-CRO}}_{\text{Extension quantique}}
-  \;\xrightarrow{\quad}\;
-  \underbrace{\text{SOTP}}_{\text{Constructions de r\'ef\'erence}}
-  \;\xrightarrow{\quad}\;
-  \underbrace{\text{Lean4}}_{\text{Certification}}
-  \;\xrightarrow{\quad}\;
-  \underbrace{\text{Exp\'erimentation}}_{\text{Protocoles et validation}}
-\end{equation}
+
+Ces six contributions forment le cycle repr\'esent\'e par la figure~\ref{fig:cycle_recherche}.
 
 \paragraph{Progression canonique.}
 \label{par:progression_FBESCX}
@@ -319,6 +308,59 @@ chapitre~\ref{chap:resultats_discussions} analyse les r\'esultats et ouvre les p
 
 \end{sloppypar}
 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={
+        rectangle,
+        rounded corners,
+        draw=black!80,
+        fill=blue!10, % Couleur de fond des boîtes
+        text width=2.8cm,
+        align=center,
+        minimum height=1.3cm,
+        font=\small\sffamily
+    },
+    arrow/.style={
+        -{Stealth[scale=1.2]},
+        thick,
+        draw=black!80
+    }
+]
+
+    % --- Positionnement des 6 objectifs en cercle ---
+    % F en haut (90°)
+    \node[box] (F) at (90:3.8)  {\textbf{Objectif~1} \\ (CLO) \\ \textbf{F}};
+    % B en haut à droite (30°)
+    \node[box] (B) at (30:3.8)  {\textbf{Objectif~2} \\ (CRO) \\ \textbf{B}};
+    % E en bas à droite (-30°)
+    \node[box] (E) at (-30:3.8) {\textbf{Objectif~3} \\ (PQ-CRO) \\ \textbf{E}};
+    % S en bas (-90°)
+    \node[box] (S) at (270:3.8) {\textbf{Objectif~4} \\ (SOTP) \\ \textbf{S}};
+    % C en bas à gauche (210°)
+    \node[box] (C) at (210:3.8) {\textbf{Objectif~5} \\ (Lean4) \\ \textbf{C}};
+    % X en haut à gauche (150°)
+    \node[box] (X) at (150:3.8) {\textbf{Objectif~6} \\ (eXp\'erimentation) \\ \textbf{X}};
+
+    % --- Fl\`eches de transition principales ---
+    \draw[arrow] (F) to[bend left=20] node[above right, font=\footnotesize] {d\'efinitions du cadre} (B);
+    \draw[arrow] (B) to[bend left=20] node[right, font=\footnotesize] {borne classique} (E);
+    \draw[arrow] (E) to[bend left=20] node[below right, font=\footnotesize] {extension quantique} (S);
+    \draw[arrow] (S) to[bend left=20] node[below left, font=\footnotesize] {saturation par construction} (C);
+    \draw[arrow] (C) to[bend left=20] node[above left, font=\footnotesize] {certification m\'ecanique} (X);
+    
+    % --- Fl\`eche de retour vers B (la mesure) ---
+    % En pointill\'es pour montrer que c'est un cycle qui se referme sur B
+    \draw[arrow, dashed] (X) to[bend right=45] node[midway, above, font=\footnotesize] {mesure empirique} (B);
+
+    % --- Texte au centre du cercle (optionnel) ---
+    
+    %\node[font=\bfseries\small, text=gray, align=center] at (0,0) {Cycle \\ logique};
+
+\end{tikzpicture}
+\caption{Illustration cyclique des six contributions et de leurs interd\'ependances.}
+\label{fig:cycle_recherche}
+\end{figure}
 % ----------------------------------------------------------------------------
 \section{PUBLICATIONS ET STATUT}
 \label{sec:ig_publications}
@@ -339,8 +381,8 @@ La th\`ese s'appuie sur cinq manuscrits, trois publi\'es et deux soumis, auxquel
 {[P1]} & C1~: cadre CLO & \textbf{F} & \ref{sec:clo} & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3660105~\cite{MINKA2026CLO} \\
 {[P2]} & C2~: Trilemme CRO conditionnel & \textbf{B} & \ref{sec:cro_classique} & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3669065~\cite{MINKA2026CRO} \\
 {[P3]} & C3~: Trilemme CRO post-quantique & \textbf{E} & \ref{sec:cro_pq} & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3722742~\cite{MINKA2026PQCRO} \\
--- & C4~: famille SOTP & \textbf{S} & \ref{sec:sotp_construction} & Soumis & \textit{IEEE Transactions on Information Theory}~\cite{MINKA2026SOTP} \\
--- & C5~: formalisation Lean4 & \textbf{C} & \ref{sec:lean4} & Soumis & \textit{Journal of Automated Reasoning}~\cite{MINKA2026LEAN4} \\
+-- & C4~: famille SOTP & \textbf{S} & \ref{sec:sotp_construction} & Soumis & \textit{IEEE Transactions on Information Theory} \\
+-- & C5~: formalisation Lean4 & \textbf{C} & \ref{sec:lean4} & Soumis & \textit{Journal of Automated Reasoning} \\
 -- & C6~: programme de validation & \textbf{X} & \ref{sec:protocoles_experimentaux} & Sp\'ecifi\'e & D\'ep\^ot de recherche~\cite{CROTrilemmaDepot} \\
 \bottomrule
 \end{tabular}
@@ -359,7 +401,7 @@ La th\`ese s'appuie sur cinq manuscrits, trois publi\'es et deux soumis, auxquel
 Outre la pr\'esente introduction et la conclusion g\'en\'erale, qui ne sont
 pas num\'erot\'ees, le manuscrit comprend cinq chapitres.
 
-\textbf{Chapitre~\ref{chap:contexte} -- Contexte, \'etat de l'art et probl\'ematique.}
+\textbf{Chapitre~\ref{chap:contexte}. Contexte, \'etat de l'art et probl\'ematique.}
 Trois cas illustratifs (Helios, ECDSA, zk-SNARK) servent d'ancrage \`a la recherche
 dans la section~\ref{sec:contexte}, qui en calcule analytiquement les profils CLO.
 La section~\ref{sec:etat_art} rassemble ensuite les fondements tir\'es de la th\'eorie
@@ -369,7 +411,7 @@ Le chapitre se termine par la section~\ref{sec:problematique}, o\`u sont formul\
 paradoxe de l'authenticit\'e invisible, la probl\'ematique centrale et les
 six objectifs de recherche.
 
-\textbf{Chapitre~\ref{chap:cadre_formel} -- Cadre formel et bornes d'impossibilit\'e.}
+\textbf{Chapitre~\ref{chap:cadre_formel}. Cadre formel et bornes d'impossibilit\'e.}
 Les actes \textbf{F}, \textbf{B} et \textbf{E} y sont men\'es successivement.
 Apr\`es la formalisation du cadre CLO \`a la section~\ref{sec:clo}
 (Obj~\ref{obj:obj1_unification}), la section~\ref{sec:cro_classique}
@@ -377,7 +419,7 @@ Apr\`es la formalisation du cadre CLO \`a la section~\ref{sec:clo}
 (Obj~\ref{obj:obj2_impossibilite}), que la section~\ref{sec:cro_pq} \'etend ensuite au
 r\'egime post-quantique (Obj~\ref{obj:obj3_postquantique}).
 
-\textbf{Chapitre~\ref{chap:constructions} -- Constructions et certification formelle.}
+\textbf{Chapitre~\ref{chap:constructions}. Constructions et certification formelle.}
 Il couvre les actes \textbf{S} et \textbf{C}. Le Semantic One-Time Pad, prototype de
 la famille, est construit \`a la section~\ref{sec:sotp_base}. La section~\ref{sec:sotp_construction}
 g\'en\'eralise ce prototype en trois constructions de r\'ef\'erence dont elle conjecture
@@ -385,7 +427,7 @@ l'optimalit\'e universelle (Obj~\ref{obj:obj4_saturation}), avant que la section
 ne soumette le noyau alg\'ebrique du trilemme \`a l'assistant de preuve Lean4
 (Obj~\ref{obj:obj5_verification}).
 
-\textbf{Chapitre~\ref{chap:experimentation} -- Protocoles de mesure et validation r\'etrospective.}
+\textbf{Chapitre~\ref{chap:experimentation}. Protocoles de mesure et validation r\'etrospective.}
 L'acte \textbf{X} (Obj~\ref{obj:obj6_experimentation}) fait l'objet de ce chapitre.
 Six protocoles de mesure des param\`etres institutionnels sont sp\'ecifi\'es \`a la
 section~\ref{sec:protocoles_experimentaux}. La
@@ -395,7 +437,7 @@ section~\ref{sec:validation_retrospective} tire une calibration
 illustrative des param\`etres institutionnels en pr\'ecisant sa port\'ee et
 ses limites.
 
-\textbf{Chapitre~\ref{chap:resultats_discussions} -- R\'esultats, discussions et perspectives.}
+\textbf{Chapitre~\ref{chap:resultats_discussions}. R\'esultats, discussions et perspectives.}
 La section~\ref{sec:resultats_theoriques} pr\'esente les validations
 r\'etrospectives et le bilan formel du corpus. La
 section~\ref{sec:discussions} interpr\`ete ces r\'esultats, les positionne
