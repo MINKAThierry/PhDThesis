@@ -324,6 +324,17 @@ illustratives portant sur Helios ($\Conf \cdot \Relver \cdot \Opp \approx
 l'\'echelle op\'erationnelle CLO, font appara\^itre un spectre de compromis
 qui motive la recherche de contraintes fondamentales~\cite{Adida08,Groth16,Johnson01}.
 
+\noindent\textit{Contributions.}
+\begin{itemize}
+  \item[\textbf{C1.1}] Les m\'etriques de confidentialit\'e $\Conf$ et de fiabilit\'e $\Rel$, formalis\'ees par la variation totale et le d\'ecodage optimal (D\'efinitions~\ref{def:confidentialite_clo} et~\ref{def:fiabilite_clo}).
+  \item[\textbf{C1.2}] La m\'etrique d'opposabilit\'e $\Opp$ (D\'efinition~\ref{def:opposabilite_clo}).
+  \item[\textbf{C1.3}] La distinction entre fiabilit\'e de reconstruction et fiabilit\'e de v\'erification (Remarque~\ref{rem:rel_ver}).
+  \item[\textbf{C1.4}] Le th\'eor\`eme du goulot d'\'etranglement contextuel, $I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$ (Th\'eor\`eme~\ref{thm:goulot_contexte}).
+  \item[\textbf{C1.5}] Les r\`egles de composition s\'equentielle et parall\`ele (Th\'eor\`eme~\ref{thm:composition_sequentielle}).
+  \item[\textbf{C1.6}] Le verdict d\'eterministe, qui force $\Opp = 1$ (Remarque~\ref{rem:verdict_deterministe}).
+  \item[\textbf{C1.7}] Les jeux IND-CONF, BIND-REL et EXT-OPP et leurs ponts vers les trois m\'etriques (sous-sous-section~\ref{subsubsec:jeux_crypto}).
+\end{itemize}
+
 \textbf{Publication~:} Article publi\'e, IEEE Access
 (DOI~: 10.1109/ACCESS.2026.3660105)~\cite{MINKA2026CLO}.
 
@@ -364,6 +375,17 @@ calibration illustrative situe $\Delta$ dans quelques dizaines de bits,
 ordre de grandeur plausible au regard de la th\'eorie de la rationalit\'e
 born\'ee~\cite{Simon82,Kahneman11}.
 
+\noindent\textit{Contributions.}
+\begin{itemize}
+  \item[\textbf{C2.1}] Les param\`etres institutionnels, \`a savoir la capacit\'e d'extraction $\Delta$, la granularit\'e des verdicts $\alpha$, la r\'egularit\'e $\beta$ et la constante de r\'egime $\kappa$ (Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regime}).
+  \item[\textbf{C2.2}] La borne $\Conf\cdot\Rel\cdot\Opp \leq \Delta/(\gamma\lambda) + O(\lambda^{-2})$ sous hypoth\`eses explicites (Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}).
+  \item[\textbf{C2.3}] L'interpr\`ete admissible et le fondement informationnel de l'extraction born\'ee (D\'efinition~\ref{def:interp_admissible}, Proposition~\ref{prop:fondement_extraction}).
+  \item[\textbf{C2.4}] La forme raffin\'ee et le seuil $H^\sharp$ qui s\'epare les r\'egimes (Remarque~\ref{rem:activite_delta}).
+  \item[\textbf{C2.5}] La borne aigu\"e d'ordre $\kappa/\lambda^2$, dont l'ordre est optimal, et le t\'emoin r\'ealisable (Proposition~\ref{prop:borne_aigue}, Remarques~\ref{rem:temoin_realisable} et~\ref{rem:temoin_combine}).
+  \item[\textbf{C2.6}] La n\'ecessit\'e de l'Hypoth\`ese de r\'egime (Remarque~\ref{rem:scope_trilemme_classique}).
+  \item[\textbf{C2.7}] La capacit\'e $\Delta^*$ propre \`a l'institution et sa majoration par $\gamma + 1$ (Remarque~\ref{rem:delta_capacite}).
+\end{itemize}
+
 \textbf{Publication~:} Article publi\'e, IEEE Access
 (DOI~: 10.1109/ACCESS.2026.3669065)~\cite{MINKA2026CRO}.
 
@@ -399,6 +421,14 @@ affaiblie ci-dessus. Une calibration illustrative sur des signatures
 standardis\'ees (ML-DSA~\cite{Dilithium2022}, SLH-DSA~\cite{SPHINCS2022}) situe
 $\Delta_q$ dans quelques dizaines de bits~\cite{Mayers1997,Lo1997,Unruh2016,Chatterjee2021}.
 
+\noindent\textit{Contributions.}
+\begin{itemize}
+  \item[\textbf{C3.1}] Le trilemme quantique sous hypoth\`eses explicites (Th\'eor\`eme~\ref{thm:trilemme_pq}).
+  \item[\textbf{C3.2}] La d\'efinition unique de la perte d'interpr\'etabilit\'e $\eta_q$ (D\'efinition~\ref{def:perte_interp_quantique_pq}).
+  \item[\textbf{C3.3}] La forme raffin\'ee quantique et le seuil $H^\sharp_q$ (Remarque~\ref{rem:forme_raffinee_pq}).
+  \item[\textbf{C3.4}] Le traitement des signatures post-quantiques standardis\'ees par le lemme classique (Remarque~\ref{rem:interp_lemme7}).
+\end{itemize}
+
 \textbf{Publication~:} Article publi\'e, IEEE Access, vol.~14, pp.~125130--125155
 (DOI~: 10.1109/ACCESS.2026.3722742)~\cite{MINKA2026PQCRO}.
 
@@ -423,10 +453,19 @@ des compromis \'elev\'es sur l'\'echelle op\'erationnelle CLO
 encodage d\'eterministe du contexte. SOTP-Base exploite la compression
 Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03,Vempala05},
 tandis que SOTP-High, pr\'evue pour les contextes riches, s'appuie sur les zk-SNARKs de
-Groth16~\cite{Groth16,BenSasson2019,PLONK20}. Les propri\'et\'es
-cryptographiques de ces constructions sont d\'emontr\'ees sous les hypoth\`eses PRG et DLog.
+Groth16~\cite{Groth16,BenSasson2019,PLONK20}. Ces trois constructions instancient le paradigme Gold-Iron-Clay, qui confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte \`a trois couches distinctes. Leurs propri\'et\'es
+cryptographiques sont d\'emontr\'ees sous les hypoth\`eses PRG et DLog et la solidit\'e de connaissance de Groth16.
 L'existence de constructions approchant la borne du Trilemme, laquelle porte sur la fiabilit\'e
 de reconstruction, demeure en revanche formul\'ee comme conjecture~\cite{Campanelli2019,Wahby18}.
+
+\noindent\textit{Contributions.}
+\begin{itemize}
+  \item[\textbf{C4.1}] Le paradigme Gold-Iron-Clay, principe de conception des protocoles institutionnels qui confie la confidentialit\'e \`a la couche Gold, la fiabilit\'e de v\'erification \`a la couche Iron et la pr\'esentation du contexte institutionnel \`a la couche Clay (sous-section~\ref{subsec:gold_iron_clay}).
+  \item[\textbf{C4.2}] Les trois variantes SOTP-Low, SOTP-Base et SOTP-High, qui instancient ce paradigme selon l'entropie du contexte (section~\ref{sec:sotp_construction}).
+  \item[\textbf{C4.3}] Les r\'eductions game-based aux hypoth\`eses PRG et DLOG, au lemme JL et \`a la solidit\'e de connaissance de Groth16 (Tableau~\ref{tab:ann_g_reductions}).
+  \item[\textbf{C4.4}] La conjecture d'optimalit\'e universelle (Conjecture~\ref{conj:optimalite_universelle}).
+  \item[\textbf{C4.5}] La m\'ecanisation en Lean~4 des r\'eductions de SOTP-Low en situation r\'eduite, qui \'etablit la faisabilit\'e de la d\'emarche (section~\ref{sec:gamebased_mecanisation}).
+\end{itemize}
 
 \textbf{Publication~:} Soumis, IEEE TIT.
 
@@ -448,8 +487,8 @@ celui qu'offrent des preuves informelles~\cite{BartheEA2013,BhargavanEA2017}.
 
 \paragraph{Production~C5, la formalisation Lean4.}
 Le noyau alg\'ebrique du Trilemme~CRO est v\'erifi\'e m\'ecaniquement
-dans l'assistant de preuve Lean4~\cite{Lean4,moura2015lean} (version~4.34.0,
-biblioth\`eque Mathlib~\cite{Mathlib} v4.34.0). La formalisation apporte
+dans l'assistant de preuve Lean4~\cite{Lean4,moura2015lean} (version~4.35.0,
+biblioth\`eque Mathlib~\cite{Mathlib} v4.35.0). La formalisation apporte
 quatre contributions. Elle fournit d'abord un mod\`ele formel de familles de protocoles,
 $\mathtt{ProtocolFamily}$, qui capture la nature asymptotique du th\'eor\`eme.
 Elle s\'epare ensuite explicitement le noyau v\'erifi\'e des in\'egalit\'es de Pinsker
@@ -458,7 +497,17 @@ puis d\'emontre ces deux in\'egalit\'es pour des lois de probabilit\'e finies.
 Elle a aussi conduit \`a expliciter l'Hypoth\`ese de r\'egime $I(M;\Sigma|C) \leq \kappa/\lambda$
 et \`a pr\'eciser trois \'enonc\'es publi\'es. Elle certifie enfin la
 forme raffin\'ee, qui d\'elimite le r\'egime o\`u la capacit\'e institutionnelle
-est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}.
+est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'eductions game-based de SOTP-Low sont en outre m\'ecanis\'ees en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}).
+
+\noindent\textit{Contributions.}
+\begin{itemize}
+  \item[\textbf{C5.1}] Le noyau alg\'ebrique certifi\'e dans ses formes explicite, raffin\'ee et asymptotique (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}).
+  \item[\textbf{C5.2}] Les hypoth\`eses rendues explicites, \`a savoir l'efficacit\'e du verdict et le r\'egime de fuite (sous-section~\ref{subsec:lean4_erreurs}).
+  \item[\textbf{C5.3}] Pinsker, sous sa forme serr\'ee, et Fano d\'emontr\'es pour des lois de probabilit\'e finies (sous-section~\ref{subsec:lean4_concret}).
+  \item[\textbf{C5.4}] Le constat que l'Hypoth\`ese~\ref{ass:regularite} ne sert qu'au Lemme~\ref{lem:confidentiality_guarantee} et non au trilemme (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}).
+  \item[\textbf{C5.5}] Les t\'emoins de coh\'erence et de port\'ee et la famille de lois t\'emoins pour tout $\lambda$ (sous-sous-section~\ref{subsubsec:temoins_lean4}, sous-section~\ref{subsec:lean4_concret}).
+  \item[\textbf{C5.6}] La le\c{c}on m\'ethodologique selon laquelle la certification m\'ecanique doit pr\'ec\'eder la soumission d'un r\'esultat (sous-section~\ref{subsec:verification_corrige_lecon}).
+\end{itemize}
 
 \textbf{Publication~:} Soumis, Journal of Automated Reasoning.
 \end{sloppypar}
@@ -500,6 +549,13 @@ en d\'emontrer la validit\'e empirique, puisque le programme n'a pas \'et\'e d\'
 cadre de cette th\`ese. Les seuils \`a partir desquels il invaliderait
 le mod\`ele sont en revanche explicitement \'enonc\'es.
 
+\noindent\textit{Contributions.}
+\begin{itemize}
+  \item[\textbf{C6.1}] Les protocoles de mesure de $\Delta$, $\alpha$, $\beta$, $\Delta_q$ et $\eta_q$ et leurs crit\`eres de r\'efutation (section~\ref{sec:protocoles_experimentaux}, Tableau~\ref{tab:criteres_refutation}).
+  \item[\textbf{C6.2}] L'estimateur de $\Delta$ et le plan factoriel (\'equation~\eqref{eq:estimateur_delta}, sous-sous-section~\ref{subsubsec:plan_factoriel_delta}).
+  \item[\textbf{C6.3}] L'opposabilit\'e des syst\`emes de r\'ef\'erence et la calibration illustrative des param\`etres (section~\ref{sec:derivation_opposabilite}, Tableau~\ref{tab:parametres_reference}).
+\end{itemize}
+
 \textbf{Statut~:} programme sp\'ecifi\'e, d\'eploiement \`a venir.
 \end{sloppypar}
 
@@ -537,47 +593,50 @@ raffin\'ee du trilemme~\cite{Zellagui2018}.
 \subsubsection{Correspondance objectifs-questions-contributions}
 \label{subsubsec:correspondance_objectifs}
 
-\begin{table}[htbp]
-\centering
-\caption{Correspondance entre objectifs scientifiques, questions de
-  recherche et contributions}
-\label{tab:correspondance_objectifs}
-\small
-\begin{tabular}{p{3.2cm}cp{7.5cm}}
-\toprule
-\textbf{Objectif} & \textbf{Q} &
-\textbf{Contributions principales} \\
-\midrule
-Unification th\'eorique & Obj~\ref{obj:obj1_unification} &
-  Cadre CLO~: $\Conf$, $\Rel$, $\Opp$~;
-  Goulot contextuel~; S-OTP \\
-\midrule
-Bornes classiques & Obj~\ref{obj:obj2_impossibilite} &
-  Trilemme CRO~: $\Delta, \alpha, \beta$~;
-  Borne $\leq \Delta/(\gamma\lambda) + O(\lambda^{-2})$ \\
-\midrule
-Extension quantique & Obj~\ref{obj:obj3_postquantique} &
-  Trilemme PQ-CRO~: $\Delta_q, \eta_q$~;
-  Analyse NIST PQC \\
-\midrule
-Constructions de r\'ef\'erence & Obj~\ref{obj:obj4_saturation} &
-  SOTP-Low/Base/High~;
-  optimalit\'e (conjecture) \\
-\midrule
-V\'erification formelle & Obj~\ref{obj:obj5_verification} &
-  Formalisation Lean4~;
-  hypoth\`eses explicit\'ees~;
-  forme raffin\'ee certifi\'ee \\
-\midrule
-Exp\'erimentation & Obj~\ref{obj:obj6_experimentation} &
-  Six protocoles de mesure~; crit\`eres de r\'efutation~;
-  calibration illustrative \\
-\bottomrule
-\end{tabular}
-\end{table}
+Le statut \og Th\`ese\fg{} d\'esigne un apport absent des articles publi\'es ou soumis~; \og Th\`ese (issu de Lean)\fg{} d\'esigne un apport que la formalisation a produit. Les formulations pr\'ecis\'ees des articles publi\'es sont en cours de finalisation pour la soumission des r\'evisions issues de la formalisation Lean4. Le tableau~\ref{tab:contributions_these} rattache chaque contribution \`a sa question, \`a sa production, \`a l'\'etape du cycle, \`a l'\'enonc\'e qui la porte, \`a son statut et \`a sa source.
 
-Le statut et la r\'ef\'erence de publication de chaque contribution figurent au
-tableau~\ref{tab:contributions_these}.
+{\footnotesize
+\begin{longtable}{p{0.6cm}p{3.1cm}p{0.8cm}p{0.6cm}p{1.1cm}p{2.3cm}p{3.6cm}}
+\caption{Correspondance entre questions, contributions, productions et statuts \`a la date de soutenance}
+\label{tab:contributions_these}\\
+\toprule
+\textbf{Q.} & \textbf{Contribution} & \textbf{Prod.} & \textbf{\'Etape} & \textbf{\'Enonc\'e} & \textbf{Statut} & \textbf{Source} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Q.} & \textbf{Contribution} & \textbf{Prod.} & \textbf{\'Etape} & \textbf{\'Enonc\'e} & \textbf{Statut} & \textbf{Source} \\
+\midrule
+\endhead
+Q1 & C1.1 $\Conf$ et $\Rel$ & C1 & \textbf{F} & D\'ef.~\ref{def:confidentialite_clo} & Publi\'e & [P1] \textit{IEEE Access}~\cite{MINKA2026CLO} \\
+Q1 & C1.2 $\Opp$ & C1 & \textbf{F} & D\'ef.~\ref{def:opposabilite_clo} & Publi\'e & [P1] \textit{IEEE Access}~\cite{MINKA2026CLO} \\
+Q1 & C1.3 $\Relrec$ et $\Relver$ & C1 & \textbf{F} & Rem.~\ref{rem:rel_ver} & Th\`ese & Chapitre~\ref{chap:cadre_formel} \\
+Q1 & C1.4 Goulot contextuel & C1 & \textbf{F} & Th.~\ref{thm:goulot_contexte} & Publi\'e, pr\'ecis\'e & [P1] et th\`ese \\
+Q1 & C1.5 Composition & C1 & \textbf{F} & Th.~\ref{thm:composition_sequentielle} & Publi\'e, pr\'ecis\'e & [P1] et th\`ese \\
+Q1 & C1.6 Verdict d\'eterministe & C1 & \textbf{F} & Rem.~\ref{rem:verdict_deterministe} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\
+Q1 & C1.7 Jeux et ponts & C1 & \textbf{F} & \S~\ref{subsubsec:jeux_crypto} & Th\`ese & Article en pr\'eparation \\
+Q2 & C2.1 Param\`etres $\Delta$, $\alpha$, $\beta$, $\kappa$ & C2 & \textbf{B} & Hyp.~\ref{ass:extraction_bornee} & Publi\'e, explicit\'e & [P2] \textit{IEEE Access}~\cite{MINKA2026CRO} \\
+Q2 & C2.2 Trilemme conditionnel & C2 & \textbf{B} & Th.~\ref{thm:trilemme_cro_conditionnel} & Publi\'e, explicit\'e & [P2] et th\`ese \\
+Q2 & C2.3 Interpr\`ete admissible & C2 & \textbf{B} & D\'ef.~\ref{def:interp_admissible} & Th\`ese & Chapitre~\ref{chap:cadre_formel} \\
+Q2 & C2.4 Forme raffin\'ee & C2 & \textbf{B} & Rem.~\ref{rem:activite_delta} & Th\`ese, certifi\'e & Sections~\ref{sec:cro_classique} et~\ref{sec:lean4} \\
+Q2 & C2.5 Borne aigu\"e & C2 & \textbf{B} & Prop.~\ref{prop:borne_aigue} & Th\`ese & Chapitre~\ref{chap:cadre_formel} \\
+Q2 & C2.6 N\'ecessit\'e du r\'egime & C2 & \textbf{B} & Rem.~\ref{rem:scope_trilemme_classique} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\
+Q2 & C2.7 Capacit\'e $\Delta^*$ & C2 & \textbf{B} & Rem.~\ref{rem:delta_capacite} & Th\`ese & Chapitre~\ref{chap:cadre_formel} \\
+Q2 & C3.1 Trilemme quantique & C3 & \textbf{E} & Th.~\ref{thm:trilemme_pq} & Publi\'e, explicit\'e & [P3] \textit{IEEE Access}~\cite{MINKA2026PQCRO} \\
+Q2 & C3.2 \`a C3.4 $\eta_q$, $H^\sharp_q$, signatures & C3 & \textbf{E} & \S~\ref{sec:cro_pq} & Th\`ese & Chapitre~\ref{chap:cadre_formel} \\
+Q1 & C4.1 Paradigme Gold-Iron-Clay & C4 & \textbf{S} & \S~\ref{subsec:gold_iron_clay} & Soumis & \textit{IEEE Trans. Inf. Theory} \\
+Q1 & C4.2 \`a C4.4 Variantes, r\'eductions, conjecture & C4 & \textbf{S} & \S~\ref{sec:sotp_construction} & Soumis & \textit{IEEE Trans. Inf. Theory} \\
+Q1 & C4.5 M\'ecanisation r\'eduite & C4 & \textbf{S} & \S~\ref{sec:gamebased_mecanisation} & Th\`ese (issu de Lean) & Annexe~\ref{chap:annexe_gamebased} \\
+Q2 & C5.1, C5.2 Noyau, hypoth\`eses & C5 & \textbf{C} & \S~\ref{sec:lean4} & Soumis & \textit{J. Autom. Reasoning} \\
+Q2 & C5.3 Pinsker et Fano finis & C5 & \textbf{C} & \S~\ref{subsec:lean4_concret} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\
+Q2 & C5.4 R\^ole de l'Hyp.~3 & C5 & \textbf{C} & Th.~\ref{thm:conditional_CRO_trilemma} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\
+Q2 & C5.5 T\'emoins & C5 & \textbf{C} & \S~\ref{subsubsec:temoins_lean4} & Soumis~; famille de lois~: th\`ese & \textit{J. Autom. Reasoning} et th\`ese \\
+Q2 & C5.6 Certifier avant de soumettre & C5 & \textbf{C} & \S~\ref{subsec:verification_corrige_lecon} & Th\`ese (issu de Lean) & Chapitre~\ref{chap:resultats_discussions} \\
+Q2 & C6.1 \`a C6.3 Programme & C6 & \textbf{X} & \S~\ref{sec:protocoles_experimentaux} & Sp\'ecifi\'e & D\'ep\^ot~\cite{CROTrilemmaDepot} \\
+\bottomrule
+\end{longtable}
+}
+
+Le tableau~\ref{tab:etat_productions} de l'introduction en donne la version r\'esum\'ee par objectif.
 
 \subsubsection{Impacts attendus}
 \label{subsubsec:impacts_attendus}
