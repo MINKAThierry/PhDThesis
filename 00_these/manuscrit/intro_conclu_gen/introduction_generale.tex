@@ -125,8 +125,8 @@ Ces deux questions se d\'eclinent en six \textbf{objectifs} de recherche, qui co
 \medskip
 \label{par:progression_FBESCX}
 La progression Obj1~$\to$~Obj6 organise la th\`ese en six \'etapes, \textbf{F}ormaliser,
-\textbf{B}orner, \textbf{E}tendre, \textbf{S}aturer, \textbf{C}ertifier et
-e\textbf{X}p\'erimenter. Le chapitre~\ref{chap:contexte} pose les fondements en amont de~F.
+\textbf{B}orner, \textbf{\'E}tendre, \textbf{S}aturer, \textbf{C}ertifier et
+e\textbf{X}p\'erimenter, qui forment un cycle (figure~\ref{fig:cycle_recherche}). Le chapitre~\ref{chap:contexte} pose les fondements en amont de~F.
 Le chapitre~\ref{chap:cadre_formel} r\'ealise F$\to$B$\to$E et le
 chapitre~\ref{chap:constructions} r\'ealise S$\to$C. Le
 chapitre~\ref{chap:experimentation} r\'ealise~X, tandis que le
@@ -139,54 +139,24 @@ successive des six objectifs apporte une r\'eponse.
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[
-    box/.style={
-        rectangle,
-        rounded corners,
-        draw=black!80,
-        fill=blue!10, % Couleur de fond des boîtes
-        text width=2.8cm,
-        align=center,
-        minimum height=1.3cm,
-        font=\small\sffamily
-    },
-    arrow/.style={
-        -{Stealth[scale=1.2]},
-        thick,
-        draw=black!80
-    }
+    etape/.style={rectangle, rounded corners, draw=black!80, fill=blue!10,
+        text width=2.6cm, align=center, minimum height=0.9cm, font=\sffamily},
+    fl/.style={-{Stealth[scale=1.2]}, thick, draw=black!80}
 ]
-
-    % --- Positionnement des 6 objectifs en cercle ---
-    % F en haut (90°)
-    \node[box] (F) at (90:3.8)  {\textbf{Objectif~1} \\ (CLO) \\ \textbf{F}};
-    % B en haut à droite (30°)
-    \node[box] (B) at (30:3.8)  {\textbf{Objectif~2} \\ (CRO) \\ \textbf{B}};
-    % E en bas à droite (-30°)
-    \node[box] (E) at (-30:3.8) {\textbf{Objectif~3} \\ (PQ-CRO) \\ \textbf{E}};
-    % S en bas (-90°)
-    \node[box] (S) at (270:3.8) {\textbf{Objectif~4} \\ (SOTP) \\ \textbf{S}};
-    % C en bas à gauche (210°)
-    \node[box] (C) at (210:3.8) {\textbf{Objectif~5} \\ (Lean4) \\ \textbf{C}};
-    % X en haut à gauche (150°)
-    \node[box] (X) at (150:3.8) {\textbf{Objectif~6} \\ (eXp\'erimentation) \\ \textbf{X}};
-
-    % --- Fl\`eches de transition principales ---
-    \draw[arrow] (F) to[bend left=20] node[above right, font=\footnotesize] {d\'efinitions du cadre} (B);
-    \draw[arrow] (B) to[bend left=20] node[right, font=\footnotesize] {borne classique} (E);
-    \draw[arrow] (E) to[bend left=20] node[below right, font=\footnotesize] {extension quantique} (S);
-    \draw[arrow] (S) to[bend left=20] node[below left, font=\footnotesize] {saturation par construction} (C);
-    \draw[arrow] (C) to[bend left=20] node[above left, font=\footnotesize] {certification m\'ecanique} (X);
-    
-    % --- Fl\`eche de retour vers B (la mesure) ---
-    % En pointill\'es pour montrer que c'est un cycle qui se referme sur B
-    \draw[arrow, dashed] (X) to[bend right=45] node[midway, above, font=\footnotesize] {mesure empirique} (B);
-
-    % --- Texte au centre du cercle (optionnel) ---
-    
-    %\node[font=\bfseries\small, text=gray, align=center] at (0,0) {Cycle \\ logique};
-
+    \node[etape] (F) at (90:3.2)  {\textbf{F}ormaliser};
+    \node[etape] (B) at (30:3.2)  {\textbf{B}orner};
+    \node[etape] (E) at (-30:3.2) {\textbf{\'E}tendre};
+    \node[etape] (S) at (270:3.2) {\textbf{S}aturer};
+    \node[etape] (C) at (210:3.2) {\textbf{C}ertifier};
+    \node[etape] (X) at (150:3.2) {e\textbf{X}p\'erimenter};
+    \draw[fl] (F) to[bend left=20] (B);
+    \draw[fl] (B) to[bend left=20] (E);
+    \draw[fl] (E) to[bend left=20] (S);
+    \draw[fl] (S) to[bend left=20] (C);
+    \draw[fl] (C) to[bend left=20] (X);
+    \draw[fl] (X) to[bend left=20] (F);
 \end{tikzpicture}
-\caption{Illustration des six objectifs et de leurs interd\'ependances.}
+\caption{Cycle de recherche de la th\`ese.}
 \label{fig:cycle_recherche}
 \end{figure}
 

@@ -568,7 +568,37 @@ le mod\`ele sont en revanche explicitement \'enonc\'es.
 \subsubsection{Coh\'erence de l'encha\^inement \textbf{F}$\to$\textbf{B}$\to$\textbf{E}$\to$\textbf{S}$\to$\textbf{C}$\to$\textbf{X} des objectifs}
 \label{subsubsec:cycle_FBESCX}
 
-La figure~\ref{fig:cycle_recherche} de l'introduction g\'en\'erale repr\'esente ce cycle.
+La figure~\ref{fig:cycle_detaille} repr\'esente cet encha\^inement et ses r\'etroactions.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, rounded corners, draw=black!80, fill=blue!10,
+        text width=2.8cm, align=center, minimum height=1.3cm, font=\small\sffamily},
+    arrow/.style={-{Stealth[scale=1.2]}, thick, draw=black!80},
+    retour/.style={-{Stealth[scale=1.2]}, thick, draw=black!80, dashed},
+    double/.style={{Stealth[scale=1.2]}-{Stealth[scale=1.2]}, thick, draw=black!80, dashed}
+]
+    \node[box] (F) at (90:3.8)  {\textbf{Objectif~1} \\ (CLO) \\ \textbf{F}ormaliser};
+    \node[box] (B) at (30:3.8)  {\textbf{Objectif~2} \\ (CRO) \\ \textbf{B}orner};
+    \node[box] (E) at (-30:3.8) {\textbf{Objectif~3} \\ (PQ-CRO) \\ \textbf{\'E}tendre};
+    \node[box] (S) at (270:3.8) {\textbf{Objectif~4} \\ (SOTP) \\ \textbf{S}aturer};
+    \node[box] (C) at (210:3.8) {\textbf{Objectif~5} \\ (Lean4) \\ \textbf{C}ertifier};
+    \node[box] (X) at (150:3.8) {\textbf{Objectif~6} \\ (programme) \\ e\textbf{X}p\'erimenter};
+    % cycle principal
+    \draw[arrow] (F) to[bend left=20] node[above right, font=\footnotesize] {d\'efinitions du cadre} (B);
+    \draw[arrow] (B) to[bend left=20] node[right, font=\footnotesize] {borne classique} (E);
+    \draw[arrow] (E) to[bend left=20] node[below right, font=\footnotesize] {extension quantique} (S);
+    \draw[arrow] (S) to[bend left=20] node[below left, font=\footnotesize] {saturation par construction} (C);
+    \draw[arrow] (C) to[bend left=20] node[above left, font=\footnotesize] {certification m\'ecanique} (X);
+    \draw[arrow] (X) to[bend left=20] node[above left, font=\footnotesize] {r\'evision des d\'efinitions} (F);
+    % retroactions
+    \draw[retour] (X) to[bend right=20] node[midway, above=3pt, font=\footnotesize] {r\'evision des param\`etres} (B);
+    \draw[double] (C) -- node[sloped, below, font=\footnotesize] {r\'evision par la certification} (B);
+\end{tikzpicture}
+\caption{Objectifs de recherche, encha\^inement et r\'etroactions.}
+\label{fig:cycle_detaille}
+\end{figure}
 
 
 Chaque d\'ependance est fonctionnelle. Les d\'efinitions formelles de
@@ -585,10 +615,21 @@ question de savoir si la borne~CRO est asymptotiquement serr\'ee reste
 ouverte. Elle est formul\'ee comme conjecture au chapitre~\ref{chap:constructions}. La complexit\'e de la cha\^ine de
 raisonnement justifie l'investissement dans la v\'erification formelle~Objectif~5~(\ref{obj:obj5_verification}),
 car la certification m\'ecanis\'ee s'impose pour des th\'eor\`emes aux implications
-soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. Enfin, la formalisation Lean4~Objectif~5~(\ref{obj:obj5_verification}) alimente
-Objectif~1~(\ref{obj:obj1_unification}) par r\'etroaction, puisqu'elle a impos\'e d'expliciter l'Hypoth\`ese de r\'egime
-et de pr\'eciser trois \'enonc\'es publi\'es, ce qui a conduit \`a une forme
-raffin\'ee du trilemme~\cite{Zellagui2018}.
+soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. La formalisation Lean4~Objectif~5~(\ref{obj:obj5_verification}) agit en retour sur les \'etapes
+qui la pr\'ec\`edent. Elle a d\'egag\'e le verdict d\'eterministe, qui enrichit le cadre de
+l'Objectif~1~(\ref{obj:obj1_unification}). Elle a surtout impos\'e d'expliciter l'Hypoth\`ese de r\'egime
+et de pr\'eciser trois \'enonc\'es publi\'es, ce qui a conduit \`a la forme raffin\'ee du trilemme
+de l'Objectif~2~(\ref{obj:obj2_impossibilite})~\cite{Zellagui2018}. La certification ne se contente donc pas
+de v\'erifier les bornes apr\`es coup. Elle peut en modifier l'\'enonc\'e et l'a d\'ej\`a fait.
+L'exp\'erimentation~Objectif~6~(\ref{obj:obj6_experimentation}) ferme le cycle. Elle mesure $\Delta$, $\alpha$,
+$\beta$, $\Delta_q$ et $\eta_q$, dont d\'ependent les bornes certifi\'ees. Si les valeurs mesur\'ees
+sortent des plages retenues ou franchissent les seuils de r\'efutation du
+chapitre~\ref{chap:experimentation}, les hypoth\`eses de l'Objectif~2 devront \^etre r\'evis\'ees, ce
+qui rouvrira l'\'etape~B. Si la mesure montre que les m\'etriques elles-m\^emes saisissent mal
+la pratique institutionnelle, c'est le cadre de l'Objectif~1 qui sera repris, ce qui rouvrira
+l'\'etape~F. Sur la figure~\ref{fig:cycle_detaille}, le trait interrompu \`a double sens entre C et B
+figure la r\'evision par la certification, d\'ej\`a survenue. La fl\`eche en pointill\'es de X vers B
+et la fl\`eche pleine de X vers F figurent les r\'evisions par la mesure, encore \`a venir.
 
 \subsubsection{Correspondance objectifs-questions-contributions}
 \label{subsubsec:correspondance_objectifs}
