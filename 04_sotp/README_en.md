@@ -15,9 +15,10 @@ The construction is a **proposal** submitted to IEEE Transactions on Information
 | Properties of S-OTP (confidentiality, $\mathsf{Rel}_{\mathrm{ver}}$, upper bound on $\mathsf{Opp}$) | Theorem `thm:proprietes_sotp` | proven | PRG, DLog |
 | Computational confidentiality of SOTP-Low | Proposition `thm:saturation_sotp_low` (1); Annex A, Th. `thm:ann_sotp_low_conf` | proven | PRG |
 | Verification reliability of SOTP-Low, $\mathsf{Rel}_{\mathrm{ver}} = 1-\mathrm{negl}(\lambda)$ | Proposition `thm:saturation_sotp_low` (2); Annex A, Th. `thm:ann_sotp_low_rel` | proven | DLog |
-| Computational confidentiality and $\mathsf{Rel}_{\mathrm{ver}}$ of SOTP-Base | Proposition `thm:saturation_sotp_base` | proven | PRG, DLog |
+| Computational confidentiality and $\mathsf{Rel}_{\mathrm{ver}}$ of SOTP-Base | Proposition `thm:saturation_sotp_base`; Annex A, Cor. `cor:ann_sotp_base_reductions` | proven | PRG, DLog |
 | JL distance preservation of SOTP-Base | Proposition `thm:saturation_sotp_base`; Annex A, Th. `thm:ann_sotp_base_opp` | proven (with probability $\geq 1-\delta$) | JL lemma |
-| Confidentiality ($\mathsf{Conf} = 1$) and $\mathsf{Rel}_{\mathrm{ver}}$ of SOTP-High | Proposition `thm:saturation_sotp_high`; Annex A, Th. `thm:ann_sotp_high` | proven | q-SDH, q-PKE, DLog, honest setup ceremony |
+| Confidentiality ($\mathsf{Conf} = 1$) and $\mathsf{Rel}_{\mathrm{ver}}$ of SOTP-High | Proposition `thm:saturation_sotp_high`; Annex A, Th. `thm:ann_sotp_high` | proven | knowledge soundness of Groth16 (generic or algebraic group model), DLog, honest setup ceremony |
+| Lean 4 mechanisation of the SOTP-Low reductions (reduced setting) | Annex A, section `sec:gamebased_mecanisation`; [preuves_game_based/lean/](preuves_game_based/lean/) | verified (Lean 4.35.0, Mathlib v4.35.0, live.lean-lang.org) | PRG, DLog as advantages of reductions |
 | Opposability lower bounds $0.75\,\Delta/\lambda$, $0.5\min\lbrace\Delta/d,\ \Delta/(\beta\log_2 d)\rbrace$, $0.45\,\beta\log_2\lambda/\lambda$ | Remarks `rem:facteur_limitant_low`, `rem:heuristique_sotp_base`, `rem:heuristique_sotp_high` | **unproven design heuristics** | – |
 | Optimality of S-OTP within the OTP class | Remark `thm:optimalite_sotp` | heuristic argument, proof open | – |
 | Universal optimality of SOTP (constant $C_R \geq 1$) | Conjecture `conj:optimalite_universelle` | **conjecture** | Assumptions `ass:extraction_bornee`–`ass:regime` |

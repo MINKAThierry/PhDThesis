@@ -9,8 +9,9 @@
 | [gamebased_fr.md](gamebased_fr.md) | Annex A in Markdown, French |
 | [gamebased_en.md](gamebased_en.md) | Annex A in Markdown, English (equivalent content) |
 | [gamebased_source_fr.tex](gamebased_source_fr.tex) | LaTeX source of Annex A in the final version of the manuscript, copied unchanged (French) |
+| [lean/GameBasedSOTP.lean](lean/GameBasedSOTP.lean) | Lean 4 mechanisation of the SOTP-Low reductions in a reduced setting (Mathlib only, checkable on <https://live.lean-lang.org>), with its build log |
 
-Content of the annex: IND-CONF, BIND-REL and EXT-OPP games; bridges to $\mathsf{Conf}$, $\mathsf{Rel}_{\mathrm{ver}}$ and $\mathsf{Opp}$; reductions of SOTP-Low to the PRG and to the discrete logarithm; JL sizing lemma for SOTP-Base; security of SOTP-High inherited from Groth16; summary table; corollary on the game-based CLO product and remark on non-contradiction with the trilemma; limitations.
+Content of the annex: IND-CONF, BIND-REL and EXT-OPP games; bridges to $\mathsf{Conf}$, $\mathsf{Rel}_{\mathrm{ver}}$ and $\mathsf{Opp}$; reductions of SOTP-Low to the PRG and to the discrete logarithm; JL sizing lemma for SOTP-Base; security of SOTP-High inherited from Groth16; corollary on the SOTP-Base reductions; summary table; corollary on the game-based CLO product and remark on non-contradiction with the trilemma; mechanisation in a reduced setting; limitations.
 
 No English `.tex` version is provided; the English Markdown version serves that purpose. The `.tex` file uses the manuscript macros (`\cmt`, `\Conf`, `\Relver`, …) and compiles within [../../00_these/manuscrit/](../../00_these/manuscrit/).
 

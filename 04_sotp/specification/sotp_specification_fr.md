@@ -30,7 +30,7 @@ Ce document reprend fidèlement les constructions S-OTP et SOTP de la thèse. Le
 |---|---|
 | Confidentialité calculatoire (SOTP-Low, SOTP-Base) | prouvée sous PRG (Propositions `thm:saturation_sotp_low`, `thm:saturation_sotp_base`) |
 | $\mathsf{Rel}_{\mathrm{ver}} = 1-\mathrm{negl}(\lambda)$ (SOTP-Low, SOTP-Base) | prouvée sous DLog |
-| Confidentialité et $\mathsf{Rel}_{\mathrm{ver}}$ (SOTP-High) | prouvées sous q-SDH, q-PKE, DLog et cérémonie honnête (Proposition `thm:saturation_sotp_high`) |
+| Confidentialité et $\mathsf{Rel}_{\mathrm{ver}}$ (SOTP-High) | prouvées sous la solidité de connaissance de Groth16 (modèle du groupe générique ou algébrique), DLog et cérémonie honnête (Proposition `thm:saturation_sotp_high`) |
 | Préservation des distances JL (SOTP-Base) | lemme de Johnson-Lindenstrauss, probabilité $\geq 1-\delta$ |
 | Minorations $0{,}75\,\Delta/\lambda$, $0{,}5\min\{\cdot\}$, $0{,}45\,\beta\log_2\lambda/\lambda$ | heuristiques de conception non prouvées |
 | Optimalité universelle de SOTP | conjecture |
@@ -314,10 +314,10 @@ Une implémentation exécutable de cet algorithme (Circom/Groth16) est fournie s
 
 ### Proposition `thm:saturation_sotp_high` (Propriétés cryptographiques de SOTP-High)
 
-Sous les hypothèses q-SDH et q-PKE (*knowledge soundness* de Groth16 [BonehBoyen08, BCTV14]), la difficulté DLog et une cérémonie de mise en place de confiance honnête [Bowe2017] :
+Sous la *knowledge soundness* de Groth16, établie dans le modèle du groupe générique [Groth16] et dans le modèle du groupe algébrique sous q-DLog [FKL18], la difficulté DLog et une cérémonie de mise en place de confiance honnête [Bowe2017] :
 
 1. la preuve $\pi$ est à divulgation nulle de connaissance parfaite et $c_m$ est parfaitement masquant, de sorte que $(\pi, c_m)$ ne révèle rien de $m$ au-delà des entrées publiques ;
-2. la complétude est parfaite et, par la *knowledge soundness*, pour tout prouveur PPT qui fait accepter $\sigma$, il existe un *extracteur* (qui rembobine le prouveur ou exploite la trappe de l'hypothèse q-PKE, contrairement au vérificateur) produisant un témoin $(m, c, \rho)$ satisfaisant la relation ; d'où $\mathsf{Rel}_{\mathrm{ver}} = 1 - \mathrm{negl}(\lambda)$.
+2. la complétude est parfaite et, par la *knowledge soundness*, pour tout prouveur PPT qui fait accepter $\sigma$, il existe un *extracteur* (qui exploite la représentation algébrique des éléments produits par le prouveur, contrairement au vérificateur) produisant un témoin $(m, c, \rho)$ satisfaisant la relation ; d'où $\mathsf{Rel}_{\mathrm{ver}} = 1 - \mathrm{negl}(\lambda)$.
 
 **Remarque `rem:heuristique_sotp_high` (Heuristique de conception de SOTP-High, non prouvée).** La formulation initiale de ce résultat énonçait $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} \geq 0{,}45 \cdot \beta\log_2\lambda/\lambda$, avec une constante $0{,}45$ « calibrée » sur les systèmes déployés. La formalisation a conduit à la remplacer. Le condensé $h_c = \mathsf{Poseidon}(c)$ et les métadonnées sont des fonctions du contexte public ($I(V;h_c|C) = 0$) ; trois éléments de groupe représentent $\Theta(\lambda)$ bits et non $O(\log\lambda)$ ; le vérificateur ne peut extraire le témoin, faute de quoi la preuve ne serait pas à divulgation nulle ; enfin une constante ajustée sur des données n'a pas sa place dans un énoncé de théorème. L'expression $0{,}45\,\beta\log_2\lambda/\lambda$ est conservée comme heuristique de conception ; $\beta$ y désigne la constante de régularité du protocole (Définition `def:beta_regularite`).
 
@@ -338,12 +338,12 @@ Source : §`subsec:synthese_selection`.
 | Valeurs ($\lambda = 128$) | $< 11$ bits | $11$–$18$ bits | $> 18$ bits |
 | ***Techniques cryptographiques*** | | | |
 | Couche Gold | PRG [BlumMicali84] | PRG [BlumMicali84] | Perfect ZK Groth16 [Groth16] |
-| Couche Iron | Pedersen [Pedersen91] | Pedersen [Pedersen91] | q-SDH Soundness [BonehBoyen08] |
+| Couche Iron | Pedersen [Pedersen91] | Pedersen [Pedersen91] | knowledge soundness (GGM ou AGM) [Groth16, FKL18] |
 | Couche Clay | $\phi:\mathcal{C}\to\lbrace 0,1\rbrace^{H(\mathcal{C})}$ | JL $\Phi:\mathbb{R}^d\to\mathbb{R}^k$ [JohnsonLindenstrauss84] | Poseidon + SNARK [Poseidon2019] |
 | Primitives | SHA-256, Pedersen | Gaussienne, Pedersen | Groth16, Poseidon, BLS12-381 [BLS12-381] |
 | ***Métriques CLO atteintes*** | | | |
 | Confidentialité | calculatoire (PRG) | calculatoire (PRG) | ZK parfait |
-| $\mathsf{Rel}_{\mathrm{ver}}$ | $1 - \epsilon_{\text{DLog}}$ | $1 - \epsilon_{\text{DLog}}$ | $1 - \epsilon_{\text{q-SDH}}$ |
+| $\mathsf{Rel}_{\mathrm{ver}}$ | $1 - \epsilon_{\text{DLog}}$ | $1 - \epsilon_{\text{DLog}}$ | $1 - \epsilon_{\text{KS}} - \epsilon_{\text{DLog}}$ |
 | $\mathsf{Opp}$ | dépend du contexte d'espèce transmis | idem | idem |
 | ***Heuristique de conception (non prouvée)*** | | | |
 | Expression | $0{,}75 \cdot \Delta/\lambda$ | $0{,}5 \cdot \min\lbrace\Delta/d,\ \Delta/(\beta\log_2 d)\rbrace$ | $0{,}45 \cdot \beta\log_2\lambda/\lambda$ |

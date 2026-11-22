@@ -15,9 +15,10 @@ La construction est une **proposition** soumise à IEEE Transactions on Informat
 | Propriétés de S-OTP (confidentialité, $\mathsf{Rel}_{\mathrm{ver}}$, majorant de $\mathsf{Opp}$) | Théorème `thm:proprietes_sotp` | prouvé | PRG, DLog |
 | Confidentialité calculatoire de SOTP-Low | Proposition `thm:saturation_sotp_low` (1) ; annexe A, Th. `thm:ann_sotp_low_conf` | prouvée | PRG |
 | Fiabilité de vérification de SOTP-Low, $\mathsf{Rel}_{\mathrm{ver}} = 1-\mathrm{negl}(\lambda)$ | Proposition `thm:saturation_sotp_low` (2) ; annexe A, Th. `thm:ann_sotp_low_rel` | prouvée | DLog |
-| Confidentialité calculatoire et $\mathsf{Rel}_{\mathrm{ver}}$ de SOTP-Base | Proposition `thm:saturation_sotp_base` | prouvées | PRG, DLog |
+| Confidentialité calculatoire et $\mathsf{Rel}_{\mathrm{ver}}$ de SOTP-Base | Proposition `thm:saturation_sotp_base` ; annexe A, Cor. `cor:ann_sotp_base_reductions` | prouvées | PRG, DLog |
 | Préservation des distances JL de SOTP-Base | Proposition `thm:saturation_sotp_base` ; annexe A, Th. `thm:ann_sotp_base_opp` | prouvée (avec probabilité $\geq 1-\delta$) | lemme JL |
-| Confidentialité ($\mathsf{Conf} = 1$) et $\mathsf{Rel}_{\mathrm{ver}}$ de SOTP-High | Proposition `thm:saturation_sotp_high` ; annexe A, Th. `thm:ann_sotp_high` | prouvées | q-SDH, q-PKE, DLog, cérémonie de mise en place honnête |
+| Confidentialité ($\mathsf{Conf} = 1$) et $\mathsf{Rel}_{\mathrm{ver}}$ de SOTP-High | Proposition `thm:saturation_sotp_high` ; annexe A, Th. `thm:ann_sotp_high` | prouvées | solidité de connaissance de Groth16 (modèle du groupe générique ou algébrique), DLog, cérémonie de mise en place honnête |
+| Mécanisation en Lean 4 des réductions de SOTP-Low (situation réduite) | annexe A, section `sec:gamebased_mecanisation` ; [preuves_game_based/lean/](preuves_game_based/lean/) | vérifiée (Lean 4.35.0, Mathlib v4.35.0, live.lean-lang.org) | PRG, DLog comme avantages de réducteurs |
 | Minorations d'opposabilité $0{,}75\,\Delta/\lambda$, $0{,}5\min\lbrace\Delta/d,\ \Delta/(\beta\log_2 d)\rbrace$, $0{,}45\,\beta\log_2\lambda/\lambda$ | Remarques `rem:facteur_limitant_low`, `rem:heuristique_sotp_base`, `rem:heuristique_sotp_high` | **heuristiques de conception non prouvées** | – |
 | Optimalité de S-OTP dans la classe OTP | Remarque `thm:optimalite_sotp` | argument heuristique, preuve ouverte | – |
 | Optimalité universelle de SOTP (constante $C_R \geq 1$) | Conjecture `conj:optimalite_universelle` | **conjecture** | Hypothèses `ass:extraction_bornee`–`ass:regime` |

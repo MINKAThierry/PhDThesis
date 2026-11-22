@@ -753,13 +753,13 @@ Valeurs ($\lambda = 128$) & $< 11$ bits & $11$--$18$ bits & $> 18$ bits \\
 \midrule
 \multicolumn{4}{l}{\textit{\textbf{Techniques cryptographiques}}} \\
 Couche Gold & PRG~\cite{BlumMicali84} & PRG~\cite{BlumMicali84} & ZK parfait (Groth16)~\cite{Groth16} \\
-Couche Iron & Pedersen~\cite{Pedersen91} & Pedersen~\cite{Pedersen91} & knowledge soundness (q-SDH)~\cite{BonehBoyen08} \\
+Couche Iron & Pedersen~\cite{Pedersen91} & Pedersen~\cite{Pedersen91} & knowledge soundness (GGM ou AGM)~\cite{Groth16,FKL18} \\
 Couche Clay & $\phi:\mathcal{C}\to\{0,1\}^{H(\mathcal{C})}$ & JL $\Phi:\mathbb{R}^d\to\mathbb{R}^k$~\cite{JohnsonLindenstrauss84} & Poseidon + SNARK~\cite{Poseidon2019} \\
 Primitives & SHA-256, Pedersen & Gaussienne, Pedersen & Groth16, Poseidon, BLS12-381~\cite{BLS12-381} \\
 \midrule
 \multicolumn{4}{l}{\textit{\textbf{M\'etriques CLO atteintes}}} \\
 Confidentialit\'e & calculatoire (PRG) & calculatoire (PRG) & ZK parfait \\
-$\Relver$ & $1 - \epsilon_{\text{DLog}}$ & $1 - \epsilon_{\text{DLog}}$ & $1 - \epsilon_{\text{q-SDH}}$ \\
+$\Relver$ & $1 - \epsilon_{\text{DLog}}$ & $1 - \epsilon_{\text{DLog}}$ & $1 - \epsilon_{\text{KS}} - \epsilon_{\text{DLog}}$ \\
 $\Opp$ & d\'epend du contexte d'esp\`ece transmis & idem & idem \\
 \midrule
 \multicolumn{4}{l}{\textit{\textbf{Heuristique de conception (non prouv\'ee)}}} \\
@@ -776,7 +776,9 @@ Produit CLO (\'echelle $\Relver$) & $\approx 0{,}273$ & $\approx 0{,}437$ & $\ap
 \end{table}
 % -----------------------------------------------------------------------
 
-L'association de chaque syst\`eme de r\'ef\'erence \`a une variante est
+Dans le tableau, $\epsilon_{\text{KS}}$ d\'esigne l'avantage d'un prouveur contre la
+solidit\'e de connaissance de Groth16 et $\epsilon_{\text{DLog}}$ celui d'un adversaire
+contre le logarithme discret. L'association de chaque syst\`eme de r\'ef\'erence \`a une variante est
 illustrative. Elle suit l'ordre relatif des entropies contextuelles de ces
 syst\`emes (ECDSA, puis Helios, puis la conformit\'e financi\`ere). Les seuils
 $H^*(\lambda)$ et $H^{**}(\lambda)$ de

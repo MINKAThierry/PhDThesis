@@ -33,28 +33,30 @@ La formalisation du Trilemme CRO conditionnel classique a conduit à des formula
 |---|---|---|
 | antérieures à 2.1 | versions de travail | non conservées dans ce dépôt |
 | 2.1 | import complet de Mathlib ; mêmes énoncés que la version 2.2 hors section 9 | version de travail, non conservée dans ce dépôt |
-| 2.2 (octobre 2026) | `import Mathlib` ; ajout de la section 9 (`opp_eq_one_of_deterministic`, `deterministic_forces_capacity`, `trilemma_refined`, `refined_bound_is_fano_when_delta_ge_gamma`) ; vérifiée sur <https://live.lean-lang.org> | [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean), listing B.1 de la thèse |
+| 2.2 (octobre 2026) | `import Mathlib` ; ajout de la section 9 (`opp_eq_one_of_deterministic`, `deterministic_forces_capacity`, `trilemma_refined`, `refined_bound_is_fano_when_delta_ge_gamma`) ; vérifiée sur <https://live.lean-lang.org> | [`../05_formalisation_lean/results/lean_build.log`](../05_formalisation_lean/results/lean_build.log) |
+| 3.0 à 3.2 (22 novembre 2026) | couche concrète : Pinsker et Fano démontrés pour des lois finies, modèle `CLOModel`, trilemmes et Lemme 4 sur de vraies lois, famille de lois témoins ; Lean et Mathlib v4.35.0 ; la v3.2 vérifiée sur <https://live.lean-lang.org> | `results/lean_build_v3.0.log` à `lean_build_v3.2.log` |
+| 3.3 (22 novembre 2026) | précisions sur la constante $c_0$, Hypothèse 3 retirée des annonces du noyau, hypothèses asymptotiques pour $\lambda\ge 64$, entropie $H(C)$ minorée, Lemme 4 concret sans paramètre libre | [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean), listing B.1 de la thèse |
 
-Les énoncés de la version 2.1 sont repris à l'identique dans la version 2.2 (thèse, annexe B). Les versions de Lean et de Mathlib sont figées à v4.34.0. Un article qui présente la formalisation est soumis au *Journal of Automated Reasoning*.
+Les énoncés de la version 2.1 sont repris à l'identique dans la version 2.2. Les versions 3.x ajoutent la couche concrète sans modifier les énoncés du noyau, hormis l'affaiblissement des hypothèses asymptotiques de la v3.3. Les versions de Lean et de Mathlib sont figées à v4.35.0 depuis la v3.3 (v4.34.0 auparavant). Un article qui présente le noyau algébrique est soumis au *Journal of Automated Reasoning*. Une mécanisation réduite des réductions game-based de SOTP-Low (version 1.0, 22 novembre 2026) se trouve dans [`../04_sotp/preuves_game_based/lean/`](../04_sotp/preuves_game_based/lean/).
 
 
 ## 4. Formulations précisées et versions de la thèse
 
 | Date | Événement | Emplacement |
 |---|---|---|
-| 2026 | Formulations précisées soumises à *IEEE Access* pour P2 (preuve du trilemme classique) | [`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
-| 2026 | Formulations précisées soumises à *IEEE Access* pour P3, parallèles à celles de P2 | [`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
+| 2026 | Formulations précisées rédigées pour P2 (preuve du trilemme classique), à transmettre à *IEEE Access* après la soutenance | [`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
+| 2026 | Formulations précisées rédigées pour P3, parallèles à celles de P2, à transmettre à *IEEE Access* après la soutenance | [`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_fr.md) |
 | 28 septembre 2026 | Dépôt de la thèse (262 pages), après intégration des retours de l'expertise académique | [`../00_these/pdf/`](../00_these/pdf/README_fr.md) |
 | octobre 2026 | Version finale du manuscrit (formalisation Lean 2.2 vérifiée en ligne, adresse du dépôt) | [`../00_these/manuscrit/`](../00_these/manuscrit/README_fr.md) |
 
-Les formulations précisées soumises ne sont pas publiées à la date de construction du dépôt. Elles gardent le statut PROPOSITION (formulations précisées soumises). Les énoncés précisés par la thèse sont recensés dans [`../03_resultats_these/`](../03_resultats_these/README_fr.md).
+Les formulations précisées ne sont ni transmises ni publiées au 22 novembre 2026. Elles gardent le statut PROPOSITION. Les énoncés précisés par la thèse sont recensés dans [`../03_resultats_these/`](../03_resultats_these/README_fr.md).
 
 ## 5. Soumissions en cours
 
 | Travail | Revue | Dossier |
 |---|---|---|
 | Famille SOTP | *IEEE Transactions on Information Theory* | [`../04_sotp/`](../04_sotp/README_fr.md) |
-| Formalisation Lean 4 v2.2 | *Journal of Automated Reasoning* | [`../05_formalisation_lean/`](../05_formalisation_lean/README_fr.md) |
+| Formalisation Lean 4, noyau algébrique | *Journal of Automated Reasoning* | [`../05_formalisation_lean/`](../05_formalisation_lean/README_fr.md) |
 
 ## 6. Construction de ce dépôt (octobre 2026)
 
@@ -67,6 +69,7 @@ Avant ce dépôt, la formalisation Lean et les scripts de calibration étaient d
 | 13 octobre 2026 | Paquet d'analyse `07_protocoles_terrain/analyse/` (111 tests passés) |
 | 13 octobre 2026 | Dossier `docs/` |
 | 19 octobre 2026 | Version finale du manuscrit dans `00_these/manuscrit/`, fichier Lean remplacé par la version 2.2 vérifiée en ligne, adresse `MINKAThierry/PhDThesis`, nouvelle graine des stimuli de P1 |
+| 22 novembre 2026 | Manuscrit relu (productions et contributions, borne aiguë, corrections du game-based), Lean v3.3 et passage à v4.35.0, mécanisation game-based réduite, dossier local mis sous git |
 
 Les sources du manuscrit dans `00_these/manuscrit/` sont celles de la version finale (voir [`../00_these/README_fr.md`](../00_these/README_fr.md)).
 

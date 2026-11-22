@@ -368,7 +368,7 @@ Nous \'etablissons les propri\'et\'es cryptographiques des trois
 constructions, \`a savoir la confidentialit\'e calculatoire sous
 PRG~\cite{GoldreichKrawczyk99,BlumMicali84} et masquage parfait
 de l'engagement ainsi que la fiabilit\'e de v\'erification sous DLog~\cite{Pedersen91} et
-q-PKE~\cite{Groth16,Boneh2008} (Propositions du chapitre~\ref{chap:constructions}
+la solidit\'e de connaissance de Groth16~\cite{Groth16,FKL18} (Propositions du chapitre~\ref{chap:constructions}
 et annexe~\ref{chap:annexe_gamebased}). Les minorations d'opposabilit\'e et les
 fractions de la borne atteintes (\og $75\,\%$, $50\,\%$, $45\,\%$\fg{} dans la
 formulation initiale) rel\`event d'heuristiques de conception, car elles supposent une extraction du verdict que la preuve seule ne
@@ -487,7 +487,7 @@ Trilemme PQ (Sec.~\ref{sec:cro_pq})
   & Sous Hypoth\`eses~\ref{ass:extraction_quantique}--\ref{ass:regime_quantique} 
   & 1 & Preuve papier & Non \\
 Propri\'et\'es SOTP ($\Conf$, $\Relver$) 
-  & Prouv\'ees sous PRG et DLog (q-PKE pour High) 
+  & Prouv\'ees sous PRG et DLog (Groth16 pour High) 
   & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Non \\
 Minorations d'opposabilit\'e SOTP, optimalit\'e 
   & Heuristiques / conjecture 

@@ -9,8 +9,9 @@
 | [gamebased_fr.md](gamebased_fr.md) | Annexe A en Markdown, en français |
 | [gamebased_en.md](gamebased_en.md) | Annexe A en Markdown, en anglais (contenu équivalent) |
 | [gamebased_source_fr.tex](gamebased_source_fr.tex) | Source LaTeX de l'annexe A dans la version finale du manuscrit, copiée sans modification (en français) |
+| [lean/GameBasedSOTP.lean](lean/GameBasedSOTP.lean) | Mécanisation en Lean 4 des réductions de SOTP-Low en situation réduite (Mathlib seul, vérifiable sur <https://live.lean-lang.org>), avec son journal de compilation |
 
-Contenu de l'annexe. Jeux IND-CONF, BIND-REL et EXT-OPP ; ponts vers $\mathsf{Conf}$, $\mathsf{Rel}_{\mathrm{ver}}$ et $\mathsf{Opp}$ ; réductions de SOTP-Low au PRG et au logarithme discret ; lemme de dimensionnement JL de SOTP-Base ; sécurité de SOTP-High héritée de Groth16 ; tableau récapitulatif ; corollaire du produit CLO game-based et remarque de non-contradiction avec le trilemme ; limitations.
+Contenu de l'annexe. Jeux IND-CONF, BIND-REL et EXT-OPP ; ponts vers $\mathsf{Conf}$, $\mathsf{Rel}_{\mathrm{ver}}$ et $\mathsf{Opp}$ ; réductions de SOTP-Low au PRG et au logarithme discret ; lemme de dimensionnement JL de SOTP-Base ; sécurité de SOTP-High héritée de Groth16 ; corollaire des réductions de SOTP-Base ; tableau récapitulatif ; corollaire du produit CLO game-based et remarque de non-contradiction avec le trilemme ; mécanisation en situation réduite ; limitations.
 
 Aucune version `.tex` anglaise n'est fournie. La version Markdown anglaise en tient lieu. Le fichier `.tex` utilise les macros du manuscrit (`\cmt`, `\Conf`, `\Relver`…) et se compile dans le cadre de [../../00_these/manuscrit/](../../00_these/manuscrit/).
 

@@ -281,9 +281,11 @@ Leurs propri\'et\'es cryptographiques (confidentialit\'e, fiabilit\'e de v\'erif
 
 \noindent\textit{Contributions.}
 \begin{itemize}
-  \item[\textbf{C4.1}] Le paradigme Gold-Iron-Clay et les trois variantes SOTP-Low, SOTP-Base et SOTP-High (sous-section~\ref{subsec:gold_iron_clay}, section~\ref{sec:sotp_construction}).
-  \item[\textbf{C4.2}] Les r\'eductions game-based aux hypoth\`eses PRG et DLOG, au lemme JL et \`a la solidit\'e de connaissance de Groth16 (Tableau~\ref{tab:ann_g_reductions}).
-  \item[\textbf{C4.3}] La conjecture d'optimalit\'e universelle (Conjecture~\ref{conj:optimalite_universelle}).
+  \item[\textbf{C4.1}] Le paradigme Gold-Iron-Clay, principe de conception des protocoles institutionnels qui confie la confidentialit\'e \`a la couche Gold, la fiabilit\'e de v\'erification \`a la couche Iron et la pr\'esentation du contexte institutionnel \`a la couche Clay (sous-section~\ref{subsec:gold_iron_clay}).
+  \item[\textbf{C4.2}] Les trois variantes SOTP-Low, SOTP-Base et SOTP-High, qui instancient ce paradigme selon l'entropie du contexte (section~\ref{sec:sotp_construction}).
+  \item[\textbf{C4.3}] Les r\'eductions game-based aux hypoth\`eses PRG et DLOG, au lemme JL et \`a la solidit\'e de connaissance de Groth16 (Tableau~\ref{tab:ann_g_reductions}).
+  \item[\textbf{C4.4}] La conjecture d'optimalit\'e universelle (Conjecture~\ref{conj:optimalite_universelle}).
+  \item[\textbf{C4.5}] La m\'ecanisation en Lean~4 des r\'eductions de SOTP-Low en situation r\'eduite, qui \'etablit la faisabilit\'e de la d\'emarche (section~\ref{sec:gamebased_mecanisation}).
 \end{itemize}
 
 \paragraph{C5. Nous certifions m\'ecaniquement le Trilemme en Lean4, du noyau
@@ -298,7 +300,12 @@ tout en explicitant les hypoth\`eses institutionnelles. La th\`ese y ajoute une 
 concr\`ete o\`u Fano et Pinsker sont d\'emontr\'es pour des lois de probabilit\'e finies,
 de sorte que le trilemme y porte sur de vraies lois. Elle \'etablit
 formellement la borne $\Delta/(\gamma\lambda) + O(\lambda^{-2})$ et sa forme
-raffin\'ee puis fournit deux t\'emoins de coh\'erence et de port\'ee. Le d\'eveloppement
+raffin\'ee puis fournit deux t\'emoins de coh\'erence et de port\'ee. Elle a aussi
+rendu explicites, dans les preuves du Trilemme classique~\cite{MINKA2026CRO} et de son
+extension post-quantique~\cite{MINKA2026PQCRO}, l'efficacit\'e du verdict et le r\'egime de
+fuite, qui y restaient implicites~; les \'enonc\'es retenus dans la th\`ese sont donc
+conditionnels et explicites, assortis de leurs constantes et de leur domaine de
+validit\'e. Le d\'eveloppement
 constitue \'egalement une biblioth\`eque Lean4 r\'eutilisable, publi\'ee avec une version fig\'ee de Lean et
 de Mathlib~\cite{CROTrilemmaDepot}.
 
@@ -311,19 +318,6 @@ de Mathlib~\cite{CROTrilemmaDepot}.
   \item[\textbf{C5.5}] Les t\'emoins de coh\'erence et de port\'ee et la famille de lois t\'emoins pour tout $\lambda$ (sous-sous-section~\ref{subsubsec:temoins_lean4}, sous-section~\ref{subsec:lean4_concret}).
   \item[\textbf{C5.6}] La le\c{c}on m\'ethodologique selon laquelle la certification m\'ecanique doit pr\'ec\'eder la soumission d'un r\'esultat (sous-section~\ref{subsec:verification_corrige_lecon}).
 \end{itemize}
-
-\medskip
-\noindent\textbf{Apport m\'ethodologique.} La formalisation en Lean4 a
-conduit \`a expliciter, dans les preuves du Trilemme CRO classique~\cite{MINKA2026CRO}
-et de son extension post-quantique~\cite{MINKA2026PQCRO}, des hypoth\`eses qui y
-restaient implicites, en l'occurrence la condition d'efficacit\'e du verdict et le r\'egime de
-fuite sous lequel la borne s'applique. Les \'enonc\'es retenus dans cette th\`ese
-sont donc conditionnels et explicites, assortis de leurs constantes et de leur
-domaine de validit\'e~; ce que la certification a ainsi rendu visible est
-d\'etaill\'e \`a la sous-section~\ref{subsec:lean4_erreurs}. Cette exp\'erience
-conduit \`a une le\c{c}on m\'ethodologique sur le r\^ole de la v\'erification
-formelle dans la production des r\'esultats interdisciplinaires, discut\'ee \`a la
-sous-section~\ref{subsec:verification_corrige_lecon}.
 
 \paragraph{C6. Nous sp\'ecifions un programme de validation falsifiable
 pour les param\`etres institutionnels et quantiques
@@ -456,7 +450,9 @@ C2.6 N\'ecessit\'e du r\'egime & C2 & \textbf{B} & Rem.~\ref{rem:scope_trilemme_
 C2.7 Capacit\'e $\Delta^*$ & C2 & \textbf{B} & Rem.~\ref{rem:delta_capacite} & Th\`ese & Chapitre~\ref{chap:cadre_formel} \\
 C3.1 Trilemme quantique & C3 & \textbf{E} & Th.~\ref{thm:trilemme_pq} & Publi\'e, explicit\'e & [P3] \textit{IEEE Access}~\cite{MINKA2026PQCRO} \\
 C3.2 \`a C3.4 $\eta_q$, $H^\sharp_q$, signatures & C3 & \textbf{E} & \S~\ref{sec:cro_pq} & Th\`ese & Chapitre~\ref{chap:cadre_formel} \\
-C4.1 \`a C4.3 SOTP & C4 & \textbf{S} & \S~\ref{sec:sotp_construction} & Soumis & \textit{IEEE Trans. Inf. Theory} \\
+C4.1 Paradigme Gold-Iron-Clay & C4 & \textbf{S} & \S~\ref{subsec:gold_iron_clay} & Soumis & \textit{IEEE Trans. Inf. Theory} \\
+C4.2 \`a C4.4 Variantes, r\'eductions, conjecture & C4 & \textbf{S} & \S~\ref{sec:sotp_construction} & Soumis & \textit{IEEE Trans. Inf. Theory} \\
+C4.5 M\'ecanisation r\'eduite & C4 & \textbf{S} & \S~\ref{sec:gamebased_mecanisation} & Th\`ese (issu de Lean) & Annexe~\ref{chap:annexe_gamebased} \\
 C5.1, C5.2 Noyau, hypoth\`eses & C5 & \textbf{C} & \S~\ref{sec:lean4} & Soumis & \textit{J. Autom. Reasoning} \\
 C5.3 Pinsker et Fano finis & C5 & \textbf{C} & \S~\ref{subsec:lean4_concret} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\
 C5.4 R\^ole de l'Hyp.~3 & C5 & \textbf{C} & Th.~\ref{thm:conditional_CRO_trilemma} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\

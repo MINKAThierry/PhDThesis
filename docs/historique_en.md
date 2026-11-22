@@ -33,28 +33,30 @@ Formalising the classical conditional CRO trilemma led to alternative, more prec
 |---|---|---|
 | before 2.1 | working versions | not kept in this repository |
 | 2.1 | full Mathlib import; same statements as version 2.2 except section 9 | working version, not kept in this repository |
-| 2.2 (October 2026) | `import Mathlib`; section 9 added (`opp_eq_one_of_deterministic`, `deterministic_forces_capacity`, `trilemma_refined`, `refined_bound_is_fano_when_delta_ge_gamma`); verified on <https://live.lean-lang.org> | [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean), Listing B.1 of the thesis |
+| 2.2 (October 2026) | `import Mathlib`; section 9 added (`opp_eq_one_of_deterministic`, `deterministic_forces_capacity`, `trilemma_refined`, `refined_bound_is_fano_when_delta_ge_gamma`); verified on <https://live.lean-lang.org> | [`../05_formalisation_lean/results/lean_build.log`](../05_formalisation_lean/results/lean_build.log) |
+| 3.0 to 3.2 (22 November 2026) | concrete layer: Pinsker and Fano proved for finite distributions, `CLOModel`, trilemmas and Lemma 4 on actual distributions, family of witness distributions; Lean and Mathlib v4.35.0; v3.2 verified on <https://live.lean-lang.org> | `results/lean_build_v3.0.log` to `lean_build_v3.2.log` |
+| 3.3 (22 November 2026) | notes on the constant $c_0$, Assumption 3 removed from the core statements' descriptions, asymptotic hypotheses for $\lambda\ge 64$, lower bound on $H(C)$, concrete Lemma 4 without a free parameter | [`../05_formalisation_lean/ConditionalCRO.lean`](../05_formalisation_lean/ConditionalCRO.lean), Listing B.1 of the thesis |
 
-The statements of version 2.1 are carried over unchanged into version 2.2 (thesis, Appendix B). The Lean and Mathlib versions are pinned at v4.34.0. An article presenting the formalisation is submitted to the *Journal of Automated Reasoning*.
+The statements of version 2.1 are carried over unchanged into version 2.2. Versions 3.x add the concrete layer without changing the core statements, except for the weaker asymptotic hypotheses of v3.3. The Lean and Mathlib versions are pinned at v4.35.0 since v3.3 (v4.34.0 before). An article presenting the algebraic core is submitted to the *Journal of Automated Reasoning*. A reduced mechanisation of the game-based reductions of SOTP-Low (version 1.0, 22 November 2026) is in [`../04_sotp/preuves_game_based/lean/`](../04_sotp/preuves_game_based/lean/).
 
 
 ## 4. Refined statements and versions of the thesis
 
 | Date | Event | Location |
 |---|---|---|
-| 2026 | Refined statements submitted to *IEEE Access* for P2 (proof of the classical trilemma) | [`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_en.md) |
-| 2026 | Refined statements submitted to *IEEE Access* for P3, parallel to those of P2 | [`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_en.md) |
+| 2026 | Refined statements drafted for P2 (proof of the classical trilemma), to be sent to *IEEE Access* after the defence | [`../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P2_CRO_IEEEAccess2026/formulations_precisees/README_en.md) |
+| 2026 | Refined statements drafted for P3, parallel to those of P2, to be sent to *IEEE Access* after the defence | [`../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/`](../01_publie/P3_PQCRO_IEEEAccess2026/formulations_precisees/README_en.md) |
 | 28 September 2026 | Deposit of the thesis (262 pages), after incorporating the feedback from the academic expert review | [`../00_these/pdf/`](../00_these/pdf/README_en.md) |
 | October 2026 | Final version of the manuscript (Lean formalisation 2.2 verified online, repository address) | [`../00_these/manuscrit/`](../00_these/manuscrit/README_en.md) |
 
-The submitted refined statements are not published at the time the repository was built. They keep the status PROPOSAL (submitted refined statements). The statements refined by the thesis are listed in [`../03_resultats_these/`](../03_resultats_these/README_en.md).
+The refined statements are neither sent nor published as of 22 November 2026. They keep the status PROPOSAL. The statements refined by the thesis are listed in [`../03_resultats_these/`](../03_resultats_these/README_en.md).
 
 ## 5. Pending submissions
 
 | Work | Journal | Folder |
 |---|---|---|
 | SOTP family | *IEEE Transactions on Information Theory* | [`../04_sotp/`](../04_sotp/README_en.md) |
-| Lean 4 formalisation v2.2 | *Journal of Automated Reasoning* | [`../05_formalisation_lean/`](../05_formalisation_lean/README_en.md) |
+| Lean 4 formalisation, algebraic core | *Journal of Automated Reasoning* | [`../05_formalisation_lean/`](../05_formalisation_lean/README_en.md) |
 
 ## 6. Construction of this repository (October 2026)
 
@@ -67,6 +69,7 @@ Before this repository, the Lean formalisation and the calibration scripts were 
 | 13 October 2026 | Analysis package `07_protocoles_terrain/analyse/` (111 tests passed) |
 | 13 October 2026 | `docs/` folder |
 | 19 October 2026 | Final version of the manuscript in `00_these/manuscrit/`, Lean file replaced by version 2.2 verified online, address `MINKAThierry/PhDThesis`, new seed for the P1 stimuli |
+| 22 November 2026 | Manuscript revised (productions and contributions, sharp bound, game-based corrections), Lean v3.3 and move to v4.35.0, reduced game-based mechanisation, local folder put under git |
 
 The manuscript sources in `00_these/manuscrit/` are those of the final version (see [`../00_these/README_en.md`](../00_these/README_en.md)).
 

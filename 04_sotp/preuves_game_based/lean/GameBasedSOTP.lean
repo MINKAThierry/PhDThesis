@@ -6,7 +6,10 @@
   OBJET
   Test de faisabilité de la mécanisation des preuves game-based de l'annexe A,
   sur une version réduite de SOTP-Low. Le fichier n'utilise que Mathlib et se
-  vérifie sur https://live.lean-lang.org (projet Mathlib).
+  vérifie sur https://live.lean-lang.org (projet Mathlib). Vérifié le 22 novembre
+  2026 sur ce site et localement (Lean 4.35.0, Mathlib v4.35.0) : aucune erreur,
+  aucun avertissement, six `#print axioms` limités à propext, Classical.choice et
+  Quot.sound.
 
   CE QUI EST CERTIFIÉ
   1. Masque jetable : la loi de m + y, y uniforme, ne dépend pas de m.

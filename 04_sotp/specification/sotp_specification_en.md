@@ -30,7 +30,7 @@ This document is a faithful rendering of the S-OTP and SOTP constructions of the
 |---|---|
 | Computational confidentiality (SOTP-Low, SOTP-Base) | proven under PRG (Propositions `thm:saturation_sotp_low`, `thm:saturation_sotp_base`) |
 | $\mathsf{Rel}_{\mathrm{ver}} = 1-\mathrm{negl}(\lambda)$ (SOTP-Low, SOTP-Base) | proven under DLog |
-| Confidentiality and $\mathsf{Rel}_{\mathrm{ver}}$ (SOTP-High) | proven under q-SDH, q-PKE, DLog and an honest ceremony (Proposition `thm:saturation_sotp_high`) |
+| Confidentiality and $\mathsf{Rel}_{\mathrm{ver}}$ (SOTP-High) | proven under the knowledge soundness of Groth16 (generic or algebraic group model), DLog and an honest ceremony (Proposition `thm:saturation_sotp_high`) |
 | JL distance preservation (SOTP-Base) | Johnson-Lindenstrauss lemma, probability $\geq 1-\delta$ |
 | Lower bounds $0.75\,\Delta/\lambda$, $0.5\min\{\cdot\}$, $0.45\,\beta\log_2\lambda/\lambda$ | unproven design heuristics |
 | Universal optimality of SOTP | conjecture |
@@ -314,10 +314,10 @@ An executable implementation of this algorithm (Circom/Groth16) is provided sepa
 
 ### Proposition `thm:saturation_sotp_high` (Cryptographic properties of SOTP-High)
 
-Under the q-SDH and q-PKE assumptions (*knowledge soundness* of Groth16 [BonehBoyen08, BCTV14]), DLog hardness and an honest trusted-setup ceremony [Bowe2017]:
+Under the *knowledge soundness* of Groth16, established in the generic group model [Groth16] and in the algebraic group model under q-DLog [FKL18], DLog hardness and an honest trusted-setup ceremony [Bowe2017]:
 
 1. the proof $\pi$ is perfect zero-knowledge and $c_m$ is perfectly hiding, so that $(\pi, c_m)$ reveals nothing about $m$ beyond the public inputs;
-2. completeness is perfect and, by *knowledge soundness*, for every PPT prover that gets $\sigma$ accepted there exists an *extractor* (which rewinds the prover or uses the trapdoor of the q-PKE assumption, unlike the verifier) producing a witness $(m, c, \rho)$ satisfying the relation; hence $\mathsf{Rel}_{\mathrm{ver}} = 1 - \mathrm{negl}(\lambda)$.
+2. completeness is perfect and, by *knowledge soundness*, for every PPT prover that gets $\sigma$ accepted there exists an *extractor* (which exploits the algebraic representation of the elements output by the prover, unlike the verifier) producing a witness $(m, c, \rho)$ satisfying the relation; hence $\mathsf{Rel}_{\mathrm{ver}} = 1 - \mathrm{negl}(\lambda)$.
 
 **Remark `rem:heuristique_sotp_high` (Design heuristic of SOTP-High, unproven).** The initial formulation of this result stated $\mathsf{Conf} \cdot \mathsf{Rel} \cdot \mathsf{Opp} \geq 0.45 \cdot \beta\log_2\lambda/\lambda$, with a constant $0.45$ "calibrated" on deployed systems. The formalisation led to replacing it. The digest $h_c = \mathsf{Poseidon}(c)$ and the metadata are functions of the public context ($I(V;h_c|C) = 0$); three group elements represent $\Theta(\lambda)$ bits and not $O(\log\lambda)$; the verifier cannot extract the witness, otherwise the proof would not be zero-knowledge; finally a constant fitted on data has no place in a theorem statement. The expression $0.45\,\beta\log_2\lambda/\lambda$ is kept as a design heuristic; $\beta$ denotes the regularity constant of the protocol (Definition `def:beta_regularite`).
 
@@ -338,12 +338,12 @@ Source: §`subsec:synthese_selection`.
 | Values ($\lambda = 128$) | $< 11$ bits | $11$–$18$ bits | $> 18$ bits |
 | ***Cryptographic techniques*** | | | |
 | Gold layer | PRG [BlumMicali84] | PRG [BlumMicali84] | Perfect ZK Groth16 [Groth16] |
-| Iron layer | Pedersen [Pedersen91] | Pedersen [Pedersen91] | q-SDH Soundness [BonehBoyen08] |
+| Iron layer | Pedersen [Pedersen91] | Pedersen [Pedersen91] | knowledge soundness (GGM or AGM) [Groth16, FKL18] |
 | Clay layer | $\phi:\mathcal{C}\to\lbrace 0,1\rbrace^{H(\mathcal{C})}$ | JL $\Phi:\mathbb{R}^d\to\mathbb{R}^k$ [JohnsonLindenstrauss84] | Poseidon + SNARK [Poseidon2019] |
 | Primitives | SHA-256, Pedersen | Gaussian, Pedersen | Groth16, Poseidon, BLS12-381 [BLS12-381] |
 | ***CLO metrics achieved*** | | | |
 | Confidentiality | computational (PRG) | computational (PRG) | perfect ZK |
-| $\mathsf{Rel}_{\mathrm{ver}}$ | $1 - \epsilon_{\text{DLog}}$ | $1 - \epsilon_{\text{DLog}}$ | $1 - \epsilon_{\text{q-SDH}}$ |
+| $\mathsf{Rel}_{\mathrm{ver}}$ | $1 - \epsilon_{\text{DLog}}$ | $1 - \epsilon_{\text{DLog}}$ | $1 - \epsilon_{\text{KS}} - \epsilon_{\text{DLog}}$ |
 | $\mathsf{Opp}$ | depends on the case-specific context conveyed | same | same |
 | ***Design heuristic (unproven)*** | | | |
 | Expression | $0.75 \cdot \Delta/\lambda$ | $0.5 \cdot \min\lbrace\Delta/d,\ \Delta/(\beta\log_2 d)\rbrace$ | $0.45 \cdot \beta\log_2\lambda/\lambda$ |

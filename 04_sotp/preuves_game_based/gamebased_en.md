@@ -46,9 +46,11 @@ This annex establishes the **formal bridge** between the two worlds in three ste
 
 **Intuition.** A PRG takes a short seed $s \in \lbrace 0,1\rbrace^\lambda$ and produces a long sequence $G(s) \in \lbrace 0,1\rbrace^{L(\lambda)}$, $L > \lambda$, indistinguishable from a truly random sequence. It underlies the Gold layer of SOTP-Low, in which the pad $G(s)$ masks the message so that, without $s$, no PPT adversary can recover $m$ from $m \oplus G(s)$.
 
-**Definition `def:ann_prg` (PRG security [GoldreichKrawczyk99]).** A polynomial-time computable function $G : \lbrace 0,1\rbrace^\lambda \to \lbrace 0,1\rbrace^{L(\lambda)}$ with $L(\lambda) > \lambda$ is a secure PRG if, for every PPT adversary $\mathcal{A}$,
+**Definition `def:ann_prg` (PRG security [GoldreichKrawczyk99]).** Let $\mathcal{S}_\lambda$ be a finite seed set, for instance $\lbrace 0,1\rbrace^\lambda$ or $\mathbb{Z}_q$, with $\log_2|\mathcal{S}_\lambda| < L(\lambda)$. A polynomial-time computable function $G : \mathcal{S}_\lambda \to \lbrace 0,1\rbrace^{L(\lambda)}$ is a secure PRG if, for every PPT adversary $\mathcal{A}$,
 
-$$\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{A}}(\lambda) = \left| \Pr_{s \leftarrow \lbrace 0,1\rbrace^\lambda}\big[\mathcal{A}(G(s)) = 1\big] - \Pr_{y \leftarrow \lbrace 0,1\rbrace^{L(\lambda)}}\big[\mathcal{A}(y) = 1\big] \right| \leq \mathrm{negl}(\lambda)$$
+$$\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{A}}(\lambda) = \left| \Pr_{s \leftarrow \mathcal{S}_\lambda}\big[\mathcal{A}(G(s)) = 1\big] - \Pr_{y \leftarrow \lbrace 0,1\rbrace^{L(\lambda)}}\big[\mathcal{A}(y) = 1\big] \right| \leq \mathrm{negl}(\lambda)$$
+
+**Seed distribution.** SOTP-Low draws its seed uniformly in $\mathbb{Z}_q$ (Algorithm `alg:sotp_low`), a condition required by the discrete-logarithm reduction. The reductions of this annex therefore use $\mathcal{S}_\lambda = \mathbb{Z}_q$. For IND-CONF, the advantage is $|\Pr[b' = b] - 1/2|$; for the PRG, it is the difference of the two probabilities above.
 
 **Practical implementations.** SOTP-Low uses ChaCha20/AES-CTR, two standardised PRGs meeting this definition.
 
@@ -141,13 +143,13 @@ with equality for the Neyman–Pearson test on the most distinguishable pair (Re
 
 ### Definition of the game
 
-**Intuition.** The game captures *non-equivocation*: an adversary must not be able to produce a proof $\sigma$ that can be opened to two distinct messages $m_0 \neq m_1$. Unlike IND-CONF, the adversary freely chooses $(c, \sigma, s_0, s_1)$, modelling an agent who deliberately forges an ambiguous proof.
+**Intuition.** The game captures *non-equivocation*: an adversary must not be able to produce a proof $\sigma$ that can be opened to two distinct messages $m_0 \neq m_1$. Unlike IND-CONF, the adversary freely chooses $(c, \sigma, o_0, o_1)$, modelling an agent who deliberately forges an ambiguous proof.
 
 **Definition `def:ann_bind_rel` (BIND-REL game).** For a protocol $\mathcal{P}$ with $\mathsf{Open}$ and an adversary $\mathcal{A}$, the game runs as follows.
 
 1. $\mathcal{A}$ receives $pp \leftarrow \mathsf{Setup}(1^\lambda)$
-2. $\mathcal{A}$ outputs $(c, \sigma, s_0, s_1)$
-3. Compute $m_i = \mathsf{Open}(pp, \sigma, s_i)$ for $i \in \lbrace 0,1\rbrace$
+2. $\mathcal{A}$ outputs $(c, \sigma, o_0, o_1)$, where each opening $o_i = (m_i, s_i, \rho_i)$
+3. Compute $m_i = \mathsf{Open}(pp, \sigma, o_i)$ for $i \in \lbrace 0,1\rbrace$
 4. $\mathcal{A}$ *wins* if and only if $\mathsf{Verify}(pp,\sigma,c)=1$, $m_0 \neq m_1$, $m_0 \neq \bot$ and $m_1 \neq \bot$
 
 $$\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathcal{P}}(\lambda) = \Pr\left[\mathcal{A} \text{ wins in } \mathsf{Exp}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathcal{P}}(\lambda) \right]$$
@@ -172,7 +174,7 @@ $$\mathsf{Rel}_{\mathrm{ver}} \geq 1 - \varepsilon_{\mathsf{bind}} - \mathrm{neg
 
 1. The challenger samples $c \leftarrow \mathcal{D}_C$, $m \leftarrow \mathcal{M}_\lambda$
 2. The challenger computes $\sigma \leftarrow \mathsf{Prove}(pp,m,c)$
-3. The interpreter receives $(\sigma,c)$ and outputs $v \leftarrow \mathsf{Interpret}(pp,\sigma,c,\Delta)$
+3. The interpreter receives $(\sigma,c)$, may consult its institutional resources $K$ (Definition `def:interp_admissible`) and outputs $v \leftarrow \mathsf{Interpret}(pp,\sigma,c,\Delta)$
 4. Let $v^*$ be the reference verdict, a realisation of the variable $V$ (which may depend on the message, the context and institutional resources, Definition `def:interp_admissible`)
 5. The interpreter *wins* if $v = v^*$
 
@@ -182,11 +184,11 @@ $$\mathsf{Err}^{\mathsf{EXT\text{-}OPP}}_{\mathsf{Interpret},\mathcal{P},\mathca
 
 ### Link with $\mathsf{Opp}$ through Fano
 
-**Remark `rem:ann_ext_opp_link` (EXT-OPP $\leftrightarrow$ $\mathsf{Opp}$ bridge).** By Fano (Lemma `lem:ann_g_fano`) applied to the estimation of $V$ from $(\Sigma,C)$,
+**Remark `rem:ann_ext_opp_link` (EXT-OPP $\leftrightarrow$ $\mathsf{Opp}$ bridge).** By Fano (Lemma `lem:ann_g_fano`) applied to the estimation of $V$ from $(\Sigma,C,K)$, then by the chain rule $H(V|\Sigma,C) = H(V|\Sigma,C,K) + I(V;K|\Sigma,C)$ (Remark `rem:jeu_ext_opp_link`),
 
-$$\mathsf{Opp} = 1 - \frac{H(V|\Sigma,C)}{H(V|C)} \geq 1 - \frac{h(\varepsilon_{\mathsf{ext}}) + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)}{H(V|C)} \qquad \text{(eq:ann\_fano\_opp)}$$
+$$\mathsf{Opp} = 1 - \frac{H(V|\Sigma,C)}{H(V|C)} \geq 1 - \frac{h(\varepsilon_{\mathsf{ext}}) + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1) + I(V;K|\Sigma,C)}{H(V|C)} \qquad \text{(eq:ann\_fano\_opp)}$$
 
-where $\varepsilon_{\mathsf{ext}} = \mathsf{Err}^{\mathsf{EXT\text{-}OPP}}$ and $h(\cdot)$ is the binary entropy. An interpreter with low extraction error implies high opposability.
+where $\varepsilon_{\mathsf{ext}} = \mathsf{Err}^{\mathsf{EXT\text{-}OPP}}$ and $h(\cdot)$ is the binary entropy. The term $I(V;K|\Sigma,C)$ measures what the interpreter draws from its own resources $K$ rather than from the proof; it vanishes when the interpreter reads only $(\Sigma,C)$. An interpreter with low extraction error, which owes little to its own resources, implies high opposability.
 
 ## A.5 Formal reductions for SOTP-Low
 
@@ -198,7 +200,7 @@ SOTP-Low operates in the context-scarce regime ($H(\mathcal{C}) < H^*(\lambda)$)
 
 **Intuition.** The Gold layer encrypts $m$ with the pad $G(s)$. If $\mathcal{A}$ distinguishes the proofs of $m_0$ vs $m_1$, it necessarily distinguishes $G(s)$ from a random string, contradicting PRG security.
 
-**Theorem `thm:ann_sotp_low_conf` (SOTP-Low, PRG reduction).** Let $\mathcal{A}$ be a PPT adversary against IND-CONF of SOTP-Low with advantage $\varepsilon$. Then there exists a PPT adversary $\mathcal{B}$ against the PRG $G$ with advantage $\geq \varepsilon/2 - \mathrm{negl}(\lambda)$.
+**Theorem `thm:ann_sotp_low_conf` (SOTP-Low, PRG reduction).** Let $\mathcal{A}$ be a PPT adversary against IND-CONF of SOTP-Low with advantage $\varepsilon$. Then there exists a PPT adversary $\mathcal{B}$ against the PRG $G$ with the same running time as $\mathcal{A}$ up to a polynomial term, such that $\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) \geq \varepsilon - 1/q$.
 
 **Proof.**
 
@@ -217,10 +219,10 @@ If $\mathcal{A}$ outputs $b'=b$, $\mathcal{B}$ returns 1; otherwise 0.
 
 **Analysis.**
 
-- *Case $y = G(s)$.* $\mathcal{A}$ sees a genuine SOTP-Low proof and wins with probability $1/2 + \varepsilon$. $\mathcal{B}$ returns 1 with probability $1/2+\varepsilon$.
+- *Case $y = G(s)$.* When $h \neq 1$, $h$ generates $\mathbb{G}$ and $\sigma_2 = g^{s'}h^\rho$ is uniform and independent of $s$, like $g^{s}h^\rho$ in the real game. $\mathcal{A}$ then sees exactly a genuine SOTP-Low proof. The event $h = 1$ has probability $1/q$. $\mathcal{B}$ therefore returns 1 with a probability that differs from $\Pr[b' = b] = 1/2 \pm \varepsilon$ by at most $1/q$.
 - *Case $y$ uniform.* $\sigma_1 = m_b \oplus U_{|m|}$ is a perfect one-time pad, $\mathcal{A}$ has no information about $b$. $\mathcal{B}$ returns 1 with probability $1/2$.
 
-Hence $\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) \geq \varepsilon/2 - \mathrm{negl}(\lambda)$. $\square$
+Hence $\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) \geq \varepsilon - 1/q$. $\square$
 
 ### Discrete-logarithm reduction for reliability
 
@@ -269,6 +271,10 @@ a union bound over the $N^2/2$ pairs gives a failure probability at most $N^2 e^
 
 **Interpretation.** SOTP-Base chooses the dimension $d$ guaranteeing distance preservation with the desired probability; the link with verdict extraction remains a design assumption.
 
+**Corollary `cor:ann_sotp_base_reductions` (Reductions for SOTP-Base).** Under PRG and DLOG in $\mathbb{G}$ of order $q$, for every PPT $\mathcal{A}$, $\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Base}}(\lambda) \leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + 1/q$ and $\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Base}}(\lambda) \leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda)$.
+
+**Proof.** SOTP-Base shares the Gold and Iron layers with SOTP-Low (Algorithm `alg:sotp_base`), and its Clay layer, the JL projection of the context, is a public function of $c$ and of the public draw of $\Phi$. The reductions of Theorems `thm:ann_sotp_low_conf` and `thm:ann_sotp_low_rel` compute this layer from $c$. Their simulations and analyses are unchanged. $\square$
+
 ## A.7 Reductions for SOTP-High
 
 SOTP-High operates in the context-rich regime ($H(\mathcal{C}) > \lambda/\log_2\lambda$) and relies on Groth16 for its Gold layer. Its Clay layer encodes $h_c = \mathsf{Poseidon}(c)$.
@@ -278,13 +284,13 @@ SOTP-High operates in the context-rich regime ($H(\mathcal{C}) > \lambda/\log_2\
 **Theorem `thm:ann_sotp_high` (SOTP-High, security inherited from Groth16).** For the relation $\mathcal{R} = \lbrace((h_c, c_m), (m, c, \rho)) : h_c = \mathsf{Poseidon}(c) \wedge c_m = g^m h^\rho \wedge \mathsf{Conforme}(m,c) = 1\rbrace$, the following two properties hold.
 
 1. **Confidentiality.** The perfect zero-knowledge of Groth16 and the perfect hiding of $c_m$ give $\mathsf{Conf} = 1$.
-2. **Verification reliability.** The knowledge soundness of Groth16 gives $\mathsf{Rel}_{\mathrm{ver}} \geq 1 - \mathrm{negl}(\lambda)$.
+2. **Verification reliability.** The knowledge soundness of Groth16 and the binding property of the Pedersen commitment under DLOG give $\mathsf{Rel}_{\mathrm{ver}} \geq 1 - \mathrm{negl}(\lambda)$.
 
 **Proof.**
 
 **Confidentiality.** By perfect ZK, honest proofs and simulated proofs $\mathcal{S}(\sigma_p, (h_c, c_m))$ have the same distribution. The simulator uses only the public inputs; $h_c$ depends only on $c$ while $c_m$ is uniform in $\mathbb{G}$ whatever $m$. The distribution of $\Sigma = (h_c, \pi, c_m, \mathsf{metadata})$ given $(M = m, C = c)$ therefore does not depend on $m$, hence $\mathsf{Conf} = 1$.
 
-**Verification reliability.** For every PPT $\mathcal{A}$ producing an accepting proof $\pi$, the Groth16 extractor $\mathcal{E}$ (which has the code of $\mathcal{A}$ and uses the q-PKE assumption; it is not the verifier) outputs a witness $(m,c,\rho)$ with $((h_c,c_m),(m,c,\rho)) \in \mathcal{R}$, except with negligible probability. Thus
+**Verification reliability.** For every PPT $\mathcal{A}$ producing an accepting proof $\pi$, the Groth16 extractor $\mathcal{E}$ whose existence is proved in the generic group model [Groth16] and in the algebraic group model under the q-DLog assumption [FKL18] (it is not the verifier) outputs a witness $(m,c,\rho)$ with $((h_c,c_m),(m,c,\rho)) \in \mathcal{R}$, except with negligible probability. Thus
 
 $$\Pr\left[\mathsf{Verify}=1 \land (m,c,\rho)\notin\mathcal{R}\right] \leq \mathsf{Adv}^{\mathsf{sound}}(\lambda) \leq \mathrm{negl}(\lambda) \;\Rightarrow\; \mathsf{Rel}_{\mathrm{ver}} \geq 1-\mathrm{negl}(\lambda).$$
 
@@ -300,7 +306,7 @@ $$\Pr\left[\mathsf{Verify}=1 \land (m,c,\rho)\notin\mathcal{R}\right] \leq \math
 
 **Theorem `thm:ann_sotp_low_games` (SOTP-Low, complete game-based bounds).** Under PRG and DLOG in $\mathbb{G}$ of order $q$, for every PPT $\mathcal{A}$,
 
-$$\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda) \leq 2\cdot\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + \frac{1}{q} \qquad \text{(eq:ann\_sotp\_low\_conf)}$$
+$$\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda) \leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + \frac{1}{q} \qquad \text{(eq:ann\_sotp\_low\_conf)}$$
 
 $$\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda) \leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda) + \frac{1}{q} \qquad \text{(eq:ann\_sotp\_low\_rel)}$$
 
@@ -312,31 +318,330 @@ $$\mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}
 
 | Variant | Property | Game | Assumption | Bound |
 |---|---|---|---|---|
-| SOTP-Low | $\mathsf{Conf}_{\mathrm{calc}}$ | IND-CONF | PRG | $\mathsf{Adv} \leq 2\varepsilon_{\mathsf{PRG}} + 1/q$ |
+| SOTP-Low | $\mathsf{Conf}_{\mathrm{calc}}$ | IND-CONF | PRG | $\mathsf{Adv} \leq \varepsilon_{\mathsf{PRG}} + 1/q$ |
 | SOTP-Low | $\mathsf{Rel}_{\mathrm{ver}}$ | BIND-REL | DLOG | $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}} + 1/q$ |
 | SOTP-Low | $\mathsf{Opp}$ | – | – | none (Rem. `rem:ann_sotp_low_opp_statut`) |
-| SOTP-Base | $\mathsf{Conf}_{\mathrm{calc}}$ | IND-CONF | PRG | $\mathsf{Adv} \leq 2\varepsilon_{\mathsf{PRG}} + \mathrm{negl}$ |
-| SOTP-Base | $\mathsf{Rel}_{\mathrm{ver}}$ | BIND-REL | DLOG | $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}} + \mathrm{negl}$ |
+| SOTP-Base | $\mathsf{Conf}_{\mathrm{calc}}$ | IND-CONF | PRG | $\mathsf{Adv} \leq \varepsilon_{\mathsf{PRG}} + 1/q$ (Cor. `cor:ann_sotp_base_reductions`) |
+| SOTP-Base | $\mathsf{Rel}_{\mathrm{ver}}$ | BIND-REL | DLOG | $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}}$ (Cor. `cor:ann_sotp_base_reductions`) |
 | SOTP-Base | – | – | JL lemma | sizing of $d$ (Th. `thm:ann_sotp_base_opp`) |
 | SOTP-High | $\mathsf{Conf}$ | IND-CONF | Groth16 perfect ZK | $\mathsf{Conf} = 1$ |
-| SOTP-High | $\mathsf{Rel}_{\mathrm{ver}}$ | BIND-REL | Groth16 (q-PKE) | $\geq 1-\mathrm{negl}(\lambda)$ |
+| SOTP-High | $\mathsf{Rel}_{\mathrm{ver}}$ | BIND-REL | Groth16 (GGM or AGM), DLOG | $\geq 1-\mathrm{negl}(\lambda)$ |
 | SOTP-High | $\mathsf{Opp}$ | – | – | none (Rem. `rem:heuristique_sotp_high`) |
 
 ### Central corollary: game-based CRO product
 
 **Corollary `cor:ann_cro_from_games` (CLO product from the games).** If IND-CONF, BIND-REL and EXT-OPP are won with respective advantages at most $\varepsilon_{\mathsf{ind}}$, $\varepsilon_{\mathsf{bind}}$, $\varepsilon_{\mathsf{ext}}$, then
 
-$$\mathsf{Conf}_{\mathrm{calc}} \cdot \mathsf{Rel}_{\mathrm{ver}} \cdot \mathsf{Opp} \geq \left(1-2\varepsilon_{\mathsf{ind}}\right) \left(1-\varepsilon_{\mathsf{bind}}\right) \left(1 - \frac{h(\varepsilon_{\mathsf{ext}}) + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1)}{H(V|C)}\right) \qquad \text{(eq:ann\_cro\_product\_games)}$$
+$$\mathsf{Conf}_{\mathrm{calc}} \cdot \mathsf{Rel}_{\mathrm{ver}} \cdot \mathsf{Opp} \geq \left(1-2\varepsilon_{\mathsf{ind}}\right) \left(1-\varepsilon_{\mathsf{bind}}\right) \left(1 - \frac{h(\varepsilon_{\mathsf{ext}}) + \varepsilon_{\mathsf{ext}}\log_2(|\mathcal{V}_\lambda|-1) + I(V;K|\Sigma,C)}{H(V|C)}\right) \qquad \text{(eq:ann\_cro\_product\_games)}$$
 
 where $\mathsf{Conf}_{\mathrm{calc}} = 1 - 2\varepsilon_{\mathsf{ind}}$ denotes computational confidentiality. For $\varepsilon_{\mathsf{ind}},\varepsilon_{\mathsf{bind}}, \varepsilon_{\mathsf{ext}} \ll 1$,
 
-$$\mathsf{Conf}_{\mathrm{calc}} \cdot \mathsf{Rel}_{\mathrm{ver}} \cdot \mathsf{Opp} \geq 1 - O\left(\varepsilon_{\mathsf{ind}} + \varepsilon_{\mathsf{bind}} + \varepsilon_{\mathsf{ext}}\log_2|\mathcal{V}_\lambda| + h(\varepsilon_{\mathsf{ext}})\right) \qquad \text{(eq:ann\_cro\_approx)}$$
+$$\mathsf{Conf}_{\mathrm{calc}} \cdot \mathsf{Rel}_{\mathrm{ver}} \cdot \mathsf{Opp} \geq 1 - O\left(\varepsilon_{\mathsf{ind}} + \varepsilon_{\mathsf{bind}} + \varepsilon_{\mathsf{ext}}\log_2|\mathcal{V}_\lambda| + h(\varepsilon_{\mathsf{ext}}) + \frac{I(V;K|\Sigma,C)}{H(V|C)}\right) \qquad \text{(eq:ann\_cro\_approx)}$$
 
 **Proof.** **Term $\mathsf{Conf}_{\mathrm{calc}}$.** Definition, with the IND-CONF game (Remark `rem:ann_ind_conf_link`). **Term $\mathsf{Rel}_{\mathrm{ver}}$.** Remark `rem:ann_bind_rel_link` gives $\mathsf{Rel}_{\mathrm{ver}} \geq 1-\varepsilon_{\mathsf{bind}} - \mathrm{negl}(\lambda)$. **Term $\mathsf{Opp}$.** Remark `rem:ann_ext_opp_link` (Fano's inequality, `eq:ann_fano_opp`). The product $(1-a)(1-b)(1-c) \geq 1-a-b-c$ for $a,b,c \in [0,1]$ gives (`eq:ann_cro_approx`). $\square$
 
 **Remark `rem:ann_pas_de_contradiction` (Why this corollary does not contradict the Trilemma).** The CRO Trilemma (Theorem `thm:trilemme_cro_conditionnel`) upper-bounds the product $\mathsf{Conf}\cdot\mathsf{Rel}_{\mathrm{rec}}\cdot\mathsf{Opp}$, where $\mathsf{Conf}$ is statistical and $\mathsf{Rel}_{\mathrm{rec}}$ measures message reconstruction. The corollary lower-bounds a product of a different nature, involving *computational* confidentiality and *verification* reliability. The two scales are not comparable. A protocol may have $\mathsf{Conf}_{\mathrm{calc}}\cdot\mathsf{Rel}_{\mathrm{ver}}\cdot\mathsf{Opp}$ close to 1 while obeying the Trilemma, because $\mathsf{Rel}_{\mathrm{rec}}$ then remains of order $2^{-\lambda}$ (Remark `rem:rel_ver`). The assumption that $\varepsilon_{\mathsf{ext}}$ is small is precisely what the Trilemma makes costly when statistical $\mathsf{Conf}$ is close to 1; Remark `rem:activite_delta` indicates which quantity ($\Delta$ or Fano) then limits $\mathsf{Opp}$. The initial formulation of this paragraph announced a "bracketing" of the product by $\Delta/(\alpha\lambda)$ and a constant $c \in [0.45;\,0.85]$; the present formulation distinguishes the two scales.
 
-## A.9 Limitations and scope of the reductions
+## A.9 Mechanisation in a reduced setting
+
+This section tests the mechanisation of the game-based proofs of this annex on a reduced version of SOTP-Low. It aims to show that the approach is feasible; the full mechanisation of the three variants will follow. The file [lean/GameBasedSOTP.lean](lean/GameBasedSOTP.lean) uses Mathlib only. It was checked on 22 November 2026 on <https://live.lean-lang.org> and locally with Lean v4.35.0 and Mathlib v4.35.0, with no error and no warning. Its six `#print axioms` show only `propext`, `Classical.choice` and `Quot.sound`.
+
+**Table `tab:ann_g_mecanisation` — Game-based theorems mechanised in a reduced setting**
+
+| Lean theorem | Statement | Annex statement |
+|---|---|---|
+| `otp_uniform` | the law of $m + y$, $y$ uniform, does not depend on $m$ | one-time pad in the proof of Theorem `thm:ann_sotp_low_conf` |
+| `ind_conf_eq_prg` | $\mathsf{Adv}^{\mathsf{IND\text{-}CONF}}(\mathcal{A}) = \mathsf{Adv}^{\mathsf{PRG}}(\mathcal{B})$ | Theorem `thm:ann_sotp_low_conf` (Gold layer) |
+| `ind_conf_perfect_otp` | zero advantage with a uniform pad | uniform case of the same proof |
+| `pedersen_extract` | $x = (s_0 - s_1)/(\rho_1 - \rho_0)$ | steps 3 to 5 of the proof of Theorem `thm:ann_sotp_low_rel` |
+| `bind_rel_gives_dlog` | a BIND-REL win yields the discrete logarithm | Theorem `thm:ann_sotp_low_rel` |
+| `win_bind_le_dlog` | $\mathsf{Win}^{\mathsf{BIND\text{-}REL}}(\mathcal{A}) \leq \mathsf{Adv}^{\mathsf{DLOG}}(\mathcal{B})$ | bound (`eq:ann_sotp_low_rel`) |
+
+**What "reduced setting" means.** Probabilities are averages over finite sets with the uniform law. Adversaries are functions whose own randomness is absorbed into their description, which suffices for both reductions. The seed is drawn in an arbitrary finite set (Definition `def:ann_prg`), $\mathbb{Z}_q$ included. The group is any group generated by an element of prime order $q$. The Iron layer is not part of the confidentiality game, its perfect hiding corresponding to the term $1/q$, and the Clay layer is not modelled. The PRG and DLOG assumptions are not stated as axioms: the theorems relate the adversary's advantage to that of the reduction built from it.
+
+**What remains to be mechanised.** Probabilistic adversaries with oracles, the term $1/q$, SOTP-Base, SOTP-High, the EXT-OPP game and Corollary `cor:ann_cro_from_games`. These steps require a framework of games with oracles, such as VCVio in Lean 4 [VCVio2026], and belong to the article in preparation.
+
+The source code is reproduced below (listing `lst:gamebased_lean`).
+
+```lean
+/-
+  Preuves game-based de SOTP-Low en situation réduite — Annexe de thèse
+  =====================================================================
+  Version 1.0 (22 novembre 2026).
+
+  OBJET
+  Test de faisabilité de la mécanisation des preuves game-based de l'annexe A,
+  sur une version réduite de SOTP-Low. Le fichier n'utilise que Mathlib et se
+  vérifie sur https://live.lean-lang.org (projet Mathlib). Vérifié le 22 novembre
+  2026 sur ce site et localement (Lean 4.35.0, Mathlib v4.35.0) : aucune erreur,
+  aucun avertissement, six `#print axioms` limités à propext, Classical.choice et
+  Quot.sound.
+
+  CE QUI EST CERTIFIÉ
+  1. Masque jetable : la loi de m + y, y uniforme, ne dépend pas de m.
+  2. Confidentialité (couche Gold) : pour tout adversaire A contre IND-CONF, le
+     réducteur B construit à partir de A vérifie Adv^IND-CONF(A) = Adv^PRG(B).
+     La graine est tirée uniformément dans un ensemble fini quelconque S, par
+     exemple Z_q comme dans l'Algorithme SOTP-Low.
+  3. Fiabilité de vérification (couches Gold et Iron) : deux ouvertures acceptées
+     d'une même preuve sur deux messages distincts donnent le logarithme discret
+     de h en base g. Le réducteur B résout DLOG chaque fois que A gagne BIND-REL,
+     d'où Win^BIND-REL(A) ≤ Adv^DLOG(B).
+
+  SITUATION RÉDUITE
+  • Les probabilités sont des moyennes sur des ensembles finis (lois uniformes).
+  • Les adversaires sont des fonctions ; leur aléa propre est absorbé dans leur
+    description, ce qui suffit pour les deux réductions ci-dessus.
+  • La couche Iron n'est pas modélisée dans le jeu de confidentialité (son
+    masquage parfait est le terme 1/q de l'annexe), la couche Clay n'est pas
+    modélisée (fonction publique du contexte).
+  • PRG et DLOG ne sont pas des axiomes : ce sont les avantages de B, que le
+    théorème relie à ceux de A.
+-/
+
+import Mathlib
+
+open Finset
+
+namespace GameBasedSOTP
+
+/-! ## 1. Probabilité uniforme sur un ensemble fini -/
+
+/-- Espérance de `f` sous la loi uniforme sur `X`. -/
+noncomputable def avg {X : Type*} [Fintype X] (f : X → ℝ) : ℝ :=
+  (∑ x, f x) / Fintype.card X
+
+/-- Indicatrice d'une proposition décidable. -/
+def ind (p : Prop) [Decidable p] : ℝ := if p then 1 else 0
+
+lemma avg_add {X : Type*} [Fintype X] (f g : X → ℝ) :
+    avg (fun x => f x + g x) = avg f + avg g := by
+  unfold avg; rw [sum_add_distrib, add_div]
+
+lemma avg_const {X : Type*} [Fintype X] [Nonempty X] (c : ℝ) :
+    avg (fun _ : X => c) = c := by
+  unfold avg
+  have h : (Fintype.card X : ℝ) ≠ 0 := by exact_mod_cast Fintype.card_ne_zero
+  rw [sum_const, card_univ, nsmul_eq_mul]; field_simp
+
+/-- On peut échanger l'ordre de deux tirages uniformes indépendants. -/
+lemma avg_comm {X Y : Type*} [Fintype X] [Fintype Y] (f : X → Y → ℝ) :
+    avg (fun x => avg (fun y => f x y)) = avg (fun y => avg (fun x => f x y)) := by
+  unfold avg
+  simp only [← Finset.sum_div, div_div]
+  rw [Finset.sum_comm, mul_comm]
+
+lemma avg_mono {X : Type*} [Fintype X] {f g : X → ℝ} (h : ∀ x, f x ≤ g x) :
+    avg f ≤ avg g := by
+  unfold avg
+  apply div_le_div_of_nonneg_right (sum_le_sum fun x _ => h x) (Nat.cast_nonneg _)
+
+/-! ## 2. Masque jetable -/
+
+/-- **Masque jetable.** Pour tout groupe abélien fini M et tout message m, la loi de
+    m + y, avec y uniforme, est la loi uniforme : pour toute statistique f,
+    E_y[f(m + y)] = E_y[f(y)]. -/
+theorem otp_uniform {M : Type*} [AddCommGroup M] [Fintype M] (m : M) (f : M → ℝ) :
+    avg (fun y => f (m + y)) = avg f := by
+  unfold avg
+  congr 1
+  exact Fintype.sum_equiv (Equiv.addLeft m) _ _ (fun _ => rfl)
+
+/-! ## 3. Confidentialité de la couche Gold, réduction au PRG
+
+Jeu IND-CONF réduit. Le challenger tire b uniforme dans Bool et la graine s
+uniforme dans S, puis envoie σ₁ = m_b + G(s). L'adversaire A rend une estimation de b.
+Avantage : |Pr[A(σ₁) = b] − 1/2|.
+
+Jeu PRG. Le distingueur reçoit y = G(s), s uniforme dans S, ou y uniforme dans M.
+Avantage : |Pr[B(G(s)) = 1] − Pr[B(y) = 1]|. -/
+
+variable {S M : Type*} [Fintype S] [AddCommGroup M] [Fintype M]
+
+/-- Probabilité de succès de A dans IND-CONF. -/
+noncomputable def winIND (G : S → M) (m : Bool → M) (A : M → Bool) : ℝ :=
+  avg (fun b : Bool => avg (fun s : S => ind (A (m b + G s) = b)))
+
+/-- Avantage de A dans IND-CONF. -/
+noncomputable def advIND (G : S → M) (m : Bool → M) (A : M → Bool) : ℝ :=
+  |winIND G m A - 1 / 2|
+
+/-- Réducteur B : sur le défi y, il tire b, envoie m_b + y à A et rend 1 si A trouve b.
+    `accB y` est sa probabilité de rendre 1. -/
+noncomputable def accB (m : Bool → M) (A : M → Bool) (y : M) : ℝ :=
+  avg (fun b : Bool => ind (A (m b + y) = b))
+
+/-- Avantage de B dans le jeu PRG. -/
+noncomputable def advPRG (G : S → M) (m : Bool → M) (A : M → Bool) : ℝ :=
+  |avg (fun s : S => accB m A (G s)) - avg (fun y : M => accB m A y)|
+
+/-- Sur un défi uniforme, B rend 1 avec probabilité 1/2 (masque jetable). -/
+lemma accB_uniform (m : Bool → M) (A : M → Bool) :
+    avg (fun y : M => accB m A y) = 1 / 2 := by
+  have hsw : avg (fun y : M => accB m A y)
+      = avg (fun b : Bool => avg (fun y : M => ind (A (m b + y) = b))) := by
+    unfold accB; exact avg_comm _
+  rw [hsw]
+  have hotp : ∀ b : Bool, avg (fun y : M => ind (A (m b + y) = b))
+      = avg (fun y : M => ind (A y = b)) :=
+    fun b => otp_uniform (m b) (fun z => ind (A z = b))
+  simp only [hotp]
+  have hpart : ∀ y : M, ind (A y = false) + ind (A y = true) = 1 := by
+    intro y; unfold ind; cases A y <;> simp
+  have h1 : avg (fun y : M => ind (A y = false)) + avg (fun y : M => ind (A y = true))
+      = 1 := by
+    rw [← avg_add]; simp only [hpart]
+    have : Nonempty M := ⟨0⟩
+    exact avg_const 1
+  unfold avg at h1 ⊢
+  simp only [Fintype.univ_bool, mem_singleton, Bool.true_eq_false, not_false_eq_true,
+    sum_insert, sum_singleton, Fintype.card_bool, Nat.cast_ofNat]
+  linarith
+
+/-- **Théorème (réduction de la confidentialité de SOTP-Low au PRG).** Pour tout
+    adversaire A contre IND-CONF, le réducteur B construit à partir de A a exactement
+    le même avantage dans le jeu PRG : Adv^IND-CONF(A) = Adv^PRG(B). En particulier,
+    si G est un PRG sûr, la couche Gold est IND-CONF. -/
+theorem ind_conf_eq_prg (G : S → M) (m : Bool → M) (A : M → Bool) :
+    advIND G m A = advPRG G m A := by
+  unfold advIND advPRG
+  rw [accB_uniform]
+  congr 2
+  unfold winIND accB
+  exact avg_comm _
+
+/-- Si le défi PRG est remplacé par un masque uniforme, l'avantage IND-CONF est nul :
+    confidentialité parfaite du masque jetable. -/
+theorem ind_conf_perfect_otp (m : Bool → M) (A : M → Bool) :
+    |avg (fun b : Bool => avg (fun y : M => ind (A (m b + y) = b))) - 1 / 2| = 0 := by
+  have h := accB_uniform m A
+  unfold accB at h
+  rw [avg_comm] at h
+  rw [h]; simp
+
+/-! ## 4. Fiabilité de vérification, réduction au logarithme discret
+
+Groupe G engendré par g d'ordre premier q. Engagement de Pedersen
+Com(s, ρ) = g^s · h^ρ avec h = g^x. Une ouverture de la preuve (σ₁, σ₂) est un triplet
+(m, s, ρ) avec σ₁ = m + PRG(s) et σ₂ = Com(s, ρ). -/
+
+section DLog
+
+variable {q : ℕ} [Fact q.Prime] {Γ : Type*} [Group Γ]
+
+/-- Puissance indexée par ZMod q. -/
+def zpowq (g : Γ) (a : ZMod q) : Γ := g ^ a.val
+
+/-- Engagement de Pedersen, h = g^x. -/
+def com (g : Γ) (x s ρ : ZMod q) : Γ := zpowq g s * (zpowq g x) ^ ρ.val
+
+lemma zpowq_natCast (g : Γ) (hg : orderOf g = q) (n : ℕ) :
+    zpowq g (n : ZMod q) = g ^ n := by
+  unfold zpowq
+  rw [ZMod.val_natCast, ← hg, pow_mod_orderOf]
+
+/-- L'engagement s'écrit g^(s + x·ρ). -/
+lemma com_eq (g : Γ) (hg : orderOf g = q) (x s ρ : ZMod q) :
+    com g x s ρ = zpowq g (s + x * ρ) := by
+  have e : s + x * ρ = ((s.val + x.val * ρ.val : ℕ) : ZMod q) := by
+    push_cast; simp
+  rw [e, zpowq_natCast g hg]
+  unfold com zpowq
+  rw [← pow_mul, ← pow_add]
+
+/-- g^a = g^b dans ZMod q implique a = b (g d'ordre q). -/
+lemma zpowq_inj (g : Γ) (hg : orderOf g = q) {a b : ZMod q}
+    (h : zpowq g a = zpowq g b) : a = b := by
+  unfold zpowq at h
+  rw [pow_eq_pow_iff_modEq, hg] at h
+  apply ZMod.val_injective
+  exact Nat.ModEq.eq_of_lt_of_lt h (ZMod.val_lt a) (ZMod.val_lt b)
+
+/-- **Extraction du logarithme discret.** Deux ouvertures (s₀, ρ₀) ≠ (s₁, ρ₁) d'un même
+    engagement, avec s₀ ≠ s₁, donnent ρ₀ ≠ ρ₁ et x = (s₀ − s₁)/(ρ₁ − ρ₀). -/
+theorem pedersen_extract (g : Γ) (hg : orderOf g = q) {x s₀ ρ₀ s₁ ρ₁ : ZMod q}
+    (hcol : com g x s₀ ρ₀ = com g x s₁ ρ₁) (hs : s₀ ≠ s₁) :
+    ρ₀ ≠ ρ₁ ∧ x = (s₀ - s₁) / (ρ₁ - ρ₀) := by
+  rw [com_eq g hg, com_eq g hg] at hcol
+  have e := zpowq_inj g hg hcol
+  have hρ : ρ₀ ≠ ρ₁ := by
+    intro h; apply hs; rw [h] at e; linear_combination e
+  refine ⟨hρ, ?_⟩
+  have hd : ρ₁ - ρ₀ ≠ 0 := sub_ne_zero.mpr (Ne.symm hρ)
+  rw [eq_div_iff hd]
+  linear_combination -e
+
+variable {S M : Type*} [AddCommGroup M]
+
+/-- Une ouverture : message, graine, aléa de l'engagement. -/
+structure Opening (S M : Type*) (q : ℕ) where
+  m : M
+  s : S
+  ρ : ZMod q
+
+/-- Ouverture acceptée de la preuve (σ₁, σ₂) pour la graine dans ZMod q. -/
+def accepts (g : Γ) (x : ZMod q) (PRG : ZMod q → M) (σ₁ : M) (σ₂ : Γ)
+    (o : Opening (ZMod q) M q) : Prop :=
+  σ₁ = o.m + PRG o.s ∧ σ₂ = com g x o.s o.ρ
+
+/-- Victoire dans BIND-REL : deux ouvertures acceptées sur des messages distincts. -/
+def winsBIND (g : Γ) (x : ZMod q) (PRG : ZMod q → M) (σ₁ : M) (σ₂ : Γ)
+    (o₀ o₁ : Opening (ZMod q) M q) : Prop :=
+  accepts g x PRG σ₁ σ₂ o₀ ∧ accepts g x PRG σ₁ σ₂ o₁ ∧ o₀.m ≠ o₁.m
+
+/-- Le réducteur DLOG : il calcule (s₀ − s₁)/(ρ₁ − ρ₀) à partir des deux ouvertures. -/
+def extract (o₀ o₁ : Opening (ZMod q) M q) : ZMod q :=
+  (o₀.s - o₁.s) / (o₁.ρ - o₀.ρ)
+
+/-- **Théorème (réduction de la fiabilité de vérification de SOTP-Low au DLOG).**
+    Si A gagne BIND-REL, le réducteur rend exactement le logarithme discret x de h.
+    Les messages distincts forcent des graines distinctes, condition qui exige la
+    graine dans ZMod q. -/
+theorem bind_rel_gives_dlog (g : Γ) (hg : orderOf g = q) (x : ZMod q)
+    (PRG : ZMod q → M) (σ₁ : M) (σ₂ : Γ) (o₀ o₁ : Opening (ZMod q) M q)
+    (hw : winsBIND g x PRG σ₁ σ₂ o₀ o₁) : extract o₀ o₁ = x := by
+  obtain ⟨⟨h₀, c₀⟩, ⟨h₁, c₁⟩, hm⟩ := hw
+  have hs : o₀.s ≠ o₁.s := by
+    intro h; apply hm
+    have : o₀.m + PRG o₀.s = o₁.m + PRG o₁.s := h₀.symm.trans h₁
+    rw [h] at this; exact add_right_cancel this
+  exact ((pedersen_extract g hg (c₀.symm.trans c₁) hs).2).symm
+
+/-- **Corollaire probabiliste.** Pour tout adversaire A qui, sur h = g^x, rend une preuve
+    et deux ouvertures, la probabilité de victoire dans BIND-REL (x uniforme) est au plus
+    la probabilité de succès du réducteur contre DLOG : Win^BIND-REL(A) ≤ Adv^DLOG(B). -/
+theorem win_bind_le_dlog (g : Γ) (hg : orderOf g = q) (PRG : ZMod q → M)
+    (A : Γ → M × Γ × Opening (ZMod q) M q × Opening (ZMod q) M q)
+    [∀ x, Decidable (winsBIND g x PRG (A (zpowq g x)).1 (A (zpowq g x)).2.1
+      (A (zpowq g x)).2.2.1 (A (zpowq g x)).2.2.2)] :
+    avg (fun x : ZMod q => ind (winsBIND g x PRG (A (zpowq g x)).1 (A (zpowq g x)).2.1
+        (A (zpowq g x)).2.2.1 (A (zpowq g x)).2.2.2))
+      ≤ avg (fun x : ZMod q =>
+          ind (extract (A (zpowq g x)).2.2.1 (A (zpowq g x)).2.2.2 = x)) := by
+  apply avg_mono
+  intro x
+  unfold ind
+  split_ifs with h1 h2
+  · exact le_rfl
+  · exact absurd (bind_rel_gives_dlog g hg x PRG _ _ _ _ h1) h2
+  · norm_num
+  · exact le_rfl
+
+end DLog
+
+end GameBasedSOTP
+
+/-! ## Bloc de vérification -/
+
+#print axioms GameBasedSOTP.otp_uniform
+#print axioms GameBasedSOTP.ind_conf_eq_prg
+#print axioms GameBasedSOTP.ind_conf_perfect_otp
+#print axioms GameBasedSOTP.pedersen_extract
+#print axioms GameBasedSOTP.bind_rel_gives_dlog
+#print axioms GameBasedSOTP.win_bind_le_dlog
+```
+
+## A.10 Limitations and scope of the reductions
 
 *Purpose of this section.* List the five limitations of the game-based reductions, namely conditionality, the honest interpreter, the one-way reduction, the $1/q$ term and the relation with Lean4.
 
@@ -348,7 +653,7 @@ $$\mathsf{Conf}_{\mathrm{calc}} \cdot \mathsf{Rel}_{\mathrm{ver}} \cdot \mathsf{
    - **Lean4 (Annex `chap:annexe_lean4`)** mechanically certifies the algebraic derivation of the bound $\mathsf{Conf}\cdot\mathsf{Rel}_{\mathrm{rec}}\cdot\mathsf{Opp} \leq \Delta/\lambda + K/\lambda^2 + \varepsilon(\lambda)$ (Theorem `thm:conditional_CRO_trilemma`), taking Fano and Pinsker as properties of each instance and bounded extraction as an assumption
    - **Annex `chap:annexe_gamebased` (here)** establishes the cryptographic properties of the SOTP family (computational confidentiality, verification reliability) under PRG, DLOG and Groth16; it does not instantiate the assumptions of the Trilemma, which concern statistical $\mathsf{Conf}$ and $\mathsf{Rel}_{\mathrm{rec}}$
 
-   The two levels are thus complementary without composing into a single proof: the *formal* level certifies the logic of the derivation of the Trilemma, while the *game-based* level justifies the cryptographic guarantees of the constructions.
+   The two levels are thus complementary without composing into a single proof: the *formal* level certifies the logic of the derivation of the Trilemma, while the *game-based* level justifies the cryptographic guarantees of the constructions. Section A.9 starts mechanising this second level, in a reduced setting.
 
 ## Transcription notes
 
