@@ -813,8 +813,10 @@ informatif que si $\zeta_q D_{\max}$ est petit. Pour une preuve classique de
 $n$ bits encod\'ee dans $d_\Sigma = 2^n$ dimensions,
 $D_{\max} = \max_c\bigl(n - H(\Sigma|C=c)\bigr)$, qui vaut plusieurs milliers de bits pour les
 signatures NIST PQC (plus de $2{,}5\cdot10^4$ bits pour ML-DSA-65, dont la
-signature compte $3\,309$ octets). Pour ces sch\'emas, la confidentialit\'e
-s'\'etablit par le Lemme~\ref{lem:confidentiality_guarantee} appliqu\'e \`a l'issue classique. La version publi\'ee
+signature compte $3\,309$ octets). Pour ces sch\'emas, la confidentialit\'e se lit donc dans le
+cadre classique. Une signature sur un message public n'est pas $\beta$-r\'eguli\`ere
+(D\'efinition~\ref{def:beta_regularite}) et sa confidentialit\'e statistique est nulle
+(section~\ref{sec:etude_cas_dilithium}). La version publi\'ee
 posait $D_{\max} = \negl(\lambda)$ pour ces sch\'emas. La pr\'esente formulation
 pr\'ecise ce point.
 \end{remark}
