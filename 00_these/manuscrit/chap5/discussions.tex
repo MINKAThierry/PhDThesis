@@ -20,11 +20,11 @@ clos. Ils valent pour l'avancement de la cryptographie comme discipline, pour le
 praticiens qui con\c{c}oivent des syst\`emes et pour les probl\`emes ouverts
 qui restent non r\'esolus.
 
-L'analyse proc\`ede en onze temps. Elle examine d'abord ce que la
+L'analyse proc\`ede en douze temps. Elle examine d'abord ce que la
 formalisation a r\'ev\'el\'e sur le Trilemme~CRO
 (sous-section~\ref{subsec:ce_que_formalisation_revele}), puis positionne nos
 r\'esultats parmi les impossibilit\'es fondamentales en pr\'esentant la
-classification \'epist\'emologique des contributions
+classification \'epist\'emologique des r\'esultats
 (sous-section~\ref{subsec:positionnement_impossibilites}). Elle d\'etaille ensuite l'apport
 sp\'ecifique de l'extension post-quantique
 (sous-section~\ref{subsec:apport_extension_quantique}), d\'egage les quatre sch\'emas
@@ -35,21 +35,22 @@ la conception et la r\'eglementation (sous-section~\ref{subsec:implications_conc
 pr\'ec\`edent la situation de la contribution
 vis-\`a-vis des travaux existants (sous-section~\ref{subsec:positionnement_travaux}) ainsi qu'un bilan
 des limitations et probl\`emes ouverts
-(sous-section~\ref{subsec:limitations_problemes_ouverts}). Les trois derni\`eres sous-sections montrent comment la
+(sous-section~\ref{subsec:limitations_problemes_ouverts}). Les trois sous-sections suivantes montrent comment la
 famille SOTP transforme l'impossibilit\'e en guide
 (sous-section~\ref{subsec:portee_constructive}), tirent la le\c{c}on
 m\'ethodologique de la certification
 (sous-section~\ref{subsec:verification_corrige_lecon}) et clarifient le
 statut \'epist\'emique du programme exp\'erimental
-(sous-section~\ref{subsec:statut_protocoles_experimentaux}).
+(sous-section~\ref{subsec:statut_protocoles_experimentaux}). La derni\`ere rassemble les
+le\c{c}ons m\'ethodologiques transf\'erables (sous-section~\ref{subsec:lecons_methodologiques}).
 \end{sloppypar}
 
 \begin{boiteArbitre}
 L'arbitre dispose maintenant des faits. Il a des bornes prouv\'ees sous hypoth\`eses,
 des constructions dont les propri\'et\'es cryptographiques sont \'etablies mais
-dont l'opposabilit\'e reste heuristique ainsi qu'une formalisation qui a mis au jour
-des lacunes du raisonnement initial. Ce
-chapitre lui demande ce que tout cela \emph{signifie} pour la discipline
+dont l'opposabilit\'e reste heuristique ainsi qu'une formalisation qui a conduit \`a pr\'eciser
+trois \'enonc\'es publi\'es. Cette
+section lui demande ce que tout cela \emph{signifie} pour la discipline
 naissante, pour les praticiens qui choisissent des protocoles et pour les
 questions qui restent ouvertes. Une impossibilit\'e prouv\'ee constitue \`a ses yeux une
 forme nette de connaissance. Elle lui apprend ce qu'il ne pourra jamais obtenir
@@ -62,7 +63,7 @@ et pour quelle raison.
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 La v\'erification m\'ecanique du Trilemme~CRO dans Lean4 a produit,
-au-del\`a de la certification du c\oe ur alg\'ebrique, six r\'ev\'elations
+au-del\`a de la certification du c\oe ur alg\'ebrique et de la couche concr\`ete, six r\'ev\'elations
 \'epist\'emologiques que le raisonnement informel n'avait pas permis
 d'identifier.
 
@@ -157,18 +158,21 @@ est une instance qui v\'erifie les Hypoth\`eses 1, 2$'$ et 3 avec
 $\Delta = 0$ mais s'\'ecarte du r\'egime de confidentialit\'e
 ($I = \lambda/2 - 1$)~; elle pr\'esente $\Conf \cdot \Rel \cdot \Opp = 1/4$
 constant. Ces deux t\'emoins \'etablissent que les hypoth\`eses sont
-satisfiables et que le r\'egime est n\'ecessaire \`a la borne.
+satisfiables et que le r\'egime est n\'ecessaire \`a la borne. La couche concr\`ete fournit
+en outre une famille de vraies lois qui satisfait toutes les hypoth\`eses pour tout
+$\lambda$ (sous-section~\ref{subsec:lean4_concret}).
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre s'arr\^ete sur ce que la formalisation a fait appara\^itre, soit cinq
+L'arbitre s'arr\^ete sur ce que la formalisation a fait appara\^itre, soit six
 enseignements que la relecture des articles n'avait pas fait voir. Des propri\'et\'es
 informationnelles y deviennent des conditions v\'erifiables, une
 structure de preuve pr\'eserve la borne dominante et un
 fait \og \'evident \fg{} exige une d\'efinition pr\'ecise. S'y ajoutent des constantes que
 la notation $O(\cdot)$ cachait ainsi que des param\`etres institutionnels qui
 se r\'ev\`elent \^etre des constantes du th\'eor\`eme, distinctes de variables
-libres.
+libres. Deux t\'emoins montrent enfin que les hypoth\`eses sont satisfiables et que le
+r\'egime est n\'ecessaire.
 
 Il note que la v\'erification formelle a fait davantage que confirmer le
 r\'esultat. Elle l'a approfondi, ce qu'il tient pour un gain r\'eel.
@@ -262,7 +266,7 @@ CAP & C\,+\,A\,+\,P impossibles simultan\'ement
 Blockchain Trilemma & D\'ecentralisation + S\'ecurit\'e + Scalabilit\'e
   & Blockchain~\cite{Buterin2014,Abadi2012} \\
 \textbf{CRO classique} & $\Conf\cdot\Relrec\cdot\Opp \le \gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
-  & \textbf{$\Delta,\alpha,\beta$ institutionnels}~\cite{MINKA2026CRO} \\
+    & \textbf{$\Delta$, $\alpha$ institutionnels et r\'egime $\kappa/\lambda$}~\cite{MINKA2026CRO} \\
 \textbf{CRO post-quantique} &
   $\Conf^q\!\cdot\!\Relrec^q\!\cdot\!\Opp^q \le
    \gamma_q^{-1}(\Delta_q/\lambda + \kappa(\Delta_q+1)/\lambda^2 + \kappa^2/\lambda^3)$
@@ -905,14 +909,13 @@ fasse autant \`a un facteur constant pr\`es reste ouvert (Conjecture~\ref{conj:o
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre dresse l'inventaire de ce qui manque. Certains axiomes sont admis sans
-\^etre d\'eriv\'es, tandis que la couverture Lean4 ne retient de SOTP que les r\'eductions de SOTP-Low
+L'arbitre dresse l'inventaire de ce qui manque. Fano et Pinsker ne sont d\'emontr\'es que pour des lois finies, tandis que la couverture Lean4 ne retient de SOTP que les r\'eductions de SOTP-Low
 en situation r\'eduite et laisse de c\^ot\'e l'extension post-quantique. Six limitations m\'ethodologiques sont
 nomm\'ees sans d\'etour, parmi lesquelles les estimations analytiques, l'entropie non
 standardis\'ee, le r\'ealisme calculatoire, le bruit quantique simplifi\'e
 et la restriction aux preuves non interactives. Quatre limitations conceptuelles touchent
-aussi le mod\`ele lui-m\^eme. Ce sont le contexte statique, les verdicts d\'eterministes,
-la r\'egularit\'e suppos\'ee et la port\'ee du t\'emoin.
+aussi le mod\`ele lui-m\^eme. Ce sont le contexte statique, les verdicts d\'eterministes, la port\'ee du t\'emoin
+et la r\'egularit\'e, que seul le lemme de confidentialit\'e requiert.
 
 Il note que rien n'est dissimul\'e. Chaque limite est pos\'ee et chaque
 cons\'equence en est tir\'ee. Il y voit un dossier en cours d'instruction,
@@ -1112,8 +1115,9 @@ Cette clarification engage trois mani\`eres de lire ce qui pr\'ec\`ede.
 \textbf{Les bornes sont conditionnelles et leurs conditions sont
 \'enonc\'ees.} Le Trilemme CRO, classique comme post-quantique, ne dit rien
 en dehors du r\'egime o\`u il est \'etabli, lequel suppose l'extraction born\'ee, un verdict
-efficace, la r\'egularit\'e du protocole et le r\'egime de fuite
-$I(M;\Sigma|C) \leq \kappa/\lambda$. Ces conditions d\'elimitent le domaine de validit\'e du
+efficace et le r\'egime de fuite $I(M;\Sigma|C) \leq \kappa/\lambda$. Des quatre hypoth\`eses
+pos\'ees, la r\'egularit\'e du protocole n'intervient que dans la garantie de
+confidentialit\'e. Ces conditions d\'elimitent le domaine de validit\'e du
 r\'esultat. Un protocole plac\'e hors de ce domaine \'echappe \`a la
 borne. Lire le trilemme comme une interdiction absolue serait donc le
 mal lire. Sa validit\'e math\'ematique est \'etablie~; sa port\'ee
@@ -1138,7 +1142,8 @@ validation exp\'erimentale, que cette th\`ese ne revendique d'ailleurs pas.
 \textbf{La port\'ee du travail est donc quadruple.} Elle est
 th\'eorique par les m\'etriques et les bornes (C1--C3),
 constructive par les protocoles qui les illustrent (C4).
-Elle est aussi certifi\'ee par la v\'erification m\'ecanique de leur noyau (C5) et
+Elle est aussi certifi\'ee, jusqu'aux lois finies, par la v\'erification m\'ecanique de
+leur noyau alg\'ebrique (C5) et
 exp\'erimentale par le programme falsifiable qui les rend
 testables (C6). Cette quadruple port\'ee structure la conclusion
 g\'en\'erale.
@@ -1238,19 +1243,19 @@ en programme.
 \begin{table}[H]
 \centering
 \caption{Synth\`ese des r\'ev\'elations, implications, limitations et
-le\c{c}ons par contribution}
+le\c{c}ons par production}
 \label{tab:synthese_discussions}
 \begin{tabular}{@{}p{1.8cm}p{3cm}p{3cm}p{3.5cm}@{}}
 \toprule
-\textbf{Contrib.} & \textbf{R\'ev\'elation / R\'esultat}
+\textbf{Prod.} & \textbf{R\'ev\'elation / R\'esultat}
   & \textbf{Implication pratique} & \textbf{Travail futur} \\
 \midrule
 C1~: CLO & M\'etrique $\Opp$ in\'edite~\cite{MINKA2026CLO}
   & Quantification des compromis
   & \'Etudes contr\^ol\'ees \\
 C2~: Trilemme & Borne $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$~\cite{MINKA2026CRO}
-  & Guide conception classique
-  & Extension Lean4 \\
+    & Guide conception classique
+  & Borne aigu\"e en Lean4 \\
 C3~: PQ & Borne $\gamma_q^{-1}(\Delta_q/\lambda + \kappa(\Delta_q+1)/\lambda^2 + \kappa^2/\lambda^3)$~\cite{MINKA2026PQCRO};
   d\'ecomp. $\delta_{\text{enh}},\delta_{\text{degr}}$
   & Standards NIST~PQC

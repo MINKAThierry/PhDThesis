@@ -10,17 +10,18 @@
 \begin{sloppypar}
 
 Le cadre th\'eorique est maintenant pos\'e. Le chapitre~\ref{chap:contexte}
-avait mis en \'evidence le paradoxe de l'authenticit\'e invisible,
-formalis\'e les six objectifs de recherche et construit l'outillage
-th\'eorique n\'ecessaire. Les chapitres~\ref{chap:cadre_formel} et~\ref{chap:constructions} y avaient
+avait r\'euni l'outillage th\'eorique et mis en \'evidence le paradoxe de l'authenticit\'e
+invisible. Il en avait tir\'e la probl\'ematique centrale, ses deux questions de recherche,
+six objectifs et six productions. Les chapitres~\ref{chap:cadre_formel} et~\ref{chap:constructions} y avaient
 r\'epondu par les \'etapes F, B, E, S et C de la progression
 F$\to$B$\to$E$\to$S$\to$C$\to$X. Le cadre CLO mesure les compromis. Le Trilemme CRO
 classique en \'etablit les contraintes puis l'extension post-quantique les g\'en\'eralise
 aux syst\`emes r\'esistants au quantique. La famille SOTP fournit des constructions de
 r\'ef\'erence dont l'optimalit\'e reste une conjecture
 (Conjecture~\ref{conj:optimalite_universelle}). La formalisation Lean4 certifie le
-noyau alg\'ebrique. Le
-chapitre~\ref{chap:experimentation} a sp\'ecifi\'e l'\'etape X.
+trilemme classique, du noyau alg\'ebrique aux lois de probabilit\'e finies. Le
+chapitre~\ref{chap:experimentation} a sp\'ecifi\'e l'\'etape X, dont le programme n'a pas
+\'et\'e d\'eploy\'e.
 
 La question qui se pose d\'esormais est diff\'erente. Les outils
 th\'eoriques pr\'edisent-ils correctement le comportement des syst\`emes
@@ -41,9 +42,10 @@ illustratifs d\'epassent la borne. Le deuxi\`eme est la plausibilit\'e des
 capacit\'es institutionnelles retenues, $\Delta \in [35, 73]$~bits et
 $\Delta_q \in [25, 67]$~bits, au regard de la litt\'erature sur la
 rationalit\'e born\'ee. Le troisi\`eme est le bilan de la formalisation
-Lean4. Il comprend la compilation r\'eussie, l'hypoth\`ese de r\'egime \'etablie
-comme n\'ecessaire, la comparaison chiffr\'ee entre la formulation initiale de
-la borne et sa formulation certifi\'ee ainsi que la port\'ee exacte du t\'emoin de coh\'erence. Le quatri\`eme est l'expos\'e
+Lean4. Il comprend la compilation sans \texttt{sorry} du noyau alg\'ebrique et de la couche
+concr\`ete, l'hypoth\`ese de r\'egime \'etablie comme n\'ecessaire et le seuil $H^\sharp$
+certifi\'e dans les deux sens. Il pr\'ecise aussi que la forme publi\'ee de la borne est un
+corollaire de sa forme certifi\'ee et d\'elimite la port\'ee exacte des t\'emoins. Le quatri\`eme est l'expos\'e
 des limitations. La validation reste r\'etrospective et analytique en
 attendant le programme exp\'erimental prospectif.
 
@@ -55,9 +57,9 @@ $\Delta_q$ et $\eta_q$ aupr\`es d'acteurs institutionnels r\'eels
 dans des conditions contr\^ol\'ees, constitue le programme de recherche
 futur esquiss\'e \`a la section~\ref{sec:perspectives}.
 
-La section~\ref{sec:resultats_theoriques} confronte les pr\'edictions du
-cadre aux estimations analytiques et pr\'esente les r\'esultats formels de
-la formalisation Lean4. La section~\ref{sec:discussions} interpr\`ete
+La section~\ref{sec:resultats_theoriques} met le cadre en regard des
+estimations analytiques puis dresse le bilan des r\'esultats formels, formalisation
+Lean4 comprise. La section~\ref{sec:discussions} interpr\`ete
 ces r\'esultats, les positionne parmi les impossibilit\'es fondamentales
 connues, examine leurs implications pour la conception et la
 r\'eglementation, puis dresse le bilan des limitations et

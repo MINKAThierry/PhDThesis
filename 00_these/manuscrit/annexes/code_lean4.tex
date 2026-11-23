@@ -9,7 +9,7 @@
 \begin{sloppypar}
 Cette annexe pr\'esente le code Lean4 complet de la formalisation du
 Trilemme CRO conditionnel, dans sa version 3.4 (22 novembre 2026). Elle prend en compte les extensions de la
-sous-section~\ref{subsec:lean4_extensions} et ajoute une couche concr\`ete o\`u les in\'egalit\'es de Pinsker et de Fano sont d\'emontr\'ees pour de vraies lois finies (sous-section~\ref{subsec:lean4_concret}).
+sous-section~\ref{subsec:lean4_extensions}, seuil $H^\sharp$ compris. Elle ajoute une couche concr\`ete o\`u les in\'egalit\'es de Pinsker et de Fano sont d\'emontr\'ees pour de vraies lois finies (sous-section~\ref{subsec:lean4_concret}).
 
 \medskip
 \noindent\textbf{Caract\'eristiques du code.} Le fichier compile sans erreur
@@ -66,7 +66,7 @@ math\'ematique du Trilemme CRO.
 \item \textbf{Th\'eor\`eme principal} (forme asymptotique) et t\'emoins
       de coh\'erence et de port\'ee.
 \item \textbf{R\'egimes de capacit\'e institutionnelle} (classification indicative).
-\item \textbf{Extensions v2.2}, soit le verdict d\'eterministe et la forme raffin\'ee.
+\item \textbf{Extensions}, soit le verdict d\'eterministe et la forme raffin\'ee (version~2.2) puis le seuil $H^\sharp$ certifi\'e dans les deux sens (version~3.4).
 \item \textbf{Couche concr\`ete} (version~3.3) avec l'in\'egalit\'e log-somme, l'entropie binaire,
       Pinsker binaire et fini, l'information mutuelle, Fano fini, la structure
       \texttt{CLOModel}, les trilemmes \'enonc\'es sur de vraies lois avec $\gamma = \alpha H(C) - 1$
@@ -77,7 +77,7 @@ math\'ematique du Trilemme CRO.
 
 \medskip
 \noindent\textbf{T\'emoins de coh\'erence et de port\'ee.} Deux instances
-concr\`etes accompagnent le code pour en d\'emontrer la non-vacuit\'e et
+explicites du mod\`ele abstrait accompagnent le code pour en d\'emontrer la non-vacuit\'e et
 la n\'ecessit\'e des hypoth\`eses.
 \begin{itemize}
 \item \texttt{witnessInstance} est une instance du mod\`ele abstrait v\'erifiant toutes les

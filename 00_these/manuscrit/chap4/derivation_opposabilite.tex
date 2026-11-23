@@ -31,8 +31,8 @@ et leur statut est celui \'etabli \`a la
 section~\ref{subsubsec:statut_deploiement}.
 
 \begin{boiteArbitre}
-L'arbitre remonte \`a la source. Trois chiffres circulent depuis le d\'ebut de
-ce chapitre ($0{,}273$, $0{,}437$, $0{,}572$) et il veut savoir d'o\`u ils
+L'arbitre remonte \`a la source. Trois chiffres circulent depuis le premier
+chapitre ($0{,}273$, $0{,}437$, $0{,}572$) et il veut savoir d'o\`u ils
 sortent. On lui annonce d'embl\'ee qu'il s'agit de calculs, c'est-\`a-dire
 d'estimations analytiques, sans relev\'e aupr\`es de juges r\'eels. Il note cette
 distinction, qui tiendra pour tout ce qui suit.
@@ -431,17 +431,24 @@ quant \`a elle proche de~$1$ (infalsifiabilit\'e sous MLWE/MSIS)~:
 \Relver^q &\approx 0{,}98
 \label{eq:rel_q_dilithium}
 \end{align}
-La formulation initiale de cette \'etude retenait $\Conf^q \approx 0{,}95$, valeur
-difficile \`a concilier avec $\Conf \approx 0{,}31$ attribu\'ee \`a ECDSA dans le m\^eme usage. Cette
-derni\`ere valeur rel\`eve de l'\'echelle op\'erationnelle~; au sens statistique, ECDSA et ML-DSA-65
+Dans le m\^eme usage, ECDSA re\c{c}oit $\Conf \approx 0{,}31$. Cette
+valeur rel\`eve de l'\'echelle op\'erationnelle~; au sens statistique, ECDSA et ML-DSA-65
 ont tous deux une confidentialit\'e nulle (Remarque~\ref{rem:portee_cas_etude}).
+L'\'etude publi\'ee dans~\cite{MINKA2026PQCRO} retient pour sa part
+$\Conf^q \approx 1 - 2^{-192} \approx 1$, au sens calculatoire de l'infalsifiabilit\'e
+EUF-CMA. Elle obtient un produit voisin de $0{,}8$ face \`a une borne de $0{,}18$, calcul\'ee avec
+$\Delta_q = 35$ bits. Elle en d\'eduit par inversion une capacit\'e implicite d'environ $154$ bits.
+La th\`ese retient le sens statistique de la D\'efinition~\ref{def:confidentialite_clo}, seul sens
+dans lequel le Th\'eor\`eme~\ref{thm:trilemme_pq} est \'enonc\'e. L'infalsifiabilit\'e rel\`eve en
+effet de la fiabilit\'e de v\'erification et non de l'indistinguabilit\'e des messages. Les valeurs
+publi\'ees mesurent donc une autre notion et restent cit\'ees pour la tra\c{c}abilit\'e.
 
 \noindent\textbf{Lecture.} Avec $\Conf^q = 0$ au sens statistique, le produit
-CLO$^q$ est nul et la borne est trivialement respect\'ee. La formulation initiale
-calculait $0{,}95 \times 0{,}98 \times 0{,}76 \approx 0{,}71$ et le comparait \`a
-$(\Delta_q + \eta_q H(C))/\lambda \approx 0{,}147$ ($28/192 \approx 0{,}146$ pour $\eta_q = 0$)~:
+CLO$^q$ est nul et la borne est trivialement respect\'ee. L'\'etude publi\'ee~\cite{MINKA2026PQCRO}
+compare au contraire son produit, voisin de $0{,}8$, \`a sa borne de $0{,}18$. Avec les param\`etres
+retenus ici, la majoration vaut $(\Delta_q + \eta_q H(C))/\lambda = 28/192 \approx 0{,}146$ pour $\eta_q = 0$.
 \begin{equation}
-0{,}71 > 0{,}147.
+0{,}8 > 0{,}18.
 \label{eq:produit_dilithium}
 \end{equation}
 Ce d\'epassement s'explique comme pour les syst\`emes classiques. Dans ce sc\'enario,

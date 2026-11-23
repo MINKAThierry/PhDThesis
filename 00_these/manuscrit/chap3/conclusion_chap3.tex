@@ -22,14 +22,16 @@ n'apporte aucune information conditionnelle au sens de $\Opp$
 (Remarque~\ref{rem:statut_sotp}).
 
 La v\'erification Lean4 (section~\ref{sec:lean4}) a certifi\'e
-le noyau alg\'ebrique. Les in\'egalit\'es de Pinsker et de Fano y sont
+le noyau alg\'ebrique puis une couche concr\`ete sur lois finies. Les in\'egalit\'es de Pinsker et de Fano y sont
 int\'egr\'ees comme propri\'et\'es des instances de protocole, puis d\'emontr\'ees pour
 des lois finies dans la couche concr\`ete. Les hypoth\`eses
 institutionnelles y sont pr\'ecis\'ees~; la borne
 $\Delta/(\gamma\lambda) + O(\lambda^{-2})$ et sa forme raffin\'ee sont v\'erifi\'ees
-sans \texttt{sorry}. Deux t\'emoins formalisent la coh\'erence (une instance du
+sans \texttt{sorry}. Le seuil $H^\sharp$ est certifi\'e dans les deux sens. Deux t\'emoins
+formalisent la coh\'erence (une instance du
 mod\`ele abstrait atteint la borne rel\^ach\'ee) et la port\'ee (une instance hors
-r\'egime atteint $1/4$). Cette d\'emarche illustre la valeur
+r\'egime atteint $1/4$). Une famille de lois concr\`etes satisfait en outre toutes les
+hypoth\`eses pour tout $\lambda$. Cette d\'emarche illustre la valeur
 \'epist\'emique de la v\'erification formelle, qui certifie des \'enonc\'es et contraint aussi
 \`a \'enoncer ce qui \'etait rest\'e implicite. Elle a conduit \`a des formulations
 plus pr\'ecises de trois \'enonc\'es publi\'es (sous-section~\ref{subsec:lean4_erreurs}).

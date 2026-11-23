@@ -9,8 +9,8 @@
 \begin{sloppypar}
 La section~\ref{sec:sotp_construction} a pr\'esent\'e les constructions de r\'ef\'erence
 SOTP.
-Il reste cependant \`a savoir si les preuves th\'eoriques \'etablies dans les
-chapitres pr\'ec\'edents sont correctes. Cette question
+Il reste cependant \`a savoir si les preuves \'etablies au
+chapitre~\ref{chap:cadre_formel} sont correctes. Cet objectif
 \textbf{Obj~\ref{obj:obj5_verification}} motive l'\'etape ultime de notre progression
 m\'ethodologique.
 
@@ -19,9 +19,12 @@ l'assistant de preuve Lean4~\cite{Lean4,moura2015lean,Avigad2019}, constituant
 l'\'etape \textbf{C (Certifier)} du processus F$\to$B$\to$E$\to$S$\to$\textbf{C}$\to$X.
 Notre formalisation \'etablit la borne
 $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$
-et sa forme raffin\'ee. Elle fournit aussi deux t\'emoins de coh\'erence et de port\'ee, certifie
-les cons\'equences d'un verdict d\'eterministe et constitue une biblioth\`eque Lean4
-r\'eutilisable pour la cryptographie institutionnelle. Cette contribution \textbf{C5}
+et sa forme raffin\'ee, dont elle certifie le seuil $H^\sharp$ dans les deux sens. Elle
+d\'emontre Fano et Pinsker pour des lois de probabilit\'e finies et \'enonce le trilemme
+sur ces lois. Elle fournit aussi deux t\'emoins de coh\'erence et de port\'ee ainsi qu'une
+famille de lois t\'emoins. Elle certifie enfin les cons\'equences d'un verdict
+d\'eterministe et constitue une biblioth\`eque Lean4
+r\'eutilisable pour la cryptographie institutionnelle. Cette production \textbf{C5}
 a aussi conduit \`a des formulations plus pr\'ecises de plusieurs \'etapes des
 preuves publi\'ees, pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
 
@@ -34,10 +37,13 @@ critiques identifi\'es lors de l'analyse pr\'eliminaire
 (section~\ref{subsec:elements_formaliser}). Elles exposent enfin les d\'efis techniques
 de la formalisation (section~\ref{subsec:defis_formalisation}), le mod\`ele formel
 et l'axiomatisation (section~\ref{subsec:modele_formel_lean4}) ainsi que la preuve
-du c\oe ur alg\'ebrique (section~\ref{subsec:preuve_coeur_algebrique}). Les deux
-derni\`eres \'enoncent le th\'eor\`eme principal v\'erifi\'e
-(section~\ref{subsec:theoreme_principal_lean4}) puis appliquent la formalisation
-aux familles de protocoles canoniques
+du c\oe ur alg\'ebrique (section~\ref{subsec:preuve_coeur_algebrique}). Viennent
+ensuite le th\'eor\`eme principal v\'erifi\'e
+(section~\ref{subsec:theoreme_principal_lean4}), ses extensions au verdict d\'eterministe
+et \`a la forme raffin\'ee (section~\ref{subsec:lean4_extensions}) puis la couche concr\`ete
+sur lois finies (section~\ref{subsec:lean4_concret}). Les deux derni\`eres pr\'esentent ce
+que la formalisation a r\'ev\'el\'e (section~\ref{subsec:lean4_erreurs}) puis appliquent la
+formalisation aux familles de protocoles canoniques
 (section~\ref{subsec:application_familles_canoniques}).
 
 Le code source v\'erifi\'e est disponible en acc\`es ouvert (licence MIT,
@@ -60,12 +66,14 @@ la relecture qui se compl\`etent.
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 Cette sous-section pr\'ecise ce que couvre la formalisation Lean4 pr\'esent\'ee dans
-ce chapitre, ainsi que ses limitations explicites.
+cette section, ainsi que ses limitations explicites.
 
 \subsubsection{Ce que la formalisation couvre}
 \label{subsubsec:ce_que_couvre}
 
-Notre formalisation couvre le c\oe ur alg\'ebrique du Trilemme CRO conditionnel.
+Notre formalisation couvre le c\oe ur alg\'ebrique du Trilemme CRO conditionnel. Elle
+couvre aussi une couche concr\`ete o\`u Fano et Pinsker sont d\'emontr\'es pour des lois
+finies (sous-section~\ref{subsec:lean4_concret}).
 Nous d\'efinissons une structure \texttt{ProtocolFamily} index\'ee par le
 param\`etre de s\'ecurit\'e $\lambda$, avec des param\`etres institutionnels
 fixes $(\Delta, \alpha, \beta, H(C))$. Dans le noyau alg\'ebrique, nous
@@ -1035,7 +1043,14 @@ qui h\'eritait de la m\^eme structure. Le Lemme~6 et la borne sup\'erieure
 du Lemme~7 ont fait l'objet de formulations plus pr\'ecises. Pour le
 Lemme~6, la formalisation a conduit \`a examiner deux
 \'etats orthogonaux. Les Hypoth\`eses~\ref{ass:verdict_quantique} et~\ref{ass:regime_quantique} sont d\'esormais pos\'ees
-au lieu d'\^etre d\'eduites. Les formulations correspondantes
+au lieu d'\^etre d\'eduites. La preuve publi\'ee passait aussi par l'Hypoth\`ese~5
+de~\cite{MINKA2026PQCRO} (compatibilit\'e protocole-institution), par son Claim~1
+($\alpha_q H(C) \geq 1$) et par un facteur~$2$ absorb\'e dans $\tilde\Delta_q := 2\Delta_q$. La
+formulation pr\'ecis\'ee s'en passe. L'Hypoth\`ese~5 servait \`a l'optimisation de l'\'Etape~6, que
+le r\'egime pos\'e remplace. Sous ce r\'egime, le terme en $\Delta_q + 1$ est d'ordre $\lambda^{-2}$,
+ce qui supprime le facteur~$2$ (Th\'eor\`eme~\ref{thm:trilemme_pq}). La condition
+$\gamma_q \geq 1$ de l'Hypoth\`ese~\ref{ass:verdict_quantique} contient enfin le Claim~1, puisque
+$\gamma_q = \theta_q\alpha_q H(C) \leq \alpha_q H(C)$. Les formulations correspondantes
 sont document\'ees aux
 sections~\ref{subsec:enonce_preuve_pq} et~\ref{subsec:hypotheses_quantiques}.
 
@@ -1179,7 +1194,8 @@ admission tacite. S'y ajoute la preuve de n\'egligeabilit\'e, l\`a o\`u l'expos\
 informel \'ecrivait simplement \og n\'egligeable\fg. Comptent aussi le r\'egime de confidentialit\'e
 pos\'e comme condition du th\'eor\`eme ainsi que les constantes explicites
 ($\kappa(\Delta+1)$ et $\kappa^2$ au lieu d'un $O(\lambda^{-2})$ non chiffr\'e). La
-forme raffin\'ee compl\`ete l'ensemble en lui indiquant exactement quand sa capacit\'e
+forme raffin\'ee compl\`ete l'ensemble. Avec le seuil $H^\sharp$ certifi\'e dans les deux
+sens, elle lui indique exactement quand sa capacit\'e
 d'extraction devient la contrainte liante. La couche concr\`ete compl\`ete le tout en
 d\'emontrant Fano et Pinsker pour des lois finies. Le trilemme porte alors sur
 de vraies lois.

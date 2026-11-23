@@ -20,7 +20,7 @@ Nous formalisons d'abord, \`a la sous-section~\ref{subsec:paradoxe_authenticite}
 l'incompatibilit\'e structurelle entre paradigme cryptographique et
 paradigme institutionnel (\textbf{F}). La
 sous-section~\ref{subsec:objectifs_recherche} \'etablit ensuite les six
-objectifs de recherche (Obj~\ref{obj:obj1_unification}$\to$Obj~\ref{obj:obj2_impossibilite}$\to$Obj~\ref{obj:obj3_postquantique}$\to$Obj~\ref{obj:obj4_saturation}$\to$Obj~\ref{obj:obj5_verification}$\to$Obj~\ref{obj:obj6_experimentation}) ainsi que les contributions qui leur
+objectifs de recherche (Obj~\ref{obj:obj1_unification}$\to$Obj~\ref{obj:obj2_impossibilite}$\to$Obj~\ref{obj:obj3_postquantique}$\to$Obj~\ref{obj:obj4_saturation}$\to$Obj~\ref{obj:obj5_verification}$\to$Obj~\ref{obj:obj6_experimentation}) ainsi que les productions et les contributions qui leur
 correspondent. Il s'agit de borner les compromis classiques (\textbf{B}) puis
 d'\'etendre ces bornes aux contextes post-quantiques (\textbf{E}). Viennent
 ensuite l'approche des bornes par des constructions dont l'optimalit\'e
@@ -293,11 +293,11 @@ explique ce qu'une preuve certifie~?
 \end{boiteArbitre}
 
 % ----------------------------------------------------------------------------
-\subsection{Objectifs de recherche et contributions associ\'ees}
+\subsection{Objectifs de recherche, productions et contributions associ\'ees}
 \label{subsec:objectifs_recherche}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
-Les quatre implications pr\'eliminaires de la section~\ref{subsubsec:formulation_mathematique} engendrent six objectifs de recherche, qui d\'eclinent les deux questions Q1 et Q2. Elles sont pr\'esent\'ees ici dans l'ordre F$\to$B$\to$E$\to$S$\to$C.
+Les quatre implications pr\'eliminaires de la section~\ref{subsubsec:formulation_mathematique} engendrent six objectifs de recherche, qui d\'eclinent les deux questions Q1 et Q2. Ils sont pr\'esent\'es ici dans l'ordre F$\to$B$\to$E$\to$S$\to$C$\to$X, chacun avec sa production et ses contributions.
 
 \subsubsection{Unification th\'eorique, cadre CLO}
 \label{subsubsec:obj1_clo}
@@ -356,8 +356,9 @@ aux partitions r\'eseau~\cite{GilbertLynch02,ChandraHadzilacos96}.
 \paragraph{Production~C2, le Trilemme CRO conditionnel.}
 Nous \'etablissons une borne sup\'erieure sur le produit
 $\Conf \cdot \Rel \cdot \Opp$ en fonction des param\`etres institutionnels
-$\Delta$ (capacit\'e d'extraction), $\alpha$ (granularit\'e des verdicts),
-$\beta$ (r\'egularit\'e du protocole)~\cite{Tsybakov2009}, sous la forme
+$\Delta$ (capacit\'e d'extraction) et $\alpha$ (granularit\'e des verdicts), dans le
+r\'egime de confidentialit\'e de constante $\kappa$. La r\'egularit\'e $\beta$ du
+protocole~\cite{Tsybakov2009} garantit pour sa part la confidentialit\'e. La borne prend la forme
 \begin{equation}
 \label{eq:cro_bound_intro}
 \Conf \cdot \Rel \cdot \Opp \leq
@@ -371,6 +372,9 @@ pos\'ee, puisque $\gamma \geq 1$ (Remarque~\ref{rem:corollaire_publie}).
 Une forme raffin\'ee identifie le r\'egime, $H(\mathcal{C}) > (\Delta + 1 +
 \kappa/\lambda)/\alpha$, dans lequel la capacit\'e institutionnelle $\Delta$
 devient la contrainte liante \`a la place de la seule in\'egalit\'e de Fano. Une
+borne aigu\"e ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ et une loi explicite
+atteint le facteur institutionnel $\Delta/\gamma$ (Proposition~\ref{prop:borne_aigue},
+Remarque~\ref{rem:temoin_realisable}). Une
 calibration illustrative situe $\Delta$ dans quelques dizaines de bits,
 ordre de grandeur plausible au regard de la th\'eorie de la rationalit\'e
 born\'ee~\cite{Simon82,Kahneman11}.
@@ -486,8 +490,8 @@ Lorsque les r\'esultats engagent directement des enjeux soci\'etaux, comme la s\
 celui qu'offrent des preuves informelles~\cite{BartheEA2013,BhargavanEA2017}.
 
 \paragraph{Production~C5, la formalisation Lean4.}
-Le noyau alg\'ebrique du Trilemme~CRO est v\'erifi\'e m\'ecaniquement
-dans l'assistant de preuve Lean4~\cite{Lean4,moura2015lean} (version~4.35.0,
+Le Trilemme~CRO est v\'erifi\'e m\'ecaniquement, de son noyau alg\'ebrique jusqu'aux lois
+de probabilit\'e finies, dans l'assistant de preuve Lean4~\cite{Lean4,moura2015lean} (version~4.35.0,
 biblioth\`eque Mathlib~\cite{Mathlib} v4.35.0). La formalisation apporte
 les six contributions C5.1 \`a C5.6 recens\'ees ci-dessous. Elle fournit d'abord un mod\`ele formel de familles de protocoles,
 $\mathtt{ProtocolFamily}$, qui rend compte de la nature asymptotique du th\'eor\`eme.
@@ -496,8 +500,8 @@ et de Fano, pos\'ees comme propri\'et\'es des instances~\cite{AbadiRogaway00,Ban
 puis d\'emontre ces deux in\'egalit\'es pour des lois de probabilit\'e finies.
 Elle a aussi conduit \`a poser l'Hypoth\`ese de r\'egime $I(M;\Sigma|C) \leq \kappa/\lambda$
 et \`a pr\'eciser trois \'enonc\'es publi\'es. Elle certifie enfin la
-forme raffin\'ee, qui d\'elimite le r\'egime o\`u la capacit\'e institutionnelle
-est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'eductions game-based de SOTP-Low sont en outre m\'ecanis\'ees en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}).
+forme raffin\'ee et le seuil $H^\sharp$ dans les deux sens, ce qui d\'elimite le r\'egime
+o\`u la capacit\'e institutionnelle est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'eductions game-based de SOTP-Low sont en outre m\'ecanis\'ees en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}).
 
 \noindent\textit{Contributions.}
 \begin{itemize}
@@ -781,8 +785,8 @@ Il est surtout sensible \`a la coh\'erence du cycle, dans lequel chaque r\'epons
 la suivante. Les d\'efinitions permettent d'\'enoncer les bornes
 classiques, qui fournissent \`a leur tour leur cible aux constructions SOTP. L'optimalit\'e de ces
 constructions dans leur r\'egime reste une conjecture. La formalisation, elle, met au jour ce que
-les preuves papier laissaient dans l'ombre, soit une hypoth\`ese implicite
-et un \'ecart entre deux ordres de grandeur.
+les preuves papier laissaient dans l'ombre, soit deux hypoth\`eses rest\'ees implicites, l'efficacit\'e du verdict
+et le r\'egime de fuite.
 
 Reste \`a v\'erifier, au chapitre~\ref{chap:cadre_formel}, si les
 th\'eor\`emes tiennent ce que les questions promettent.

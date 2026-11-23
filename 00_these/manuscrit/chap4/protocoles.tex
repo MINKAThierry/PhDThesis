@@ -70,12 +70,16 @@ positivement en petit \'echantillon~; l'intervalle de confiance est obtenu par
 bootstrap non param\'etrique \emph{sur les participants}.
 
 \begin{remark}[Formulation initiale de l'estimateur]
-La formulation initiale de ce protocole proposait
+La formulation initiale de ce protocole, dans le protocole de mesure standardis\'e
+de~\cite{MINKA2026CRO}, proposait
 $\hat{\Delta} = I_{\mathrm{emp}}(V;\Sigma|C) - I_{\mathrm{vrai}}(M;\Sigma|C)$.
+L'\'equation~(155) de~\cite{MINKA2026PQCRO} en donne la version quantique, tronqu\'ee par
+$\max(0,\cdot)$.
 Cet estimateur prend des valeurs n\'egatives pour un protocole fiable
 ($I(M;\Sigma|C) \geq \Relrec\cdot\lambda - 1$ par Fano, alors que
 $I(V;\Sigma|C) \leq \log_2|\mathcal{V}_\lambda|$) et ne fournit qu'une borne
-inf\'erieure sur $\Delta$. La formulation retenue
+inf\'erieure sur $\Delta$. La troncature ne change pas ce constat, un minorant ramen\'e \`a z\'ero
+n'apportant pas davantage d'information. La formulation retenue
 est~\eqref{eq:estimateur_delta}.
 \end{remark}
 

@@ -12,7 +12,7 @@ Le corpus th\'eorique de la cryptographie institutionnelle est maintenant
 constitu\'e. Il r\'eunit des m\'etriques formalis\'ees (C1)~\cite{MINKA2026CLO}, une borne
 d'impossibilit\'e \'etablie (C2)~\cite{MINKA2026CRO}, une extension quantique
 d\'emontr\'ee (C3)~\cite{MINKA2026PQCRO}. S'y ajoutent des constructions de r\'ef\'erence aux propri\'et\'es
-cryptographiques prouv\'ees (C4) (section~\ref{sec:sotp_construction}), un noyau Lean4 certifi\'e (C5)
+cryptographiques prouv\'ees (C4) (section~\ref{sec:sotp_construction}), une formalisation Lean4 certifi\'ee du noyau alg\'ebrique aux lois finies (C5)
 (section~\ref{sec:lean4}) et un programme de validation sp\'ecifi\'e (C6)
 (chapitre~\ref{chap:experimentation}). Que faire de ces fondations~?
 Cette section y r\'epond en
@@ -48,7 +48,7 @@ et \`a \'etablir l'optimalit\'e des constructions SOTP. Il faudra aussi calibrer
 quantiques~$\Delta_q$ et~$\eta_q$ et \'etendre les constructions
 au calcul homomorphe et multi-parties. L'arbitre de demain
 aura besoin de protocoles que la cryptographie institutionnelle ne sait pas
-encore concevoir. Ce chapitre en trace la feuille de route.
+encore concevoir. Cette section en trace la feuille de route.
 \end{boiteArbitre}
 
 % -----------------------------------------------------------------------
@@ -432,10 +432,13 @@ pas r\'ealisable par un protocole, Remarque~\ref{rem:portee_temoin}). Le \emph{t
 les Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace} et~\ref{ass:regularite} mais s'\'ecarte du r\'egime de confidentialit\'e,
 atteignant $1/4$ constant. Ce r\'egime est donc n\'ecessaire
 \`a la borne (cas limite d\'etaill\'e \`a la
-sous-section~\ref{subsec:lean4_erreurs}).
+sous-section~\ref{subsec:lean4_erreurs}). Une famille de lois concr\`etes montre de plus
+que de vraies lois satisfont les hypoth\`eses pour tout $\lambda$
+(sous-section~\ref{subsec:lean4_concret}).
 
 \paragraph{Couverture du corpus et passage \`a l'\'echelle.}
-La formalisation couvre le noyau alg\'ebrique du th\'eor\`eme.
+La formalisation couvre le noyau alg\'ebrique du th\'eor\`eme, une couche concr\`ete sur
+lois finies et la m\'ecanisation r\'eduite des r\'eductions de SOTP-Low.
 L'extension aux constructions SOTP compl\`etes et aux r\'esultats
 post-quantiques constitue une direction de recherche future, estim\'ee \`a
 un investissement substantiel mais r\'ealiste pour une \'equipe d\'edi\'ee.
@@ -444,8 +447,9 @@ un investissement substantiel mais r\'ealiste pour une \'equipe d\'edi\'ee.
 \label{subsubsec:extension_lean4_sotp_pq}
 
 La formalisation Lean4 actuelle (annexe~\ref{chap:annexe_lean4}) couvre
-int\'egralement le noyau alg\'ebrique du Trilemme CRO
-classique, y compris les t\'emoins de coh\'erence et de port\'ee. Deux
+le noyau alg\'ebrique du Trilemme CRO classique, t\'emoins de coh\'erence et de port\'ee
+compris, ainsi que la couche concr\`ete sur lois finies. Outre la certification de la
+borne aigu\"e, deux
 extensions restent \`a d\'evelopper.
 
 \begin{itemize}
@@ -623,15 +627,15 @@ CASH soumises \`a standardisation.
 
 \begin{table}[htbp]
 \centering
-\caption{Synth\`ese des perspectives par contribution et horizon}
+\caption{Synth\`ese des perspectives par production et horizon}
 \label{tab:perspectives_horizons}
 \small
 \begin{tabular}{@{}p{2.5cm}p{3cm}p{3cm}p{3cm}@{}}
 \toprule
-\textbf{Contribution} & \textbf{Court terme} & \textbf{Moyen terme} & \textbf{Long terme} \\
+\textbf{Production} & \textbf{Court terme} & \textbf{Moyen terme} & \textbf{Long terme} \\
 \midrule
 C1 (CLO) & D\'eploiement du protocole (chap.~\ref{chap:experimentation}, non ex\'ecut\'e) & Outils ML d'estimation & Standards ISO/IEC \\
-C2 (CRO classique) & Extension Lean4 \`a SOTP et PQ & Extensions FHE/MPC & Caract\'erisation $\mathcal{R}$ \\
+C2 (CRO classique) & Certification Lean4 de la borne aigu\"e & Extensions FHE/MPC & Caract\'erisation $\mathcal{R}$ \\
 C3 (CRO post-quantique) & Mesure de $\Delta_q$ (ML-DSA, SLH-DSA) & Th\'eorie $\eta_q$ (options D, E) & PQC certifi\'e CLO \\
 C4 (SOTP) & Mod\`ele \`a contexte priv\'e (B2), R\'eduction SOTP$\to$ZK-NR & Preuve ou r\'efutation de la conjecture d'optimalit\'e & Th\'eorie unifi\'ee, impl\'ementations de r\'ef\'erence \\
 C5 (Lean4) & Extension couverture SOTP et PQ & Certification UC & V\'erificateur automatique, int\'egration Mathlib et Coq/Isabelle \\
@@ -675,8 +679,8 @@ programme longitudinal repr\'esente une direction de recherche \`a 3--5 ans.
 L'arbitre retient que le voyage ne s'arr\^ete pas ici. Les bornes existent
 sous hypoth\`eses, tandis que les constructions ont des propri\'et\'es prouv\'ees et une
 opposabilit\'e encore heuristique. La borne aigu\"e de terme dominant
-$O(\lambda^{-2})$ reste \`a certifier en Lean, de m\^eme que les extensions au calcul homomorphe
-et multi-parties. Les param\`etres quantiques
+$O(\lambda^{-2})$ reste \`a certifier en Lean, tandis que les extensions au calcul homomorphe
+et multi-parties restent \`a \'etablir. Les param\`etres quantiques
 $\Delta_q$ et $\eta_q$ restent quant \`a eux \`a calibrer sur des acteurs r\'eels. Ce qui a
 \'et\'e construit est prouv\'e l\`a o\`u il est dit prouv\'e et conjectur\'e l\`a o\`u il est dit conjectur\'e.
 Ce qui reste \`a construire est plus vaste encore, mais une carte existe d\'esormais pour s'y orienter.

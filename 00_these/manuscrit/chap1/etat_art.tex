@@ -9,7 +9,7 @@
 \begin{sloppypar}
 La cryptographie institutionnelle ne peut \^etre formalis\'ee qu'en r\'eunissant six corpus th\'eoriques d'ordinaire s\'epar\'es. Ce sont la th\'eorie de l'information classique~\cite{Shannon48,Shannon49,CoverThomas06}, la th\'eorie de l'information
 quantique~\cite{NielsenChuang2010,Wilde2017}, les primitives cryptographiques d'obscurcissement~\cite{Pedersen91,Groth16}, les
-d\'efinitions pr\'eliminaires du cadre CRO, les trilemmes d'impossibilit\'e~\cite{Arrow50,Brewer00,FLP85} ainsi que la v\'erification formelle~\cite{moura2015lean,Lean4,Coq,Isabelle}. Nous les parcourons ici dans le but de \emph{pr\'eparer des blocs directement utilisables}. Chaque section ne retient donc que les r\'esultats dont les sections~\ref{sec:clo}, \ref{sec:cro_classique},
+fondements cognitifs de la rationalit\'e born\'ee~\cite{Simon82,Miller56}, les trilemmes d'impossibilit\'e~\cite{Arrow50,Brewer00,FLP85} ainsi que la v\'erification formelle~\cite{moura2015lean,Lean4,Coq,Isabelle}. Nous les parcourons ici dans le but de \emph{pr\'eparer des blocs directement utilisables}. Chaque section ne retient donc que les r\'esultats dont les sections~\ref{sec:clo}, \ref{sec:cro_classique},
 \ref{sec:cro_pq}, \ref{sec:sotp_construction} et~\ref{sec:lean4}
 auront besoin, en indiquant le r\^ole exact qu'ils jouent dans la d\'emonstration.
 
@@ -35,11 +35,11 @@ l'\emph{opposabilit\'e} comme une propri\'et\'e de premi\`ere classe. En second 
 les trois m\'etriques ($\Conf$~\ref{def:confidentialite_clo}, $\Rel$~\ref{def:fiabilite_clo}, $\Opp$~\ref{def:opposabilite_clo}) seront d\'efinies ici dans
 leur formulation issue de la th\'eorie de l'information, qui autorise le raisonnement
 asymptotique. Leurs \'equivalents calculatoires, \'etablis au moyen de jeux de
-s\'ecurit\'e~\cite{GoldwasserMicali84,GMR88}, sont trait\'es \`a la section~\ref{sec:cro_classique}.
+s\'ecurit\'e~\cite{GoldwasserMicali84,GMR88}, sont trait\'es \`a la sous-sous-section~\ref{subsubsec:jeux_crypto}.
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre ne dispose pas encore d'un langage pour décrire ce qu'il vit. Ce chapitre
+L'arbitre ne dispose pas encore d'un langage pour décrire ce qu'il vit. Cette section
 lui en fournit les éléments. L'entropie mesure ce qu'une preuve révèle et
 l'inégalité de Fano borne ce qu'un interprète peut
 récupérer d'un signal bruité. Les trilemmes CAP et FLP lui montrent que son incapacité s'apparente à
@@ -795,13 +795,14 @@ retenue le pose comme hypoth\`ese.
 
 \item \textbf{Formulations alternatives.} La formalisation a conduit \`a des
 formulations plus pr\'ecises de trois \'enonc\'es publi\'es
-(section~\ref{subsec:lean4_erreurs}). La forme raffin\'ee du trilemme, qui
-d\'elimite le r\'egime o\`u la capacit\'e institutionnelle est contraignante, a
-\'egalement \'et\'e certifi\'ee.
+(section~\ref{subsec:lean4_erreurs}). La forme raffin\'ee du trilemme et le seuil $H^\sharp$, qui
+d\'elimitent le r\'egime o\`u la capacit\'e institutionnelle est contraignante, ont
+\'egalement \'et\'e certifi\'es.
 
 \item \textbf{S\'eparation explicite.} La formalisation s\'epare le noyau alg\'ebrique
-v\'erifi\'e des propri\'et\'es pos\'ees (Fano, Pinsker, hypoth\`eses institutionnelles),
-clarifiant le statut \'epist\'emique de chaque composant~\cite{Zellagui2018}.
+v\'erifi\'e des propri\'et\'es pos\'ees (Fano, Pinsker, hypoth\`eses institutionnelles).
+Sa couche concr\`ete d\'emontre ensuite Fano et Pinsker pour des lois finies, ce qui
+clarifie le statut \'epist\'emique de chaque composant~\cite{Zellagui2018}.
 \end{enumerate}
 \end{sloppypar}
 
@@ -811,7 +812,7 @@ clarifiant le statut \'epist\'emique de chaque composant~\cite{Zellagui2018}.
 % ----------------------------------------------------------------------------
 
 \begin{boiteArbitre}
-L'arbitre referme le dossier. Ce seul chapitre lui a fait traverser six corpus
+L'arbitre referme le dossier. Cette seule section lui a fait traverser six corpus
 (th\'eorie de l'information, m\'ecanique quantique, primitives cryptographiques,
 sciences cognitives, trilemmes d'impossibilit\'e, v\'erification formelle),
 ce qui lui a d'abord paru beaucoup. Il comprend maintenant que chaque pi\`ece \'etait n\'ecessaire.
@@ -833,7 +834,7 @@ m\'ecanique du Trilemme CRO. L'in\'egalit\'e de Pinsker relie la confidentialit\
 d'erreur, tandis que la DPI garantit que le verdict n'invente pas d'information.
 
 Le r\^ole de Lean4 l'\'etonne davantage. Outre la certification, la formalisation
-a contraint \`a poser une hypoth\`ese et \`a pr\'eciser plusieurs \'enonc\'es. L'arbitre
+a contraint \`a poser l'hypoth\`ese de r\'egime et \`a pr\'eciser trois \'enonc\'es publi\'es. L'arbitre
 ne s'attendait pas \`a voir la rigueur formelle servir d'instrument de d\'ecouverte.
 
 Il tourne la page. Six objectifs de recherche l'attendent (Obj~\ref{obj:obj1_unification},~Obj~\ref{obj:obj2_impossibilite},~Obj~\ref{obj:obj3_postquantique},~Obj~\ref{obj:obj4_saturation},~Obj~\ref{obj:obj5_verification} et~Obj~\ref{obj:obj6_experimentation}). Il veut savoir

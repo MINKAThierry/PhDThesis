@@ -25,9 +25,10 @@ math\'ematique rigoureuse de la cryptographie institutionnelle.
 L'Objectif~\ref{obj:obj1_unification} demande comment \'etablir un cadre unifi\'e
 formalisant confidentialit\'e, fiabilit\'e et opposabilit\'e par des mesures
 issues de la th\'eorie de l'information, qui autorisent des analyses quantitatives et des
-comparaisons objectives. La r\'eponse tient en cinq \'etapes. Elles portent successivement sur le
-mod\`ele de protocole, les d\'efinitions des m\'etriques, leurs propri\'et\'es,
-le paradigme de conception et une construction prototype.
+comparaisons objectives. La r\'eponse tient en quatre \'etapes. Elles portent successivement sur le
+mod\`ele de protocole, les d\'efinitions des m\'etriques, leurs propri\'et\'es
+fondamentales et leur extension quantique. Le paradigme de conception et la
+construction prototype sont pr\'esent\'es \`a la section~\ref{sec:sotp_base}.
 
 Notre apport conceptuel central est l'opposabilit\'e $\Opp$. La
 litt\'erature cryptographique classique traite
@@ -35,7 +36,7 @@ l'interpr\'etabilit\'e institutionnelle comme contrainte externe~\cite{GMR85,Gol
 \'educative des utilisateurs~\cite{Whitten99,Adams1999,Herley09}. Le cadre CLO en fait une dimension \`a
 optimiser au m\^eme titre que $\Conf$ et $\Rel$.
 
-Cette section correspond \`a l'\'etape \textbf{F (Formaliser)} de la progression \textbf{F}$\to$B$\to$E$\to$S$\to$C$\to$X et apporte la contribution \textbf{C1} de cette th\`ese.
+Cette section correspond \`a l'\'etape \textbf{F (Formaliser)} de la progression \textbf{F}$\to$B$\to$E$\to$S$\to$C$\to$X et apporte la production \textbf{C1} de cette th\`ese.
 \end{sloppypar}
 
 \begin{boiteArbitre}
@@ -331,6 +332,13 @@ illimit\'e ne peut alors distinguer~\cite{Wyner75,WynerZiv76}. \`A l'oppos\'e, $
 de messages $m_0, m_1$ et d'un contexte $c$ pour lesquels les supports
 sont disjoints. Un observateur passif acquiert alors une certitude.
 Le r\'egime pratique est interm\'ediaire.
+
+La D\'efinition~2 de~\cite{MINKA2026CLO} comparait les lois de la preuve apr\`es
+marginalisation du contexte. La th\`ese conditionne au contexte et retient le pire, car
+l'institution et l'adversaire connaissent $C$ et toutes les grandeurs du trilemme sont
+conditionn\'ees \`a $C$. Lorsque $M$ est ind\'ependant de $C$, la convexit\'e de la variation
+totale rend cette forme plus exigeante. La confidentialit\'e de~\cite{MINKA2026CLO} majore
+alors celle de la D\'efinition~\ref{def:confidentialite_clo}.
 
 Du point de vue des jeux de s\'ecurit\'e, notre d\'efinition majore l'avantage
 de tout distingueur dans IND-CPA~\cite{GoldwasserMicali84,Bellare97}. Avec
@@ -759,10 +767,15 @@ fix\'e. Aucune r\`egle g\'en\'erale ne vaut pour la composition parall\`ele.
 L'information mutuelle n'est ni sous- ni sur-additive en g\'en\'eral. Les
 r\`egles de~\cite{MINKA2026CLO} ($\Opp \geq \min$ en s\'equentiel,
 $\Opp \approx$ produit en parall\`ele) sont des heuristiques qui ne sont pas
-reprises ici. La formulation initiale de ce th\'eor\`eme dans~\cite{MINKA2026CLO}
-(minoration par le produit au moyen de l'in\'egalit\'e de Fr\'echet, $\Conf \geq \max$
-en parall\`ele) est remplac\'ee ici par une formulation plus pr\'ecise,
-l'in\'egalit\'e de Fr\'echet donnant $ab \geq a+b-1$.
+reprises ici. La formulation initiale de ce th\'eor\`eme dans~\cite{MINKA2026CLO} minorait en s\'equentiel
+$\Conf$ par le produit $\Conf(\mathcal{P}_1)\Conf(\mathcal{P}_2)$. Elle posait en parall\`ele
+l'\'egalit\'e $\Conf = \min\{\Conf(\mathcal{P}_1), \Conf(\mathcal{P}_2)\}$. Elle est remplac\'ee
+ici par une formulation plus pr\'ecise. En s\'equentiel, la preuve publi\'ee obtient le minorant
+$\Conf(\mathcal{P}_1)+\Conf(\mathcal{P}_2)-1$, qui n'entra\^ine pas le produit puisque
+l'in\'egalit\'e de Fr\'echet donne $ab \geq a+b-1$. La th\`ese \'etablit \`a la
+place~\eqref{eq:comp_seq_conf}. En parall\`ele, l'argument de marginalisation
+de~\cite{MINKA2026CLO} \'etablit la majoration~\eqref{eq:comp_par_conf}, que la th\`ese
+conserve sans l'\'egalit\'e.
 \end{remark}
 
 \begin{Preuve}[Remarque~\ref{rem:composition_opp}]
@@ -1099,8 +1112,8 @@ Ces extensions seront formalis\'ees et exploit\'ees \`a la section~\ref{sec:cro_
 L'arbitre referme le dossier CLO et ach\`eve ainsi l'\'etape \textbf{F}. Cette section lui a donn\'e un
 langage pour mesurer ce qu'il vit, qu'aucun corpus pr\'ec\'edent ne lui avait fourni.
 
-Il retient trois contributions, dans l'ordre o\`u elles se sont
-construites. Le mod\`ele de protocole d'abord (deux couches et deux questions
+Il retient trois acquis, dans l'ordre o\`u ils se sont
+construits. Le mod\`ele de protocole d'abord (deux couches et deux questions
 distinctes, portant sur la validit\'e de la preuve puis sur ce qu'elle signifie pour lui).
 Les trois m\'etriques ensuite ($\Conf$, $\Rel$, $\Opp$), dont la derni\`ere
 le concerne directement. Il sait d\'esormais qu'elle

@@ -147,14 +147,15 @@
     sur lequel il s'appuie, qui couvre la th\'eorie de l'information classique
     et quantique, la cryptographie et les primitives d'obscurcissement, les
     trilemmes d'impossibilit\'e, les standards post-quantiques du NIST ainsi que
-    les sciences cognitives. Il formule ensuite les six objectifs de recherche
-    qui structurent la progression canonique de la th\`ese. Il met enfin en
+    les sciences cognitives. Il met ensuite en
     \'evidence le paradoxe de l'authenticit\'e invisible, selon lequel les
     protocoles cryptographiques les plus s\^urs, ceux qui maximisent la
     confidentialit\'e, induisent une opacit\'e institutionnelle s\'ev\`ere, alors
     que les protocoles transparents sacrifient la confidentialit\'e. Ce paradoxe,
-    qui traverse l'ensemble de la contribution, motive l'introduction de la
-    m\'etrique d'opposabilit\'e et structure la probl\'ematique centrale de la th\`ese.%
+    qui traverse l'ensemble de la th\`ese, motive l'introduction de la
+    m\'etrique d'opposabilit\'e et fonde la probl\'ematique centrale. Le chapitre d\'ecline enfin
+    cette probl\'ematique en deux questions de recherche, six objectifs et six productions, qui
+    suivent la progression canonique F$\to$B$\to$E$\to$S$\to$C$\to$X.%
   }%
   {%
     cryptographie institutionnelle, opposabilit\'e juridique, paradoxe de
@@ -182,12 +183,15 @@
     Le cadre CLO y est d'abord d\'evelopp\'e afin de formaliser les trois
     dimensions concurrentes de la cryptographie institutionnelle que sont la
     confidentialit\'e, la fiabilit\'e et l'opposabilit\'e. Vient ensuite le
-    Trilemme CRO conditionnel classique. Sous quatre hypoth\`eses explicites
-    portant sur les limites de l'institution, il borne le produit des trois
-    m\'etriques par une quantit\'e dont le terme dominant est le rapport entre
-    la capacit\'e institutionnelle et le param\`etre de s\'ecurit\'e, pond\'er\'e par
-    la richesse des verdicts. Sa forme raffin\'ee identifie le r\'egime
-    o\`u cette capacit\'e est la contrainte liante. Le chapitre \'etend enfin ce
+    Trilemme CRO conditionnel classique. Le chapitre pose quatre hypoth\`eses explicites
+    sur les limites de l'institution. Sous trois d'entre elles, l'extraction born\'ee, le
+    verdict efficace et le r\'egime de confidentialit\'e, il borne le produit des trois
+    m\'etriques. Le terme dominant de cette borne est le rapport entre la capacit\'e
+    institutionnelle et le param\`etre de s\'ecurit\'e, pond\'er\'e par la richesse des
+    verdicts. La quatri\`eme, la r\'egularit\'e du protocole, garantit la confidentialit\'e.
+    La forme raffin\'ee identifie le r\'egime o\`u cette capacit\'e est la contrainte liante.
+    Une borne aigu\"e ram\`ene ensuite le terme dominant \`a l'ordre $\lambda^{-2}$ et un
+    t\'emoin r\'ealisable atteint le facteur institutionnel $\Delta/\gamma$. Le chapitre \'etend enfin ce
     r\'esultat au r\'egime post-quantique. La borne y garde la m\^eme structure,
     tandis qu'une perte d'interpr\'etabilit\'e $\eta_q$, nulle pour les preuves
     classiques, intervient dans le sc\'enario d'un support quantique.%
@@ -218,10 +222,11 @@
     SOTP. Les trois variantes de cette famille, deux en contexte rare et une en contexte riche,
     ont des propri\'et\'es de confidentialit\'e et de fiabilit\'e de v\'erification
     prouv\'ees, alors que leur opposabilit\'e est guid\'ee par une heuristique de conception.
-    Leur optimalit\'e universelle est formul\'ee comme conjecture. Il soumet enfin le noyau alg\'ebrique du
-    trilemme \`a l'assistant de preuve Lean4, d\'emarche qui conduit \`a
-    expliciter les hypoth\`eses de la preuve, \`a en donner les constantes, \`a en
-    caract\'eriser le r\'egime de validit\'e et \`a pr\'eciser trois \'enonc\'es publi\'es.%
+    Leur optimalit\'e universelle est formul\'ee comme conjecture. Il soumet enfin le
+    trilemme \`a l'assistant de preuve Lean4, du noyau alg\'ebrique aux lois de probabilit\'e
+    finies. Cette d\'emarche conduit \`a expliciter les hypoth\`eses de la preuve, \`a en donner
+    les constantes, \`a en caract\'eriser le r\'egime de validit\'e, \`a certifier le seuil
+    $H^\sharp$ et \`a pr\'eciser trois \'enonc\'es publi\'es.%
   }%
   {%
     famille SOTP, heuristique de conception, conjecture d'optimalit\'e,
@@ -281,7 +286,7 @@
   {R\'esultats, discussions et perspectives}%
   {%
     Ce chapitre pr\'esente le bilan et l'interpr\'etation des
-    contributions. Il r\'esume d'abord la calibration illustrative sur des
+    six productions de la th\`ese. Il r\'esume d'abord la calibration illustrative sur des
     syst\`emes d\'eploy\'es, classiques et post-quantiques, qui ne sont pas des
     instances du th\'eor\`eme. Il dresse ensuite le bilan formel du corpus,
     dans lequel les r\'esultats sont class\'es selon les actes du cycle canonique et selon
@@ -327,6 +332,10 @@
 % ANNEXES
 % =============================================================================
 \appendix
+% Num\'erotation des flottants et \'equations par annexe (A.x, B.x, C.x)
+\renewcommand{\thetable}{\thechapter.\arabic{table}}%
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}%
+\renewcommand{\theequation}{\thechapter.\arabic{equation}}%
 \addtocontents{toc}{\protect\etocsettocdepth{chapter}}
 \entreePartie{ANNEXES}     
 \debutAnnexes

@@ -8,7 +8,7 @@
 \label{sec:resultats_theoriques}
 % ============================================================================
 \begin{sloppypar}
-Deux questions distinctes structurent cette section. La premi\`ere, quantitative, demande si les ordres de grandeur retenus pour des syst\`emes d\'eploy\'es,
+Deux interrogations distinctes structurent cette section. La premi\`ere, quantitative, demande si les ordres de grandeur retenus pour des syst\`emes d\'eploy\'es,
 classiques et post-quantiques, sont coh\'erents entre eux et avec le cadre
 CLO-CRO-PQ-SOTP. La seconde, formelle, porte sur les r\'esultats math\'ematiques
 effectivement \'etablis et sur la hi\'erarchie de certitude qui les ordonne.
@@ -19,7 +19,7 @@ distinctes.
 \begin{boiteArbitre}
 L'arbitre arrive \`a un moment charni\`ere. Jusqu'ici, on lui a donn\'e un
 cadre, des hypoth\`eses et des d\'emonstrations~; on lui demande maintenant de
-v\'erifier. Deux questions ind\'ependantes lui sont soumises. La
+v\'erifier. Deux interrogations ind\'ependantes lui sont soumises. La
 premi\`ere porte sur la coh\'erence mutuelle des chiffres retenus pour les syst\`emes r\'eels,
 la seconde sur ce qui a \'et\'e
 math\'ematiquement \'etabli et sur le degr\'e de certitude qui s'y attache. Il note qu'on
@@ -212,7 +212,7 @@ tableau~\ref{tab:criteres_refutation}.
 \small
 \begin{tabular}{@{}p{5cm}p{3.5cm}p{2.5cm}@{}}
 \toprule
-\textbf{Grandeur} & \textbf{Valeur attendue} & \textbf{Contribution} \\
+\textbf{Grandeur} & \textbf{Valeur attendue} & \textbf{Production} \\
 \midrule
 \multicolumn{3}{c}{\textit{Classique (C2)}} \\
 \midrule
@@ -252,7 +252,7 @@ th\'eor\`eme. Il y a aussi trouv\'e des crit\`eres de r\'efutation fix\'es \`a l
 Sans constituer une preuve ni m\^eme un signe fort, ce dossier est d\'esormais pr\^et \`a
 \^etre test\'e.
 
-La seconde question l'attend maintenant. Qu'a-t-on
+La seconde interrogation l'attend maintenant. Qu'a-t-on
 formellement \'etabli~?
 \end{boiteArbitre}
 
@@ -309,8 +309,8 @@ central. Dans sa forme explicite, avec $\gamma = \alpha H(C) - 1 \geq 1$ :
 \end{equation}
 et, sous la d\'efinition admissible de l'interpr\`ete
 (D\'efinition~\ref{def:interp_admissible}), la forme raffin\'ee
-\eqref{eq:trilemme_cro_raffine}, qui rend compte du r\'egime \og rare\fg{} o\`u Fano
-limite l'opposabilit\'e et du r\'egime \og riche\fg{} o\`u $\Delta$ la limite
+\eqref{eq:trilemme_cro_raffine}, qui rend compte du r\'egime \og rare\fg{} o\`u la seule in\'egalit\'e de Fano
+borne le produit et du r\'egime \og riche\fg{} o\`u $\Delta$ est la contrainte liante
 (Remarque~\ref{rem:activite_delta}).
 Comme $\gamma \geq 1$, on obtient la forme simplifi\'ee
 \begin{equation}
@@ -330,6 +330,13 @@ v\'erifi\'ee m\'ecaniquement dans l'annexe~\ref{chap:annexe_lean4}. La borne
 publi\'ee $\Delta/\lambda + O(\lambda^{-2}) + \negl(\lambda)$ s'en d\'eduit comme
 corollaire sous l'Hypoth\`ese~\ref{ass:regime} pos\'ee (Remarque~\ref{rem:corollaire_publie}).
 \end{remark}
+
+La \textbf{borne aigu\"e} (Proposition~\ref{prop:borne_aigue}) compl\`ete ce th\'eor\`eme
+sans le remplacer. Son terme dominant est d'ordre $\kappa/\lambda^2$, ordre qui ne peut
+pas \^etre am\'elior\'e, avec le m\^eme facteur institutionnel
+(Remarque~\ref{rem:borne_aigue_portee}). Une loi explicite atteint ce facteur, avec
+$\Opp = \Delta/\gamma$ \`a confidentialit\'e parfaite (Remarque~\ref{rem:temoin_realisable}).
+Ces compl\'ements sont d\'emontr\'es sur papier et ne sont pas encore certifi\'es en Lean.
 
 \subsubsection{Les th\'eor\`emes du Trilemme CRO post-quantique (\'etape E)}
 \label{subsubsec:resultats_etape_E}
@@ -390,12 +397,13 @@ de v\'erification (Remarque~\ref{rem:statut_optimalite}).
 \subsubsection{La formalisation Lean4 (\'etape C)}
 \label{subsubsec:resultats_etape_C}
 
-Nous v\'erifions m\'ecaniquement le noyau alg\'ebrique du Trilemme
-CRO~(section~\ref{sec:lean4}).
+Nous v\'erifions m\'ecaniquement le Trilemme CRO classique, du noyau alg\'ebrique aux
+lois de probabilit\'e finies~(section~\ref{sec:lean4}).
 
-La formalisation Lean4 couvre l'int\'egralit\'e du noyau alg\'ebrique du
-Trilemme, organis\'e en dix sections, suivies d'un bloc de v\'erification des axiomes
-qui forme la onzi\`eme section du code (annexe~\ref{chap:annexe_lean4})~:
+Le code Lean4, dans sa version~3.4, est organis\'e en dix sections, neuf pour le noyau
+alg\'ebrique et une pour la couche concr\`ete. Un bloc de v\'erification des axiomes en
+forme la onzi\`eme (annexe~\ref{chap:annexe_lean4}). Ces sections couvrent les
+\'el\'ements suivants.
 \begin{itemize}
     \item La constante de Pinsker $c_0 = 1/(2\ln 2)$ et ses propri\'et\'es
     \item La n\'egligeabilit\'e de $2^{-\lambda}$, obtenue avec les outils de Mathlib
@@ -420,24 +428,26 @@ La formalisation \'etablit la borne
 \Conf \cdot \Relrec \cdot \Opp \leq \frac{\Delta}{\lambda}
 + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3} + \varepsilon(\lambda)
 \end{equation}
-enti\`erement v\'erifi\'ee sans \texttt{sorry} ni axiome d\'eclar\'e (seuls les
-axiomes standard \texttt{propext}, \texttt{Classical.choice} et
-\texttt{Quot.sound} apparaissent). Fano et Pinsker, absents de Mathlib, sont
+enti\`erement v\'erifi\'ee sans \texttt{sorry} ni axiome d\'eclar\'e. Les vingt
+\texttt{\#print axioms} du bloc final n'affichent que les axiomes standard
+\texttt{propext}, \texttt{Classical.choice} et \texttt{Quot.sound}. Fano et Pinsker, absents de Mathlib, sont
 pos\'es comme propri\'et\'es des instances dans le noyau alg\'ebrique et d\'emontr\'es
 pour des lois de probabilit\'e finies dans la couche concr\`ete. L'extraction born\'ee et
 le r\'egime de confidentialit\'e sont des hypoth\`eses du th\'eor\`eme. La
 certification porte donc sur la d\'erivation~; les pr\'emisses restent des hypoth\`eses.
 
 Le p\'erim\`etre couvert garantit la correction du noyau alg\'ebrique
-central. Les constructions SOTP compl\`etes et l'extension post-quantique
-constituent des directions de recherche future. Les reformulations impos\'ees par Lean4 sont rassembl\'ees \`a la
+central et son application \`a de vraies lois finies. La borne aigu\"e, les constructions
+SOTP compl\`etes et l'extension post-quantique restent \`a certifier. Les reformulations impos\'ees par Lean4 sont rassembl\'ees \`a la
 sous-section~\ref{subsec:lean4_erreurs}.
 
 \subsubsection{Coh\'erence et port\'ee du th\'eor\`eme v\'erifi\'e}
 \label{subsubsec:coherence_portee}
 
 La formalisation Lean4 produit deux t\'emoins qui d\'emontrent la
-non-vacuit\'e et la n\'ecessit\'e des hypoth\`eses du th\'eor\`eme.
+non-vacuit\'e et la n\'ecessit\'e des hypoth\`eses du th\'eor\`eme. La couche concr\`ete y
+ajoute une famille de lois qui satisfait toutes les hypoth\`eses pour tout $\lambda$
+(sous-section~\ref{subsec:lean4_concret}).
 
 \paragraph{T\'emoin de coh\'erence}
 
@@ -483,18 +493,21 @@ formels class\'es selon leur niveau de certitude.
 \textbf{Statut de v\'erification} & \textbf{Couvert. Lean4} \\
 \midrule
 Trilemme (forme raffin\'ee), Lemme~\ref{lem:confidentiality_guarantee}
-  & Prouv\'es sous Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regime} 
-  & 2 & Preuves papier 
+    & Prouv\'es sous Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regime} (trois d'entre elles pour la borne, la r\'egularit\'e pour le lemme)
+  & 2 & Preuves papier  
   & \textbf{Oui} (noyau, annexe~\ref{chap:annexe_lean4}) \\
 Proposition~\ref{prop:fondement_extraction}
   & Prouv\'ee (r\`egle de cha\^ine et DPI)
   & 1 & Preuve papier & Non \\
-Goulot, composition, bornes \'el\'ementaires (Sec.~\ref{sec:clo}) 
+Borne aigu\"e et t\'emoins r\'ealisables (Proposition~\ref{prop:borne_aigue}, Remarques~\ref{rem:temoin_realisable} et~\ref{rem:temoin_combine})
+  & Borne prouv\'ee sous Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace} et~\ref{ass:regime}~; t\'emoins satisfaisant les quatre
+  & 3 & Preuves papier & Non \\
+Goulot, composition, bornes \'el\'ementaires (Sec.~\ref{sec:clo})  
   & Prouv\'es (formulations pr\'ecis\'ees) 
   & 3 & Preuves papier 
   & Verdict d\'eterministe seulement \\
 Trilemme PQ (Sec.~\ref{sec:cro_pq}) 
-  & Sous Hypoth\`eses~\ref{ass:extraction_quantique}--\ref{ass:regime_quantique} 
+    & Sous Hypoth\`eses~\ref{ass:extraction_quantique}, \ref{ass:verdict_quantique} et~\ref{ass:regime_quantique}  
   & 1 & Preuve papier & Non \\
 Propri\'et\'es SOTP ($\Conf$, $\Relver$) 
   & $\Conf$ statistique (masque tronqu\'e) ou sous PRG~; $\Relver$ sous DLog (Groth16 pour High) 

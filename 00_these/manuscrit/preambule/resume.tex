@@ -26,12 +26,13 @@ cadre CLO, qui agr\`ege confidentialit\'e (Conf), fiabilit\'e (Rel) et
 opposabilit\'e (Opp). Elle l'articule \`a des param\`etres cognitifs
 explicites, en particulier la capacit\'e d'extraction institutionnelle
 $\Delta$ et la granularit\'e des verdicts $\alpha$. Elle \'etablit un
-trilemme d'impossibilit\'e conditionnel. Sous quatre hypoth\`eses bornant
-les capacit\'es de l'institution, le produit Conf$\cdot$Rel$\cdot$Opp
-est major\'e par $\Delta/(\gamma\lambda)$, o\`u $\gamma = \alpha H(C) - 1$,
-\`a un terme d'ordre $\lambda^{-2}$ et \`a un reste n\'egligeable pr\`es.
-Une forme raffin\'ee identifie le r\'egime o\`u la capacit\'e
-institutionnelle devient la contrainte liante. La ressource limitante
+trilemme d'impossibilit\'e conditionnel sous trois hypoth\`eses, l'extraction
+born\'ee, le verdict efficace et le r\'egime de confidentialit\'e. Le produit
+Conf$\cdot$Rel$\cdot$Opp y est major\'e par $\Delta/(\gamma\lambda)$, o\`u
+$\gamma = \alpha H(C) - 1$, \`a un terme d'ordre $\lambda^{-2}$ et \`a un reste
+n\'egligeable pr\`es. Une forme raffin\'ee identifie le r\'egime o\`u la capacit\'e
+institutionnelle devient la contrainte liante. Une borne aigu\"e ram\`ene le
+terme dominant \`a l'ordre $\lambda^{-2}$, qui ne peut pas \^etre am\'elior\'e. La ressource limitante
 est alors la quantit\'e d'information qu'une institution peut
 extraire humainement d'une preuve, bien plus que la taille des cl\'es.
 
@@ -42,11 +43,11 @@ l'effet sur la borne cro\^it avec l'entropie contextuelle. La th\`ese
 propose aussi la famille SOTP, param\'etr\'ee pour les deux
 r\'egimes de richesse contextuelle, dont elle \'etablit les propri\'et\'es
 cryptographiques. Son optimalit\'e \`a un facteur constant pr\`es est formul\'ee comme
-conjecture. Le noyau alg\'ebrique du
-trilemme est certifi\'e m\'ecaniquement dans Lean4, qui explicite
-hypoth\`eses, constantes et domaine de validit\'e et fournit deux
-t\'emoins formels garantissant la coh\'erence interne et la port\'ee du
-r\'esultat.
+conjecture. Le trilemme est certifi\'e m\'ecaniquement dans Lean4, du noyau
+alg\'ebrique aux lois de probabilit\'e finies. Cette certification explicite
+hypoth\`eses, constantes et domaine de validit\'e. Elle \'etablit dans les deux
+sens le seuil qui s\'epare les r\'egimes et fournit des t\'emoins de coh\'erence
+et de port\'ee.
 
 Enfin, la th\`ese sp\'ecifie un programme exp\'erimental r\'efutable
 comprenant six protocoles destin\'es \`a mesurer les param\`etres

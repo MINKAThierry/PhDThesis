@@ -49,8 +49,9 @@ L'opposabilit\'e $\Opp$ \'etait absente de tout cadre cryptographique
 ant\'erieur. Les contributions C1.1 \`a C1.7 y r\'epondent. L'objectif est atteint.
 
 \textbf{Obj~\ref{obj:obj2_impossibilite}. Bornes.} Existe-t-il des limites
-fondamentales sur les compromis r\'ealisables~? Sous quatre hypoth\`eses
-institutionnelles explicites, nous avons \'etabli la borne
+fondamentales sur les compromis r\'ealisables~? Quatre hypoth\`eses
+institutionnelles explicites sont pos\'ees. Sous trois d'entre elles, l'extraction
+born\'ee, le verdict efficace et le r\'egime de confidentialit\'e, nous avons \'etabli la borne
 \begin{equation}
   \Conf \cdot \Relrec \cdot \Opp \;\leq\;
   \frac{1}{\gamma}\left(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
@@ -95,13 +96,15 @@ une heuristique et l'optimalit\'e reste une conjecture.
 \textbf{Obj~\ref{obj:obj5_verification}. V\'erification.} Comment certifier la
 correction d'un th\'eor\`eme complexe~? La formalisation Lean4 a
 certifi\'e m\'ecaniquement le noyau alg\'ebrique du th\'eor\`eme
-(section~\ref{sec:lean4}), ainsi que la forme raffin\'ee de la borne. Fano et
+(section~\ref{sec:lean4}), la forme raffin\'ee de la borne et le seuil $H^\sharp$ dans
+les deux sens. Fano et
 Pinsker y sont pos\'es comme propri\'et\'es des instances de protocole, puis
 d\'emontr\'es pour des lois de probabilit\'e finies dans une couche concr\`ete~; les
 hypoth\`eses institutionnelles y sont aussi pos\'ees. La formalisation a produit
 deux t\'emoins, l'un de coh\'erence (un point du mod\`ele abstrait o\`u la
 borne est atteinte, non r\'ealisable par un protocole), l'autre de port\'ee
-(une instance hors r\'egime atteint $1/4$). Le d\'etail de ce que la certification a mis au jour, hypoth\`eses,
+(une instance hors r\'egime atteint $1/4$). Une famille de lois concr\`etes satisfait
+en outre toutes les hypoth\`eses pour tout $\lambda$. Le d\'etail de ce que la certification a mis au jour, hypoth\`eses,
 constantes et r\'egime de validit\'e, est pr\'esent\'e \`a la
 sous-section~\ref{subsec:lean4_erreurs}. Les contributions C5.1 \`a C5.6 y r\'epondent.
 L'objectif est atteint pour le trilemme classique, jusqu'aux lois finies~; l'extension
@@ -167,7 +170,7 @@ r\'efutable (C6.1), mais elle n'a pas encore \'et\'e r\'ealis\'ee.
 
 La probl\'ematique demandait quelles limites fondamentales contraignent les compromis entre
 confidentialit\'e, fiabilit\'e et opposabilit\'e. La th\`ese y r\'epond par une limite explicite
-et conditionnelle. Sous quatre hypoth\`eses institutionnelles, le produit
+et conditionnelle. Sous trois des quatre hypoth\`eses institutionnelles pos\'ees, le produit
 $\Conf \cdot \Relrec \cdot \Opp$ est major\'e par une quantit\'e dont le terme dominant est
 $\Delta/(\gamma\lambda)$. La borne aigu\"e ram\`ene ce terme \`a l'ordre $\kappa/\lambda^2$, ordre
 qui ne peut pas \^etre am\'elior\'e. La forme raffin\'ee identifie le r\'egime
@@ -181,7 +184,7 @@ $\hat{I}(V;\Sigma|M,C)$, forment le programme ouvert par ce travail.
 \end{sloppypar}
 
 % ----------------------------------------------------------------------------
-\section{PRINCIPALES CONTRIBUTIONS}
+\section{PRINCIPALES PRODUCTIONS ET APPORTS TRANSVERSAUX}
 \label{sec:cg_contributions}
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
@@ -205,8 +208,9 @@ $I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$~; un verdict d\'eterministe donne $\O
 
 \textbf{C2. Trilemme CRO conditionnel}~\cite{MINKA2026CRO}. Premi\`ere
 borne prouv\'ee, \`a notre connaissance, sur les compromis $(\Conf, \Rel, \Opp)$, conditionnelle
-aux param\`etres $(\Delta, \alpha, \beta)$ et au r\'egime de
-confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La forme explicite
+aux param\`etres $(\Delta, \alpha)$ et au r\'egime de
+confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$, la r\'egularit\'e $\beta$ ne
+contraignant que la confidentialit\'e. La forme explicite
 est $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$~;
 la forme raffin\'ee, qui combine $\Opp \leq 1$ et les
 Hypoth\`eses~\ref{ass:extraction_bornee} et~\ref{ass:verdicts_efficace}, distingue
@@ -231,7 +235,8 @@ du noyau alg\'ebrique et de la forme raffin\'ee. Fano et Pinsker, pos\'es comme
 propri\'et\'es d'instance dans le noyau, d\'emontr\'es pour des lois de probabilit\'e finies
 dans la couche concr\`ete. S'y ajoutent la mise au jour des hypoth\`eses institutionnelles
 et la production de deux t\'emoins, l'un de coh\'erence (mod\`ele abstrait), l'autre de
-port\'ee. La sous-section~\ref{subsec:lean4_erreurs} recense les
+port\'ee. Le seuil $H^\sharp$ est certifi\'e dans les deux sens et une famille de lois
+concr\`etes satisfait toutes les hypoth\`eses. La sous-section~\ref{subsec:lean4_erreurs} recense les
 pr\'ecisions que la certification a apport\'ees aux \'enonc\'es.
 
 \textbf{C6. Programme de validation falsifiable}. Les protocoles
@@ -318,7 +323,7 @@ Partielle (traitement formel restreint \`a certains cas)~; Qualitative
 
 La port\'ee de cette th\`ese est quadruple.
 
-\textbf{Th\'eorique.} Les bornes C1--C3 \'etablissent des limites
+\textbf{Th\'eorique.} Le cadre et les bornes des productions C1 \`a C3 \'etablissent des limites
 fondamentales conditionnelles \`a des param\`etres institutionnels
 mesurables.
 
@@ -327,11 +332,11 @@ construction aux propri\'et\'es cryptographiques prouv\'ees. Que son opposabilit
 la meilleure du r\'egime \`a un facteur constant pr\`es est conjectur\'e.
 
 \textbf{Certifi\'ee.} La formalisation Lean4 (C5) certifie
-m\'ecaniquement le noyau alg\'ebrique du Trilemme CRO classique.
+m\'ecaniquement le Trilemme CRO classique, du noyau alg\'ebrique aux lois de probabilit\'e finies.
 
-\textbf{M\'ethodologique.} Le programme de validation (C6) et la
-le\c{c}on de la formalisation
-(section~\ref{subsec:verification_corrige_lecon}) fournissent \`a la
+\textbf{Exp\'erimentale.} Le programme de validation falsifiable (C6) rend le cadre
+testable. Avec la le\c{c}on de la formalisation
+(section~\ref{subsec:verification_corrige_lecon}), il fournit \`a la
 communaut\'e des outils et des m\'ethodes transf\'erables.
 
 \end{sloppypar}
@@ -342,20 +347,20 @@ communaut\'e des outils et des m\'ethodes transf\'erables.
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
 
-Quatre limitations d\'elimitent le p\'erim\`etre des contributions. Les
+Quatre limitations d\'elimitent le p\'erim\`etre des productions. Les
 param\`etres $\Delta$ et $\alpha$ ne sont pas encore valid\'es par des \'etudes exp\'erimentales
 et $\beta$ n'a pas encore \'et\'e calcul\'e sur les lois de preuve de syst\`emes d\'eploy\'es~; les valeurs retenues,
 de quelques dizaines de bits, sont une calibration illustrative rendue
 plausible par la litt\'erature sur la rationalit\'e born\'ee. L'opposabilit\'e
 des constructions SOTP est heuristique et leur optimalit\'e conjectur\'ee. La formalisation Lean4 couvre le noyau
-alg\'ebrique~; l'extension post-quantique et les constructions SOTP restent
+alg\'ebrique et les lois finies~; la borne aigu\"e, l'extension post-quantique et les constructions SOTP restent
 hors de son p\'erim\`etre, \`a l'exception des r\'eductions de SOTP-Low en situation r\'eduite. Les constructions SOTP disposent d'impl\'ementations
 de r\'ef\'erence dans le d\'ep\^ot compagnon, sans d\'eploiement en conditions
 r\'eelles. Une
 analyse compl\`ete des limitations est pr\'esent\'ee \`a la
 section~\ref{subsec:limitations_problemes_ouverts}.
 
-Les travaux futurs par contribution et par horizon sont d\'etaill\'es au
+Les travaux futurs par production et par horizon sont d\'etaill\'es au
 tableau~\ref{tab:perspectives_horizons}.
 
 Le programme futur s'organise selon trois directions structurantes.

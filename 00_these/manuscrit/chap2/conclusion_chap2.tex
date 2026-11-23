@@ -20,16 +20,21 @@ les protocoles. Les jeux cryptographiques (IND-CONF,
 BIND-REL, EXT-OPP) compl\`etent cette formalisation en \'etablissant le pont
 avec les r\'eductions de s\'ecurit\'e standard.
 
-Le Trilemme CRO classique (section~\ref{sec:cro_classique}) a born\'e
-ces m\'etriques sous quatre hypoth\`eses \'enonc\'ees sur les limites
-institutionnelles, soit l'extraction born\'ee, le verdict efficace, la r\'egularit\'e
-du protocole et le r\'egime de confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$.
+Le Trilemme CRO classique (section~\ref{sec:cro_classique}) a pos\'e
+quatre hypoth\`eses sur les limites institutionnelles. Trois d'entre elles, l'extraction
+born\'ee, le verdict efficace et le r\'egime de confidentialit\'e
+$I(M;\Sigma|C) \leq \kappa/\lambda$, bornent le produit des m\'etriques. La quatri\`eme, la
+r\'egularit\'e du protocole, garantit la confidentialit\'e
+(Lemme~\ref{lem:confidentiality_guarantee}).
 Le produit $\Conf\cdot\Rel\cdot\Opp$ ne peut
 d\'epasser $\Delta/(\gamma\lambda) + O(\lambda^{-2})$. La forme raffin\'ee, elle,
 identifie le r\'egime ($H(\mathcal{C}) > H^\sharp$) o\`u la capacit\'e
 institutionnelle $\Delta$ est la contrainte liante~; l'Hypoth\`ese d'extraction
 born\'ee y re\c{c}oit un fondement informationnel exact
-(Proposition~\ref{prop:fondement_extraction}). Les syst\`emes d\'eploy\'es ne
+(Proposition~\ref{prop:fondement_extraction}). La borne aigu\"e ram\`ene le terme
+dominant \`a l'ordre exact $\kappa/\lambda^2$ et une loi explicite atteint le facteur
+institutionnel $\Delta/\gamma$ (Proposition~\ref{prop:borne_aigue},
+Remarque~\ref{rem:temoin_realisable}). Les syst\`emes d\'eploy\'es ne
 sont pas des instances du th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}).
 Ils servent seulement \`a calibrer des capacit\'es implicites,
 $\Delta_{\text{Helios}} \approx 56$~bits,

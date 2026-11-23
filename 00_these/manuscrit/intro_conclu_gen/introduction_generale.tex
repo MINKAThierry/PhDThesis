@@ -126,7 +126,7 @@ Ces deux questions se d\'eclinent en six \textbf{objectifs} de recherche, qui co
 \label{par:progression_FBESCX}
 La progression Obj1~$\to$~Obj6 organise la th\`ese en six \'etapes, \textbf{F}ormaliser,
 \textbf{B}orner, \textbf{\'E}tendre, \textbf{S}aturer, \textbf{C}ertifier et
-e\textbf{X}p\'erimenter, qui forment un cycle (figure~\ref{fig:cycle_recherche}). Le chapitre~\ref{chap:contexte} pose les fondements en amont de~F.
+e\textbf{X}p\'erimenter, qui forment un cycle (figure~\ref{fig:cycle_recherche}). La fl\`eche de X vers F ferme ce cycle. Le trait interrompu entre C et B figure la r\'evision des bornes par la certification. Le chapitre~\ref{chap:contexte} pose les fondements en amont de~F.
 Le chapitre~\ref{chap:cadre_formel} r\'ealise F$\to$B$\to$E et le
 chapitre~\ref{chap:constructions} r\'ealise S$\to$C. Le
 chapitre~\ref{chap:experimentation} r\'ealise~X. Le
@@ -154,9 +154,10 @@ successive des six objectifs apporte une r\'eponse.
     \draw[fl] (E) to[bend left=20] (S);
     \draw[fl] (S) to[bend left=20] (C);
     \draw[fl] (C) to[bend left=20] (X);
-    \draw[fl] (X) to[bend left=20] (F);
+        \draw[fl] (X) to[bend left=20] (F);
+    \draw[fl, dashed, {Stealth[scale=1.2]}-{Stealth[scale=1.2]}] (C) -- (B);
 \end{tikzpicture}
-\caption{Cycle de recherche de la th\`ese.}
+\caption{Cycle de recherche de la th\`ese, avec le retour de X vers F et la boucle de r\'evision entre C et B.}
 \label{fig:cycle_recherche}
 \end{figure}
 
@@ -196,7 +197,7 @@ V\'erification formelle & Lean4, Mathlib~\cite{moura2015lean,Lean4,Mathlib,Wiedi
 Cette th\`ese r\'eunit la rigueur math\'ematique, la pertinence
 institutionnelle et la certification formelle~\cite{Gonthier08,Leroy09,BhargavanEA2017}
 dans une m\^eme d\'emarche, qui fournit les bases sur lesquelles
-les parties suivantes construisent puis valident la th\'eorie.
+les chapitres suivants construisent la th\'eorie puis sp\'ecifient sa validation.
 
 \end{sloppypar}
 
@@ -211,7 +212,7 @@ Cette th\`ese s'adresse \`a plusieurs publics, dont les points d'entr\'ee diff\`
 \begin{itemize}
 \item \textbf{Cryptographes.} Les sections~\ref{sec:cro_classique} et~\ref{sec:sotp_construction} contiennent des preuves originales utilisant des techniques standard (Fano~\cite{Fano61}, Pinsker~\cite{Pinsker1964}, r\'eductions cryptographiques~\cite{Shoup01,Damgard87}).
 
-\item \textbf{Chercheurs en s\'ecurit\'e formelle.} La section~\ref{sec:lean4} fournit une formalisation compl\`ete, avec un noyau alg\'ebrique aux hypoth\`eses \'enonc\'ees et une couche o\`u Fano et Pinsker sont d\'emontr\'es pour des lois finies~\cite{BartheEA2013,Lochbihler2016,Affeldt2015}.
+\item \textbf{Chercheurs en s\'ecurit\'e formelle.} La section~\ref{sec:lean4} fournit la formalisation Lean4 du trilemme classique, avec un noyau alg\'ebrique aux hypoth\`eses \'enonc\'ees et une couche o\`u Fano et Pinsker sont d\'emontr\'es pour des lois finies~\cite{BartheEA2013,Lochbihler2016,Affeldt2015}.
 
 \item \textbf{Juristes et r\'egulateurs.} La section~\ref{sec:clo} montre l'applicabilit\'e aux syst\`emes de vote~\cite{Adida08,Benaloh94}, de conformit\'e~\cite{FATF12,AMLD4} et de preuve num\'erique~\cite{Mason07,Casey16}.
 
@@ -225,9 +226,9 @@ La lecture suppose une familiarit\'e avec les preuves \`a divulgation nulle~\cit
 \begin{boiteArbitre}
 L'arbitre ne sait pas encore qu'il est pris dans un paradoxe.
 Il sait seulement que quelque chose ne fonctionne pas entre la preuve qu'on
-lui soumet et la d\'ecision qu'on lui demande de rendre. Ce chapitre lui donne
-le nom du probl\`eme et la carte du voyage, avec deux questions, six objectifs, six
-contributions et un cycle. Il lui pr\'esente aussi les \'equipiers dont il aura
+lui soumet et la d\'ecision qu'on lui demande de rendre. Cette introduction lui donne
+le nom du probl\`eme et la carte du voyage, avec une probl\'ematique, deux questions, six
+objectifs, six productions et un cycle. Il lui pr\'esente aussi les \'equipiers dont il aura
 besoin, soit la th\'eorie de l'information, la cryptographie, les
 sciences cognitives, le droit et la v\'erification formelle. Le voyage commence
 \`a la section~\ref{sec:contexte}.
@@ -255,7 +256,7 @@ Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3669065), ce r\'esulta
   \frac{\Delta}{\gamma\lambda} + O(\lambda^{-2}),
   \qquad \gamma = \alpha H(\mathcal{C}) - 1,
 \end{equation}
-conditionnelle \`a la capacit\'e d'extraction $\Delta$, \`a la granularit\'e des verdicts $\alpha$, \`a la r\'egularit\'e $\beta$ et au r\'egime de confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La forme publi\'ee en est un corollaire. Une borne aigu\"e ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ et une forme raffin\'ee identifie le r\'egime o\`u la capacit\'e institutionnelle est la contrainte liante. L'impossibilit\'e reste conditionnelle, \`a la mani\`ere de CAP~\cite{Brewer00,GilbertLynch02}, de FLP~\cite{FLP85} ou du th\'eor\`eme d'Arrow~\cite{Arrow50}.
+conditionnelle \`a la capacit\'e d'extraction $\Delta$, \`a la granularit\'e des verdicts $\alpha$ et au r\'egime de confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$. La r\'egularit\'e $\beta$ n'entre pas dans cette borne et garantit la confidentialit\'e (Lemme~\ref{lem:confidentiality_guarantee}). La forme publi\'ee en est un corollaire. Une borne aigu\"e ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ et une forme raffin\'ee identifie le r\'egime o\`u la capacit\'e institutionnelle est la contrainte liante. L'impossibilit\'e reste conditionnelle, \`a la mani\`ere de CAP~\cite{Brewer00,GilbertLynch02}, de FLP~\cite{FLP85} ou du th\'eor\`eme d'Arrow~\cite{Arrow50}.
 
 \paragraph{C3. Nous \'etendons le Trilemme au contexte quantique~\cite{MINKA2026PQCRO}~(section~\ref{sec:cro_pq}).}
 Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3722742), ce r\'esultat \'etend la borne aux adversaires quantiques,
@@ -271,7 +272,7 @@ Soumis \`a \emph{IEEE TIT}, ce travail confie la confidentialit\'e, la fiabilit\
 
 \paragraph{C5. Nous certifions m\'ecaniquement le Trilemme en Lean4, du noyau
 alg\'ebrique aux lois de probabilit\'e finies (section~\ref{sec:lean4}).}
-Soumis au \emph{Journal of Automated Reasoning}, cet article pr\'esente la premi\`ere formalisation en Lean4 du noyau alg\'ebrique d'un th\'eor\`eme d'impossibilit\'e en cryptographie institutionnelle~\cite{moura2015lean,Lean4,Mathlib}. La th\`ese y ajoute une couche o\`u Fano et Pinsker sont d\'emontr\'es pour des lois finies. La formalisation a mis au jours, dans les preuves de~\cite{MINKA2026CRO} et de~\cite{MINKA2026PQCRO}, l'efficacit\'e du verdict et le r\'egime de fuite. Le code, v\'erifi\'e sans \texttt{sorry}, est publi\'e avec des versions fig\'ees de Lean et de Mathlib~\cite{CROTrilemmaDepot}.
+Soumis au \emph{Journal of Automated Reasoning}, cet article pr\'esente la premi\`ere formalisation en Lean4 du noyau alg\'ebrique d'un th\'eor\`eme d'impossibilit\'e en cryptographie institutionnelle~\cite{moura2015lean,Lean4,Mathlib}. La th\`ese y ajoute une couche o\`u Fano et Pinsker sont d\'emontr\'es pour des lois finies ainsi que la certification du seuil $H^\sharp$ dans les deux sens. La formalisation a mis au jour, dans les preuves de~\cite{MINKA2026CRO} et de~\cite{MINKA2026PQCRO}, deux hypoth\`eses rest\'ees implicites, l'efficacit\'e du verdict et le r\'egime de fuite. Le code, v\'erifi\'e sans \texttt{sorry}, est publi\'e avec Lean et Mathlib fig\'es en version~4.35.0~\cite{CROTrilemmaDepot}.
 
 \paragraph{C6. Nous sp\'ecifions un programme de validation falsifiable
 (chapitre~\ref{chap:experimentation}).}
@@ -341,8 +342,8 @@ Il couvre les actes \textbf{S} et \textbf{C}. Le Semantic One-Time Pad, prototyp
 la famille, est construit \`a la section~\ref{sec:sotp_base}. La section~\ref{sec:sotp_construction}
 g\'en\'eralise ce prototype en trois constructions de r\'ef\'erence dont elle conjecture
 l'optimalit\'e universelle (Obj~\ref{obj:obj4_saturation}), avant que la section~\ref{sec:lean4}
-ne soumette le noyau alg\'ebrique du trilemme \`a l'assistant de preuve Lean4
-(Obj~\ref{obj:obj5_verification}).
+ne soumette le trilemme \`a l'assistant de preuve Lean4, du noyau alg\'ebrique aux lois
+finies (Obj~\ref{obj:obj5_verification}).
 
 \textbf{Chapitre~\ref{chap:experimentation}. Protocoles de mesure et validation r\'etrospective.}
 L'acte \textbf{X} (Obj~\ref{obj:obj6_experimentation}) fait l'objet de ce chapitre.
@@ -355,8 +356,8 @@ illustrative des param\`etres institutionnels en pr\'ecisant sa port\'ee et
 ses limites.
 
 \textbf{Chapitre~\ref{chap:resultats_discussions}. R\'esultats, discussions et perspectives.}
-La section~\ref{sec:resultats_theoriques} pr\'esente les validations
-r\'etrospectives et le bilan formel du corpus. La
+La section~\ref{sec:resultats_theoriques} pr\'esente la calibration
+r\'etrospective et le bilan formel du corpus. La
 section~\ref{sec:discussions} interpr\`ete ces r\'esultats, les positionne
 parmi les impossibilit\'es fondamentales et documente les limitations
 reconnues. La section~\ref{sec:perspectives} ouvre le programme de recherche
