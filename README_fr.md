@@ -34,6 +34,10 @@ Ce dépôt réunit l'ensemble des travaux de la thèse de doctorat de Thierry Em
 - SOTP-High : `cd 04_sotp/high && bash scripts/run_all.sh` (Node 18 ou plus)
 - Analyse de terrain : `cd 07_protocoles_terrain/analyse && python3 -m pytest -q tests`
 
+## Dossier de vérification
+
+La formalisation Lean dispose d'un dossier de vérification, décrit dans [05_formalisation_lean/VERIFICATION_fr.md](05_formalisation_lean/VERIFICATION_fr.md). Il isole les énoncés des preuves et audite les axiomes. Il se lance par `cd 05_formalisation_lean && lake exe cache get && bash verifier.sh`.
+
 ## Licences
 
 Le code est sous licence MIT ([LICENSE](LICENSE)). Les textes, formulaires et données sont sous licence CC BY 4.0 ([LICENSE-CC-BY-4.0](LICENSE-CC-BY-4.0)). Les articles publiés conservent la licence CC BY 4.0 de l'éditeur.

@@ -1,0 +1,51 @@
+# Dossier de vérification Lean (05_formalisation_lean/VERIFICATION_fr.md).
+# Ce workflow complète le job « lean » de ci.yml, qu'il ne remplace pas.
+# Il ne tourne que si la formalisation change, ou à la demande.
+# Il compile ConditionalCRO et la bibliothèque Verification, puis exécute
+# verifier.sh : énoncés sans preuve, mots interdits, compilation, #print axioms,
+# leanchecker et nanoda_bin (vérificateurs fournis avec la chaîne Lean 4.35.0).
+name: Vérification Lean
+
+on:
+  push:
+    paths:
+      - "05_formalisation_lean/**"
+      - ".github/workflows/verification_lean.yml"
+  pull_request:
+    paths:
+      - "05_formalisation_lean/**"
+      - ".github/workflows/verification_lean.yml"
+  workflow_dispatch:
+
+jobs:
+  verification:
+    runs-on: ubuntu-latest
+    env:
+      # leanchecker charge l'environnement Mathlib ; on limite le parallélisme
+      # pour ne pas épuiser la mémoire du runner (README de lean-action).
+      LEAN_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Lean, télécharger le cache Mathlib et compiler
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: "05_formalisation_lean"
+          use-mathlib-cache: "true"
+          build: "true"
+          build-args: "ConditionalCRO Verification"
+          test: "false"
+          lint: "false"
+
+      - name: Audit du dossier de vérification
+        working-directory: 05_formalisation_lean
+        run: bash verifier.sh
+
+      - name: Conserver les journaux
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-lean
+          path: |
+            05_formalisation_lean/results/verification.log
+            05_formalisation_lean/results/axiomes.txt

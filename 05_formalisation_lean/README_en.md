@@ -24,6 +24,10 @@ lake env lean ConditionalCRO.lean    # prints the #check and #print axioms outpu
 
 `lake exe cache get` downloads the precompiled Mathlib, which avoids several hours of compilation. The expected result is a build with no error, no warning and no `sorry`. Each of the twenty `#print axioms` in the file must print exactly `[propext, Classical.choice, Quot.sound]`, the three standard axioms of Lean and Mathlib. The file can also be checked by pasting it into <https://live.lean-lang.org> (Mathlib project); version 3.2 was checked there on 22 November 2026.
 
+## Verification dossier
+
+The dossier [`VERIFICATION_en.md`](VERIFICATION_en.md) lets a reader judge what is proved without reading all the code. It is additive and does not modify `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) holds the 29 statements of the thesis without proof. [`Verification/Principal.lean`](Verification/Principal.lean) links each one to the existing theorem in one line. [`Verification/Coherence.lean`](Verification/Coherence.lean) tests the non-vacuity of the project's own definitions. The script [`verifier.sh`](verifier.sh) audits the sources, the build, the axioms and the kernel. Its outputs are in [`results/verification.log`](results/verification.log) and [`results/axiomes.txt`](results/axiomes.txt). The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) runs it on GitHub.
+
 ## What is certified
 
 | File section | Declarations | Thesis statement |

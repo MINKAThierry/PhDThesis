@@ -1,0 +1,46 @@
+# Exécution locale du 26 novembre 2026 (Lean 4.35.0, Mathlib v4.35.0 commit 56a0058).
+# Fichier compilé : copie de ConditionalCRO.lean dont seule la ligne 46 diffère
+# (import Mathlib remplacé par sept imports ciblés, cache Mathlib inaccessible).
+# SHA-256 du ConditionalCRO.lean du dépôt : 33876520f8e925d2c9e71aa1f0be74bdc88dde89128e829fd9ecb25a41faf7d8
+# Contrôle complémentaire hors script : lake env leanchecker --fresh Verification.Principal, réussi (6 min 23 s).
+
+Dossier de vérification Lean, 2026-11-26 20:09 UTC
+Lean : Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)
+Commit du dépôt : inconnu
+SHA-256 ConditionalCRO.lean : 8fcf589a3cd9069ca7980fdf3a0a53c76f4c6ad6cb57121c3d738e0bb7611237
+
+1. Énoncés seuls (Verification/Enonces.lean)
+OK     aucune tactique by
+OK     aucune déclaration theorem, lemma, example, instance, abbrev ou axiom
+OK     29 définitions, toutes de la forme def Nom : Prop :=
+
+2. Mots interdits dans les sources (commentaires exclus)
+OK     ConditionalCRO.lean
+OK     Verification/Enonces.lean
+OK     Verification/Principal.lean
+OK     Verification/Coherence.lean
+
+3. Point d'entrée (Verification/Principal.lean)
+OK     29 théorèmes de la forme theorem principal_x : Enonces.X := nomExistant
+OK     chaque énoncé est utilisé exactement une fois
+
+4. Compilation
+OK     lake build ConditionalCRO Verification
+       avertissements (hors module system) : 0
+Build completed successfully (2288 jobs).
+
+5. Axiomes (#print axioms)
+OK     29 théorèmes de Principal.lean, tous [propext, Classical.choice, Quot.sound]
+OK     29 lemmes de Coherence.lean, axiomes standard seulement
+
+6. Vérification indépendante du noyau
+OK     leanchecker ConditionalCRO (rejeu par le noyau de Lean)
+OK     leanchecker Verification.Enonces (rejeu par le noyau de Lean)
+OK     leanchecker Verification.Principal (rejeu par le noyau de Lean)
+OK     leanchecker Verification.Coherence (rejeu par le noyau de Lean)
+Checked 28867 declarations with no typechecker errors, 1 pretty printer errors: [
+    "Unable to print axioms",
+]
+OK     nanoda_bin, second vérificateur écrit en Rust, sur Principal.lean et ses dépendances
+
+RÉSULTAT : vérification réussie.

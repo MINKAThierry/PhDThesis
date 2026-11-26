@@ -34,6 +34,10 @@ This repository gathers all the work of the doctoral thesis of Thierry Emmanuel 
 - SOTP-High: `cd 04_sotp/high && bash scripts/run_all.sh` (Node 18 or later)
 - Field analysis: `cd 07_protocoles_terrain/analyse && python3 -m pytest -q tests`
 
+## Verification dossier
+
+The Lean formalisation has a verification dossier, described in [05_formalisation_lean/VERIFICATION_en.md](05_formalisation_lean/VERIFICATION_en.md). It isolates statements from proofs and audits the axioms. It runs with `cd 05_formalisation_lean && lake exe cache get && bash verifier.sh`.
+
 ## Licences
 
 Code is MIT-licensed ([LICENSE](LICENSE)). Texts, forms and data are CC BY 4.0 ([LICENSE-CC-BY-4.0](LICENSE-CC-BY-4.0)). Published articles keep the publisher's CC BY 4.0 licence.
