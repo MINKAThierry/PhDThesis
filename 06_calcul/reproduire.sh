@@ -26,7 +26,7 @@ echo "== Python: 14 numerical checks"
 python3 python/verifications.py | tee results/verifications_output.txt
 
 if [[ "${1:-}" != "--sans-lean" ]]; then
-  echo "== Lean: build (Lean 4.34.0, Mathlib v4.34.0) in ${LEAN_DIR}"
+  echo "== Lean: build (Lean 4.35.0, Mathlib v4.35.0) in ${LEAN_DIR}"
   mkdir -p "${LEAN_DIR}/results"
   ( cd "${LEAN_DIR}" && lake exe cache get && lake build && lake env lean ConditionalCRO.lean ) \
       2>&1 | tee "${LEAN_DIR}/results/lean_build.log"
