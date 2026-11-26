@@ -14,8 +14,8 @@ sous-section~\ref{subsec:lean4_extensions}, seuil $H^\sharp$ compris. Elle ajout
 \medskip
 \noindent\textbf{Caract\'eristiques du code.} Le fichier compile sans erreur
 ni \texttt{sorry} et sans avertissement. La version 3.4 a \'et\'e v\'erifi\'ee le 22 novembre 2026 avec Lean~v4.35.0 et
-Mathlib~v4.35.0, compil\'es depuis les sources, en rempla\c{c}ant \texttt{import Mathlib} par les
-modules effectivement utilis\'es (journal \texttt{results/lean\_build\_v3.4.log} du d\'ep\^ot).
+Mathlib~v4.35.0, compil\'es depuis les sources. Pour cette seule compilation, la ligne \texttt{import Mathlib} du
+listing a \'et\'e remplac\'ee par les modules effectivement utilis\'es, le reste du fichier \'etant inchang\'e (journal \texttt{results/lean\_build\_v3.4.log} du d\'ep\^ot).
 La version 2.2 avait \'et\'e v\'erifi\'ee sur \url{https://live.lean-lang.org} en octobre 2026.
 La version 3.2, avec \texttt{import Mathlib} complet, y a \'et\'e v\'erifi\'ee le 22 novembre 2026, les dix-huit \texttt{\#print axioms} n'affichant que les trois axiomes standards. La version 3.3 n'en diff\`ere que par des pr\'ecisions de documentation, l'affaiblissement de deux hypoth\`eses asymptotiques et le retrait d'un param\`etre libre du Lemme~4 concret. La version 3.4 ajoute deux th\'eor\`emes qui certifient le seuil $H^\sharp$ dans les deux sens. Le d\'ep\^ot
 de la th\`ese~\cite{CROTrilemmaDepot} le fournit aussi dans un projet Lake, avec des
@@ -31,11 +31,12 @@ et \texttt{Quot.sound}.
 
 \medskip
 \noindent\textbf{Mode d'emploi.} Pour v\'erifier le code (d\'etails \`a la
-section~\ref{sec:lean4_reproduction}), on proc\`ede comme suit.
+section~\ref{sec:lean4_reproduction} de cette annexe), on proc\`ede comme suit.
 \begin{enumerate}
 \item Dans le navigateur, coller le code~\ref{lst:lean4_complet} dans
       \url{https://live.lean-lang.org} (projet Mathlib), qui utilise la version
-      courante de Mathlib.
+      courante de Mathlib. La v\'erification dat\'ee dans le navigateur porte sur la version~3.2
+      (section~\ref{sec:lean4_reproduction}).
 \item Localement, ex\'ecuter \texttt{lake exe cache get \&\& lake build} dans le
       r\'epertoire \texttt{05\_formalisation\_lean/} du d\'ep\^ot.
 \item Dans les deux cas, le r\'esultat attendu ne comporte ni erreur ni \texttt{sorry}. Chacun des vingt
@@ -51,7 +52,9 @@ section~\ref{sec:lean4_reproduction}), on proc\`ede comme suit.
 
 \begin{sloppypar}
 Le code est organis\'e en onze sections qui suivent la structure
-math\'ematique du Trilemme CRO.
+math\'ematique du Trilemme CRO. Les commentaires du code et le tableau~\ref{tab:lean4_status}
+gardent la num\'erotation des articles. Sa correspondance avec celle de la th\`ese est donn\'ee en
+t\^ete de la section~\ref{sec:lean4}.
 \begin{enumerate}
 \item \textbf{Constante de Pinsker} $c_0 = 1/(2\ln 2)$ et ses propri\'et\'es.
 \item \textbf{N\'egligeabilit\'e} de $\varepsilon_0(\lambda) = 2^{-\lambda}$,
@@ -59,17 +62,18 @@ math\'ematique du Trilemme CRO.
 \item \textbf{Param\`etres institutionnels} $(\Delta, \alpha, \beta, H(C))$
       et le coefficient $\gamma = \alpha H(C) - 1$.
 \item \textbf{Instance de protocole} avec les d\'efinitions de Conf, Rel,
-      Opp ainsi que les lemmes de Pinsker et Fano int\'egr\'es comme propri\'et\'es.
-\item \textbf{Hypoth\`eses institutionnelles} 1, 2$'$ et 3.
-\item \textbf{Lemme 4} (garantie de confidentialit\'e) et
-      \textbf{Th\'eor\`eme 1} (forme explicite et instance).
-\item \textbf{Th\'eor\`eme principal} (forme asymptotique) et t\'emoins
-      de coh\'erence et de port\'ee.
+      Opp, les lemmes de Pinsker et Fano int\'egr\'es comme propri\'et\'es et les hypoth\`eses
+      institutionnelles (Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regularite}).
+\item \textbf{Garantie de confidentialit\'e} (Lemme~\ref{lem:confidentiality_guarantee},
+      Lemme~4 des commentaires du code).
+\item \textbf{Trilemme CRO conditionnel} sous ses formes explicite, publi\'ee et asymptotique
+      (Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}, Th\'eor\`eme~1 des commentaires du code).
+\item \textbf{Coh\'erence et port\'ee des hypoth\`eses} (t\'emoins).
 \item \textbf{R\'egimes de capacit\'e institutionnelle} (classification indicative).
 \item \textbf{Extensions}, soit le verdict d\'eterministe et la forme raffin\'ee (version~2.2) puis le seuil $H^\sharp$ certifi\'e dans les deux sens (version~3.4).
-\item \textbf{Couche concr\`ete} (version~3.3) avec l'in\'egalit\'e log-somme, l'entropie binaire,
-      Pinsker binaire et fini, l'information mutuelle, Fano fini, la structure
-      \texttt{CLOModel}, les trilemmes \'enonc\'es sur de vraies lois avec $\gamma = \alpha H(C) - 1$
+\item \textbf{Couche concr\`ete} (version~3.2) avec l'in\'egalit\'e log-somme, l'entropie binaire,
+      Pinsker binaire et fini, l'information mutuelle, Fano fini et la structure
+      \texttt{CLOModel}. Les trilemmes y sont \'enonc\'es sur de vraies lois, avec $\gamma = \alpha H(C) - 1$
       calcul\'e \`a partir de la loi de $C$. Elle contient enfin une famille de lois t\'emoins \texttt{famModel}
       qui satisfait toutes les hypoth\`eses pour tout $\lambda$.
 \item \textbf{Bloc de v\'erification} (\texttt{\#check}, \texttt{\#print axioms}).
@@ -84,8 +88,8 @@ la n\'ecessit\'e des hypoth\`eses.
       hypoth\`eses, avec $\Conf \cdot \Rel \cdot \Opp = 1/\lambda$
       exactement (\'egalit\'e dans la borne rel\^ach\'ee~; voir la
       Remarque~\ref{rem:portee_temoin}).
-\item \texttt{scopeInstance} est une instance v\'erifiant les Hypoth\`eses 1,
-      2$'$ et 3 mais hors du r\'egime de l'Hypoth\`ese 4, avec
+\item \texttt{scopeInstance} est une instance v\'erifiant les Hypoth\`eses~\ref{ass:extraction_bornee}
+      \`a~\ref{ass:regularite} mais hors du r\'egime de l'Hypoth\`ese~\ref{ass:regime}, avec
       $\Conf \cdot \Rel \cdot \Opp = 1/4$ constant.
 \end{itemize}
 \end{sloppypar}
@@ -155,12 +159,12 @@ d\'ep\^ot~\cite{CROTrilemmaDepot}, dont l'en-t\^ete porte en outre les noms des 
     propriétés d'une instance abstraite (`ProtocolInstance`).
   • Couche concrète (section 10) : Pinsker et Fano y sont DÉMONTRÉS pour de
     vraies lois de probabilité finies sur (C, M, Σ, V), avec M uniforme sur 2^λ
-    valeurs et indépendant de C, et une interprétation admissible (noyau de
+    valeurs et indépendant de C et une interprétation admissible (noyau de
     verdict ne dépendant que de (Σ, C)). H(C) est l'entropie de la loi et
     γ = α·H(C) − 1. Le trilemme (formes explicite, raffinée, asymptotique)
     n'utilise ni Pinsker ni l'Hypothèse 3 ni les supports communs, qui ne servent
     qu'au Lemme 4. L'inégalité I(V;Σ|C) ≤ H(V|C) y est démontrée. Une famille de
-    lois concrètes (`famModel`) satisfait toutes les hypothèses pour tout λ, et le
+    lois concrètes (`famModel`) satisfait toutes les hypothèses pour tout λ et le
     théorème asymptotique s'y applique.
   • Bloc de vérification (section 11).
   • Couche « cryptographie institutionnelle » : les Hypothèses 1 (extraction
@@ -444,7 +448,7 @@ noncomputable def witnessInstance (lam : ℕ) (hlam : 1 ≤ lam) : ProtocolInsta
       norm_num }
 
 /-- **Cohérence (non-vacuité).** Les Hypothèses 1, 2′, 3 et 4 sont
-    simultanément satisfiables dans le modèle abstrait, et la borne du
+    simultanément satisfiables dans le modèle abstrait et la borne du
     Théorème 1 y est atteinte : Conf·Rel·Opp = Δ/(γλ) = 1/λ. Le témoin est
     un point du modèle relâché ; il ne construit pas une loi de probabilité. -/
 theorem assumptions_consistent_and_bound_attained (lam : ℕ) (hlam : 1 ≤ lam) :
@@ -1474,7 +1478,7 @@ theorem trilemma_refined_concrete {lam : ℕ} {M C S V : Type*} [Fintype M] [Fin
 
 open CLOModel in
 /-- **Lemme 4 concret** : Conf ≥ 1 − √(c₀·β·I(M;Σ|C)). Il utilise Pinsker, donc les
-    supports communs, et l'Hypothèse 3 avec la constante β ≥ 1. Les paramètres de
+    supports communs et l'Hypothèse 3 avec la constante β ≥ 1. Les paramètres de
     l'instance sont H = H(C) tirée de la loi et β ; Δ et α n'interviennent pas. -/
 theorem lemma4_concrete {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
     [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C]
@@ -1521,9 +1525,9 @@ theorem conditional_CRO_trilemma_concrete {M S : ℕ → Type} {C V : Type}
 /-! ### 10.7 Une famille de lois concrètes satisfait toutes les hypothèses
 
 Témoin de non-vacuité pour tout λ : M uniforme sur 2^λ valeurs, C et Σ deux bits
-uniformes, les trois indépendants, et un verdict qui recopie la preuve. Toutes les
+uniformes, les trois indépendants et un verdict qui recopie la preuve. Toutes les
 hypothèses des théorèmes concrets, y compris les supports communs et l'Hypothèse 3,
-sont satisfaites, et le théorème asymptotique s'applique à cette famille. -/
+sont satisfaites et le théorème asymptotique s'applique à cette famille. -/
 
 /-- Loi uniforme sur (C, M, Σ) ∈ {0,1} × {0,1}^λ × {0,1} et verdict V = Σ. -/
 noncomputable def famModel (l : ℕ) : CLOModel l (Fin (2 ^ l)) (Fin 2) (Fin 2) (Fin 2) where

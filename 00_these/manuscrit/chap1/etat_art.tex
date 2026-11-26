@@ -32,7 +32,7 @@ cryptographie institutionnelle sont celles de la cryptographie standard~\cite{Go
 Ce qui la distingue des sous-disciplines existantes tient \`a son \emph{objectif}, qui consiste \`a quantifier et \`a optimiser l'utilisabilit\'e
 institutionnelle des garanties cryptographiques, en traitant notamment
 l'\emph{opposabilit\'e} comme une propri\'et\'e de premi\`ere classe. En second lieu,
-les trois m\'etriques ($\Conf$~\ref{def:confidentialite_clo}, $\Rel$~\ref{def:fiabilite_clo}, $\Opp$~\ref{def:opposabilite_clo}) seront d\'efinies ici dans
+les trois m\'etriques (D\'efinitions~\ref{def:confidentialite_clo} \`a~\ref{def:opposabilite_clo}) seront d\'efinies ici dans
 leur formulation issue de la th\'eorie de l'information, qui autorise le raisonnement
 asymptotique. Leurs \'equivalents calculatoires, \'etablis au moyen de jeux de
 s\'ecurit\'e~\cite{GoldwasserMicali84,GMR88}, sont trait\'es \`a la sous-sous-section~\ref{subsubsec:jeux_crypto}.
@@ -118,10 +118,11 @@ positive. Il vient $\TV^2 \leq \tfrac12\KL_{\mathrm{nat}} = \tfrac{\ln 2}{2}\KL_
 \end{Preuve}
 
 \noindent Dans la preuve du Trilemme CRO \`a la section~\ref{sec:cro_classique}, cette in\'egalit\'e relie la
-confidentialit\'e $\Conf = 1 - \max_{m_0,m_1} \TV(P_{\Sigma|m_0},
-P_{\Sigma|m_1})$ \`a l'information mutuelle $I(M;\Sigma|C)$ au moyen de
-l'hypoth\`ese de $\beta$-r\'egularit\'e. Elle permet ainsi de convertir un
-\'ecart entre distributions en une borne sur le produit $\Conf \cdot \Rel \cdot
+confidentialit\'e $\Conf = 1 - \max_{m_0,m_1,c} \TV(P_{\Sigma|m_0,c},
+P_{\Sigma|m_1,c})$ \`a l'information mutuelle $I(M;\Sigma|C)$ au moyen de
+l'hypoth\`ese de $\beta$-r\'egularit\'e. Elle garantit ainsi la confidentialit\'e
+dans le r\'egime de faible fuite (Lemme~\ref{lem:confidentiality_guarantee})
+sans entrer dans la borne du produit $\Conf \cdot \Rel \cdot
 \Opp$~\cite{Tsybakov2009}.
 
 \subsubsection{Le lemme de Fano}
@@ -163,7 +164,7 @@ $H(M|\Sigma,C) = H(M|C) - I(M;\Sigma|C)$, on obtient~\eqref{eq:rel_fano_bound}.
 \subsubsection{L'in\'egalit\'e de traitement des donn\'ees}
 \label{subsubsec:dpi}
 
-\begin{lemma}[Data Processing Inequality~\cite{CoverThomas06,Lindblad}]\label{lem:dpi}
+\begin{lemma}[Data Processing Inequality (DPI)~\cite{CoverThomas06,Lindblad}]\label{lem:dpi}
 Pour toute cha\^ine de Markov $X \to Y \to Z$, on a
 \begin{equation}
 I(X;Z) \;\leq\; I(X;Y).
@@ -203,8 +204,8 @@ de l'opposabilit\'e, con\c{c}ue comme un ratio de r\'eduction d'incertitude, s'e
 \label{subsubsec:capacite_canal}
 
 Le th\'eor\`eme de codage source-canal~\cite{Shannon48,CoverThomas06} \'etablit que
-la transmission fiable d'une source $X$ sur un canal de capacit\'e $C$ est possible
-si $H(X) < C$ et impossible si $H(X) > C$. Transpos\'e au contexte institutionnel, ce r\'esultat conduit \`a
+la transmission fiable d'une source $X$ sur un canal de capacit\'e $C_{\mathrm{can}}$ est possible
+si $H(X) < C_{\mathrm{can}}$ et impossible si $H(X) > C_{\mathrm{can}}$. Transpos\'e au contexte institutionnel, ce r\'esultat conduit \`a
 mod\'eliser l'interpr\`ete comme un canal de capacit\'e born\'ee $\Delta$, qui limite
 la quantit\'e d'information qu'il peut extraire~\cite{WynerZiv76,Maurer1999}.
 \end{sloppypar}
@@ -244,7 +245,7 @@ I(A;B)_\rho = S(\rho_A) + S(\rho_B) - S(\rho_{AB}).
 \label{eq:qmi}
 \end{equation}
 L'information mutuelle quantique ob\'eit elle aussi \`a une in\'egalit\'e de traitement
-des donn\'ees~\cite{Lindblad}. L'application d'un canal CPTP $\Lambda$ au
+des donn\'ees~\cite{Lindblad}. L'application d'un canal $\Lambda$ compl\`etement positif pr\'eservant la trace (CPTP) au
 syst\`eme $B$ ne peut que la r\'eduire,
 \begin{equation}
 I(A;B)_\rho \geq I(A; \Lambda(B))_\rho.
@@ -262,7 +263,7 @@ $\bar{\rho} = \sum_x P_X(x)\rho_x$, elle vaut
 \label{eq:holevo}
 \end{equation}
 Le th\'eor\`eme de Holevo \'etablit que l'information accessible $I_{\mathrm{acc}}$
-par toute mesure POVM satisfait $I_{\mathrm{acc}} \leq \chi$. L'extension
+par toute mesure \`a valeurs d'op\'erateurs positifs (POVM) satisfait $I_{\mathrm{acc}} \leq \chi$. L'extension
 post-quantique de l'opposabilit\'e s'appuie directement sur cette borne. Quels que
 soient les outils quantiques dont il dispose, un interpr\`ete institutionnel n'extrait
 en effet du \textit{proof state} quantique qu'au plus $\chi$ bits d'information~\cite{Winter}.
@@ -297,7 +298,7 @@ Pour tous \'etats quantiques $\rho$ et $\sigma$, on a
 \label{eq:qpinsker}
 \end{equation}
 o\`u $D(\rho\|\sigma) = \mathrm{Tr}(\rho\log\rho - \rho\log\sigma)$ est l'entropie
-relative quantique.
+relative quantique, exprim\'ee en nats.
 \end{lemma}
 
 \begin{Preuve}[Lemme~\ref{lem:pinsker_quantique_etat_art}, esquisse]
@@ -331,11 +332,11 @@ post-mesure satisfait
 \begin{Preuve}[Lemme~\ref{lem:mesure_douce_etat_art}]
 L'\'etat post-mesure est $\rho' = \sqrt{M_m}\,\rho\sqrt{M_m}/p_m$. Comme
 $\sqrt{\rho}\rho'\sqrt{\rho} = (\sqrt{\rho}\sqrt{M_m}\sqrt{\rho})^2/p_m$ avec
-$\sqrt{\rho}\sqrt{M_m}\sqrt{\rho} \geq 0$, la fid\'elit\'e vaut
-$F(\rho,\rho') = (\mathrm{Tr}\,\rho\sqrt{M_m})^2/p_m$. De $0 \leq M_m \leq \mathbb{I}$
+$\sqrt{\rho}\sqrt{M_m}\sqrt{\rho} \geq 0$, la fid\'elit\'e~\eqref{eq:fidelite} vaut
+$F(\rho,\rho') = \mathrm{Tr}(\rho\sqrt{M_m})/\sqrt{p_m}$. De $0 \leq M_m \leq \mathbb{I}$
 on d\'eduit $\sqrt{M_m} \geq M_m$, donc $\mathrm{Tr}\,\rho\sqrt{M_m} \geq p_m$ et
-$F(\rho,\rho') \geq p_m \geq 1 - \delta$. L'in\'egalit\'e de Fuchs-van de Graaf
-$\tfrac12\|\rho - \rho'\|_1 \leq \sqrt{1 - F(\rho,\rho')}$~\cite{Wilde2017} donne
+$F(\rho,\rho')^2 \geq p_m \geq 1 - \delta$. L'in\'egalit\'e de Fuchs-van de Graaf~\eqref{eq:fuchs_vdg}, soit
+$\tfrac12\|\rho - \rho'\|_1 \leq \sqrt{1 - F(\rho,\rho')^2}$~\cite{Wilde2017}, donne
 alors $\|\rho - \rho'\|_1 \leq 2\sqrt{\delta}$.
 \end{Preuve}
 
@@ -380,7 +381,7 @@ Trois mod\`eles de canaux sont pertinents pour l'analyse post-quantique~\cite{Wi
 \begin{itemize}
 \item \textbf{Canal d\'epolarisant}, d\'efini par $\Lambda_{\mathrm{dep}}(\rho) = (1-p)\rho + \frac{p}{d}I_d$
 \item \textbf{Canal d'amortissement d'amplitude} $\Lambda_{\mathrm{AD}}(\rho)$, qui mod\'elise la dissipation d'\'energie
-\item \textbf{Canal de d\'ephasage}, d\'efini par $\Lambda_{\mathrm{deph}}(\rho) = (1-\lambda)\rho + \lambda Z\rho Z$
+\item \textbf{Canal de d\'ephasage}, d\'efini par $\Lambda_{\mathrm{deph}}(\rho) = (1-p)\rho + p Z\rho Z$
 \end{itemize}
 
 Ces canaux mod\'elisent les effets de bruit quantique qui d\'egradent
@@ -448,7 +449,7 @@ Plusieurs syst\`emes de preuves compl\`etent les zk-SNARKs dans la palette dispo
 
 \textbf{Bulletproofs.} B\"unz et al.~\cite{Bunz19} ont introduit des preuves \`a divulgation nulle sans trusted setup, avec des tailles logarithmiques en la taille du t\'emoin. Leur construction repose sur un argument de produit scalaire (\emph{inner-product argument}) et sur la difficult\'e du logarithme discret~; elle n'est donc pas post-quantique.
 
-\textbf{STARKs.} Ben-Sasson et al.~\cite{BenSasson18} ont d\'evelopp\'e des preuves transparentes (sans trusted setup) et post-quantiques, fond\'ees sur des codes correcteurs d'erreurs et la technique FRI (Fast Reed-Solomon Interactive Oracle Proof of Proximity).
+\textbf{STARKs (\emph{Scalable Transparent ARguments of Knowledge}).} Ben-Sasson et al.~\cite{BenSasson2019} ont d\'evelopp\'e des preuves transparentes (sans trusted setup) et post-quantiques, fond\'ees sur des codes correcteurs d'erreurs et la technique FRI (Fast Reed-Solomon Interactive Oracle Proof of Proximity).
 
 \textbf{Fiat-Shamir.} La transformation de Fiat et Shamir~\cite{FiatShamir87} convertit les preuves interactives en preuves non-interactives au moyen d'une fonction de hachage. Sa s\'ecurit\'e dans le mod\`ele de l'oracle al\'eatoire quantique a \'et\'e analys\'ee, pour les signatures, par Kiltz, Lyubashevsky et Schaffner~\cite{Kiltz2017}.
 
@@ -564,7 +565,7 @@ $\Delta$ bits \emph{au-del\`a du message}, $I(V;\Sigma|M,C) \leq \Delta$, d'o\`u
 I(V;\Sigma|C) \;\leq\; I(M;\Sigma|C) + \Delta.
 \label{eq:extraction_bornee_etat_art}
 \end{equation}
-C'est l'Hypoth\`ese d'Extraction Born\'ee~\cite{Smith09}, formalis\'ee \`a la
+C'est l'Hypoth\`ese d'extraction born\'ee~\cite{Smith09}, formalis\'ee \`a la
 section~\ref{sec:cro_classique} par l'\'equation~\eqref{eq:extraction_bornee} et
 fond\'ee par la Proposition~\ref{prop:fondement_extraction}.
 \end{sloppypar}
@@ -608,7 +609,7 @@ l'interpr\`ete institutionnel, dot\'e de ressources propres $K$.
 
 \begin{remark}[Coexistence de deux notations de l'opposabilit\'e]\label{rem:deux_notations}
 Deux notations de l'opposabilit\'e coexistent, renvoyant toutes les deux \`a la m\^eme r\'ealit\'e, mais chacune servant un but pr\'ecis.
-La notation de l'\'equation~\eqref{eq:opp_def} sert \`a pr\'eciser le protocole sous revue et le contexte particulier de son examen ou ex\'ecution, c'est une notation purement p\'edagogique, utilis\'ee notamment dans les \'equations~\eqref{eq:opp_helios}, \eqref{eq:opp_zksnark} et \eqref{eq:opp_ecdsa}.
+La notation de l'\'equation~\eqref{eq:opp_def} sert \`a pr\'eciser le protocole sous revue et le contexte institutionnel de son examen ou de son ex\'ecution. Le symbole $C$ y reste la variable al\'eatoire du contexte, de sorte que la quantit\'e est celle de l'\'equation~\eqref{eq:opp_clo}. C'est une notation p\'edagogique, utilis\'ee notamment dans les \'equations~\eqref{eq:opp_helios}, \eqref{eq:opp_zksnark} et \eqref{eq:opp_ecdsa}.
 La notation de l'\'equation~\eqref{eq:opp_clo} est celle utilis\'ee dans les d\'emonstrations et autres d\'eveloppements, pour sa sym\'etrie avec celles des deux autres m\'etriques.
 \end{remark}
 
@@ -787,7 +788,9 @@ Au-del\`a de la certification~\cite{AbadiRogaway00,BanaComon12}, la formalisatio
 Lean4 (section~\ref{sec:lean4}) a produit trois apports.
 
 \begin{enumerate}
-\item \textbf{Mise au jour d'une hypoth\`ese.} La formalisation a impos\'e de poser
+\item \textbf{Mise au jour de deux hypoth\`eses.} La formalisation a d\'egag\'e
+l'efficacit\'e du verdict comme hypoth\`ese distincte
+(Remarque~\ref{rem:statut_verdict_efficace}). Elle a aussi impos\'e de poser
 le r\'egime de pr\'eservation de la confidentialit\'e
 $I(M;\Sigma|C) \leq \kappa/\lambda$ (Hypoth\`ese~\ref{ass:regime}), que la preuve
 publi\'ee d\'eduisait d'une \'etape d'optimisation. La formulation alternative
@@ -795,7 +798,7 @@ retenue le pose comme hypoth\`ese.
 
 \item \textbf{Formulations alternatives.} La formalisation a conduit \`a des
 formulations plus pr\'ecises de trois \'enonc\'es publi\'es
-(section~\ref{subsec:lean4_erreurs}). La forme raffin\'ee du trilemme et le seuil $H^\sharp$, qui
+(section~\ref{subsec:lean4_formulations}). La forme raffin\'ee du trilemme et le seuil $H^\sharp$, qui
 d\'elimitent le r\'egime o\`u la capacit\'e institutionnelle est contraignante, ont
 \'egalement \'et\'e certifi\'es.
 

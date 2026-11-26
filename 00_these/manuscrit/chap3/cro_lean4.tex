@@ -26,7 +26,7 @@ famille de lois t\'emoins. Elle certifie enfin les cons\'equences d'un verdict
 d\'eterministe et constitue une biblioth\`eque Lean4
 r\'eutilisable pour la cryptographie institutionnelle. Cette production \textbf{C5}
 a aussi conduit \`a des formulations plus pr\'ecises de plusieurs \'etapes des
-preuves publi\'ees, pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
+preuves publi\'ees, pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_formulations}.
 
 Les sous-sections suivantes pr\'ecisent d'abord ce que cette formalisation
 couvre et ses limitations (section~\ref{subsec:portee_limitations}), puis les
@@ -42,7 +42,7 @@ ensuite le th\'eor\`eme principal v\'erifi\'e
 (section~\ref{subsec:theoreme_principal_lean4}), ses extensions au verdict d\'eterministe
 et \`a la forme raffin\'ee (section~\ref{subsec:lean4_extensions}) puis la couche concr\`ete
 sur lois finies (section~\ref{subsec:lean4_concret}). Les deux derni\`eres pr\'esentent ce
-que la formalisation a r\'ev\'el\'e (section~\ref{subsec:lean4_erreurs}) puis appliquent la
+que la formalisation a r\'ev\'el\'e (section~\ref{subsec:lean4_formulations}) puis appliquent la
 formalisation aux familles de protocoles canoniques
 (section~\ref{subsec:application_familles_canoniques}).
 
@@ -50,6 +50,14 @@ Le code source v\'erifi\'e est disponible en acc\`es ouvert (licence MIT,
 \url{https://github.com/MINKAThierry/PhDThesis}~\cite{CROTrilemmaDepot}), avec une
 version de Lean et de Mathlib fig\'ee (v4.35.0) et une int\'egration continue qui le
 recompile \`a chaque modification.
+
+Les extraits de ce chapitre sont tir\'es de la version~3.4 du fichier
+(annexe~\ref{chap:annexe_lean4}). Les num\'eros de version cit\'es plus loin datent l'apparition de
+chaque \'enonc\'e. Les commentaires du code gardent la num\'erotation des articles. Les Lemmes~1,
+2 et~4 y d\'esignent les Lemmes~\ref{lem:pinsker}, \ref{lem:fano}
+et~\ref{lem:confidentiality_guarantee}. Les Hypoth\`eses~1, 2', 3 et~4 y d\'esignent les
+Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regime} et le Th\'eor\`eme~1 le
+Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}.
 \end{sloppypar}
 
 \begin{boiteArbitre}
@@ -111,7 +119,7 @@ Mathlib, reste un travail futur.
 
 \textbf{Les constructions SOTP ne sont couvertes que partiellement par Lean4.}
 La formalisation couvre le noyau alg\'ebrique du Trilemme. Les r\'eductions de SOTP-Low sont m\'ecanis\'ees
-en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}). Celles de SOTP-Base et de SOTP-High
+en situation r\'eduite (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). Celles de SOTP-Base et de SOTP-High
 constituent une direction de recherche future.
 
 \textbf{L'extension quantique du Trilemme CRO n'est pas couverte.}
@@ -170,7 +178,7 @@ o\`u $\mathrm{TV}$ est la distance de variation totale.
 \end{definition}
 
 \begin{definition}[Fiabilit\'e]\label{def:rel_lean4}
-Soit $\hat{M}$ l'estimateur MAP de $M$ \`a partir de $(\Sigma, C)$. La fiabilit\'e
+Soit $\hat{M}$ l'estimateur du maximum a posteriori (MAP) de $M$ \`a partir de $(\Sigma, C)$. La fiabilit\'e
 est alors d\'efinie par
 \begin{equation}
 \Rel(\mathcal{P}) = 1 - \Pr[\hat{M} \neq M]
@@ -231,7 +239,10 @@ pour cette m\^eme preuve sans contenu.
 
 Le trilemme repose sur quatre pr\'emisses, dont trois portent sur
 l'institution interpr\`ete et le protocole, la quatri\`eme reliant fiabilit\'e et
-information. Nous les formalisons telles quelles, sans simplification.
+information. Nous les formalisons telles quelles, sans simplification. Les trois premi\`eres
+reprennent les Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace}
+et~\ref{ass:regularite}. La quatri\`eme est la cons\'equence du Lemme~\ref{lem:fano} que le noyau
+alg\'ebrique re\c{c}oit en pr\'emisse.
 % Note de source : les labels LaTeX de ces quatre enonces ne correspondent pas
 % a leur contenu ; seuls les titres font foi.
 
@@ -247,7 +258,7 @@ raisonnement au-del\`a du contexte formel $C$.
 \begin{assumption}[Verdict efficace]\label{ass:pinsker_axiom}
 La taille de l'espace de verdict et l'entropie du verdict satisfont
 \begin{equation}
-|\mathcal{Y}_\lambda| \le 2^{\alpha H(C)}
+|\mathcal{V}_\lambda| \le 2^{\alpha H(C)}
 \quad\text{et}\quad
 H(V|C) \ge \alpha H(C) - 1 =: \gamma \ge 1
 \end{equation}
@@ -277,7 +288,7 @@ Le code Lean4 n'impose que $0 \le \Rel \le 1$.
 \subsubsection{\'Enonc\'e du th\'eor\`eme original}
 \label{subsubsec:enonce_theoreme_original}
 
-\begin{theorem}[Trilemme CRO conditionnel]\label{thm:original_lean4}
+\begin{theorem}[Trilemme CRO conditionnel, \'enonc\'e publi\'e~\cite{MINKA2026CRO}]\label{thm:original_lean4}
 Sous les Hypoth\`eses~\ref{ass:fano_axiom},~\ref{ass:pinsker_axiom} et
 pour un protocole $\beta$-r\'egulier avec messages uniformes
 ($H(M)=\lambda$) et $\lambda \ge 64$, on a
@@ -287,7 +298,10 @@ pour un protocole $\beta$-r\'egulier avec messages uniformes
 \end{equation}
 \end{theorem}
 
-La preuve originale encha\^ine
+Cet \'enonc\'e est celui de l'article. La formalisation le pr\'ecise en posant le r\'egime de
+l'Hypoth\`ese~\ref{ass:regime}, sous lequel il d\'ecoule de la forme explicite
+(Remarque~\ref{rem:corollaire_publie}). La r\'egularit\'e $\beta$ y garantit la confidentialit\'e
+(Lemme~\ref{lem:confidentiality_guarantee}). La preuve originale encha\^ine
 quatre arguments.
 \begin{enumerate}
     \item L'in\'egalit\'e de Fano~\cite{Fano61,CoverThomas06} donne
@@ -478,7 +492,9 @@ structure InstitutionalParams where
 \end{leancode}
 
 Cette structure couvre les trois familles canoniques~\cite{Adida08,Groth16,Johnson01},
-instanci\'ees ci-dessous.
+instanci\'ees ci-dessous. La famille \texttt{TraditionalAuditParams} porte les valeurs de $H(C)$, de
+$\Delta$ et de $\alpha$ de la calibration ECDSA. Sa valeur de $\beta$ remplit le champ de la structure
+et n'est employ\'ee par aucun th\'eor\`eme.
 
 \begin{leancode}[caption={Instances canoniques Helios, zk-SNARKs et audit traditionnel}, label={lst:lean4_instances_canoniques}]
 noncomputable def HeliosParams : InstitutionalParams :=
@@ -584,10 +600,10 @@ theorem negligible_eps0 : Negligible ε₀ := by
   -- (suite de la preuve : annexe B, listing complet)
 \end{leancode}
 
-\subsubsection{Lemme~4 de garantie de confidentialit\'e}
+\subsubsection{Lemme de garantie de confidentialit\'e}
 \label{subsubsec:lemme4_lean4}
 
-\begin{leancode}[caption={Garantie de confidentialit\'e du Lemme~4 en Lean4}, label={lst:lean4_lemma4}]
+\begin{leancode}[caption={Lemme de garantie de confidentialit\'e en Lean4}, label={lst:lean4_lemma4}]
 theorem lemma4_confidentiality_guarantee {lam : ℕ} (P : ProtocolInstance lam)
     (hA3 : P.KLmax ≤ P.params.β * P.I) :
     1 - Real.sqrt (c0 * P.params.β * P.I) ≤ P.Conf := by
@@ -708,7 +724,7 @@ $\Delta/\gamma$ est lui aussi r\'ealis\'e par une loi explicite
 (Remarque~\ref{rem:temoin_realisable}).
 \end{remark}
 
-\begin{leancode}[caption={T\'emoin de coh\'erence~: instance atteignant la borne}, label={lst:lean4_witness_instance}]
+\begin{leancode}[caption={T\'emoin de coh\'erence, instance atteignant la borne}, label={lst:lean4_witness_instance}]
 theorem assumptions_consistent_and_bound_attained (lam : ℕ) (hlam : 1 ≤ lam) :
     InstitutionalAssumptions (witnessInstance lam hlam) ∧
     (witnessInstance lam hlam).I ≤ 0 / lam ∧
@@ -748,7 +764,7 @@ explicite de la Remarque~\ref{rem:scope_trilemme_classique} r\'ealise ces valeur
 \`a $2^{-\lambda}$ pr\`es, avec un produit $1/4 + 2^{-\lambda-2}$.
 \end{Preuve}
 
-\begin{leancode}[caption={T\'emoin de port\'ee~: instance hors du r\'egime}, label={lst:lean4_scope_instance}]
+\begin{leancode}[caption={T\'emoin de port\'ee, instance hors du r\'egime}, label={lst:lean4_scope_instance}]
 theorem regime_assumption_necessary (lam : ℕ) (hlam : 64 ≤ lam) :
     InstitutionalAssumptions (scopeInstance lam hlam) ∧
     (scopeInstance lam hlam).params.Δ = 0 ∧
@@ -764,7 +780,7 @@ theorem regime_assumption_necessary (lam : ℕ) (hlam : 64 ≤ lam) :
 \label{rem:statut_verification_lean4}
 Le noyau alg\'ebrique de cette preuve est certifi\'e m\'ecaniquement en
 Lean4. Les formulations alternatives issues de la certification sont
-pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}.
+pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_formulations}.
 \end{remark}
 \end{sloppypar}
 
@@ -791,7 +807,7 @@ structurels \'etablis au chapitre~\ref{chap:cadre_formel}.
 Chacun de ces \'enonc\'es ne d\'epend que des axiomes standard \texttt{propext},
 \texttt{Classical.choice} et \texttt{Quot.sound}.
 
-\begin{leancode}[caption={Extensions de la version 2.2}, label={lst:lean4_extensions}]
+\begin{leancode}[caption={Extensions introduites en version 2.2}, label={lst:lean4_extensions}]
 /-- **T1.** Verdict déterministe : I(V;Σ|C) = H(V|C) ⇒ Opp = 1. -/
 theorem opp_eq_one_of_deterministic {lam : ℕ} (P : ProtocolInstance lam)
     (hdet : P.IV = P.HV) (hHV : 0 < P.HV) : P.Opp = 1 := by
@@ -944,7 +960,7 @@ sont pas encore certifi\'es.
 \end{sloppypar}
 
 \subsection{Ce que la formalisation a r\'ev\'el\'e}
-\label{subsec:lean4_erreurs}
+\label{subsec:lean4_formulations}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 La formalisation Lean4 du noyau alg\'ebrique du Trilemme CRO a produit,
@@ -966,7 +982,7 @@ Lemme~\ref{lem:confidentiality_guarantee} retient cette formulation
 alternative.
 
 \paragraph{Statut de l'Hypoth\`ese~2.}
-L'Hypoth\`ese~2 publi\'ee \'enon\c{c}ait $|\mathcal{Y}_\lambda| \leq
+L'Hypoth\`ese~2 publi\'ee \'enon\c{c}ait $|\mathcal{V}_\lambda| \leq
 2^{\alpha H(C)}$ (borne sup\'erieure) et en d\'eduisait
 $H(V|C) \geq \alpha H(C) - 1$ (borne inf\'erieure). La formalisation a
 montr\'e que ces deux \'enonc\'es sont logiquement ind\'ependants. La borne
@@ -1079,7 +1095,7 @@ Les formulations alternatives et le cas limite qui \'etablit la n\'ecessit\'e
 du r\'egime de confidentialit\'e conduisent \`a une le\c{c}on
 m\'ethodologique sur le r\^ole de la formalisation dans le processus de
 publication scientifique. La
-section~\ref{subsec:verification_corrige_lecon} la d\'eveloppe.
+section~\ref{subsec:verification_precise_lecon} la d\'eveloppe.
 \end{sloppypar}
 
 \begin{boiteArbitre}
@@ -1113,7 +1129,7 @@ cette classification. Les valeurs de $\beta$ des familles canoniques sont illust
 sens statistique, une signature qui publie le message et un chiffrement dont le chiffr\'e
 d\'etermine le clair ne sont pas $\beta$-r\'eguliers (D\'efinition~\ref{def:beta_regularite}). Le
 param\`etre $\beta$ n'intervient pas dans la borne du produit~; il n'intervient que dans le
-Lemme~4.
+Lemme~\ref{lem:confidentiality_guarantee}.
 
 \begin{leancode}[caption={Classification des r\'egimes institutionnels en Lean4}, label={lst:lean4_capacity_regime}]
 inductive InstitutionalRegime where

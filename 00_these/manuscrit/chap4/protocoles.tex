@@ -42,8 +42,8 @@ I(V;\Sigma|C) \leq I(M;\Sigma|C) + \Delta
 
 \begin{definition}[Capacit\'e d'extraction institutionnelle $\Delta$]\label{def:capacite_extraction_op}
 $\Delta$ est la quantit\'e d'information sur les verdicts qu'un acteur
-institutionnel peut extraire \emph{au-del\`a} de l'information mutuelle brute
-contenue dans la preuve cryptographique. En pratique, $\Delta$ capture la
+institutionnel peut extraire \emph{au-del\`a} de l'information $I(M;\Sigma|C)$
+que la preuve porte sur le message. En pratique, $\Delta$ capture la
 connaissance pr\'ealable (pr\'ec\'edents juridiques, formation sp\'ecialis\'ee,
 proc\'edures institutionnelles, capacit\'e de d\'elib\'eration collective) non
 formalis\'ee dans le contexte $C$.
@@ -57,9 +57,9 @@ $I(V;\Sigma|M,C)$. L'estimateur retenu est donc
 \hat{\Delta} = \hat{I}(V;\Sigma \mid M, C)
 \label{eq:estimateur_delta}
 \end{equation}
-o\`u $\hat{I}$ est un estimateur de l'information mutuelle conditionnelle
-(plug-in avec correction de Miller--Madow, ou estimateur de type NSB pour
-les petits \'echantillons), calcul\'e sur les triplets $(v_i, \sigma_i, m_i)$
+Ici $\hat{I}$ est un estimateur de l'information mutuelle conditionnelle
+(plug-in avec correction de Miller--Madow, ou estimateur de Nemenman, Shafee et Bialek (NSB) pour
+les petits \'echantillons). Il est calcul\'e sur les triplets $(v_i, \sigma_i, m_i)$
 recueillis \`a contexte $c$ fix\'e. Le message $m_i$ est connu de
 l'exp\'erimentateur (v\'erit\'e terrain) mais non des participants. $\hat{\Delta}$ estime
 la plus petite capacit\'e compatible avec l'Hypoth\`ese~\ref{ass:extraction_bornee}
@@ -186,7 +186,7 @@ l'Algorithme~\ref{alg:estimation_delta}.
 \end{algorithm}
 
 L'algorithme transpose sur le terrain la d\'efinition th\'eorique de la
-capacit\'e d'extraction institutionnelle en encha\^inant quatre phases.
+capacit\'e d'extraction institutionnelle en encha\^inant cinq phases.
 
 La phase d'\textbf{entr\'ees} (lignes~1--2) fixe le cadre de la mesure.
 Elle re\c{c}oit une institution cible $I$, un ensemble de types de preuves
@@ -330,16 +330,16 @@ calibration.
 \subsubsection{Pr\'edictions v\'erifiables}
 \label{subsubsec:predictions_delta}
 
-Les pr\'edictions suivantes sont directement
-falsifiables~\cite{MINKA2026CRO,MINKA2026SOTP}~:
+Les pr\'edictions suivantes sont
+pr\'eenregistr\'ees~\cite{MINKA2026CRO,MINKA2026SOTP}~:
 
 \begin{enumerate}
 \item $\hat\Delta_{\text{juge g\'en\'eral}} \approx 25$ bits, sous la capacit\'e de $35$ bits que la calibration retient pour un juge dot\'e d'une expertise PKI (Remarque~\ref{rem:delta_capacite})
 \item $\hat\Delta_{\text{juge PKI}} \approx 35$ bits
 \item $\hat\Delta_{\text{r\'egulateur senior}} \approx 65$ bits
-\item $\hat\Delta_{\text{ECDSA}} > \hat\Delta_{\text{Helios}}$ pour tout sous-groupe
-\item Facteur d'amplification institutionnelle $1{,}25$ \`a $3{,}7$ fois par
-      rapport \`a la capacit\'e individuelle Miller ($\approx 20$ bits)
+\item $\hat I(V;\Sigma \mid M,C)$ plus \'elev\'e sur des preuves ECDSA que sur des preuves Helios, pour tout sous-groupe
+\item Facteur d'amplification institutionnelle de $1{,}25$ (juge g\'en\'eral, $25$ bits) \`a $3{,}7$
+      (r\'egulateur expert, $73$ bits) par rapport \`a la capacit\'e individuelle de r\'ef\'erence ($\approx 20$ bits)
 \end{enumerate}
 Les pr\'edictions~1, 2, 3 et~5 portent sur des valeurs absolues que le minorant par
 traits ne peut pas atteindre (effet de plateau de la
@@ -353,7 +353,7 @@ cet ordre r\'efuterait le mod\`ele de capacit\'e institutionnelle.
 \begin{boiteArbitre}
 L'arbitre note un \'el\'ement nouveau. Des chiffres fixent d\'esormais des cibles,
 avec vingt-cinq bits pour un juge g\'en\'eraliste et soixante-cinq pour un
-r\'egulateur senior. Il y voit des paris, qui peuvent donc \^etre perdus.
+r\'egulateur senior. Il y voit des paris. L'ordre entre les groupes, lui, peut \^etre d\'ementi par la mesure.
 \end{boiteArbitre}
 
 % -----------------------------------------------------------------------
@@ -500,14 +500,16 @@ op\'erationnelle (fiabilit\'e de v\'erification)~:
 La valeur cible pour l'opposabilit\'e seule est
 $\Opp_{\mathrm{pr\'edit}} = 0{,}50$~; son calcul complet (espace de
 verdicts \`a quatre d\'ecisions, signal expert binaire d'un bit) est
-\'etablie \`a la section~\ref{sec:derivation_helios}. Le
+\'etabli \`a la section~\ref{sec:derivation_helios}. Le
 pr\'esent protocole met \`a l'\'epreuve l'hypoth\`ese d'uniformit\'e des verdicts qui
 sous-tend cette valeur. Il mesure la distribution empirique $H_{\mathrm{emp}}(V|C)$
 au lieu de la postuler.
 
 \noindent\textbf{Crit\`ere de validation.}
 \begin{itemize}
-\item Accord si $|\Opp_{\mathrm{emp}} - \Opp_{\mathrm{pr\'edit}}| \leq 0{,}05$
+\item Accord si $\Opp_{\mathrm{pr\'edit}}$ est dans l'IC~95\,\% bootstrap de $\Opp_{\mathrm{emp}}$
+      et si $|\Opp_{\mathrm{emp}} - \Opp_{\mathrm{pr\'edit}}| \leq 0{,}05$
+\item Ind\'etermination si $\Opp_{\mathrm{pr\'edit}}$ est dans cet intervalle avec un \'ecart sup\'erieur \`a $0{,}05$
 \item D\'esaccord (la valeur $0{,}50$ et l'hypoth\`ese d'uniformit\'e qui la fonde
       sont r\'efut\'ees) si $\Opp_{\mathrm{pr\'edit}}$ tombe hors de l'IC~95\,\% bootstrap
       de $\Opp_{\mathrm{emp}}$
@@ -537,7 +539,7 @@ CRO ne soient calcul\'ees. Le param\`etre $\beta$ se calcule sur les lois de pre
 \State \textbf{\'Etape 3~:} Test d'admissibilit\'e $V \perp M \mid (\Sigma,C)$
 \State \textbf{\'Etape 4~:} $\hat\Delta \leftarrow \hat I(V;\Sigma \mid M,C)$
 \State \textbf{\'Etape 5~:} $\hat\alpha \leftarrow \log_2|\mathcal{V}| / H(C)$
-\State \textbf{\'Etape 6~:} Validation (ICC $\geq 0{,}8$, $\kappa \geq 0{,}7$)
+\State \textbf{\'Etape 6~:} Validation (ICC $\geq 0{,}8$, $\kappa_{\mathrm{Cohen}} \geq 0{,}7$)
 \end{algorithmic}
 \end{algorithm}
 
@@ -588,7 +590,7 @@ m\'ecaniquement un $\hat\alpha$ biais\'e.
 L'\textbf{\'etape~6} (ligne~9) valide les estimations par deux
 statistiques. Le coefficient de corr\'elation intra-classe
 $\mathrm{ICC} \geq 0{,}8$ mesure la coh\'erence test-retest tandis que le
-coefficient $\kappa$ de Cohen $\geq 0{,}7$ mesure l'accord
+coefficient $\kappa_{\mathrm{Cohen}}$ de Cohen $\geq 0{,}7$ mesure l'accord
 inter-\'evaluateurs au-del\`a du hasard. Ces deux seuils sont plus
 exigeants que ceux de l'algorithme~\ref{alg:estimation_delta}, qui se
 contentait d'une validation qualitative. Le protocole standardis\'e fixe
@@ -625,7 +627,7 @@ I(V^q; \Sigma|C)_\rho \leq I(M;\Sigma|C)_\rho + \Delta_q
 \begin{definition}[Capacit\'e d'extraction quantique $\Delta_q$]\label{def:capacite_extraction_quantique_op}
 $\Delta_q$ est la quantit\'e d'information sur les verdicts qu'un acteur
 institutionnel peut extraire dans un environnement post-quantique,
-au-del\`a de l'information accessible de Holevo. Elle se d\'ecompose
+au-del\`a de l'information $I(M;\Sigma|C)_\rho$ que la preuve porte sur le message. Elle se d\'ecompose
 comme $\Delta_q = \Delta + \delta_{\mathrm{enh}} - \delta_{\mathrm{degr}}$
 (D\'efinition~\ref{def:decomposition_delta_q}). Le terme $\delta_{\mathrm{enh}}$
 repr\'esente l'am\'elioration due aux ressources quantiques. Le terme
@@ -882,7 +884,7 @@ preuves avec et sans d\'egradation quantique simul\'ee.
 \midrule
 D\'epolarisation & $p_{\mathrm{dep}}$ & $[0{,}001;\,0{,}1]$ & $0{,}02$--$0{,}20$ \\
 D\'ephasage & $p_{\mathrm{deph}}$ & $[0{,}001;\,0{,}05]$ & $0{,}01$--$0{,}10$ \\
-Amortissement & $\gamma_{\mathrm{AD}}$ & $[0{,}001;\,0{,}02]$ & $0{,}005$--$0{,}05$ \\
+Amortissement & $g$ & $[0{,}001;\,0{,}02]$ & $0{,}005$--$0{,}05$ \\
 Combin\'e (NISQ typique) & --- & --- & $0{,}05$--$0{,}15$ \\
 \bottomrule
 \end{tabular}
@@ -929,7 +931,7 @@ pour extraire $\hat\eta_q$.
 \item Ordre de grandeur de $\hat\eta_q\,H(C)$ compatible avec la borne de
       continuit\'e de l'information mutuelle conditionnelle (Alicki--Fannes--Winter),
       exprim\'ee en fonction de la distance de trace
-      $\tfrac12\|\Lambda(\rho_\Sigma)-\rho_\Sigma\|_1 \leq \sqrt{1-F}$ (heuristique)
+      $\tfrac12\|\Lambda(\rho_\Sigma)-\rho_\Sigma\|_1 \leq \sqrt{1-F}$, o\`u $F$ est la fid\'elit\'e au carr\'e (heuristique)
 \item Relation croissante, approximativement lin\'eaire pour bruit faible, entre
       $p_{\mathrm{dep}}$ et $\hat\eta_q$
 \item $\hat\eta_q = 0$, aux fluctuations d'\'echantillonnage pr\`es, lorsque la
@@ -1065,7 +1067,7 @@ l'engagement m\'ethodologique.
 \toprule
 \textbf{Param\`etre} & \textbf{L'hypoth\`ese est r\'efut\'ee si\ldots} \\
 \midrule
-$\Delta$ (Hyp.~\ref{ass:extraction_bornee}) & la borne inf\'erieure de l'IC~95\,\% de $\hat{I}(V;\Sigma|M,C)$ d\'epasse la capacit\'e fix\'ee \emph{avant} l'exp\'erience pour la population \'etudi\'ee. \\
+$\Delta$ (Hyp.~\ref{ass:extraction_bornee}) & la borne inf\'erieure de l'IC~95\,\% de $\hat{I}(V;\Sigma|M,C)$ d\'epasse la capacit\'e fix\'ee \emph{avant} l'exp\'erience pour la population \'etudi\'ee. Avec $k$ traits, ce crit\`ere n'atteint que les capacit\'es d\'eclar\'ees inf\'erieures \`a $k$ bits~; au-del\`a, la r\'efutation porte sur l'ordre entre groupes (sous-sous-section~\ref{subsubsec:predictions_delta}). \\
 Admissibilit\'e (D\'ef.~\ref{def:interp_admissible}) & un test de permutation rejette $V \perp M \mid (\Sigma,C)$ au seuil $0{,}01$. \\
 $\gamma$ (Hyp.~\ref{ass:verdicts_efficace}) & la borne sup\'erieure de l'IC~95\,\% de $\hat{H}(V|C)$ est inf\'erieure \`a $\alpha H(\mathcal{C}) - 1$. \\
 $\eta_q$ (sc\'enario quantique) & l'IC~95\,\% de $\hat{\eta}_q$ exclut l'intervalle pr\'edit avant l'exp\'erience. \\
@@ -1170,8 +1172,8 @@ post-quantiques sur ML-DSA et SLH-DSA
 (sections~\ref{subsec:protocole_delta_q}
 et~\ref{subsec:protocole_eta_q}).
 
-Ce choix d\'ecoule du positionnement \'epist\'emologique retenu au
-chapitre~\ref{chap:cadre_formel}, selon lequel ce travail est d'abord th\'eorique. La
+Ce choix d\'ecoule du positionnement \'epist\'emologique retenu dans l'introduction g\'en\'erale et \`a la
+sous-section~\ref{subsec:note_methodo}, selon lequel ce travail est d'abord th\'eorique. La
 certification m\'ecanique en Lean4 garantit la correction de la d\'erivation du noyau
 alg\'ebrique \`a partir des hypoth\`eses, Fano et Pinsker y \'etant pos\'es comme
 propri\'et\'es des instances puis d\'emontr\'es pour des lois finies. La v\'erit\'e des hypoth\`eses elles-m\^emes rel\`eve de la

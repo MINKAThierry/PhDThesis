@@ -33,7 +33,9 @@ Encodage pr\'eservant le contexte institutionnel pour l'extraction
 d'information par des interpr\`etes aux ressources born\'ees~\cite{Miller56,Simon82}, par encodage
 d\'eterministe, projection Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03} ou hachage d\'eterministe. La couche
 Clay r\'epond \`a la question \emph{\guillemotleft~Comment permettre \`a $\mathsf{Interpret}$ d'extraire
-un maximum d'information sur $V$ depuis $(c, \sigma)$~?\guillemotright}
+un maximum d'information sur $V$ depuis $(c, \sigma)$~?\guillemotright} Elle accro\^it $\Opp$
+lorsqu'elle transmet un contexte d'esp\`ece que l'institution ne d\'etient pas d\'ej\`a. Sinon, elle agit
+comme un format de pr\'esentation (Remarque~\ref{rem:statut_sotp}).
 
 \begin{figure}[htbp]
 \centering
@@ -243,9 +245,11 @@ L'engagement $c_\Sigma = \mathsf{Com}(M^*)$ h\'erite de cette
 indiscernabilit\'e, car l'engagement de Pedersen est \emph{parfaitement} masquant
 sans hypoth\`ese calculatoire~\cite{Pedersen91}. Il en r\'esulte que
 \begin{equation}
-\Conf(\text{S-OTP}) = 1 - \max_{m_0,m_1} \TV(P_{\Sigma|M=m_0}, P_{\Sigma|M=m_1})
-= 1 - \negl(\lambda)
+\Conf(\text{S-OTP}) = 1 - \max_{m_0,m_1,c} \TV(P_{\Sigma|M=m_0,C=c}, P_{\Sigma|M=m_1,C=c})
+= 1
 \end{equation}
+pour le masque uniforme. Avec un masque pseudo-al\'eatoire, la garantie devient calculatoire, \`a
+l'avantage contre le PRG pr\`es, d'o\`u le $1 - \negl(\lambda)$ de l'\'enonc\'e.
 \cmtFormule{La confidentialit\'e atteint son maximum \`a une quantit\'e n\'egligeable pr\`es.}
 \cmt{Pedersen cache parfaitement $M^*$, inconditionnellement~; seul le caract\`ere liant repose sur DLog.}
 \end{Preuve}
@@ -357,7 +361,7 @@ au besoin de proximit\'e entre contextes.
 
 \begin{boiteArbitre}
 L'arbitre note que $0{,}998$ correspond au meilleur cas. D\`es que le
-contexte s'enrichit, l'opposabilit\'e s'effondre et d'autres constructions
+contexte s'enrichit au-del\`a du seuil, l'opposabilit\'e d\'ecro\^it en $1/H(\mathcal{C})$ et d'autres constructions
 deviennent n\'ecessaires.
 \end{boiteArbitre}
 

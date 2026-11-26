@@ -40,7 +40,7 @@ impeccable, plus elle devient institutionnellement opaque, c'est-\`a-dire qu'ell
 
 \subsection{L'urgence post-quantique}
 
-En ao\^ut 2024, le National Institute of Standards and Technology (NIST) a publi\'e les trois premi\`eres normes de cryptographie post-quantique~\cite{NISTPQC,Alagic2020,NISTPostQuantum2022}. Il s'agit de FIPS~203 (ML-KEM, d\'eriv\'e de Kyber~\cite{Kyber2022}), de FIPS~204 (ML-DSA, issu de Dilithium~\cite{Dilithium2022}) et de FIPS~205 (SLH-DSA, tir\'e de SPHINCS+~\cite{SPHINCS2022}). Avec cette standardisation, la migration vers la cryptographie post-quantique a quitt\'e le terrain de la sp\'eculation th\'eorique pour devenir une r\'ealit\'e op\'erationnelle.
+En ao\^ut 2024, le National Institute of Standards and Technology (NIST) a publi\'e les trois premi\`eres normes de cryptographie post-quantique (\emph{Post-Quantum Cryptography}, PQC)~\cite{NISTPQC,Alagic2020,NISTPostQuantum2022}. Il s'agit de FIPS\footnote{FIPS, \emph{Federal Information Processing Standards}. ML-KEM, \emph{Module-Lattice-Based Key-Encapsulation Mechanism}. ML-DSA, \emph{Module-Lattice-Based Digital Signature Algorithm}. SLH-DSA, \emph{Stateless Hash-Based Digital Signature Algorithm}.}~203 (ML-KEM, d\'eriv\'e de Kyber~\cite{Kyber2022}), de FIPS~204 (ML-DSA, issu de Dilithium~\cite{Dilithium2022}) et de FIPS~205 (SLH-DSA, tir\'e de SPHINCS+~\cite{SPHINCS2022}). Avec cette standardisation, la migration vers la cryptographie post-quantique a quitt\'e le terrain de la sp\'eculation th\'eorique pour devenir une r\'ealit\'e op\'erationnelle.
 
 Cette transition d\'epasse le simple remplacement d'algorithmes. Elle rompt avec plusieurs paradigmes \'etablis. Les adversaires classiques sont limit\'es par la puissance de calcul, alors que les adversaires quantiques exploitent des requ\^etes en superposition~\cite{Boneh2011,Watrous2009} qui invalident les preuves de s\'ecurit\'e conventionnelles. La migration aggrave donc le paradoxe de l'authenticit\'e invisible, puisque la complexit\'e structurelle des sch\'emas post-quantiques (fond\'es sur les r\'eseaux ou sur les fonctions de hachage) entre en tension avec les besoins institutionnels. La mani\`ere dont ces effets quantiques modifient la valeur probante des preuves et leur compr\'ehension par les interpr\`etes institutionnels (juge, auditeur, r\'egulateur) demeure \`a ce jour largement inexplor\'ee.
 
@@ -58,7 +58,7 @@ de Louvain s'est trouv\'ee dans l'incapacit\'e d'exploiter le syst\`eme Helios s
 \`a une expertise externe~\cite{Adida09UCL}. En novembre 2025, l'International Association
 for Cryptologic Research (IACR) a annul\'e son \'election apr\`es la perte irr\'em\'ediable
 d'une cl\'e partielle~\cite{IACR2025incident}.
-De leur c\^ot\'e, les r\'egulateurs financiers destinataires de preuves zk-SNARK~\cite{Groth16,BenSasson2019,PLONK20} ne peuvent
+Les r\'egulateurs financiers re\c{c}oivent, eux, des preuves zk-SNARK (arguments succincts non interactifs \`a divulgation nulle)~\cite{Groth16,BenSasson2019,PLONK20}. Ils ne peuvent
 pas cibler une transaction suspecte pr\'ecise, car l'opacit\'e qui prot\`ege les clients
 fait aussi obstacle \`a l'investigation~\cite{Casey16,Garratt19}. Ces incidents, qui ne rel\`event pas de d\'efauts de mise en
 \oe uvre, traduisent une incompatibilit\'e structurelle entre deux paradigmes
@@ -77,7 +77,7 @@ Ces constats conduisent \`a la probl\'ematique centrale de cette th\`ese, formul
 \textit{Quelles limites fondamentales contraignent les compromis entre confidentialit\'e, fiabilit\'e et opposabilit\'e dans les syst\`emes cryptographiques soumis \`a des exigences d'interpr\'etabilit\'e institutionnelle~?}
 \end{boiteProblematique}
 
-Cette th\`ese formalise ces propri\'et\'es ($\Conf$~\ref{def:confidentialite_clo}, $\Rel$~\ref{def:fiabilite_clo}, $\Opp$~\ref{def:opposabilite_clo}) et d\'ecline cette probl\'ematique en deux questions de recherche.
+Cette th\`ese formalise ces propri\'et\'es (D\'efinitions~\ref{def:confidentialite_clo} \`a~\ref{def:opposabilite_clo}) et d\'ecline cette probl\'ematique en deux questions de recherche.
 
 \medskip
 \begin{boiteQuestion}{Q1. Conciliation}
@@ -219,7 +219,7 @@ Cette th\`ese s'adresse \`a plusieurs publics, dont les points d'entr\'ee diff\`
 \item \textbf{Sp\'ecialistes post-quantique.} La section~\ref{sec:cro_pq} \'etend le cadre aux adversaires quantiques~\cite{Watrous2009,Unruh2016,Boneh2011} et aux standards NIST~\cite{NISTPQC,NISTPostQuantum2022}.
 \end{itemize}
 
-La lecture suppose une familiarit\'e avec les preuves \`a divulgation nulle~\cite{GMR85,BenSasson2019,Campanelli2019}, des notions de base de th\'eorie de l'information (entropie, information mutuelle)~\cite{CoverThomas06,Smith09} ainsi qu'une connaissance \'el\'ementaire de la th\'eorie de la complexit\'e. Le glossaire~\ref{chap:glossaire} plac\'e en d\'ebut de th\`ese d\'efinit l'ensemble des acronymes et notations utilis\'es.
+La lecture suppose une familiarit\'e avec les preuves \`a divulgation nulle~\cite{GMR85,BenSasson2019,Campanelli2019}, des notions de base de th\'eorie de l'information (entropie, information mutuelle)~\cite{CoverThomas06,Smith09} ainsi qu'une connaissance \'el\'ementaire de la th\'eorie de la complexit\'e. Le glossaire plac\'e en d\'ebut de th\`ese (page~\pageref{chap:glossaire}) d\'efinit l'ensemble des acronymes et notations utilis\'es.
 
 \end{sloppypar}
 
@@ -228,7 +228,7 @@ L'arbitre ne sait pas encore qu'il est pris dans un paradoxe.
 Il sait seulement que quelque chose ne fonctionne pas entre la preuve qu'on
 lui soumet et la d\'ecision qu'on lui demande de rendre. Cette introduction lui donne
 le nom du probl\`eme et la carte du voyage, avec une probl\'ematique, deux questions, six
-objectifs, six productions et un cycle. Il lui pr\'esente aussi les \'equipiers dont il aura
+objectifs, six productions et un cycle. Elle lui pr\'esente aussi les \'equipiers dont il aura
 besoin, soit la th\'eorie de l'information, la cryptographie, les
 sciences cognitives, le droit et la v\'erification formelle. Le voyage commence
 \`a la section~\ref{sec:contexte}.
@@ -249,7 +249,7 @@ Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3660105), ce cadre mes
 Cette derni\`ere est la fraction de l'incertitude institutionnelle que la preuve r\'esout. L'opposabilit\'e n'a pas d'\'equivalent dans la litt\'erature ant\'erieure~\cite{Smith09,Alvim12} et le th\'eor\`eme du goulot d'\'etranglement contextuel la relie \`a la granularit\'e des verdicts.
 
 \paragraph{C2. Nous \'etablissons le Trilemme CRO conditionnel~\cite{MINKA2026CRO}~(section~\ref{sec:cro_classique}).}
-Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3669065), ce r\'esultat prouve la borne
+Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3669065), ce r\'esultat porte sur le triplet confidentialit\'e, fiabilit\'e, opposabilit\'e (\emph{Confidentiality-Reliability-Opposability}, CRO). Il prouve la borne
 \begin{equation}
   \Conf(\mathcal{P})\cdot\Rel(\mathcal{P})\cdot\Opp(\mathcal{P})
   \;\leq\;
@@ -265,10 +265,10 @@ Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3722742), ce r\'esulta
   \;\leq\;
   \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda} + O(\lambda^{-2}) + \negl(\lambda),
 \end{equation}
-o\`u $\Delta_q$ est la capacit\'e d'extraction adapt\'ee au quantique et $\eta_q$ la perte d'interpr\'etabilit\'e. Cette perte est nulle pour les preuves qui sont des cha\^ines de bits, dont les signatures ML-DSA et SLH-DSA~\cite{Dilithium2022,SPHINCS2022}.
+o\`u $\Delta_q$ est la capacit\'e d'extraction adapt\'ee au quantique et $\eta_q$ la perte d'interpr\'etabilit\'e. La borne explicite garde la forme classique avec $\Delta_q$~; le terme $\eta_q H(C)$ ne figure que dans cette majoration affaiblie. Cette perte est nulle pour les preuves qui sont des cha\^ines de bits, dont les signatures ML-DSA et SLH-DSA~\cite{Dilithium2022,SPHINCS2022}.
 
 \paragraph{C4. Nous proposons le paradigme Gold-Iron-Clay et la famille Semantic One-Time Pad (SOTP)~(section~\ref{sec:sotp_construction}).}
-Soumis \`a \emph{IEEE TIT}, ce travail confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte institutionnel \`a trois couches distinctes. Il en tire trois constructions de r\'ef\'erence pour les deux r\'egimes que s\'epare le seuil $H^\sharp$ du th\'eor\`eme. En contexte rare, SOTP-Low transmet le contexte exact et SOTP-Base en donne une repr\'esentation par Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84} qui pr\'eserve la proximit\'e entre contextes. En contexte riche, SOTP-High s'appuie sur Groth16~\cite{Groth16}. Leur confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees par r\'eduction et leur optimalit\'e est conjectur\'ee.
+Soumis \`a \emph{IEEE Transactions on Information Theory}, ce travail confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte institutionnel \`a trois couches distinctes. Il en tire trois constructions de r\'ef\'erence pour les deux r\'egimes que s\'epare le seuil $H^\sharp$ du th\'eor\`eme. En contexte rare, SOTP-Low transmet le contexte exact et SOTP-Base en donne une repr\'esentation par Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84} qui pr\'eserve la proximit\'e entre contextes. En contexte riche, SOTP-High s'appuie sur Groth16~\cite{Groth16}. Leur confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees par r\'eduction et leur optimalit\'e est conjectur\'ee.
 
 \paragraph{C5. Nous certifions m\'ecaniquement le Trilemme en Lean4, du noyau
 alg\'ebrique aux lois de probabilit\'e finies (section~\ref{sec:lean4}).}
@@ -320,7 +320,7 @@ Outre la pr\'esente introduction et la conclusion g\'en\'erale, qui ne sont
 pas num\'erot\'ees, le manuscrit comprend cinq chapitres.
 
 \textbf{Chapitre~\ref{chap:contexte}. Contexte, \'etat de l'art et probl\'ematique.}
-Trois cas illustratifs (Helios, ECDSA, zk-SNARK) servent d'ancrage \`a la recherche
+Trois cas illustratifs (le vote Helios, la signature sur courbe elliptique ECDSA et les zk-SNARK) servent d'ancrage \`a la recherche
 dans la section~\ref{sec:contexte}, qui en calcule analytiquement les profils CLO.
 La section~\ref{sec:etat_art} rassemble ensuite les fondements tir\'es de la th\'eorie
 de l'information classique et quantique, des primitives d'obscurcissement, de la
@@ -329,7 +329,7 @@ Le chapitre se termine par la section~\ref{sec:problematique}, o\`u sont formul\
 paradoxe de l'authenticit\'e invisible, la probl\'ematique centrale et les
 six objectifs de recherche.
 
-\textbf{Chapitre~\ref{chap:cadre_formel}. Cadre formel et bornes d'impossibilit\'e.}
+\textbf{Chapitre~\ref{chap:cadre_formel}. Cadre formel et bornes d'impossibilit\'e pour l'opposabilit\'e l\'egale.}
 Les actes \textbf{F}, \textbf{B} et \textbf{E} y sont men\'es successivement.
 Apr\`es la formalisation du cadre CLO \`a la section~\ref{sec:clo}
 (Obj~\ref{obj:obj1_unification}), la section~\ref{sec:cro_classique}
@@ -341,8 +341,8 @@ r\'egime post-quantique (Obj~\ref{obj:obj3_postquantique}).
 Il couvre les actes \textbf{S} et \textbf{C}. Le Semantic One-Time Pad, prototype de
 la famille, est construit \`a la section~\ref{sec:sotp_base}. La section~\ref{sec:sotp_construction}
 g\'en\'eralise ce prototype en trois constructions de r\'ef\'erence dont elle conjecture
-l'optimalit\'e universelle (Obj~\ref{obj:obj4_saturation}), avant que la section~\ref{sec:lean4}
-ne soumette le trilemme \`a l'assistant de preuve Lean4, du noyau alg\'ebrique aux lois
+l'optimalit\'e universelle (Obj~\ref{obj:obj4_saturation}). La section~\ref{sec:lean4}
+soumet ensuite le trilemme \`a l'assistant de preuve Lean4, du noyau alg\'ebrique aux lois
 finies (Obj~\ref{obj:obj5_verification}).
 
 \textbf{Chapitre~\ref{chap:experimentation}. Protocoles de mesure et validation r\'etrospective.}

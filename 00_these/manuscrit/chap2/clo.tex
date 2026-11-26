@@ -83,8 +83,8 @@ et l'espace de verdicts $\mathcal{V}_\lambda$ (d\'ecisions institutionnelles).
 \item $\mathsf{Interpret}(\sigma, c) \to v$ : \textbf{interpr\'etation institutionnelle} produisant verdict $v \in \mathcal{V}$~; l'institution y mobilise aussi ses ressources propres $K$, que la D\'efinition~\ref{def:interp_admissible} rend explicites en \'ecrivant $V = \mathsf{Interpret}(\Sigma, C, K)$
 \end{itemize}
 
-\medskip\noindent o\`u $c$ repr\'esente la distribution du contexte
-institutionnel capturant l'environnement d\'ecisionnel (pr\'ec\'edents juridiques,
+\medskip\noindent o\`u $c$ est une r\'ealisation du contexte
+institutionnel $C$, de loi $P_C$, qui d\'ecrit l'environnement d\'ecisionnel (pr\'ec\'edents juridiques,
 expertise disponible, proc\'edures \'etablies).
 \end{definition}
 
@@ -136,7 +136,7 @@ $H(V|C) = 1$. On a donc $\mathsf{Verify}(\sigma) = 1$ et $\Opp = 0$.
 % Ligne 2 : Prouveur
 \node[cryptobox, minimum width=4cm] (prover) at (3, 4)
     {\textbf{Prouveur}\\[2pt]
-     $\mathsf{Prouver}(sk, m, c) \to \sigma$};
+     $\mathsf{Prove}(sk, m, c) \to \sigma$};
 
 % Ligne 3 : Preuve
 \node[cryptobox] (proof) at (3, 2)
@@ -145,7 +145,7 @@ $H(V|C) = 1$. On a donc $\mathsf{Verify}(\sigma) = 1$ et $\Opp = 0$.
 % Ligne 4 gauche : V\'erifier
 \node[cryptobox] (verify) at (0, 0)
     {\textbf{V\'erifier}\\[2pt]
-     $\mathsf{V\'erifier}(pk, \sigma, c)$};
+     $\mathsf{Verify}(pk, \sigma, c)$};
 
 % Ligne 5 gauche : r\'esultat binaire
 \node[box] (vresult) at (0, -1.8)
@@ -154,7 +154,7 @@ $H(V|C) = 1$. On a donc $\mathsf{Verify}(\sigma) = 1$ et $\Opp = 0$.
 % Ligne 4 droite : Interpr\'eter
 \node[instbox] (interpret) at (7, 0)
     {\textbf{Interpr\'eter}\\[2pt]
-     $\mathsf{Interpr\'eter}(\sigma, c)$};
+     $\mathsf{Interpret}(\sigma, c)$};
 
 % Ligne 5 droite : Verdict
 \node[instbox] (verdict) at (7, -1.8)
@@ -214,9 +214,9 @@ $H(V|C) = 1$. On a donc $\mathsf{Verify}(\sigma) = 1$ et $\Opp = 0$.
 \smallskip
 \begin{minipage}{\linewidth}
   \small\textit{Note :} La couche cryptographique (verte) assure la correction
-  math\'ematique par les algorithmes $\mathsf{Prouver}$ et $\mathsf{V\'erifier}$.
+  math\'ematique par les algorithmes $\mathsf{Prove}$ et $\mathsf{Verify}$.
   La couche institutionnelle (bleue marine) fournit l'interpr\'etation s\'emantique
-  par la fonction $\mathsf{Interpr\'eter}$, qui projette les preuves cryptographiques
+  par la fonction $\mathsf{Interpret}$, qui projette les preuves cryptographiques
   sur des verdicts ayant une port\'ee juridique en contexte institutionnel.
 \end{minipage}
 
@@ -586,7 +586,7 @@ telle que pour tous $x, y \in S$ :
 (1-\varepsilon)\|x-y\|^2 \leq \|\Phi x - \Phi y\|^2 \leq (1+\varepsilon)\|x-y\|^2
 \label{eq:jl_preservation}
 \end{equation}
-avec haute probabilit\'e lorsque $\Phi$ est une matrice al\'eatoire avec des 
+Cette propri\'et\'e vaut avec haute probabilit\'e lorsque $\Phi$ est une matrice al\'eatoire avec des 
 entr\'ees $\Phi_{ij} \sim \mathcal{N}(0, 1/k)$ ou sous-gaussiennes.
 \end{lemma}
 
@@ -803,7 +803,7 @@ qu'abaisser la confidentialit\'e par rapport \`a chacune d'elles.
 
 Les d\'efinitions informationnelles de $\Conf$, $\Rel$ et $\Opp$ sont
 compl\'et\'ees par des jeux cryptographiques qui captent leur contenu
-op\'erationnel en termes d'avantages d'adversaires PPT. Cette section
+op\'erationnel en termes d'avantages d'adversaires en temps polynomial probabiliste (PPT). Cette section
 \'etablit le pont formel entre les deux formalismes.
 
 \paragraph{Le jeu IND-CONF pour la confidentialit\'e game-based.}
@@ -1041,7 +1041,7 @@ est diagonal), la distance de trace se r\'eduit \`a la distance de variation tot
 \end{equation}
 Donc $\Conf^q$ se r\'eduit \`a $\Conf$ du cadre classique~\cite{MINKA2026CLO}. La
 d\'efinition en est donc une g\'en\'eralisation stricte. Les notions calculatoires
-(adversaires QPT) rel\`event des jeux de s\'ecurit\'e, comme IND-CONF dans le
+(adversaires quantiques en temps polynomial, QPT) rel\`event des jeux de s\'ecurit\'e, comme IND-CONF dans le
 cas classique (Remarque~\ref{rem:jeu_ind_conf_link}).
 \end{remark}
 

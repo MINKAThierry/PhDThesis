@@ -24,7 +24,7 @@ section~\ref{sec:derivation_opposabilite}.
 \begin{boiteArbitre}
 L'arbitre change de posture. Apr\`es un plan, il assiste \`a une
 confrontation. Ce qui avait \'et\'e admis plus haut ($\Delta \in [35, 73]$
-bits, $\alpha \in [0{,}8, 1{,}5]$, $\beta \geq 1$) revient maintenant sous
+bits, $\alpha \in [1{,}0, 1{,}5]$, $\beta \geq 1$) revient maintenant sous
 forme de valeurs calibr\'ees, syst\`eme par syst\`eme. Il s'agit de savoir
 si les ordres de grandeur retenus se tiennent entre eux, sans v\'erifier le
 th\'eor\`eme, dont ces syst\`emes ne sont pas des instances.
@@ -199,7 +199,7 @@ tra\c{c}abilit\'e avec les valeurs publi\'ees (fichier \texttt{06\_calcul/data/c
 
 \noindent\textbf{Justification de la p\'enalit\'e d'adaptation.} La transition
 vers les standards NIST PQC impose une courbe d'apprentissage aux institutions.
-La p\'enalit\'e $\delta_{\text{degr}}$ refl\`ete~:
+La p\'enalit\'e $\delta_{\text{degr}}$ refl\`ete quatre facteurs~:
 \begin{itemize}
 \item Nouveau format de cl\'es (structur\'e diff\'eremment de RSA/ECDSA)
 \item Nouveaux algorithmes de v\'erification (fond\'es sur les r\'eseaux euclidiens au lieu du logarithme discret)
@@ -240,7 +240,8 @@ Simulation hybride & Variable & Variable & $0{,}02$--$0{,}15$ & Param\'etrable \
 \label{eq:relation_eta_q_fidelite}
 \end{equation}
 Cette relation n'a pas valeur de th\'eor\`eme. L'in\'egalit\'e de Fuchs--van de Graaf
-borne la distance de trace par $\sqrt{1-F}$. La continuit\'e de l'information
+borne la distance de trace par $\sqrt{1-F}$, o\`u $F$ d\'esigne ici la fid\'elit\'e au carr\'e,
+soit le carr\'e de la quantit\'e~\eqref{eq:fidelite}. La continuit\'e de l'information
 mutuelle conditionnelle (Alicki--Fannes--Winter) convertit cette distance en perte
 d'information avec un facteur qui d\'epend de la dimension du syst\`eme au lieu de
 $H(C)$. Elle fixe un ordre de grandeur pour le sc\'enario.
@@ -278,7 +279,9 @@ calcul\'ees \`a la section~\ref{sec:derivation_opposabilite} (avec $\Relver$).
 Pour les standards post-quantiques, o\`u aucun calcul descendant n'est
 disponible faute de contexte institutionnel document\'e, les produits sont
 obtenus par transposition du rapport $\Delta_q/\lambda$ major\'e d'une correction
-d'adaptation. Ce sont donc des hypoth\`eses de travail.
+d'adaptation. Ce sont donc des hypoth\`eses de travail. Le produit $0{,}35$ de ML-DSA-65 est une telle
+transposition \`a $\lambda = 128$. Il se distingue du produit nul de l'\'etude de cas \`a $\lambda = 192$
+et de la valeur $0{,}8$ de l'\'etude publi\'ee (section~\ref{sec:derivation_opposabilite}).
 
 % -----------------------------------------------------------------------
 \subsection{Tableau comparatif principal}
@@ -314,7 +317,7 @@ PQC & SLH-DSA & 25 & 0{,}08 & 0{,}30 & --- \\
 Classique $\to$ PQC & ECDSA $\to$ ML-DSA & 35 $\to$ 28 & 0 $\to$ 0{,}08 &
   $0{,}273 \to 0{,}35$ & $+28\%$ \\
 Classique $\to$ PQC & RSA $\to$ SLH-DSA & 30 $\to$ 25 & 0 $\to$ 0{,}08 &
-  $0{,}23 \to 0{,}30$ & $+28\%$ \\
+  $0{,}234 \to 0{,}30$ & $+28\%$ \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
@@ -405,7 +408,7 @@ Un coefficient de variation de $20\,\%$ sur $\Delta$ se propage int\'egralement
 \`a $\Delta/\lambda$, puisque $\lambda$ est fix\'e. Sous une loi normale,
 l'intervalle \`a $95\,\%$ a pour demi-largeur $1{,}96 \times 20\,\% \approx 39\,\%$ de la
 valeur centrale. Cet intervalle vaut environ $[0{,}17;\,0{,}38]$
-(ECDSA), $[0{,}27;\,0{,}61]$ (Helios) et $[0{,}35;\,0{,}79]$ (zk-SNARKs). Cette
+(ECDSA), $[0{,}27;\,0{,}61]$ (Helios) et $[0{,}35;\,0{,}80]$ (zk-SNARKs). Cette
 largeur traduit l'incertitude sur les param\`etres institutionnels~; elle
 rappelle qu'en l'absence de donn\'ees, les valeurs de ce chapitre sont des
 ordres de grandeur.
@@ -628,7 +631,7 @@ Le tableau~\ref{tab:synthese_validation} r\'ecapitule ce que cette section
 \textbf{Statut} \\
 \midrule
 Plausibilit\'e des $\Delta$ & Intervalle cognitif $[20,80]$ & 3/3 & 2/2 & Ordre de grandeur \\
-Hypoth\`ese~\ref{ass:verdicts_efficace} & $H(V|C) \geq \gamma$ & 1/3 (ECDSA) & --- & Hors champ sinon \\
+Hypoth\`ese~\ref{ass:verdicts_efficace} & $H(V|C) \geq \hat\gamma$ (esp\`ece) & 3/3 & --- & Hors champ (Rem.~\ref{rem:portee_cas_etude}) \\
 Produit $\leq$ borne & --- & non applicable & d\'epass\'ee & Syst\`emes hors champ \\
 Incertitude & IC~95\,\% de $\Delta/\lambda$ & $\pm 39\,\%$ & $\pm 49\,\%$ & CV suppos\'e \\
 \bottomrule
@@ -644,7 +647,7 @@ Incertitude & IC~95\,\% de $\Delta/\lambda$ & $\pm 39\,\%$ & $\pm 49\,\%$ & CV s
 \item \textbf{R\'eserve.} La validation prospective demeure n\'ecessaire. Les
   protocoles de la section~\ref{sec:protocoles_experimentaux} fournissent les
   mesures de $\Delta$, $\Delta_q$ et $\eta_q$ qui restent \`a produire, avec les
-  crit\`eres de r\'efutation du tableau~\ref{tab:criteres_refutation}~; leur
+  crit\`eres de r\'efutation du tableau~\ref{tab:criteres_refutation}. Leur
   statut de d\'eploiement est \'etabli \`a la
   section~\ref{subsubsec:statut_deploiement}.
 \end{itemize}
@@ -675,12 +678,12 @@ proposition de th\`ese.
 \midrule
 00\_these & Sources \LaTeX{} et PDF du manuscrit & Ensemble \\
 01\_publie & Les trois articles publi\'es dans IEEE Access (P1, P2, P3) & Chap.~1 \`a 3, annexe~\ref{chap:annexe_publications} \\
-02\_preprints & Fiches des neuf pr\'eprints IACR ePrint cit\'es & Chap.~1, annexe~\ref{chap:annexe_publications} \\
+02\_preprints & Fiches des neuf pr\'eprints IACR ePrint cit\'es & Chap.~1, bibliographie \\
 03\_resultats\_these & \'Enonc\'es propres \`a la th\`ese et formulations pr\'ecis\'ees par rapport aux articles & Chap.~2 \`a 4 \\
 04\_sotp & Sp\'ecification de la famille SOTP, impl\'ementations de r\'ef\'erence et preuves game-based & Chap.~\ref{chap:constructions}, annexe~\ref{chap:annexe_gamebased} \\
 05\_formalisation\_lean & Fichier ConditionalCRO.lean (version 3.4) et configuration Lean/Mathlib & Section~\ref{sec:lean4}, annexe~\ref{chap:annexe_lean4} \\
 06\_calcul & Scripts, donn\'ees de calibration, sorties de r\'ef\'erence et tests & Section~\ref{sec:validation_retrospective} \\
-07\_protocoles\_terrain & Instruments des protocoles P1 \`a P7, non d\'eploy\'es & Section~\ref{sec:protocoles_experimentaux} \\
+07\_protocoles\_terrain & Instruments des sept protocoles, non d\'eploy\'es & Section~\ref{sec:protocoles_experimentaux} \\
 \bottomrule
 \end{tabularx}
 \end{table}

@@ -26,9 +26,9 @@ prospective.
 
 Chacun de ces quatre axes prolonge un aspect
 distinct du cadre CLO-CRO-PQ-SOTP. Le premier axe porte sur les fondations calculatoires
-post-quantiques, avec le probl\`eme AIIP~\cite{MINKA2025AIIP} et le
+post-quantiques, avec le probl\`eme AIIP (\textit{Affine Iterated Inversion Problem})~\cite{MINKA2025AIIP} et le
 CASH Toolkit (section~\ref{subsec:axe1_aiip_cash}). Le deuxi\`eme suit la voie protocolaire
-ouverte par Q2CSI et la s\'erie
+ouverte par Q2CSI (\textit{Quantum Composable and Contextual Security Infrastructure}) et la s\'erie
 ZK-NR~\cite{MINKA2025Q2CSI,MINKA2025ZKNR_Exploration,MINKA2025ZKNR_Design,MINKA2025ZKNR_UC}
 (section~\ref{subsec:axe2_q2csi_zknr}). Le troisi\`eme \'etend le
 Trilemme CRO au calcul homomorphe, au multi-parties et au
@@ -218,7 +218,7 @@ quantiques~\cite{Unruh2010,Unruh2015}.
 
 La s\'erie \textbf{ZK-NR} (\textit{Zero-Knowledge Non-Repudiation}) protocol
 mat\'erialise la maturation progressive d'un protocole institutionnel depuis
-l'exploration architecturale jusqu'\`a la s\'ecurit\'e UC
+l'exploration architecturale jusqu'\`a la s\'ecurit\'e en composabilit\'e universelle (UC)
 compl\`ete~\cite{Canetti01}. Elle constitue en elle-m\^eme un paradigme
 m\'ethodologique, qui consiste \`a s\'eparer l'exploration, la formalisation de la conception et la
 certification de s\'ecurit\'e en trois stades distincts, chacun s'appuyant
@@ -249,7 +249,7 @@ protocoles composables d\'eployables~? La structure \`a couches de ZK-NR
 s'\'etend-elle aux r\'eseaux de preuves institutionnelles multi-parties
 impliquant $n > 2$ institutions, au moyen de sch\'emas de partage de
 secret~\cite{Shamir1979,Blakley1979} et des preuves zero-knowledge
-agr\'eg\'ees~\cite{Bunz2018}~?
+agr\'eg\'ees~\cite{Bunz19}~?
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
@@ -308,9 +308,9 @@ dans celle de la Remarque~\ref{rem:borne_aigue_portee}.
 \end{Preuve}
 
 La formalisation de l'optimisation analytique sur l'intervalle complet
-$[0, \lambda]$ reste un probl\`eme ouvert. Elle n\'ecessite des outils
-d'analyse r\'eelle (d\'eriv\'ees de fonctions avec racine carr\'ee) non encore
-disponibles dans Mathlib. Elle permettrait d'\'etudier le comportement de la
+$[0, \lambda]$ reste un probl\`eme ouvert. Elle demande une \'etude de variations
+(d\'eriv\'ees de fonctions avec racine carr\'ee) que ce travail n'a pas
+m\'ecanis\'ee. Elle permettrait d'\'etudier le comportement de la
 borne hors du r\'egime de l'Hypoth\`ese~\ref{ass:regime}.
 
 \subsubsection{G\'en\'eralisation \`a la r\'egion r\'ealisable compl\`ete}
@@ -432,7 +432,7 @@ pas r\'ealisable par un protocole, Remarque~\ref{rem:portee_temoin}). Le \emph{t
 les Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace} et~\ref{ass:regularite} mais s'\'ecarte du r\'egime de confidentialit\'e,
 atteignant $1/4$ constant. Ce r\'egime est donc n\'ecessaire
 \`a la borne (cas limite d\'etaill\'e \`a la
-sous-section~\ref{subsec:lean4_erreurs}). Une famille de lois concr\`etes montre de plus
+sous-section~\ref{subsec:lean4_formulations}). Une famille de lois concr\`etes montre de plus
 que de vraies lois satisfont les hypoth\`eses pour tout $\lambda$
 (sous-section~\ref{subsec:lean4_concret}).
 
@@ -453,7 +453,7 @@ borne aigu\"e, deux
 extensions restent \`a d\'evelopper.
 
 \begin{itemize}
-    \item \textbf{Extension SOTP.} La m\'ecanisation r\'eduite de SOTP-Low (section~\ref{sec:gamebased_mecanisation})
+    \item \textbf{Extension SOTP.} La m\'ecanisation r\'eduite de SOTP-Low (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation})
           sert de point de d\'epart. La formalisation compl\`ete des trois
           variantes demanderait d'abord celle de la distance statistique du masque tronqu\'e et des
           r\'eductions \`a PRG et DLog. Elle demanderait aussi celle de la solidit\'e de connaissance
@@ -661,7 +661,7 @@ validation), IBM Quantum (acc\`es simulateur).
 Les travaux ant\'erieurs~\cite{MINKA2026CRO} et la
 section~\ref{sec:cro_pq} invitent \`a
 mesurer l'\'evolution des param\`etres \`a mesure que les institutions
-acqui\`erent de l'exp\'erience, selon les lois
+acqui\`erent de l'exp\'erience. Cette \'evolution suivrait les lois
 \begin{align}
 \Delta(t) &= \Delta_\infty(1 - e^{-t/\tau})
 \label{eq:suivi_delta} \\

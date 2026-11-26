@@ -115,7 +115,9 @@ institutionnelle et ces r\'eductions ne la minorent pas.
 \label{subsubsec:couche_clay}
 
 La couche Clay encode le contexte $c$ sous une forme maximisant l'information extractible
-par l'interpr\`ete institutionnel tout en maintenant les garanties Gold et Iron. Chacune des
+par l'interpr\`ete institutionnel tout en maintenant les garanties Gold et Iron. Cette information
+ne compte au sens de $\Opp$ que pour un contexte d'esp\`ece que l'institution ne d\'etient pas
+(Remarque~\ref{rem:statut_sotp}). Chacune des
 trois variantes appelle une technique propre.
 
 Sous le seuil $H^\sharp$ du th\'eor\`eme (Remarque~\ref{rem:activite_delta}), la capacit\'e de
@@ -137,7 +139,7 @@ H_{\text{total}} = H_{\text{Gold}} + H_{\text{Iron}} + H_{\text{Clay}}
 Pour $\lambda = 128$ et $H(\mathcal{C}) = 40$ bits (vote type Helios~\cite{Adida08}), cela donne
 $\approx 296$ bits. Ce budget compte l'entropie de la preuve et non sa longueur~; la
 repr\'esentation JL de SOTP-Base occupe ainsi $k$ coordonn\'ees r\'eelles. Il contraint la couche Clay. Pr\'eserver trop de contexte
-peut corr\'eler $\Sigma$ avec $m$, r\'eduisant $\Conf$~; compresser trop agressivement
+peut corr\'eler $\Sigma$ avec $m$ lorsque le contexte d\'epend du message, ce qui r\'eduit $\Conf$. Les trois variantes \'ecartent ce cas par $M \perp C$. Compresser trop agressivement
 r\'eduit $\Opp$ parce que l'interpr\`ete ne peut plus extraire les verdicts~\cite{Smith09,Alvim12}.
 
 L'allocation \'equilibr\'ee est modulaire par conception~\cite{canetti2001,Goldreich02}. La couche Gold peut substituer
@@ -198,7 +200,7 @@ $M \perp C$ \'etant garanti par construction.
 \State \quad \textbf{Retourner} $\sigma = (\sigma_1, \sigma_2, \sigma_3)$ ;\; t\'emoin secret $(s, \rho)$
 \State \textbf{$\mathsf{Verify}(pk, \sigma, c)$} :
 \State \quad V\'erifier $\mathsf{Hash}(c) \stackrel{?}{=} \sigma_3.\mathsf{hc}$ et
-         $\phi(c) \stackrel{?}{=} \sigma_3.h_c$ et $\sigma_2 \in \mathbb{G}$
+         $\phi(c) \stackrel{?}{=} \sigma_3.\phi_c$ et $\sigma_2 \in \mathbb{G}$
 \State \textbf{$\mathsf{Open}(pk, \sigma, c, (m, s, \rho))$} :
 \State \quad Accepter ssi $\sigma_2 = g^{s} h^{\rho}$ et $\sigma_1 = m \oplus \mathsf{PRG}(s)$
 \end{algorithmic}
@@ -238,7 +240,9 @@ ouvert que sur un unique message $m$. La couche Clay
 (ligne~15) produit le triplet $\sigma_3 = (\phi(c), \mathsf{Hash}(c), V(c))$.
 L'encodage d\'eterministe $\phi(c)$ y transmet la structure s\'emantique du
 contexte, le condens\'e $\mathsf{Hash}(c)$ en garantit l'int\'egrit\'e tandis que
-$V(c)$ est le verdict institutionnel attendu. Cette couche porte
+$V(c)$ est le verdict attendu que le prouveur associe au contexte $c$. Cette fonction de $c$ ne se
+confond pas avec le verdict $V = \mathsf{Interpret}(\Sigma, C, K)$ de l'institution, qui d\'epend
+aussi de ses ressources $K$. Cette couche porte
 l'int\'egralit\'e de l'information contextuelle exploitable par l'arbitre.
 La preuve compl\`ete $\sigma = (\sigma_1, \sigma_2, \sigma_3)$ est
 retourn\'ee publiquement~; la paire $(s, \rho)$ reste secr\`ete chez le
@@ -349,7 +353,7 @@ n\'egligeable.
 \noindent\textbf{Partie II~. Fiabilit\'e de v\'erification.}
 
 \textit{Compl\'etude.} Pour toute preuve honn\^ete, $\mathsf{Hash}(c) = \sigma_3.\mathsf{hc}$
-et $\phi(c) = \sigma_3.h_c$ par construction, $\sigma_2 \in \mathbb{G}$ par
+et $\phi(c) = \sigma_3.\phi_c$ par construction, $\sigma_2 \in \mathbb{G}$ par
 fermeture du groupe~; enfin $\mathsf{Open}$ accepte le t\'emoin honn\^ete $(m, s, \rho)$.
 La compl\'etude est parfaite.
 \cmtFormule{La v\'erification et l'ouverture acceptent toute preuve honn\^ete.}
@@ -509,9 +513,9 @@ probabilit\'e $1 - 10^{-6}$ demande $k \approx 83\,100$ (Th\'eor\`eme~\ref{thm:a
 \label{subsubsec:saturation_base}
 
 \begin{proposition}[Propri\'et\'es cryptographiques de SOTP-Base]\label{thm:saturation_sotp_base}
-Sous s\'ecurit\'e PRG~\cite{BlumMicali84} et difficult\'e DLog~\cite{DiffieHellman76}, les
-couches Gold et Iron de SOTP-Base \'etant identiques \`a celles de SOTP-Low,
-SOTP-Base v\'erifie les deux propri\'et\'es de la
+Les couches Gold et Iron de SOTP-Base sont identiques \`a celles de SOTP-Low.
+Sous s\'ecurit\'e PRG~\cite{BlumMicali84} et difficult\'e DLog~\cite{DiffieHellman76},
+SOTP-Base v\'erifie donc les deux propri\'et\'es de la
 Proposition~\ref{thm:saturation_sotp_low}, \`a savoir la confidentialit\'e calculatoire et
 $\Relver = 1 - \negl(\lambda)$ pour la proc\'edure d'ouverture. De plus, pour
 tous contextes $c, c'$, avec probabilit\'e au moins $1 - \delta$ sur le tirage
@@ -568,7 +572,7 @@ d'une opposabilit\'e r\'eduite.
 
 La conformit\'e financi\`ere par zk-SNARKs~\cite{Groth16,Garratt15,BaselIII} illustre ce r\'egime. Transactions complexes,
 r\'eglementations multi-juridictionnelles et historiques longs produisent $H(\mathcal{C})
-\approx 70$--$90$ bits, au-del\`a du seuil $H^\sharp \approx 49$ bits obtenu avec $\Delta \approx 73$ bits
+\approx 70$ bits, au-del\`a du seuil $H^\sharp \approx 49$ bits obtenu avec $\Delta \approx 73$ bits
 et $\alpha = 1{,}5$. La capacit\'e de l'institution ne couvre plus l'entropie des verdicts,
 $\gamma = \alpha H(\mathcal{C}) - 1 = 104$ bits pour $H(\mathcal{C}) = 70$~\cite{Simon82,Miller56}.
 Lui transmettre le contexte ou sa repr\'esentation ne servirait plus le verdict~; il faut certifier
@@ -581,7 +585,7 @@ elle offre environ $100$ bits de s\'ecurit\'e~; la valeur $\lambda = 128$ y est 
 l'ordre $q \approx 2^{252}$ des groupes utilis\'es ne satisfait la condition $|q| \geq 2\lambda$ qu'\`a
 quelques bits pr\`es.} ind\'ependante de la complexit\'e du
 circuit v\'erifi\'e. Le caract\`ere succinct brise le couplage lin\'eaire entre $H(\mathcal{C})$ et la
-taille de preuve. Il permet d'encoder des relations complexes sur un contexte de
+taille de preuve. Il permet d'encoder des relations complexes sur un contexte dont l'encodage compte
 plusieurs milliers de bits dans un condens\'e que l'interpr\`ete peut v\'erifier en quelques millisecondes.
 
 Cette solution a une double contrepartie. Une \'etape de mise en place de confiance (\emph{trusted
@@ -681,20 +685,21 @@ l'assertion certifi\'ee ($\mathsf{Conforme}(m,c) = 1$), non au condens\'e.
 \label{subsubsec:saturation_high}
 
 \begin{proposition}[Propri\'et\'es cryptographiques de SOTP-High]\label{thm:saturation_sotp_high}
-Sous la \emph{knowledge soundness} de Groth16, \'etablie dans le mod\`ele du groupe
+On suppose la \emph{knowledge soundness} de Groth16, \'etablie dans le mod\`ele du groupe
 g\'en\'erique~\cite{Groth16} et dans le mod\`ele du groupe alg\'ebrique sous
-q-DLog~\cite{FKL18}, de la difficult\'e DLog, de la r\'esistance aux collisions de
-$\mathsf{Poseidon}$~\cite{Poseidon2019} et d'une c\'er\'emonie de mise en
-place de confiance honn\^ete~\cite{Bowe2017}~:
+q-DLog~\cite{FKL18}. On suppose aussi la difficult\'e DLog, la r\'esistance aux collisions de
+$\mathsf{Poseidon}$~\cite{Poseidon2019} et une c\'er\'emonie de mise en
+place de confiance honn\^ete~\cite{Bowe2017}. Alors~:
 \begin{enumerate}
 \item la preuve $\pi$ est \`a divulgation nulle de connaissance parfaite et
       $c_m$ est parfaitement masquant, de sorte que $(\pi, c_m)$ ne r\'ev\`ele rien de $m$
       au-del\`a des entr\'ees publiques~;
-\item la compl\'etude est parfaite et, par la \emph{knowledge soundness}, pour
+\item la compl\'etude est parfaite. Par la \emph{knowledge soundness}, pour
       tout prouveur PPT qui fait accepter $\sigma$, il existe un
-      \emph{extracteur} (qui exploite la repr\'esentation alg\'ebrique des \'el\'ements
-      produits par le prouveur, contrairement au v\'erificateur) produisant un t\'emoin
-      $(m, c, \rho)$ satisfaisant la relation~; d'o\`u $\Relver = 1 - \negl(\lambda)$.
+      \emph{extracteur} produisant un t\'emoin
+      $(m, c, \rho)$ satisfaisant la relation, d'o\`u $\Relver = 1 - \negl(\lambda)$.
+      Cet extracteur exploite la repr\'esentation alg\'ebrique des \'el\'ements
+      produits par le prouveur, contrairement au v\'erificateur.
 \end{enumerate}
 La confidentialit\'e s'entend entre messages conformes au m\^eme contexte, seuls messages pour
 lesquels $\mathsf{Prove}$ est d\'efini. L'hypoth\`ese $M \perp C$ demande alors que la loi de $M$
@@ -831,7 +836,7 @@ contexte tr\`es riche~\cite{Garratt15,BaselIII}.
 \State $H^\sharp \leftarrow (\Delta + 1 + \kappa/\lambda)/\alpha$
 \If{$\text{TrustedSetup\_OK} = \texttt{False}$ \textbf{and} $H(\mathcal{C}) > H^\sharp$}
   \State \textbf{ALERTE} : SOTP-High requis mais trusted setup indisponible~\cite{Bowe2017}
-  \State \textbf{Recommander} : variante du besoin avec perte d'opposabilit\'e, ou d\'eployer MPC
+  \State \textbf{Recommander} : variante du besoin avec perte d'opposabilit\'e, ou d\'eployer un calcul multi-parties (MPC)
   \State \textbf{Retourner} SOTP-Low si $\text{Besoin} = \text{exact}$, sinon SOTP-Base
 \EndIf
 \If{$H(\mathcal{C}) > H^\sharp$}
@@ -939,7 +944,7 @@ protocoles du chapitre~\ref{chap:experimentation}.
 On se place dans un mod\`ele o\`u la couche Clay transmet un contexte d'esp\`ece que l'institution ne
 d\'etient pas. Sous les Hypoth\`eses~\ref{ass:extraction_bornee}--\ref{ass:regime}, pour chaque
 r\'egime de richesse contextuelle, il existe une variante SOTP et une
-constante $C_R \geq 1$ ind\'ependante de $\lambda$, de $\Delta$ et de $\gamma$ telles que, pour tout
+constante $C_R \geq 1$ ind\'ependante de $\lambda$, de $\Delta$ et de $\gamma$ qui v\'erifient la propri\'et\'e suivante. Pour tout
 protocole CLO $\mathcal{P}'$ du m\^eme r\'egime dont la fuite $I(M;\Sigma|C)$ est n\'egligeable
 (en particulier $\kappa = 0$),
 \begin{equation}
@@ -1046,14 +1051,14 @@ post-quantiques (engagement \`a base de r\'eseaux~\cite{Peikert2016}, signatures
 particuli\`ere~\cite{Unruh2016,Chatterjee2021}. Leur solidit\'e de connaissance est \'etablie dans les
 mod\`eles du groupe g\'en\'erique et alg\'ebrique (sous q-DLog). Elle repose sur des groupes \`a couplage
 dont l'algorithme de Shor r\'esout le logarithme discret. Les STARKs~\cite{BenSasson2019}, qui ne reposent que sur des fonctions de
-hachage, constituent l'alternative post-quantique~; les Bulletproofs~\cite{Bulletproofs2018}
+hachage, constituent l'alternative post-quantique~; les Bulletproofs~\cite{Bunz19}
 reposent sur DLog et ne sont pas post-quantiques.
 
 Le coefficient de perte d'interpr\'etabilit\'e $\eta_q$
 (D\'efinition~\ref{def:perte_interp_quantique}) s'applique \`a toutes les variantes
 lorsque la preuve transite par un support quantique~:
 \begin{equation}
-\Opp^q \geq \Opp - \eta_q\,\frac{H(C)}{H(V|C)},
+\Opp^{\Lambda} \geq \Opp - \eta_q\,\frac{H(C)}{H(V|C)},
 \end{equation}
 et $\eta_q = 0$ lorsque la preuve reste une cha\^ine de bits classique.
 \end{sloppypar}

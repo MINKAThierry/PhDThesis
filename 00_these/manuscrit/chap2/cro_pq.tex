@@ -23,7 +23,7 @@ l'Hypoth\`ese~\ref{ass:regime_quantique} pos\'ee, la majoration affaiblie publi\
 (Remarque~\ref{rem:corollaire_publie_pq})~:
 \begin{equation}
 \Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda}
-+ \mathcal{O}(\lambda^{-2})
++ \mathcal{O}(\lambda^{-2}) + \negl(\lambda)
 \label{eq:cro_pq_borne_principale}
 \end{equation}
 o\`u $\Delta_q$ repr\'esente la capacit\'e d'extraction institutionnelle
@@ -146,6 +146,8 @@ Pour tous \'etats quantiques $\rho, \sigma$~:
 \begin{equation}
 \|\rho - \sigma\|_1^2 \leq 2 \ln 2 \cdot D(\rho\|\sigma)
 \end{equation}
+o\`u l'entropie relative $D$ est exprim\'ee en bits. C'est le
+Lemme~\ref{lem:pinsker_quantique_etat_art}, \'ecrit l\`a en nats.
 \end{lemma}
 
 \begin{Preuve}[Lemme~\ref{lem:pinsker_quantique}, Pinsker quantique]\label{prv:pinsker_quantique}
@@ -189,8 +191,8 @@ satisfait
 \begin{equation}
 \|\rho - \rho'\|_1 \leq 3\sqrt{\delta}
 \end{equation}
-La constante optimale, $2\sqrt{\delta}$, est \'etablie
-dans~\cite{Winter,OgawaNagaoka}~; la d\'emonstration donn\'ee ici,
+La constante $2\sqrt{\delta}$ est celle du
+Lemme~\ref{lem:mesure_douce_etat_art}~\cite{Winter,OgawaNagaoka}~; la d\'emonstration donn\'ee ici,
 volontairement \'el\'ementaire, fournit $3\sqrt{\delta}$, ce qui suffit
 \`a tous les usages qui en sont faits dans cette th\`ese.
 \end{lemma}
@@ -290,7 +292,7 @@ quantique de dimension $d$ comme
 \Lambda_{\text{dep}}(\rho) = (1-p)\rho + \frac{p}{d} I_d
 \end{equation}
 Ce mod\`ele pr\'esente un bruit sym\'etrique dans les syst\`emes quantiques et
-est le mod\`ele d'erreur dominant dans les dispositifs NISQ actuels~\cite{Preskill2018,Bharti2022}.
+est le mod\`ele d'erreur dominant dans les dispositifs NISQ (\emph{Noisy Intermediate-Scale Quantum}) actuels~\cite{Preskill2018,Bharti2022}.
 \end{definition}
 
 \begin{definition}[Canal d'amortissement]\label{def:canal_amortissement}
@@ -377,8 +379,8 @@ s\'ecurit\'e $\lambda$ comprend~\cite{Unruh2016,Chatterjee2021}~:
 \item \textbf{Espace de preuves} $\Sigma_\lambda$ (peut \^etre classique ou quantique)
 \item \textbf{Algorithme de preuve} $\mathcal{P}(\lambda, m, c) \to \sigma$
 pour $m \in \mathcal{M}_\lambda, c \in \mathcal{C}_\lambda$
-\item \textbf{Espace de verdicts} $\mathcal{Y}_\lambda$ de taille finie $k_\lambda$
-\item \textbf{Algorithme de v\'erification quantique} $\mathcal{V}^q(\lambda, \sigma, c)$
+\item \textbf{Espace de verdicts} $\mathcal{V}_\lambda$ de taille finie $k_\lambda$
+\item \textbf{Algorithme de v\'erification quantique} $\mathsf{Verify}^q(\lambda, \sigma, c)$
 pouvant utiliser des requ\^etes en superposition quantique~\cite{Watrous2009}
 \end{itemize}
 \end{definition}
@@ -407,7 +409,7 @@ $\mathcal{H}_\Sigma$ qui maximise la probabilit\'e d'identifier correctement
 le message.
 La \textbf{fiabilit\'e quantique} est la fiabilit\'e de reconstruction, d\'efinie par
 \begin{equation}
-\Rel^q(\mathcal{P}) = 1 - \Pr[\hat{M} \neq M]
+\Rel^q(\mathcal{P}) := \Relrec^q(\mathcal{P}) = 1 - \Pr[\hat{M} \neq M]
 \label{eq:rel_q_pq}
 \end{equation}
 o\`u la probabilit\'e est sur la distribution jointe $(M, C, \Sigma)$ et les
@@ -515,10 +517,10 @@ Un v\'erificateur institutionnel quantique $\mathcal{J}$ est un algorithme
 QPT op\'erant sur un espace de Hilbert $\mathcal{H}_\mathcal{J}$ et
 rendant un verdict admissible au sens de la D\'efinition~\ref{def:interp_admissible}
 \begin{equation}
-V^q = \mathsf{Interpret}^q(\Sigma, C, K) \in \mathcal{Y}_\lambda,
-\qquad K \perp M \mid (\Sigma, C),
+V^q = \mathsf{Interpret}^q(\Sigma, C, K) \in \mathcal{V}_\lambda,
+\qquad K \perp M \mid (\Sigma, C).
 \end{equation}
-o\`u $\mathsf{Interpret}^q$ mesure la preuve et combine l'issue classique au
+L'algorithme $\mathsf{Interpret}^q$ mesure la preuve et combine l'issue classique au
 contexte et aux ressources propres $K$ de l'institution.
 Le v\'erificateur est caract\'eris\'e par sa capacit\'e d'extraction
 $\Delta_q$ et sa granularit\'e $\alpha_q$.
@@ -594,7 +596,7 @@ preuve et de la loi du contexte institutionnel, sans mesure aupr\`es d'acteurs.
 La version de la preuve pr\'esent\'ee ici diff\`ere de celle de l'article
 publi\'e~\cite{MINKA2026PQCRO}. Comme dans le cas classique, les choix de formulation dict\'es
 par la certification Lean4 sont expliqu\'es \`a la
-section~\ref{subsec:lean4_erreurs}.
+section~\ref{subsec:lean4_formulations}.
 \end{remark}
 
 \begin{assumption}[Extraction institutionnelle born\'ee quantique]
@@ -714,7 +716,7 @@ D_{\max}}$, minorant informatif seulement si $\zeta_q D_{\max}$ est petit
 \begin{Preuve}[Remarque~\ref{rem:statut_regime_quantique}]
 Pour un \'etat classique-quantique, l'information mutuelle quantique entre le
 registre classique $M$ et le syst\`eme $\Sigma$ \`a $C = c$ fix\'e est l'information
-de Holevo de l'ensemble $\mathcal{E}_{m,c} = \{P_{M|C}(m|c), \rho_\Sigma^{m,c}\}$.
+de Holevo de l'ensemble $\mathcal{E}_{m,c} = \{P_{M|C}(m|c), \rho_\Sigma^{m,c}\}_m$, o\`u $m$ parcourt les messages \`a $c$ fix\'e.
 On a donc $I(M;\Sigma|C) = \sum_c P_C(c)\,\chi(\mathcal{E}_{m,c})$, moyenne major\'ee
 par son maximum $\chi_{\max} \leq \kappa/\lambda$. La borne de Holevo donne
 $I_{\mathrm{acc}} \leq I(M;\Sigma|C)$~\cite{Holevo1973}. Enfin la fonction
@@ -744,7 +746,7 @@ de la version publi\'ee, avec l'esp\'erance prise sur des tirages
 alors que le membre de droite de (68) vaut $1/2$. La pr\'esente formulation
 se passe donc du Lemme~6 et de la borne sup\'erieure (72) du Lemme~7 qui en
 d\'epend. Le d\'etail de ces formulations alternatives est pr\'esent\'e \`a la
-section~\ref{subsec:lean4_erreurs}.
+section~\ref{subsec:lean4_formulations}.
 \end{remark}
 
 \begin{Preuve}[Remarque~\ref{rem:retrait_lemma6}]
@@ -849,6 +851,9 @@ param\`etres institutionnels quantiques $(\Delta_q, \alpha_q, \beta_q,
 \Conf^q(\mathcal{P}) \cdot \Rel^q(\mathcal{P}) \cdot \Opp^q(\mathcal{P}) \leq \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa(\Delta_q+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right) \leq \frac{\Delta_q + \eta_q H(C)}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
 \label{eq:trilemme_pq}
 \end{equation}
+La r\'egularit\'e $\beta_q$ n'entre pas dans cette borne. Sous
+l'Hypoth\`ese~\ref{ass:regularite_quantique}, elle garantit la confidentialit\'e par le
+Lemme~\ref{lem:q_conf_mi_pq}.
 \end{theorem}
 
 \begin{Preuve}
@@ -975,7 +980,7 @@ Le noyau alg\'ebrique de cette preuve est analogue \`a celui du
 Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} classique, certifi\'e
 m\'ecaniquement en Lean4 \`a la section~\ref{sec:lean4}. Les formulations
 retenues pour l'analogue classique figurent \`a la
-section~\ref{subsec:lean4_erreurs}.
+section~\ref{subsec:lean4_formulations}.
 \end{remark}
 
 \begin{remark}[Forme raffin\'ee quantique]\label{rem:forme_raffinee_pq}
@@ -1186,7 +1191,7 @@ Falcon~\cite{Falcon2022} & R\'eseau & 256 & $0$ & $\approx 70$ bits & non calibr
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\item \footnotesize $\eta_q = 0$ car ces signatures sont des cha\^ines de bits classiques. Colonne implicite~: valeurs obtenues par inversion de la forme publi\'ee de~\cite{MINKA2026PQCRO}. Colonne hypoth\`ese de travail~: valeurs du tableau~\ref{tab:parametres_reference}, seules employ\'ees dans la suite. Pour la colonne implicite, les valeurs $\eta_q \in [0{,}012 ; 0{,}020]$ de la formulation initiale correspondaient au sc\'enario hypoth\'etique d'un support quantique~; elles modifiaient $\Delta_q$ de moins d'un bit. ML-KEM (Kyber), m\'ecanisme d'encapsulation de cl\'e et non syst\`eme de preuve, ne figure pas dans le tableau.
+\item \footnotesize $\eta_q = 0$ car ces signatures sont des cha\^ines de bits classiques. Colonne implicite~: valeurs du tableau de coh\'erence de~\cite{MINKA2026PQCRO}, obtenues par inversion de la forme publi\'ee. Pour ML-DSA-65, l'\'etude de cas de la m\^eme publication aboutit \`a $154$ bits avec un produit voisin de $0{,}8$ (section~\ref{sec:derivation_opposabilite}). Colonne hypoth\`ese de travail~: valeurs du tableau~\ref{tab:parametres_reference}, seules employ\'ees dans la suite. Pour la colonne implicite, les valeurs $\eta_q \in [0{,}012 ; 0{,}020]$ de la formulation initiale correspondaient au sc\'enario hypoth\'etique d'un support quantique~; elles modifiaient $\Delta_q$ de moins d'un bit. ML-KEM (Kyber), m\'ecanisme d'encapsulation de cl\'e et non syst\`eme de preuve, ne figure pas dans le tableau.
 \end{tablenotes}
 \end{table}
 % -----------------------------------------------------------------------
@@ -1207,8 +1212,8 @@ empirique des hypoth\`eses institutionnelles quantiques.
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 Notre analyse r\'ev\`ele que les standards NIST PQC actuels se concentrent
-exclusivement sur la s\'ecurit\'e calculatoire (IND-CCA2,
-EUF-CMA)~\cite{Goldreich01,KatzLindell14} tout en n\'egligeant
+exclusivement sur la s\'ecurit\'e calculatoire (IND-CCA2 pour l'indistinguabilit\'e sous attaque adaptative \`a chiffr\'es choisis,
+EUF-CMA pour l'infalsifiabilit\'e)~\cite{Goldreich01,KatzLindell14} tout en n\'egligeant
 l'interpr\'etabilit\'e institutionnelle. Nous fournissons trois recommandations
 concr\`etes pour la migration institutionnelle.
 
@@ -1227,10 +1232,10 @@ institutionnelle.
 
 \subsubsection{Constructions hybrides pour les p\'eriodes de transition}
 
-\textbf{Recommandation~3.} Superposer des structures classiques riches en
+\textbf{Recommandation~3.} Superposer des structures classiques porteuses de
 s\'emantique sur des primitives r\'esistantes au quantique pendant la
-p\'eriode de transition (2024--2035) o\`u les institutions manquent de
-capacit\'e pour l'interpr\'etation PQC pure~:
+p\'eriode de transition (2024--2035). Les institutions y manquent de
+capacit\'e pour l'interpr\'etation PQC pure. La preuve hybride s'\'ecrit
 \begin{equation}
 \sigma_{\text{hybride}} = (\sigma_{\text{PQC}}, \sigma_{\text{explication}},
 \pi_{\text{liaison}})

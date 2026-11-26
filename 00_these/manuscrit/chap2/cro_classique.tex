@@ -66,9 +66,9 @@ rigoureuses~\cite{ClarksonSchneider10,Smith09}.
 $\Delta \geq 0$ (en bits) quantifie la connaissance pr\'ealable des interpr\`etes
 institutionnels et leurs ressources cognitives au-del\`a du contexte formel~$C$~\cite{Simon82,Miller56}.
 Ce param\`etre agr\`ege les pr\'ec\'edents juridiques et la jurisprudence applicable~\cite{Mason07,Kerr04},
-l'expertise de domaine des d\'ecideurs~\cite{Ericsson95,Chi2006}, la documentation et les proc\'edures
-\'etablies, les capacit\'es de d\'elib\'eration collaborative entre experts~\cite{Sunstein2005,Hong2016}, ainsi
-que la m\'emoire institutionnelle et les bases de donn\'ees historiques~\cite{Argyris1978,Walsh1995}.
+l'expertise de domaine des d\'ecideurs~\cite{Ericsson95,Chi2006} ainsi que la documentation et les proc\'edures
+\'etablies. Il agr\`ege aussi les capacit\'es de d\'elib\'eration collaborative entre experts~\cite{Sunstein2005,Hong2016},
+la m\'emoire institutionnelle et les bases de donn\'ees historiques~\cite{Argyris1978,Walsh1995}.
 
 \end{definition}
 
@@ -114,7 +114,7 @@ institutionnelles~\cite{Simon1955,Miller56,Ericsson95}. Chacune repose
 sur des justifications multidisciplinaires ; aucune n'a \'et\'e valid\'ee
 \`a ce stade par protocoles exp\'erimentaux contr\^ol\'es mesurant
 directement $\Delta$ et $\alpha$ aupr\`es d'acteurs
-institutionnels r\'eels, cette limitation est reconnue
+institutionnels r\'eels. Cette limitation est reconnue
 (sous-section~\ref{subsec:note_methodo}). Le param\`etre $\beta$ se calcule \`a partir
 des lois de preuve et de la loi du contexte institutionnel, sans mesure aupr\`es d'acteurs.
 
@@ -229,7 +229,7 @@ $H(V|C) \geq \alpha H(C) - 1$. Cette borne inf\'erieure est la
 propri\'et\'e d'\textbf{efficacit\'e} du verdict, qui doit \^etre
 postul\'ee. Elle formalise l'id\'ee qu'une institution
 exploitant effectivement le contexte disponible distingue au moins
-$\gamma$ bits de verdicts. Pour les param\`etres institutionnels typiques
+$\gamma$ bits de verdicts. Pour des param\`etres de domaine
 ($H(C) \geq 10$ bits, $\alpha = 1$), on a $\gamma \geq 9$.
 \end{remark}
 
@@ -264,7 +264,7 @@ I(M;\Sigma|C) \leq \frac{\kappa}{\lambda}
 Dans la version initiale de la preuve, ce r\'egime \'etait pr\'esent\'e
 comme une \emph{cons\'equence} de l'optimisation, sur $[0, \lambda]$, d'une
 fonction $f(x) = (1 - a\sqrt{x})\,x^2$ de $x = I(M;\Sigma|C)$, avec $a = \sqrt{c_0/(\beta\lambda)} > 0$,
-introduite par la version publi\'ee (\'Etape~6, sous-section~\ref{subsec:lean4_erreurs}). Sa d\'eriv\'ee
+introduite par la version publi\'ee (\'Etape~6, sous-section~\ref{subsec:lean4_formulations}). Sa d\'eriv\'ee
 s'\'ecrit $f'(x) = 2x - \frac{5}{2}ax^{3/2}$. La formalisation a conduit \`a une r\'esolution alternative de cette
 optimisation. La d\'eriv\'ee s'annule en
 $\sqrt{x^*} = \frac{4}{5a}$ et ce point est un \emph{maximiseur} de $f$, puisque
@@ -357,7 +357,7 @@ Nous \'etablissons le r\'esultat principal du r\'egime classique.
 La version de la preuve pr\'esent\'ee ici diff\`ere de celle de l'article
 publi\'e~\cite{MINKA2026CRO}. Les formulations alternatives retenues, issues
 de la certification Lean4, sont d\'etaill\'ees \`a la
-section~\ref{subsec:lean4_erreurs}.
+section~\ref{subsec:lean4_formulations}.
 \end{remark}
 
 \begin{lemma}[Garantie de confidentialit\'e pour les protocoles r\'eguliers]
@@ -853,8 +853,8 @@ avec \'egalit\'e, de m\^eme que $\Opp \leq (\kappa/\lambda + \Delta)/\gamma$ ave
 
 \begin{remark}[T\'emoin combin\'e o\`u le facteur institutionnel est actif]
 \label{rem:temoin_combine}
-Pour tous entiers $1 \leq \Delta < \gamma$, tout $\kappa$ tel que
-$\lambda^2 2^{-\lambda} \leq \kappa \leq \lambda^2$ et $\kappa/\lambda + \Delta < \gamma$, et tout $\lambda \geq 64$, il existe une loi
+Pour tous entiers $1 \leq \Delta < \gamma$, tout $\lambda \geq 64$ et tout $\kappa$ tel que
+$\lambda^2 2^{-\lambda} \leq \kappa \leq \lambda^2$ et $\kappa/\lambda + \Delta < \gamma$, il existe une loi
 qui satisfait les Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regime} et dont le
 produit vaut $(1-\rho)\,\frac{\kappa}{\lambda^2}\,\frac{\Delta}{\gamma}$ avec
 $\rho \leq \kappa/\lambda^2$. Elle combine le protocole de la
@@ -967,7 +967,7 @@ formalis\'ees comme propri\'et\'es des instances de protocole. Fano et Pinsker
 y sont en outre d\'emontr\'es pour des lois de probabilit\'e finies
 (sous-section~\ref{subsec:lean4_concret}). Le
 d\'etail des formulations alternatives issues de la certification est pr\'esent\'e \`a la
-section~\ref{subsec:lean4_erreurs}.
+section~\ref{subsec:lean4_formulations}.
 \end{remark}
 
 \begin{corollary}[Forme simplifi\'ee]\label{cor:forme_simplifiee}
@@ -1039,18 +1039,18 @@ sont plus fins que ce qu'il sait extraire.
 
 \node[draw=enspred, fill=enspred!8, rounded corners, thick,
       minimum width=3cm, minimum height=1.2cm] (bound) at (0, 2)
-    {$\Conf \cdot \Rel \cdot \Opp \leq \dfrac{\Delta}{\lambda}$};
+    {$\Conf \cdot \Rel \cdot \Opp \lesssim \dfrac{\Delta}{\lambda}$};
 
 \draw[-{Stealth[length=2mm]}, thick, enspblue]  (C.south) -- (bound.north west);
 \draw[-{Stealth[length=2mm]}, thick, enspgreen] (R.east)  -- (bound.south west);
 \draw[-{Stealth[length=2mm]}, thick, navyblue]  (O.west)  -- (bound.south east);
 
 \node[rotate=63,  font=\footnotesize, text=enspblue]  at (-2.3, 2.2)
-    {Contrainte $\Delta$};
+    {Borne de Fano};
 \node[rotate=-63, font=\footnotesize, text=navyblue]  at ( 2.3, 2.2)
     {Goulot $H(C)$};
 \node[font=\footnotesize, text=enspgreen]              at (0,   -0.5)
-    {Borne de Fano};
+    {Contrainte $\Delta$};
 
 \node[above=0.3cm of C, font=\footnotesize, text=enspblue, align=center]
     {Protection\\de la vie priv\'ee};
@@ -1067,7 +1067,7 @@ sont plus fins que ce qu'il sait extraire.
 \smallskip
 \begin{minipage}{\linewidth}
   \small\textit{Note :} La borne centrale
-  $\Conf \cdot \Rel \cdot \Opp \leq \Delta/\lambda$ limite l'optimisation simultan\'ee.
+  $\Conf \cdot \Rel \cdot \Opp \lesssim \Delta/\lambda$ (forme simplifi\'ee) limite l'optimisation simultan\'ee.
   Les \'etiquettes des ar\^etes indiquent le m\'ecanisme de contrainte principal
   reliant chaque paire de propri\'et\'es.
 \end{minipage}
@@ -1127,7 +1127,7 @@ La capacit\'e institutionnelle couvre la richesse du contexte~; le produit est
 born\'e par l'in\'egalit\'e de Fano, $(1+\kappa/\lambda)/\lambda$. Avec les
 param\`etres illustratifs de la calibration (Tableau~\ref{tab:validation_cro_classique}),
 un contrat standardis\'e ($H(\mathcal{C}) \approx 20$ bits, $\alpha = 1$,
-$\Delta \approx 35$ bits pour un juge dot\'e d'une expertise PKI~\cite{Mason07,Kerr04}, soit
+$\Delta \approx 35$ bits pour un juge dot\'e d'une expertise en infrastructure \`a cl\'es publiques (PKI)~\cite{Mason07,Kerr04}, soit
 $H^\sharp \approx 36$) rel\`eve de ce r\'egime. C'est aussi le cas d'un scrutin de taille moyenne ($H(\mathcal{C}) \approx 40$
 bits, $\alpha = 1{,}2$, $\Delta \approx 56$ bits pour un comit\'e de garants
 sp\'ecialis\'es~\cite{Goodman15}, soit $H^\sharp \approx 48$). La capacit\'e d'extraction n'y est pas la contrainte liante. Ces deux valeurs de
@@ -1154,7 +1154,8 @@ capacit\'e cognitive de l'institution, au-del\`a de la seule structure
 cryptographique, plafonne le produit. Ce classement se lit \`a l'\'echelle du domaine, avec les
 param\`etres de calibration. Il suppose un verdict de domaine dont l'entropie atteint au moins
 $\gamma = 104$ bits, ce que la th\`ese ne mesure pas. \`A l'\'echelle d'une d\'ecision, le
-chapitre~\ref{chap:experimentation} d\'enombre huit verdicts, d'o\`u $\hat\alpha \approx 0{,}27$ et
+chapitre~\ref{chap:experimentation} d\'enombre huit verdicts pour une entropie d'esp\`ece
+$H(C) \approx 11$ bits (Tableau~\ref{tab:parametres_reference}), d'o\`u $\hat\alpha \approx 0{,}27$ et
 $\hat\gamma = 2$. Le m\^eme syst\`eme rel\`eve alors du contexte rare. L'existence du r\'egime riche
 ne repose pas sur cet exemple. La Remarque~\ref{rem:temoin_realisable} en donne une loi
 explicite pour tout $\Delta \leq \gamma$. Savoir quelles institutions l'occupent rel\`eve du programme
@@ -1262,7 +1263,7 @@ la d\'egradation s\'emantique dans les canaux quantiques (d\'ecoh\'erence, erreu
 
 \item La borne post-quantique~:
 \begin{equation}
-\Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda} + O(\lambda^{-2})
+\Conf^q \cdot \Rel^q \cdot \Opp^q \leq \frac{\Delta_q + \eta_q \cdot H(C)}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
 \end{equation}
 \end{itemize}
 
@@ -1300,5 +1301,5 @@ L'ordre $\lambda^{-2}$ de la borne aigu\"e est atteint \`a un facteur deux pr\`e
 facteur $\Delta/\gamma$ est r\'ealis\'e par une loi explicite~; la constante exacte reste
 ouverte. La section suivante l'\'etendra au r\'egime quantique.
 
-Il veut voir si les constructions tiennent ce que le th\'eor\`eme promet.
+Il veut voir si la borne r\'esiste aux adversaires quantiques.
 \end{boiteArbitre}

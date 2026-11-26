@@ -20,8 +20,8 @@ adversaire probabiliste en temps polynomial (PPT).
 Le cadre CLO raisonne en bits et en entropies, alors que la cryptographie classique
 raisonne en jeux et en avantages d'adversaires. Cette annexe construit
 le pont entre les deux. Elle traduit chaque m\'etrique du cadre CLO
-en un jeu cryptographique puis relie chaque jeu \`a une hypoth\`ese
-de duret\'e standard (PRG, DLOG, JL, Groth16).
+en un jeu cryptographique puis relie chaque jeu \`a son appui, soit une hypoth\`ese
+de duret\'e standard (PRG, DLog, Groth16), soit l'in\'egalit\'e de Fano, soit le lemme JL.
 %\end{cmtEtape}
 
 Cette annexe \'etablit le pont formel entre les deux mondes en trois \'etapes.
@@ -68,13 +68,13 @@ r\'esoudre un probl\`eme difficile.
 \midrule
 \ref{sec:gamebased_primitives} & Primitives et d\'efinitions pr\'ealables & -- & -- \\
 \ref{sec:gamebased_confidentialite} & Jeu IND-CONF + lien $\Conf$ & $\Conf$ & PRG \\
-\ref{sec:gamebased_fiabilite} & Jeu BIND-REL + lien $\Relver$ & $\Relver$ & DLOG \\
+\ref{sec:gamebased_fiabilite} & Jeu BIND-REL + lien $\Relver$ & $\Relver$ & DLog \\
 \ref{sec:gamebased_opposabilite} & Jeu EXT-OPP + lien $\Opp$ & $\Opp$ & Fano \\
-\ref{sec:gamebased_SOTP-Low} & R\'eductions SOTP-Low & $\Conf_{\mathrm{calc}}$, $\Relver$ & PRG, DLOG \\
+\ref{sec:gamebased_SOTP-Low} & R\'eductions SOTP-Low & $\Conf_{\mathrm{calc}}$, $\Relver$ & PRG, DLog \\
 \ref{sec:gamebased_SOTP-base} & Dimensionnement SOTP-Base & -- & JL \\
 \ref{sec:gamebased_SOTP-High} & R\'eductions SOTP-High & $\Conf$, $\Relver$ & Groth16 \\
 \ref{sec:gamebased_produitCRO} & \'enonc\'es complets + produit CLO & $\Conf_{\mathrm{calc}}\cdot\Relver\cdot\Opp$ & Tous \\
-\ref{sec:gamebased_mecanisation} & M\'ecanisation en situation r\'eduite & $\Conf_{\mathrm{calc}}$, $\Relver$ & PRG, DLOG \\
+\ref{sec:gamebased_mecanisation} & M\'ecanisation en situation r\'eduite & $\Conf_{\mathrm{calc}}$, $\Relver$ & PRG, DLog \\
 \ref{sec:gamebased_limitations} & Limitations et port\'ee & -- & -- \\
 \bottomrule
 \end{tabular}
@@ -150,7 +150,7 @@ La construction $\mathsf{Com}(m, r) = g^m h^r$ exploite l'alg\`ebre des
 groupes cycliques. Toute collision d'engagements permettrait de calculer
 $\log_g h$, r\'esolvant le logarithme discret.
 \cmt{Le hiding parfait signifie que le message est cach\'e inconditionnellement.}
-\cmt{Par le binding calculatoire, ouvrir sur deux messages casserait DLOG.}
+\cmt{Par le binding calculatoire, ouvrir sur deux messages casserait DLog.}
 
 \begin{definition}[Engagement~de~Pedersen~\cite{Pedersen91}]\label{def:ann_pedersen}
 Soit $\mathbb{G}$ un groupe cyclique d'ordre premier $q$,
@@ -532,7 +532,7 @@ logarithme discret (fiabilit\'e).
 
 %\begin{cmtEtape}{Objectif de cette section.}
 Cette section \'etablit les deux r\'eductions formelles qui relient SOTP-Low aux
-hypoth\`eses standard PRG (couche Gold) et DLOG (couche Iron).
+hypoth\`eses standard PRG (couche Gold) et DLog (couche Iron).
 %\end{cmtEtape}
 
 \subsection{R\'eduction PRG pour la confidentialit\'e}
@@ -605,7 +605,7 @@ Donc $\mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) \geq \varepsilon - 1/q$
 $\sigma_2 = g^s h^\rho$. Pour gagner BIND-REL, l'adversaire doit trouver
 deux ouvertures $s_0 \neq s_1$ pour le m\^eme $\sigma_2$. On aurait alors
 $g^{s_0}h^{\rho_0} = g^{s_1}h^{\rho_1}$, d'o\`u l'on tire
-$\log_g h$. DLOG serait r\'esolu.
+$\log_g h$. DLog serait r\'esolu.
 \cmt{Deux ouvertures distinctes donnent directement le logarithme discret.}
 
 \begin{theorem}[Réduction de SOTP-Low au logarithme discret (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_low_rel}
@@ -613,23 +613,23 @@ On suppose la graine tir\'ee dans $\mathbb{Z}_q$ et l'engagement de la forme
 $\sigma_2 = g^{s}h^{\rho}$ (Algorithme~\ref{alg:sotp_low}). Soit $\mathcal{A}$ PPT
 gagnant BIND-REL pour SOTP-Low (proc\'edure d'ouverture $\mathsf{Open}$) avec
 probabilit\'e $\varepsilon$. Alors $\exists$ adversaire PPT $\mathcal{B}$ r\'esolvant
-DLOG dans $\mathbb{G}$ avec probabilit\'e $\geq \varepsilon$.
-\cmt{L'avantage contre DLOG est le m\^eme que contre BIND-REL.}
+DLog dans $\mathbb{G}$ avec probabilit\'e $\geq \varepsilon$.
+\cmt{L'avantage contre DLog est le m\^eme que contre BIND-REL.}
 \end{theorem}
 
 \begin{Preuve}
 
-\begin{cmtEtape}{Construction du r\'educteur DLOG.}
-$\mathcal{B}$ re\c{c}oit une instance DLOG $(g, h)$ et utilise l'attaque
+\begin{cmtEtape}{Construction du r\'educteur DLog.}
+$\mathcal{B}$ re\c{c}oit une instance DLog $(g, h)$ et utilise l'attaque
 de $\mathcal{A}$ contre BIND-REL pour extraire $\log_g h$. La cl\'e est
 que deux ouvertures valides sur la m\^eme preuve donnent une \'equation
 alg\'ebrique r\'esoluble.
 \end{cmtEtape}
 
-Soit une instance DLOG $(g,h)$ avec $x = \log_g h$ inconnu.
+Soit une instance DLog $(g,h)$ avec $x = \log_g h$ inconnu.
 \begin{enumerate}
 \item $\mathcal{B}$ configure SOTP-Low avec $(g,h)$ donn\'es
-      \cmt{$\mathcal{B}$ utilise l'instance DLOG comme param\`etres publics~; leur loi est celle du Setup.}
+      \cmt{$\mathcal{B}$ utilise l'instance DLog comme param\`etres publics~; leur loi est celle du Setup.}
 \item $\mathcal{A}$ produit $(c,\,\sigma{=}(\sigma_1,\sigma_2,\sigma_3))$ et deux
       ouvertures accept\'ees $(m_0, s_0, \rho_0)$, $(m_1, s_1, \rho_1)$ avec
       $m_0 \neq m_1$
@@ -656,7 +656,7 @@ attaque valide, avec probabilit\'e $\varepsilon$.
 \noindent\textbf{Signification pratique.} Avec Curve25519 ($q \approx 2^{252}$,
 s\'ecurit\'e 128 bits), casser la fiabilit\'e de SOTP-Low est aussi difficile
 que r\'esoudre le DLP sur les courbes elliptiques.
-\cmt{Le niveau de s\'ecurit\'e de SOTP-Low h\'erite de celui de DLOG sur la courbe.}
+\cmt{Le niveau de s\'ecurit\'e de SOTP-Low h\'erite de celui de DLog sur la courbe.}
 \end{sloppypar}
 
 % ============================================================================
@@ -717,13 +717,13 @@ $k$ garantissant la pr\'eservation des distances avec la probabilit\'e voulue~;
 le lien avec l'extraction du verdict reste une hypoth\`ese de conception.
 
 \begin{corollary}[R\'eductions pour SOTP-Base]\label{cor:ann_sotp_base_reductions}
-Sous PRG et DLOG dans $\mathbb{G}$ d'ordre $q$, pour tout PPT $\mathcal{A}$,
+Sous PRG et DLog dans $\mathbb{G}$ d'ordre $q$, pour tout PPT $\mathcal{A}$,
 \begin{equation}
 \mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Base}}(\lambda)
 \leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + \frac{1}{q},
 \qquad
 \mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Base}}(\lambda)
-\leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda).
+\leq \mathsf{Adv}^{\mathsf{DLog}}_{\mathcal{B}'}(\lambda).
 \end{equation}
 \end{corollary}
 
@@ -763,7 +763,7 @@ Pour la relation $\mathcal{R} = \{((h_c, c_m), (m, c, \rho)) : h_c = \mathsf{Pos
       \cmt{La preuve et l'engagement sont ind\'ependants de $m$ sachant $c$.}
 \item \textbf{Fiabilité de v\'erification.} La solidité de connaissance de
       Groth16, la r\'esistance aux collisions de $\mathsf{Poseidon}$ et le caract\`ere liant de
-      l'engagement de Pedersen sous DLOG donnent
+      l'engagement de Pedersen sous DLog donnent
       $\Relver \geq 1 - \negl(\lambda)$.
       \cmt{Un prouveur qui fait accepter conna\^it un t\'emoin valide.}
 \end{enumerate}
@@ -787,7 +787,7 @@ mod\`ele du groupe alg\'ebrique sous l'hypoth\`ese q-DLog~\cite{FKL18}. Ainsi
 \Pr\!\left[\mathsf{Verify}=1 \land (m,c,\rho)\notin\mathcal{R}\right]
 \leq \mathsf{Adv}^{\mathsf{sound}}(\lambda) \leq \negl(\lambda)
 \end{equation}
-Le liant de $c_m$, sous DLOG, interdit en outre que deux t\'emoins extraits portent sur
+Le liant de $c_m$, sous DLog, interdit en outre que deux t\'emoins extraits portent sur
 des messages distincts. Il vient $\Relver \geq 1-\negl(\lambda)$.
 \cmtFormule{La solidit\'e connaissance implique l'absence de forge.}
 
@@ -833,19 +833,19 @@ directement au Trilemme CRO (Remarque~\ref{rem:ann_pas_de_contradiction}).
 \subsection{S\'ecurit\'e compl\`ete de SOTP-Low}
 
 \begin{theorem}[Bornes game-based compl\`etes de SOTP-Low (section~\ref{sec:sotp_construction})]\label{thm:ann_sotp_low_games}
-Sous PRG et DLOG dans $\mathbb{G}$ d'ordre $q$, on a
+Sous PRG et DLog dans $\mathbb{G}$ d'ordre $q$, on a
 \begin{align}
 \mathsf{Adv}^{\mathsf{IND\text{-}CONF}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda)
 &\leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda)
     + \frac{1}{q}
 \label{eq:ann_sotp_low_conf} \\[4pt]
 \mathsf{Win}^{\mathsf{BIND\text{-}REL}}_{\mathcal{A},\mathsf{SOTP\text{-}Low}}(\lambda)
-&\leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda)
+&\leq \mathsf{Adv}^{\mathsf{DLog}}_{\mathcal{B}'}(\lambda)
     + \frac{1}{q}
 \label{eq:ann_sotp_low_rel}
 \end{align}
 \cmtFormule{Confidentialit\'e calculatoire born\'ee par l'avantage PRG.}
-\cmtFormule{Fiabilit\'e de v\'erification born\'ee par l'avantage DLOG.}
+\cmtFormule{Fiabilit\'e de v\'erification born\'ee par l'avantage DLog.}
 pour tout PPT $\mathcal{A}$.
 \end{theorem}
 
@@ -860,7 +860,7 @@ $\varepsilon \leq \mathsf{Adv}^{\mathsf{PRG}}_{\mathcal{B}}(\lambda) + 1/q$, soi
 (Th\'eor\`eme~\ref{thm:ann_sotp_low_conf}).
 
 \emph{Fiabilit\'e.} Le Th\'eor\`eme~\ref{thm:ann_sotp_low_rel} donne
-$\mathsf{Win}^{\mathsf{BIND\text{-}REL}} \leq \mathsf{Adv}^{\mathsf{DLOG}}_{\mathcal{B}'}(\lambda)$.
+$\mathsf{Win}^{\mathsf{BIND\text{-}REL}} \leq \mathsf{Adv}^{\mathsf{DLog}}_{\mathcal{B}'}(\lambda)$.
 L'ajout du terme positif $1/q$ donne~\eqref{eq:ann_sotp_low_rel}.
 \end{Preuve}
 
@@ -890,21 +890,21 @@ l'institution. Ce canal rel\`eve de l'heuristique de conception
 \midrule
 SOTP-Low & $\Conf_{\mathrm{calc}}$ & IND-CONF & PRG
   & $\mathsf{Adv} \leq \varepsilon_{\mathsf{PRG}} + 1/q$ \\
-SOTP-Low & $\Relver$ & BIND-REL & DLOG
-  & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}} + 1/q$ \\
+SOTP-Low & $\Relver$ & BIND-REL & DLog
+  & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLog}} + 1/q$ \\
 SOTP-Low & $\Opp$ & -- & --
   & aucune (Rem.~\ref{rem:ann_sotp_low_opp_statut}) \\
 \midrule
 SOTP-Base & $\Conf_{\mathrm{calc}}$ & IND-CONF & PRG
   & $\mathsf{Adv} \leq \varepsilon_{\mathsf{PRG}} + 1/q$ (Cor.~\ref{cor:ann_sotp_base_reductions}) \\
-SOTP-Base & $\Relver$ & BIND-REL & DLOG
-  & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLOG}}$ (Cor.~\ref{cor:ann_sotp_base_reductions}) \\
+SOTP-Base & $\Relver$ & BIND-REL & DLog
+  & $\mathsf{Win} \leq \varepsilon_{\mathsf{DLog}}$ (Cor.~\ref{cor:ann_sotp_base_reductions}) \\
 SOTP-Base & -- & -- & Lemme JL
   & dimensionnement de $k$ (Th.~\ref{thm:ann_sotp_base_opp}) \\
 \midrule
 SOTP-High & $\Conf$ & IND-CONF & Groth16 ZK parfaite
   & $\Conf = 1$ \\
-SOTP-High & $\Relver$ & BIND-REL & Groth16 (GGM ou AGM), DLOG
+SOTP-High & $\Relver$ & BIND-REL & Groth16 (GGM ou AGM), DLog
   & $\geq 1-\negl(\lambda)$ \\
 SOTP-High & $\Opp$ & -- & --
   & aucune (Rem.~\ref{rem:heuristique_sotp_high}) \\
@@ -1006,7 +1006,7 @@ chaque th\'eor\`eme Lean \`a l'\'enonc\'e de cette annexe qu'il m\'ecanise.
 \texttt{ind\_conf\_perfect\_otp} & avantage nul avec un masque uniforme & cas $y$ uniforme de la m\^eme preuve \\
 \texttt{pedersen\_extract} & $x = (s_0 - s_1)/(\rho_1 - \rho_0)$ & \'etapes 3 \`a 5 de la preuve du Th\'eor\`eme~\ref{thm:ann_sotp_low_rel} \\
 \texttt{bind\_rel\_gives\_dlog} & un gain BIND-REL donne le logarithme discret & Th\'eor\`eme~\ref{thm:ann_sotp_low_rel} \\
-\texttt{win\_bind\_le\_dlog} & $\mathsf{Win}^{\mathsf{BIND\text{-}REL}}(\mathcal{A}) \leq \mathsf{Adv}^{\mathsf{DLOG}}(\mathcal{B})$ & borne~\eqref{eq:ann_sotp_low_rel} \\
+\texttt{win\_bind\_le\_dlog} & $\mathsf{Win}^{\mathsf{BIND\text{-}REL}}(\mathcal{A}) \leq \mathsf{Adv}^{\mathsf{DLog}}(\mathcal{B})$ & borne~\eqref{eq:ann_sotp_low_rel} \\
 \bottomrule
 \end{tabular}
 }
@@ -1021,7 +1021,7 @@ deux r\'eductions. La graine est tir\'ee dans un ensemble fini quelconque
 quelconque engendr\'e par un \'el\'ement d'ordre premier $q$. La couche Iron n'entre pas
 dans le jeu de confidentialit\'e, son masquage parfait correspondant au terme $1/q$ du
 Th\'eor\`eme~\ref{thm:ann_sotp_low_games}. La couche Clay, fonction publique du
-contexte, n'est pas mod\'elis\'ee. Les hypoth\`eses PRG et DLOG ne sont pas pos\'ees comme
+contexte, n'est pas mod\'elis\'ee. Les hypoth\`eses PRG et DLog ne sont pas pos\'ees comme
 axiomes~: les th\'eor\`emes relient l'avantage de l'adversaire $\mathcal{A}$ \`a celui du
 r\'educteur $\mathcal{B}$ construit \`a partir de lui.
 
@@ -1060,8 +1060,8 @@ du d\'ep\^ot.
      exemple Z_q comme dans l'Algorithme SOTP-Low.
   3. Fiabilité de vérification (couches Gold et Iron) : deux ouvertures acceptées
      d'une même preuve sur deux messages distincts donnent le logarithme discret
-     de h en base g. Le réducteur B résout DLOG chaque fois que A gagne BIND-REL,
-     d'où Win^BIND-REL(A) ≤ Adv^DLOG(B).
+     de h en base g. Le réducteur B résout DLog chaque fois que A gagne BIND-REL,
+     d'où Win^BIND-REL(A) ≤ Adv^DLog(B).
 
   SITUATION RÉDUITE
   • Les probabilités sont des moyennes sur des ensembles finis (lois uniformes).
@@ -1070,7 +1070,7 @@ du d\'ep\^ot.
   • La couche Iron n'est pas modélisée dans le jeu de confidentialité (son
     masquage parfait est le terme 1/q de l'annexe), la couche Clay n'est pas
     modélisée (fonction publique du contexte).
-  • PRG et DLOG ne sont pas des axiomes : ce sont les avantages de B, que le
+  • PRG et DLog ne sont pas des axiomes : ce sont les avantages de B, que le
     théorème relie à ceux de A.
 -/
 
@@ -1264,11 +1264,11 @@ def winsBIND (g : Γ) (x : ZMod q) (PRG : ZMod q → M) (σ₁ : M) (σ₂ : Γ)
     (o₀ o₁ : Opening (ZMod q) M q) : Prop :=
   accepts g x PRG σ₁ σ₂ o₀ ∧ accepts g x PRG σ₁ σ₂ o₁ ∧ o₀.m ≠ o₁.m
 
-/-- Le réducteur DLOG : il calcule (s₀ − s₁)/(ρ₁ − ρ₀) à partir des deux ouvertures. -/
+/-- Le réducteur DLog : il calcule (s₀ − s₁)/(ρ₁ − ρ₀) à partir des deux ouvertures. -/
 def extract (o₀ o₁ : Opening (ZMod q) M q) : ZMod q :=
   (o₀.s - o₁.s) / (o₁.ρ - o₀.ρ)
 
-/-- **Théorème (réduction de la fiabilité de vérification de SOTP-Low au DLOG).**
+/-- **Théorème (réduction de la fiabilité de vérification de SOTP-Low au DLog).**
     Si A gagne BIND-REL, le réducteur rend exactement le logarithme discret x de h.
     Les messages distincts forcent des graines distinctes, condition qui exige la
     graine dans ZMod q. -/
@@ -1284,7 +1284,7 @@ theorem bind_rel_gives_dlog (g : Γ) (hg : orderOf g = q) (x : ZMod q)
 
 /-- **Corollaire probabiliste.** Pour tout adversaire A qui, sur h = g^x, rend une preuve
     et deux ouvertures, la probabilité de victoire dans BIND-REL (x uniforme) est au plus
-    la probabilité de succès du réducteur contre DLOG : Win^BIND-REL(A) ≤ Adv^DLOG(B). -/
+    la probabilité de succès du réducteur contre DLog : Win^BIND-REL(A) ≤ Adv^DLog(B). -/
 theorem win_bind_le_dlog (g : Γ) (hg : orderOf g = q) (PRG : ZMod q → M)
     (A : Γ → M × Γ × Opening (ZMod q) M q × Opening (ZMod q) M q)
     [∀ x, Decidable (winsBIND g x PRG (A (zpowq g x)).1 (A (zpowq g x)).2.1
@@ -1331,12 +1331,12 @@ et la relation avec Lean4.
 
 \begin{enumerate}
 \item \textbf{Conditionnalit\'e aux hypoth\`eses calculatoires.}
-      La s\'ecurit\'e de SOTP-Low est prouv\'ee sous PRG et DLOG.
+      La s\'ecurit\'e de SOTP-Low est prouv\'ee sous PRG et DLog.
       SOTP-High, fond\'e sur Groth16, repose sur la difficult\'e des
       couplages sur BN254, non post-quantique. Une extension aux
       primitives r\'esistantes aux quantiques (STARKs, r\'eseaux
       euclidiens) est une direction de recherche ouverte (section~\ref{sec:sotp_construction}).
-      \cmt{La s\'ecurit\'e d\'epend d'hypoth\`eses non prouv\'ees (PRG, DLOG, couplages).}
+      \cmt{La s\'ecurit\'e d\'epend d'hypoth\`eses non prouv\'ees (PRG, DLog, couplages).}
 
 \item \textbf{Mod\`ele d'interpr\`ete honn\^ete dans EXT-OPP.}
       Le jeu suppose que l'interpr\`ete tente sinc\`erement d'extraire
@@ -1377,7 +1377,7 @@ et la relation avec Lean4.
             \cmt{Certification m\'ecanique de la logique interne.}
       \item \textbf{Annexe~\ref{chap:annexe_gamebased} (ici)} \'etablit les
             propri\'et\'es cryptographiques de la famille SOTP (confidentialit\'e
-            calculatoire, fiabilit\'e de v\'erification) sous PRG, DLOG et Groth16.
+            calculatoire, fiabilit\'e de v\'erification) sous PRG, DLog et Groth16.
             Elle n'instancie pas les hypoth\`eses du Trilemme, qui portent sur
             $\Conf$ statistique et $\Relrec$
             \cmt{Instanciation dans des primitives calculatoires concr\`etes.}

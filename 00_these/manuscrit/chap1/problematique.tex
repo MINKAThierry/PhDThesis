@@ -25,7 +25,7 @@ correspondent. Il s'agit de borner les compromis classiques (\textbf{B}) puis
 d'\'etendre ces bornes aux contextes post-quantiques (\textbf{E}). Viennent
 ensuite l'approche des bornes par des constructions dont l'optimalit\'e
 est examin\'ee (\textbf{S}) et la certification des r\'esultats par v\'erification formelle
-(\textbf{C}). Vient enfin la sp\'ecification d'un programme exp\'erimental qui mesure les
+(\textbf{C}). Suit la sp\'ecification d'un programme exp\'erimental qui mesure les
 param\`etres institutionnels (\textbf{X}). Enfin, la sous-section~\ref{subsec:objectifs_programme} examine
 la coh\'erence interne du programme et en esquisse les retomb\'ees scientifiques,
 pratiques et soci\'etales.
@@ -75,7 +75,7 @@ des \textbf{jeux} opposant un challenger \`a un adversaire polynomial~\cite{Gold
 Trois propri\'et\'es en ressortent.
 
 La confidentialit\'e est mesur\'ee par l'avantage du distingueur dans le
-jeu IND-CPA~\cite{GoldwasserMicali84}, qui doit rester n\'egligeable
+jeu d'indistinguabilit\'e sous attaque \`a clairs choisis (IND-CPA)~\cite{GoldwasserMicali84}, qui doit rester n\'egligeable
 \begin{equation}
 \label{eq:ind_cpa_advantage}
 \mathsf{Adv}^{\text{IND-CPA}}_{\mathcal{A}}(\lambda) =
@@ -88,8 +88,8 @@ adversaire polynomial $\mathcal{A}$,
 \Pr[x \neq x' \land H(x) = H(x') : (x,x') \leftarrow \mathcal{A}(1^\lambda)]
 \leq \negl(\lambda).
 \end{equation}
-L'authenticit\'e enfin est mesur\'ee par la r\'esistance \`a la \textit{forgery}
-existentielle dans le jeu EUF-CMA~\cite{GMR88,Schnorr91}, c'est-\`a-dire par l'incapacit\'e d'un adversaire \`a produire une signature valide sur un message non autoris\'e
+L'authenticit\'e enfin est mesur\'ee dans le jeu d'infalsifiabilit\'e
+existentielle sous attaque \`a messages choisis (EUF-CMA)~\cite{GMR88,Schnorr91}. Elle traduit l'incapacit\'e d'un adversaire \`a produire une signature valide sur un message non autoris\'e
 \begin{equation}
 \label{eq:euf_cma}
 \Pr[\mathsf{Verify}(vk, m^*, \sigma^*) = 1 \land m^* \notin \mathcal{Q}
@@ -251,7 +251,7 @@ de recherche.
 Il faut d'abord faire de l'opposabilit\'e une propri\'et\'e de premi\`ere classe. Les
 d\'efaillances observ\'ees (Louvain~2009, IACR~2025, vide de contr\^ole
 AML) ne se r\'esorbent pas avec de meilleures interfaces ou des
-formations suppl\'ementaires. Elles t\'emoignent de limites structurelles
+formations suppl\'ementaires. Elles r\'ev\`elent des limites structurelles
 qui appellent une refonte conceptuelle de la cryptographie institutionnelle~\cite{Bonneau16,Narayanan16}.
 
 La capacit\'e cognitive humaine ($\Delta$) est la contrainte dominante.
@@ -264,7 +264,7 @@ born\'ee~\cite{Simon82,Simon1955,Miller56,Cowan2001,Ericsson95}, elle est syst\'
 
 Les compromis observ\'es laissent aussi pr\'esager des bornes fondamentales.
 Aucune des trois estimations illustratives de la section~\ref{sec:contexte} n'atteint
-un produit $\Conf \cdot \Rel \cdot \Opp > 0{,}6$.
+un produit $\Conf \cdot \Relver \cdot \Opp > 0{,}6$.
 Le fait que tous restent sous ce seuil s'accorde avec l'existence de contraintes th\'eoriques
 comparables au th\'eor\`eme~CAP~\cite{Brewer00,GilbertLynch02} ou au trilemme
 blockchain~\cite{Buterin17,Garay15}.
@@ -302,7 +302,7 @@ Les quatre implications pr\'eliminaires de la section~\ref{subsubsec:formulation
 \subsubsection{Unification th\'eorique, cadre CLO}
 \label{subsubsec:obj1_clo}
 
-\begin{objectif}[Unification Th\'eorique]\label{obj:obj1_unification}
+\begin{objectif}[Formalisation]\label{obj:obj1_unification}
 \textit{\'Etablir un cadre unifi\'e qui formalise math\'ematiquement la confidentialit\'e, la fiabilit\'e et l'opposabilit\'e au moyen de mesures issues de la th\'eorie de l'information.}
 \end{objectif}
 
@@ -318,7 +318,8 @@ la confidentialit\'e $\Conf$, la fiabilit\'e $\Rel$ et l'opposabilit\'e $\Opp$ (
 \'equations~\eqref{eq:conf_def}--\eqref{eq:opp_def} de la section~\ref{subsec:definitions_preliminaires_cro}). Le cadre \'etablit le Th\'eor\`eme du Goulot
 d'\'etranglement Contextuel $I(V;\Sigma|C) \leq \alpha H(\mathcal{C})$,
 fournit des r\`egles de composition s\'equentielle et parall\`ele pour $\Conf$ et $\Rel$, s\'equentielle seulement pour $\Opp$ (Remarque~\ref{rem:composition_opp}). Il
-propose aussi la construction Semantic One-Time Pad (S-OTP). Les \'etudes de cas
+propose aussi la construction Semantic One-Time Pad (S-OTP), reprise \`a la
+section~\ref{sec:sotp_base} au titre de l'\'etape~\textbf{S}. Les \'etudes de cas
 illustratives portant sur Helios ($\Conf \cdot \Relver \cdot \Opp \approx
 0{,}437$), zk-SNARKs ($\approx 0{,}572$) et ECDSA ($\approx 0{,}273$), sur
 l'\'echelle op\'erationnelle CLO, font appara\^itre un spectre de compromis
@@ -341,7 +342,7 @@ qui motive la recherche de contraintes fondamentales~\cite{Adida08,Groth16,Johns
 \subsubsection{Bornes d'impossibilit\'e classiques, Trilemme conditionnel CRO}
 \label{subsubsec:obj2_cro}
 
-\begin{objectif}[Bornes d'Impossibilit\'e Classiques]\label{obj:obj2_impossibilite}
+\begin{objectif}[Bornes d'impossibilit\'e classiques]\label{obj:obj2_impossibilite}
 \textit{\'Etablir les limites fondamentales, conditionn\'ees par la capacit\'e cognitive institutionnelle, des compromis r\'ealisables entre confidentialit\'e, fiabilit\'e et opposabilit\'e.}
 \end{objectif}
 
@@ -396,7 +397,7 @@ born\'ee~\cite{Simon82,Kahneman11}.
 \subsubsection{Extension quantique, Trilemme conditionnel CRO}
 \label{subsubsec:obj3_pqcro}
 
-\begin{objectif}[Extension Post-Quantique]\label{obj:obj3_postquantique}
+\begin{objectif}[Extension post-quantique]\label{obj:obj3_postquantique}
 \textit{\'Etendre ces bornes aux adversaires quantiques et aux effets de canal quantique, puis caract\'eriser les termes propres au r\'egime post-quantique.}
 \end{objectif}
 
@@ -458,7 +459,7 @@ SOTP-Base sa proximit\'e avec d'autres contextes par la projection
 Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84,DasguptaGupta03,Vempala05}.
 Au-del\`a, SOTP-High s'appuie sur les zk-SNARKs de
 Groth16~\cite{Groth16,BenSasson2019,PLONK20}. Ces trois constructions instancient le paradigme Gold-Iron-Clay, qui confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte \`a trois couches distinctes. Leurs propri\'et\'es
-cryptographiques sont d\'emontr\'ees sous les hypoth\`eses PRG et DLog et la solidit\'e de connaissance de Groth16.
+cryptographiques sont d\'emontr\'ees sous les hypoth\`eses du g\'en\'erateur pseudo-al\'eatoire (PRG) et du logarithme discret (DLog) ainsi que sous la solidit\'e de connaissance de Groth16.
 Qu'elles atteignent, \`a une constante pr\`es, la meilleure opposabilit\'e permise aux protocoles
 \`a fuite n\'egligeable demeure en revanche une conjecture~\cite{Campanelli2019,Wahby18}.
 
@@ -466,17 +467,17 @@ Qu'elles atteignent, \`a une constante pr\`es, la meilleure opposabilit\'e permi
 \begin{itemize}
   \item[\textbf{C4.1}] Le paradigme Gold-Iron-Clay, principe de conception des protocoles institutionnels. Il confie la confidentialit\'e \`a la couche Gold, la fiabilit\'e de v\'erification \`a la couche Iron et la pr\'esentation du contexte institutionnel \`a la couche Clay (sous-section~\ref{subsec:gold_iron_clay}).
   \item[\textbf{C4.2}] Les trois variantes SOTP-Low, SOTP-Base et SOTP-High, qui instancient ce paradigme selon le r\'egime du contexte (seuil $H^\sharp$) et le besoin fonctionnel de l'institution (section~\ref{sec:sotp_construction}).
-  \item[\textbf{C4.3}] Les r\'eductions game-based aux hypoth\`eses PRG et DLOG, au lemme JL et \`a la solidit\'e de connaissance de Groth16 (Tableau~\ref{tab:ann_g_reductions}). La confidentialit\'e devient statistique lorsque le masque est tronqu\'e (Remarque~\ref{rem:masque_troncature}).
+  \item[\textbf{C4.3}] Les r\'eductions game-based aux hypoth\`eses PRG et DLog, au lemme JL et \`a la solidit\'e de connaissance de Groth16 (Tableau~\ref{tab:ann_g_reductions}). La confidentialit\'e devient statistique lorsque le masque est tronqu\'e (Remarque~\ref{rem:masque_troncature}).
   \item[\textbf{C4.4}] La conjecture d'optimalit\'e universelle (Conjecture~\ref{conj:optimalite_universelle}).
-  \item[\textbf{C4.5}] La m\'ecanisation en Lean~4 des r\'eductions de SOTP-Low en situation r\'eduite, qui \'etablit la faisabilit\'e de la d\'emarche (section~\ref{sec:gamebased_mecanisation}).
+  \item[\textbf{C4.5}] La m\'ecanisation en Lean~4 des r\'eductions de SOTP-Low en situation r\'eduite, qui \'etablit la faisabilit\'e de la d\'emarche (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}).
 \end{itemize}
 
-\textbf{Publication~:} Soumis, IEEE TIT.
+\textbf{Publication~:} Soumis, \textit{IEEE Transactions on Information Theory}.
 
 \subsubsection{V\'erification formelle, Lean4}
 \label{subsubsec:obj5_lean4}
 
-\begin{objectif}[V\'erification Formelle]\label{obj:obj5_verification}
+\begin{objectif}[Certification formelle]\label{obj:obj5_verification}
 \textit{Obtenir, dans un assistant de preuve, une certification m\'ecanique du noyau du th\'eor\`eme d'impossibilit\'e en explicitant les hypoth\`eses sur lesquelles il repose.}
 \end{objectif}
 
@@ -501,16 +502,16 @@ puis d\'emontre ces deux in\'egalit\'es pour des lois de probabilit\'e finies.
 Elle a aussi conduit \`a poser l'Hypoth\`ese de r\'egime $I(M;\Sigma|C) \leq \kappa/\lambda$
 et \`a pr\'eciser trois \'enonc\'es publi\'es. Elle certifie enfin la
 forme raffin\'ee et le seuil $H^\sharp$ dans les deux sens, ce qui d\'elimite le r\'egime
-o\`u la capacit\'e institutionnelle est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'eductions game-based de SOTP-Low sont en outre m\'ecanis\'ees en situation r\'eduite (section~\ref{sec:gamebased_mecanisation}).
+o\`u la capacit\'e institutionnelle est contraignante~\cite{Affeldt2015,HibonPortier20,Lochbihler2016}. Les r\'eductions game-based de SOTP-Low sont en outre m\'ecanis\'ees en situation r\'eduite (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}).
 
 \noindent\textit{Contributions.}
 \begin{itemize}
   \item[\textbf{C5.1}] Le noyau alg\'ebrique certifi\'e dans ses formes explicite, raffin\'ee et asymptotique (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}).
-  \item[\textbf{C5.2}] Les hypoth\`eses mises au jour, soit l'efficacit\'e du verdict et le r\'egime de fuite (sous-section~\ref{subsec:lean4_erreurs}).
+  \item[\textbf{C5.2}] Les hypoth\`eses mises au jour, soit l'efficacit\'e du verdict et le r\'egime de fuite (sous-section~\ref{subsec:lean4_formulations}).
   \item[\textbf{C5.3}] Pinsker sous sa forme serr\'ee ainsi que Fano, d\'emontr\'es pour des lois de probabilit\'e finies (sous-section~\ref{subsec:lean4_concret}).
   \item[\textbf{C5.4}] Le constat que l'Hypoth\`ese~\ref{ass:regularite} ne sert qu'au Lemme~\ref{lem:confidentiality_guarantee} et non au trilemme (Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}).
   \item[\textbf{C5.5}] Les t\'emoins de coh\'erence et de port\'ee et la famille de lois t\'emoins pour tout $\lambda$ (sous-sous-section~\ref{subsubsec:temoins_lean4}, sous-section~\ref{subsec:lean4_concret}).
-  \item[\textbf{C5.6}] La le\c{c}on m\'ethodologique selon laquelle la certification m\'ecanique doit pr\'ec\'eder la soumission d'un r\'esultat (sous-section~\ref{subsec:verification_corrige_lecon}).
+  \item[\textbf{C5.6}] La le\c{c}on m\'ethodologique selon laquelle la certification m\'ecanique doit pr\'ec\'eder la soumission d'un r\'esultat (sous-section~\ref{subsec:verification_precise_lecon}).
 \end{itemize}
 
 \textbf{Publication~:} Soumis, Journal of Automated Reasoning.
@@ -606,26 +607,26 @@ La figure~\ref{fig:cycle_detaille} repr\'esente cet encha\^inement et ses r\'etr
 
 
 Chaque d\'ependance est fonctionnelle. Les d\'efinitions formelles de
-$\Conf$, $\Rel$, $\Opp$~Objectif~1~(\ref{obj:obj1_unification}) sont n\'ecessaires pour \'enoncer
-le Trilemme~CRO~Objectif~2~(\ref{obj:obj2_impossibilite}). Sans op\'erationnalisation
+$\Conf$, $\Rel$, $\Opp$~(Obj~\ref{obj:obj1_unification}) sont n\'ecessaires pour \'enoncer
+le Trilemme~CRO~(Obj~\ref{obj:obj2_impossibilite}). Sans op\'erationnalisation
 de l'opposabilit\'e au sens de la th\'eorie de l'information, le trilemme resterait une
-conjecture informelle~\cite{ClarksonSchneider10}. La borne d'impossibilit\'e classique~Objectif~2~(~\ref{obj:obj2_impossibilite}) fournit
-le point de d\'epart que l'extension post-quantique~Objectif~3~(\ref{obj:obj3_postquantique}) g\'en\'eralise avec
-les param\`etres $\Delta_q$ et $\eta_q$~\cite{NielsenChuang2010,Wilde2017}. Les bornes classiques~Objectif~2~(\ref{obj:obj2_impossibilite})
-et quantiques~Objectif 3~(\ref{obj:obj3_postquantique}) fournissent les cibles asymptotiques que les
-constructions SOTP~Objectif~4~(\ref{obj:obj4_saturation}) visent. Sans ces bornes, SOTP ne serait qu'une
+conjecture informelle~\cite{ClarksonSchneider10}. La borne d'impossibilit\'e classique~(Obj~\ref{obj:obj2_impossibilite}) fournit
+le point de d\'epart que l'extension post-quantique~(Obj~\ref{obj:obj3_postquantique}) g\'en\'eralise avec
+les param\`etres $\Delta_q$ et $\eta_q$~\cite{NielsenChuang2010,Wilde2017}. Les bornes classiques~(Obj~\ref{obj:obj2_impossibilite})
+et quantiques~(Obj~\ref{obj:obj3_postquantique}) fournissent les cibles asymptotiques que les
+constructions SOTP~(Obj~\ref{obj:obj4_saturation}) visent. Sans ces bornes, SOTP ne serait qu'une
 collection de protocoles ad~hoc~\cite{JohnsonLindenstrauss84,Groth16}. La
 question de savoir si une variante SOTP offre, \`a un facteur constant pr\`es, la meilleure
 opposabilit\'e de son r\'egime reste ouverte. Elle est formul\'ee comme conjecture au chapitre~\ref{chap:constructions}. La complexit\'e de la cha\^ine de
-raisonnement justifie l'investissement dans la v\'erification formelle~Objectif~5~(\ref{obj:obj5_verification}).
+raisonnement justifie l'investissement dans la v\'erification formelle~(Obj~\ref{obj:obj5_verification}).
 La certification m\'ecanis\'ee s'impose pour des th\'eor\`emes aux implications
-soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. La formalisation Lean4~Objectif~5~(\ref{obj:obj5_verification}) agit en retour sur les \'etapes
+soci\'etales directes~\cite{Gonthier08,Wiedijk2007}. La formalisation Lean4~(Obj~\ref{obj:obj5_verification}) agit en retour sur les \'etapes
 qui la pr\'ec\`edent. Elle a d\'egag\'e le verdict d\'eterministe, qui enrichit le cadre de
-l'Objectif~1~(\ref{obj:obj1_unification}). Elle a surtout impos\'e de poser l'Hypoth\`ese de r\'egime
+l'Obj~\ref{obj:obj1_unification}. Elle a surtout impos\'e de poser l'Hypoth\`ese de r\'egime
 et de pr\'eciser trois \'enonc\'es publi\'es, ce qui a conduit \`a la forme raffin\'ee du trilemme
-de l'Objectif~2~(\ref{obj:obj2_impossibilite})~\cite{Zellagui2018}. La certification ne se contente donc pas
+de l'Obj~\ref{obj:obj2_impossibilite}~\cite{Zellagui2018}. La certification ne se contente donc pas
 de v\'erifier les bornes apr\`es coup. Elle peut en modifier l'\'enonc\'e et l'a d\'ej\`a fait.
-L'exp\'erimentation~Objectif~6~(\ref{obj:obj6_experimentation}) ferme le cycle. Elle mesure $\Delta$, $\alpha$,
+L'exp\'erimentation~(Obj~\ref{obj:obj6_experimentation}) ferme le cycle. Elle mesure $\Delta$, $\alpha$,
 $\Delta_q$ et $\eta_q$ et calcule $\beta$, param\`etres dont d\'ependent les bornes certifi\'ees. Si les valeurs mesur\'ees
 sortent des plages retenues ou franchissent les seuils de r\'efutation du
 chapitre~\ref{chap:experimentation}, les hypoth\`eses de l'Objectif~2 devront \^etre r\'evis\'ees et
@@ -670,12 +671,12 @@ Q2 & C3.1 Trilemme quantique & C3 & \textbf{E} & Th.~\ref{thm:trilemme_pq} & Pub
 Q2 & C3.2 \`a C3.4 $\eta_q$, $H^\sharp_q$, signatures & C3 & \textbf{E} & \S~\ref{sec:cro_pq} & Th\`ese & Chapitre~\ref{chap:cadre_formel} \\
 Q1 & C4.1 Paradigme Gold-Iron-Clay & C4 & \textbf{S} & \S~\ref{subsec:gold_iron_clay} & Soumis & \textit{IEEE Trans. Inf. Theory} \\
 Q1 & C4.2 \`a C4.4 Variantes, r\'eductions, conjecture & C4 & \textbf{S} & \S~\ref{sec:sotp_construction} & Soumis & \textit{IEEE Trans. Inf. Theory} \\
-Q1 & C4.5 M\'ecanisation r\'eduite & C4 & \textbf{S} & \S~\ref{sec:gamebased_mecanisation} & Th\`ese (issu de Lean) & Annexe~\ref{chap:annexe_gamebased} \\
+Q1 & C4.5 M\'ecanisation r\'eduite & C4 & \textbf{S} & Ann.~\ref{chap:annexe_gamebased}, \S~\ref{sec:gamebased_mecanisation} & Th\`ese (issu de Lean) & Annexe~\ref{chap:annexe_gamebased} \\
 Q2 & C5.1, C5.2 Noyau, hypoth\`eses & C5 & \textbf{C} & \S~\ref{sec:lean4} & Soumis & \textit{J. Autom. Reasoning} \\
 Q2 & C5.3 Pinsker et Fano finis & C5 & \textbf{C} & \S~\ref{subsec:lean4_concret} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\
-Q2 & C5.4 R\^ole de l'Hyp.~3 & C5 & \textbf{C} & Th.~\ref{thm:conditional_CRO_trilemma} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\
+Q2 & C5.4 R\^ole de l'Hyp.~\ref{ass:regularite} & C5 & \textbf{C} & Th.~\ref{thm:conditional_CRO_trilemma} & Th\`ese (issu de Lean) & Section~\ref{sec:lean4} \\
 Q2 & C5.5 T\'emoins & C5 & \textbf{C} & \S~\ref{subsubsec:temoins_lean4} & Soumis~; famille de lois~: th\`ese & \textit{J. Autom. Reasoning} et th\`ese \\
-Q2 & C5.6 Certifier avant de soumettre & C5 & \textbf{C} & \S~\ref{subsec:verification_corrige_lecon} & Th\`ese (issu de Lean) & Chapitre~\ref{chap:resultats_discussions} \\
+Q2 & C5.6 Certifier avant de soumettre & C5 & \textbf{C} & \S~\ref{subsec:verification_precise_lecon} & Th\`ese (issu de Lean) & Chapitre~\ref{chap:resultats_discussions} \\
 Q2 & C6.1 \`a C6.3 Programme & C6 & \textbf{X} & \S~\ref{sec:protocoles_experimentaux} & Sp\'ecifi\'e & D\'ep\^ot~\cite{CROTrilemmaDepot} \\
 \bottomrule
 \end{longtable}
@@ -737,8 +738,8 @@ quantiques ($\eta_q$), en plus de leur s\'ecurit\'e calculatoire~\cite{NISTPQC,K
 Le paradoxe de l'authenticit\'e invisible pose un d\'efi de fond \`a
 la d\'emocratie num\'erique. Il oblige \`a se demander comment des citoyens peuvent contr\^oler des
 syst\`emes qu'ils ne comprennent pas~\cite{Citron14,Grimmelmann15}. Calibrer l'opposabilit\'e $\Opp$ selon la capacit\'e institutionnelle $\Delta$ fournit une r\'eponse
-quantifiable universelle, selon laquelle les syst\`emes restent sous contr\^ole d\'emocratique
-effectif \`a condition que $\Opp$ reste au-dessus du seuil impos\'e par $\Delta$.
+quantifiable. Les syst\`emes restent sous contr\^ole d\'emocratique
+effectif tant que l'opposabilit\'e exig\'ee reste compatible avec le plafond que fixe $\Delta$.
 
 Dans les pays du \textbf{Sud Global}, l'adoption de syst\`emes cryptographiques
 con\c{c}us ailleurs sans \'evaluation critique de leur ad\'equation aux capacit\'es

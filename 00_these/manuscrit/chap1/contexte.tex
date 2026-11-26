@@ -71,7 +71,7 @@ quelques centaines d'octets qui atteste la conformit\'e de milliers de
 transactions sans permettre au r\'egulateur de cibler la moindre op\'eration
 suspecte. Le dossier d'ECDSA offre au contraire une transparence totale ainsi
 qu'une tra\c{c}abilit\'e parfaite, obtenues au prix d'une confidentialit\'e nulle.
-Chacun t\'emoigne d'une impuissance diff\'erente. Le pr\'esent chapitre les d\'ecrit
+Chacun montre une impuissance diff\'erente. Le pr\'esent chapitre les d\'ecrit
 tandis que les chapitres suivants cherchent pourquoi elles convergent toutes
 vers la m\^eme contrainte.
 \end{boiteArbitre}
@@ -108,7 +108,7 @@ parcourent l'ensemble des compromis possibles entre confidentialit\'e et
 opposabilit\'e. On va ainsi des syst\`emes tr\`es confidentiels mais peu opposables
 (Helios, zk-SNARKs) jusqu'\`a un syst\`eme tr\`es opposable dont la confidentialit\'e
 est quasi nulle (ECDSA). Pris ensemble, ils font appara\^itre une r\'egularit\'e.
-Aucune des trois estimations n'atteint un produit $\Conf \cdot \Rel \cdot \Opp$
+Aucune des trois estimations n'atteint un produit $\Conf \cdot \Relver \cdot \Opp$
 sup\'erieur \`a $0{,}58$. Cette observation laisse supposer l'existence d'une
 contrainte de fond.
 \end{sloppypar}
@@ -167,10 +167,10 @@ hypoth\`eses institutionnelles d\'etaill\'ees \`a la
 section~\ref{sec:derivation_helios} et \`a la section~\ref{subsubsec:parametres_institutionnels}.
 La confidentialit\'e op\'erationnelle du bulletin chiffr\'e ElGamal~\cite{TsiounisYung}, estim\'ee sur l'\'echelle CLO, vaut $\Conf \approx 0{,}92$.
 La v\'erification des preuves de bien-formation, compl\`ete et solide, donne $\Relver \approx 0{,}95$.
-L'interpr\'etation d\'epend structurellement des experts, avec une capacit\'e d'extraction $\Delta \approx 56$ bits~\cite{MINKA2026CRO}, d'o\`u $\Opp \approx 0{,}50$.
+L'interpr\'etation d\'epend structurellement des experts et l'opposabilit\'e est estim\'ee \`a $\Opp \approx 0{,}50$. La capacit\'e d'extraction qui s'en d\'eduit par inversion de la forme publi\'ee vaut $\Delta \approx 56$ bits~\cite{MINKA2026CRO} (Tableau~\ref{tab:validation_cro_classique}).
 Le produit vaut donc
 \begin{equation}
-\Conf \cdot \Rel \cdot \Opp \;\approx\; 0{,}437.
+\Conf \cdot \Relver \cdot \Opp \;\approx\; 0{,}437.
 \label{eq:helios_cro}
 \end{equation}
 Cette valeur sert \`a la calibration illustrative des param\`etres
@@ -194,7 +194,7 @@ de taille constante ($128$--$256$ octets) y certifie que
 $\mathcal{C}(x, w) = 1$ pour un t\'emoin secret $w$, sa v\'erification ne
 demandant que quelques millisecondes~\cite{Parno13,Wahby18}. Ces propri\'et\'es expliquent l'int\'er\^et
 des zk-SNARKs pour la conformit\'e r\'eglementaire. Elles permettent en effet de prouver
-le respect des r\`egles AML~\cite{FATF12,AMLD4} ou de B\^ale~III~\cite{BaselIII}
+le respect des r\`egles de lutte contre le blanchiment (\emph{Anti-Money Laundering}, AML)~\cite{FATF12,AMLD4} ou de B\^ale~III~\cite{BaselIII}
 sans divulguer les transactions sous-jacentes~\cite{Garratt19}.
 
 Cette succinctit\'e a toutefois un co\^ut~\cite{Bitansky2017}. Une preuve qui ne r\'ev\`ele rien du t\'emoin
@@ -206,7 +206,7 @@ contr\^ole~\cite{FinckMoscon19,DeFilippi16} bien plus que d'une d\'efaillance d'
 \paragraph{Tensions avec le droit de la protection des donn\'ees.}
 \label{par:zksnark_rgpd}
 
-Le RGPD (R\`eglement G\'en\'eral pour la Protection des Donn\'ees \`a caract\`ere personnel)~\cite{GDPR2016} consacre un droit d'acc\`es (Article~15), un droit
+Le RGPD (R\`eglement G\'en\'eral sur la Protection des Donn\'ees)~\cite{GDPR2016} consacre un droit d'acc\`es (Article~15), un droit
 \`a l'effacement (Article~17) ainsi qu'une obligation de rendre compte
 (Article~5(2))~\cite{CCPA2018}. Chacune de ces exigences se heurte aux
 propri\'et\'es zero-knowledge. Le droit d'acc\`es suppose en effet de pouvoir
@@ -219,13 +219,13 @@ incompatibilit\'es~\cite{FinckMoscon19,Sergey18}.
 \label{par:zksnark_clo}
 
 Sous les m\^emes hypoth\`eses, les estimations param\'etriques analytiques donnent
-$\Conf \approx 0{,}89$ (confidentialit\'e op\'erationnelle estim\'ee du dispositif de conformit\'e, au-del\`a de la seule preuve~\cite{Groth16}),
-$\Relver \approx 0{,}96$ (compl\'etude et solidit\'e de la v\'erification),
-$\Opp \approx 0{,}67$ (opposabilit\'e mod\'er\'ee, port\'ee par une forte capacit\'e
-d'extraction $\Delta \approx 73$ bits~\cite{MINKA2026CRO}),
-d'o\`u le produit
+$\Conf \approx 0{,}89$ (confidentialit\'e op\'erationnelle estim\'ee du dispositif de conformit\'e, au-del\`a de la seule preuve~\cite{Groth16}) et
+$\Relver \approx 0{,}96$ (compl\'etude et solidit\'e de la v\'erification).
+L'opposabilit\'e est mod\'er\'ee, avec $\Opp \approx 0{,}67$. La capacit\'e
+d'extraction qui lui correspond par inversion vaut $\Delta \approx 73$ bits~\cite{MINKA2026CRO}.
+Le produit vaut
 \begin{equation}
-\Conf \cdot \Rel \cdot \Opp \;\approx\; 0{,}572.
+\Conf \cdot \Relver \cdot \Opp \;\approx\; 0{,}572.
 \label{eq:zksnark_cro}
 \end{equation}
 Ce produit CRO relativement \'elev\'e s'explique par la forte capacit\'e
@@ -261,13 +261,13 @@ circulant en clair tandis que l'identit\'e est publique et la transaction trac\'
 \label{par:ecdsa_clo}
 
 Les estimations param\'etriques analytiques sont
-$\Conf \approx 0{,}31$ (confidentialit\'e op\'erationnelle estim\'ee du dispositif contractuel~; au sens statistique de la D\'efinition~\ref{def:confidentialite_clo}, un message publi\'e en clair a une confidentialit\'e nulle),
-$\Relver \approx 0{,}98$ (infalsifiabilit\'e existentielle sous ECDLP~\cite{GoldwasserMicali84,GMR88}),
-$\Opp \approx 0{,}90$ (v\'erification rejouable, non-r\'epudiation forte,
-capacit\'e d'extraction $\Delta \approx 35$ bits suffisante~\cite{MINKA2026CRO}),
-soit le produit
+$\Conf \approx 0{,}31$ (confidentialit\'e op\'erationnelle estim\'ee du dispositif contractuel~; au sens statistique de la D\'efinition~\ref{def:confidentialite_clo}, un message publi\'e en clair a une confidentialit\'e nulle) et
+$\Relver \approx 0{,}98$ (infalsifiabilit\'e existentielle sous ECDLP~\cite{GoldwasserMicali84,GMR88}).
+L'opposabilit\'e vaut $\Opp \approx 0{,}90$ (v\'erification rejouable, non-r\'epudiation forte),
+pour une capacit\'e d'extraction correspondante $\Delta \approx 35$ bits~\cite{MINKA2026CRO}.
+Le produit vaut
 \begin{equation}
-\Conf \cdot \Rel \cdot \Opp \;\approx\; 0{,}273.
+\Conf \cdot \Relver \cdot \Opp \;\approx\; 0{,}273.
 \label{eq:ecdsa_cro}
 \end{equation}
 La faiblesse de ce produit ne signale aucune d\'efaillance de conception.
@@ -284,12 +284,12 @@ l'opposabilit\'e au d\'etriment de la confidentialit\'e~\cite{BonehFranklin}.
 Le Tableau~\ref{tab:clo_resume_ch1} r\'esume les trois profils pr\'esent\'es plus haut
 et appelle deux observations. En premier lieu, confidentialit\'e et opposabilit\'e
 varient en sens inverse, les protocoles qui maximisent l'une minimisant
-l'autre~\cite{ClarksonSchneider10}. Aucun des trois n'approche la r\'egion $(\Conf, \Rel, \Opp)
-\approx (0{,}8, 0{,}8, 0{,}8)$, qui resterait pourtant en dessous de
-$1$. Ensuite, les produits $\Conf \cdot \Rel \cdot \Opp$ varient de
+l'autre~\cite{ClarksonSchneider10}. Aucun des trois n'approche l'\'equilibre $(\Conf, \Relver, \Opp)
+\approx (0{,}8, 0{,}8, 0{,}8)$. L'observation porte sur l'\'equilibre des
+composantes et non sur le produit. Ensuite, les produits $\Conf \cdot \Relver \cdot \Opp$ varient de
 $0{,}273$ \`a $0{,}572$. Cet \'ecart sugg\`ere l'existence d'une contrainte
 qui d\'epend des param\`etres
-institutionnels ($\Delta$, $\alpha$, $\beta$)~\cite{Simon82,Cowan2001}.
+institutionnels ($\Delta$, $\alpha$)~\cite{Simon82,Cowan2001}.
 
 La cryptographie classique ne dispose, \`a notre connaissance, d'aucun outil pour formaliser cette
 contrainte~\cite{AbadiRogaway00}. Elle mesure l'avantage de l'adversaire~\cite{Goldreich01} sans rien dire de l'utilit\'e institutionnelle. La litt\'erature sur l'\emph{usable
@@ -412,10 +412,10 @@ chapitre a donn\'e \`a cette situation le nom de paradoxe de l'authenticit\'e
 invisible.
 
 Il en retient quatre enseignements. Une confidentialit\'e tr\`es \'elev\'ee
-(sup\'erieure \`a $0{,}90$) produit une opacit\'e qui paralyse l'interpr\`ete
+(voisine de $0{,}90$) produit une opacit\'e qui paralyse l'interpr\`ete
 institutionnel, comme le montrent Helios et les zk-SNARKs. Les
-produits $\Conf \cdot \Rel \cdot \Opp$ s'\'etagent de $0{,}273$ \`a $0{,}572$
-selon les param\`etres institutionnels ($\Delta$, $\alpha$, $\beta$). Cet \'etagement
+produits $\Conf \cdot \Relver \cdot \Opp$ s'\'etagent de $0{,}273$ \`a $0{,}572$
+selon les param\`etres institutionnels ($\Delta$, $\alpha$). Cet \'etagement
 d\'esigne une contrainte qui d\'epend du contexte.
 Les protocoles actuels ont aussi \'et\'e con\c{c}us sans tenir compte de
 lui, puisque sa capacit\'e cognitive born\'ee ($\Delta$) n'appara\^it dans aucune

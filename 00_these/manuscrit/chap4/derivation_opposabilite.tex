@@ -156,10 +156,10 @@ Sous les hypoth\`eses de ce calcul, les preuves cryptographiques r\'esolvent la
 moiti\'e de l'incertitude institutionnelle. Le bit r\'esiduel rel\`eve du raisonnement
 juridique sur la conformit\'e proc\'edurale, l'interpr\'etation de l'intention
 des \'electeurs et le droit \'electoral de la juridiction. La r\'ealit\'e
-institutionnelle de cet \'ecart est document\'ee par les incidents IACR~2025 et
-UCL~2009, o\`u des trustees pourtant experts en cryptographie ont rencontr\'e
-des difficult\'es op\'erationnelles avec la gestion des cl\'es
-distribu\'ees~\cite{MINKA2026CLO}. Le protocole de mesure de la
+institutionnelle de cet \'ecart est document\'ee par deux incidents. \`A Louvain en 2009, des garants
+sans formation cryptographique n'ont pas pu conduire seuls le d\'echiffrement distribu\'e. \`A l'IACR
+en 2025, des trustees pourtant experts en cryptographie ont perdu une cl\'e
+partielle~\cite{MINKA2026CLO}. Le protocole de mesure de la
 section~\ref{subsec:protocole_opp} confronterait cette valeur de $0{,}50$ \`a
 $\Opp_{\mathrm{emp}}$ sur une \'election r\'eellement d\'eploy\'ee.
 
@@ -171,7 +171,7 @@ $\Opp_{\mathrm{emp}}$ sur une \'election r\'eellement d\'eploy\'ee.
 \end{equation}
 Les valeurs $\Conf \approx 0{,}92$ et $\Relver \approx 0{,}95$ sont reprises de
 l'\'echelle op\'erationnelle de~\cite{MINKA2026CLO}. Elles s'appuient sur la s\'ecurit\'e
-s\'emantique d'ElGamal sous l'hypoth\`ese DDH et sur la soundness des preuves ZK
+s\'emantique d'ElGamal sous l'hypoth\`ese d\'ecisionnelle de Diffie-Hellman (DDH) et sur la soundness des preuves ZK
 ($< 2^{-80}$). Ces garanties calculatoires ne fixent pas \`a elles seules une valeur
 num\'erique, qui rel\`eve de la calibration op\'erationnelle.
 
@@ -226,7 +226,7 @@ pratiques r\'eglementaires document\'ees.
 \noindent\textbf{\'Etape 2. Estimation de $I(V;\Sigma|C)$.} Les op\'erations de
 couplage elliptique $e: \mathbb{G}_1 \times \mathbb{G}_2 \to \mathbb{G}_T$, la
 validation des param\`etres du trusted setup et la v\'erification des
-contraintes R1CS demeurent inaccessibles \`a un r\'egulateur sans formation
+contraintes de rang~1 (R1CS) demeurent inaccessibles \`a un r\'egulateur sans formation
 sp\'ecialis\'ee. Deux bits restent n\'eanmoins extractibles~:
 \begin{enumerate}
 \item \textbf{V\'erification calculatoire} ($1$ bit). La preuve passe ou
@@ -278,11 +278,11 @@ P-256~\cite{Johnson01}.
 
 \noindent\textbf{Contexte institutionnel mod\'elis\'e.} Tribunal civil statuant
 sur un litige contractuel, avec infrastructure PKI \'etablie et
-$H(\mathcal{C}) \approx 20$ bits. Ces bits se d\'ecomposent en compr\'ehension PKI
-($\approx 2^{10}$ types de certificats, $10$ bits), pr\'ec\'edents
-jurisprudentiels ($\approx 2^{8}$ cat\'egories accumul\'ees en d\'ecennies de
-droit des signatures num\'eriques, $8$ bits) et cadres juridiques (ESIGN, eIDAS et
-r\'eglementations sp\'ecifiques, $2$ bits)~\cite{MINKA2026CLO}.
+$H(\mathcal{C}) \approx 20$ bits. Ces bits se d\'ecomposent en trois parts~\cite{MINKA2026CLO}. La compr\'ehension PKI en compte $10$
+($\approx 2^{10}$ types de certificats) et les pr\'ec\'edents
+jurisprudentiels $8$ ($\approx 2^{8}$ cat\'egories accumul\'ees en d\'ecennies de
+droit des signatures num\'eriques). Les cadres juridiques (ESIGN, eIDAS et
+r\'eglementations sp\'ecifiques) en apportent $2$.
 
 \noindent\textbf{Formulation CLO.}
 \begin{itemize}
@@ -424,7 +424,7 @@ est fix\'ee, \`a titre illustratif, \`a partir de celle d'ECDSA dans le m\^eme u
 La confidentialit\'e et la fiabilit\'e se lisent comme pour ECDSA. Le contrat
 sign\'e \'etant public, on a $\Conf^q = 0$ au sens de la
 D\'efinition~\ref{def:confidentialite_clo}~; la fiabilit\'e de v\'erification est
-quant \`a elle proche de~$1$ (infalsifiabilit\'e sous MLWE/MSIS)~:
+quant \`a elle proche de~$1$ (infalsifiabilit\'e sous les hypoth\`eses Module-LWE et Module-SIS)~:
 \begin{align}
 \Conf^q &= 0
 \label{eq:conf_q_dilithium}\\
@@ -437,7 +437,9 @@ ont tous deux une confidentialit\'e nulle (Remarque~\ref{rem:portee_cas_etude}).
 L'\'etude publi\'ee dans~\cite{MINKA2026PQCRO} retient pour sa part
 $\Conf^q \approx 1 - 2^{-192} \approx 1$, au sens calculatoire de l'infalsifiabilit\'e
 EUF-CMA. Elle obtient un produit voisin de $0{,}8$ face \`a une borne de $0{,}18$, calcul\'ee avec
-$\Delta_q = 35$ bits. Elle en d\'eduit par inversion une capacit\'e implicite d'environ $154$ bits.
+$\Delta_q = 35$ bits. Elle en d\'eduit par inversion une capacit\'e implicite d'environ $154$ bits pour cette \'etude de cas.
+Son tableau de coh\'erence des sch\'emas du NIST retient $54$ bits pour le m\^eme sch\'ema, valeur
+reprise au tableau~\ref{tab:validation_pqc}.
 La th\`ese retient le sens statistique de la D\'efinition~\ref{def:confidentialite_clo}, seul sens
 dans lequel le Th\'eor\`eme~\ref{thm:trilemme_pq} est \'enonc\'e. L'infalsifiabilit\'e rel\`eve en
 effet de la fiabilit\'e de v\'erification et non de l'indistinguabilit\'e des messages. Les valeurs
@@ -447,13 +449,9 @@ publi\'ees mesurent donc une autre notion et restent cit\'ees pour la tra\c{c}ab
 CLO$^q$ est nul et la borne est trivialement respect\'ee. L'\'etude publi\'ee~\cite{MINKA2026PQCRO}
 compare au contraire son produit, voisin de $0{,}8$, \`a sa borne de $0{,}18$. Avec les param\`etres
 retenus ici, la majoration vaut $(\Delta_q + \eta_q H(C))/\lambda = 28/192 \approx 0{,}146$ pour $\eta_q = 0$.
-\begin{equation}
-0{,}8 > 0{,}18.
-\label{eq:produit_dilithium}
-\end{equation}
-Ce d\'epassement s'explique comme pour les syst\`emes classiques. Dans ce sc\'enario,
+Le d\'epassement publi\'e, $0{,}8 > 0{,}18$, s'explique comme pour les syst\`emes classiques. Dans ce sc\'enario,
 la signature ML-DSA n'est pas une instance du
-Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} (message public avec $\Relver$ proche
+Th\'eor\`eme~\ref{thm:trilemme_pq} (message public avec $\Relver$ proche
 de~$1$ au lieu de $\Relrec$). La pr\'esente formulation pr\'ecise aussi
 l'interpr\'etation initiale, selon laquelle \og la borne ne s'applique qu'\`a la
 composante cryptographique\fg{}, puisque le th\'eor\`eme borne le produit entier.
@@ -539,11 +537,12 @@ Cette mise en regard ne vaut pas validation, pour deux raisons. (i)~Les valeurs 
 \'et\'e initialement fix\'ees par inversion $\Delta := \lambda\cdot(\Conf\cdot\Relver\cdot\Opp)$
 (tableau~\ref{tab:validation_cro_classique}). Les deux voies ne sont donc
 pas ind\'ependantes. (ii)~Ces syst\`emes ne satisfont pas les hypoth\`eses du
-th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}). En particulier,
-$H(V|C) = 2 < \gamma = 8{,}6$ pour Helios et $3 < 15{,}5$ pour les zk-SNARKs, avec
-les valeurs de $H(\mathcal{C})$ de cette section. Lus comme des instances, les
-produits d\'epasseraient $\Delta/(\gamma\lambda)$ d'un facteur de l'ordre de $8{,}6$,
-$15{,}5$ et $19$. La mise en regard montre seulement que les ordres de grandeur
+th\'eor\`eme (Remarque~\ref{rem:portee_cas_etude}). Leur fiabilit\'e est mesur\'ee par $\Relver$ et non par
+$\Relrec$, que le r\'egime de l'Hypoth\`ese~\ref{ass:regime} borne par $(1+\kappa/\lambda)/\lambda$.
+\`A l'\'echelle de l'esp\`ece, l'Hypoth\`ese~\ref{ass:verdicts_efficace}
+est en revanche satisfaite, avec $\hat\gamma = 1$, $2$ et $19$ pour $H(V|C) = 2$, $3$ et $20$ bits. Lus comme des instances, les
+produits vaudraient $\hat\gamma$ fois $\Delta/(\hat\gamma\lambda)$, soit un facteur $1$,
+$2$ et $19$. La mise en regard montre seulement que les ordres de grandeur
 retenus sont mutuellement coh\'erents. Tel est le r\^ole d'une calibration
 illustrative.
 

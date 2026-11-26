@@ -22,15 +22,14 @@ prot\`ege efficacement, plus elle devient opaque pour un tiers profane.
 La th\`ese introduit une m\'etrique informationnelle in\'edite,
 l'opposabilit\'e Opp, d\'efinie comme la proportion d'incertitude
 institutionnelle qu'une preuve parvient \`a dissiper. Elle propose le
-cadre CLO, qui agr\`ege confidentialit\'e (Conf), fiabilit\'e (Rel) et
+cadre CLO (\emph{Cryptographic Legal Opposability}), qui agr\`ege confidentialit\'e (Conf), fiabilit\'e de reconstruction (Rel) et
 opposabilit\'e (Opp). Elle l'articule \`a des param\`etres cognitifs
 explicites, en particulier la capacit\'e d'extraction institutionnelle
 $\Delta$ et la granularit\'e des verdicts $\alpha$. Elle \'etablit un
 trilemme d'impossibilit\'e conditionnel sous trois hypoth\`eses, l'extraction
 born\'ee, le verdict efficace et le r\'egime de confidentialit\'e. Le produit
 Conf$\cdot$Rel$\cdot$Opp y est major\'e par $\Delta/(\gamma\lambda)$, o\`u
-$\gamma = \alpha H(C) - 1$, \`a un terme d'ordre $\lambda^{-2}$ et \`a un reste
-n\'egligeable pr\`es. Une forme raffin\'ee identifie le r\'egime o\`u la capacit\'e
+$\gamma = \alpha H(C) - 1$, \`a un terme d'ordre $\lambda^{-2}$ pr\`es. Une forme raffin\'ee identifie le r\'egime o\`u la capacit\'e
 institutionnelle devient la contrainte liante. Une borne aigu\"e ram\`ene le
 terme dominant \`a l'ordre $\lambda^{-2}$, qui ne peut pas \^etre am\'elior\'e. La ressource limitante
 est alors la quantit\'e d'information qu'une institution peut
@@ -40,7 +39,7 @@ Ce r\'esultat se prolonge au contexte post-quantique. Dans le sc\'enario
 d'un support ou d'un v\'erificateur quantique, le bruit induit une perte
 d'interpr\'etabilit\'e $\eta_q$, nulle pour les preuves classiques, dont
 l'effet sur la borne cro\^it avec l'entropie contextuelle. La th\`ese
-propose aussi la famille SOTP, param\'etr\'ee pour les deux
+propose aussi la famille SOTP (\emph{Semantic One-Time Pad}), param\'etr\'ee pour les deux
 r\'egimes de richesse contextuelle, dont elle \'etablit les propri\'et\'es
 cryptographiques. Son optimalit\'e \`a un facteur constant pr\`es est formul\'ee comme
 conjecture. Le trilemme est certifi\'e m\'ecaniquement dans Lean4, du noyau

@@ -48,7 +48,7 @@ le goulot contextuel.
 L'opposabilit\'e $\Opp$ \'etait absente de tout cadre cryptographique
 ant\'erieur. Les contributions C1.1 \`a C1.7 y r\'epondent. L'objectif est atteint.
 
-\textbf{Obj~\ref{obj:obj2_impossibilite}. Bornes.} Existe-t-il des limites
+\textbf{Obj~\ref{obj:obj2_impossibilite}. Bornes d'impossibilit\'e classiques.} Existe-t-il des limites
 fondamentales sur les compromis r\'ealisables~? Quatre hypoth\`eses
 institutionnelles explicites sont pos\'ees. Sous trois d'entre elles, l'extraction
 born\'ee, le verdict efficace et le r\'egime de confidentialit\'e, nous avons \'etabli la borne
@@ -56,7 +56,7 @@ born\'ee, le verdict efficace et le r\'egime de confidentialit\'e, nous avons \'
   \Conf \cdot \Relrec \cdot \Opp \;\leq\;
   \frac{1}{\gamma}\left(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
 \end{equation}
-o\`u $\gamma = \alpha H(C) - 1 \geq 1$ et $\kappa$ est la constante du
+Ici $\gamma = \alpha H(C) - 1 \geq 1$ et $\kappa$ est la constante du
 r\'egime de pr\'eservation de la confidentialit\'e
 (Hypoth\`ese~\ref{ass:regime}). Le terme dominant de cette borne est
 $\Delta/(\gamma\lambda)$~; les autres sont en $O(\lambda^{-2})$. La forme raffin\'ee
@@ -65,19 +65,20 @@ capacit\'e d'extraction institutionnelle est la contrainte liante, la puissance
 de calcul de l'adversaire passant au second plan. La formulation
 publi\'ee~\cite{MINKA2026CRO} s'en d\'eduit comme corollaire sous l'Hypoth\`ese~\ref{ass:regime} pos\'ee (Remarque~\ref{rem:corollaire_publie}). Une borne aigu\"e, obtenue par une minoration directe de la divergence binaire et non par Fano, ram\`ene le terme dominant \`a l'ordre $\kappa/\lambda^2$ avec le m\^eme facteur institutionnel (Proposition~\ref{prop:borne_aigue}). Cet ordre ne peut pas \^etre am\'elior\'e (Remarque~\ref{rem:borne_aigue_portee}) et le facteur $\Delta/\gamma$ est atteint par une loi explicite (Remarque~\ref{rem:temoin_realisable}). Les contributions C2.1 \`a C2.7 y r\'epondent. L'objectif est atteint, sous des hypoth\`eses institutionnelles \'enonc\'ees.
 
-\textbf{Obj~\ref{obj:obj3_postquantique}. Extension quantique.} Les bornes CRO
+\textbf{Obj~\ref{obj:obj3_postquantique}. Extension post-quantique.} Les bornes CRO
 se pr\'eservent-elles face aux adversaires quantiques~? Nous avons \'etabli
 le Trilemme CRO post-quantique
 \begin{equation}
   \Conf^q \cdot \Relrec^q \cdot \Opp^q \;\leq\;
   \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa(\Delta_q+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
 \end{equation}
-o\`u $\Delta_q$ est la capacit\'e d'extraction quantique et $\eta_q$ quantifie
+o\`u $\Delta_q$ est la capacit\'e d'extraction quantique. La majoration affaiblie publi\'ee y ajoute
+le terme $\eta_q H(C)/\lambda$, o\`u $\eta_q$ quantifie
 la perte d'interpr\'etabilit\'e, nulle pour les preuves qui sont des cha\^{\i}nes
 de bits classiques, dont les signatures ML-DSA et SLH-DSA. Les contributions C3.1 \`a C3.4
 y r\'epondent. L'objectif est atteint, sous des hypoth\`eses quantiques explicites.
 
-\textbf{Obj~\ref{obj:obj4_saturation}. Optimalit\'e.} Peut-on approcher ces
+\textbf{Obj~\ref{obj:obj4_saturation}. Constructions optimales.} Peut-on approcher ces
 bornes~? La famille SOTP propose trois constructions. SOTP-Low (encodage d\'eterministe) et
 SOTP-Base (projection Johnson-Lindenstrauss) couvrent le r\'egime \`a contexte rare. SOTP-High (Groth16)
 couvre le r\'egime \`a contexte riche. Leur
@@ -93,7 +94,7 @@ y r\'epondent. L'objectif est partiellement atteint. Les garanties cryptographiq
 prouv\'ees et la d\'emarche de m\'ecanisation est engag\'ee~; l'opposabilit\'e reste guid\'ee par
 une heuristique et l'optimalit\'e reste une conjecture.
 
-\textbf{Obj~\ref{obj:obj5_verification}. V\'erification.} Comment certifier la
+\textbf{Obj~\ref{obj:obj5_verification}. Certification formelle.} Comment certifier la
 correction d'un th\'eor\`eme complexe~? La formalisation Lean4 a
 certifi\'e m\'ecaniquement le noyau alg\'ebrique du th\'eor\`eme
 (section~\ref{sec:lean4}), la forme raffin\'ee de la borne et le seuil $H^\sharp$ dans
@@ -106,13 +107,13 @@ borne est atteinte, non r\'ealisable par un protocole), l'autre de port\'ee
 (une instance hors r\'egime atteint $1/4$). Une famille de lois concr\`etes satisfait
 en outre toutes les hypoth\`eses pour tout $\lambda$. Le d\'etail de ce que la certification a mis au jour, hypoth\`eses,
 constantes et r\'egime de validit\'e, est pr\'esent\'e \`a la
-sous-section~\ref{subsec:lean4_erreurs}. Les contributions C5.1 \`a C5.6 y r\'epondent.
+sous-section~\ref{subsec:lean4_formulations}. Les contributions C5.1 \`a C5.6 y r\'epondent.
 L'objectif est atteint pour le trilemme classique, jusqu'aux lois finies~; l'extension
 quantique et la m\'ecanisation compl\`ete de SOTP restent \`a faire, au-del\`a de la
 m\'ecanisation r\'eduite de l'annexe~\ref{chap:annexe_gamebased}.
 
 \textbf{Obj~\ref{obj:obj6_experimentation}. Exp\'erimentation.} Comment rendre
-ces bornes testables~? Six protocoles op\'erationnels dotent chacun des
+ces bornes testables~? Six protocoles de mesure, compl\'et\'es par un protocole combin\'e, dotent chacun des
 param\`etres institutionnels d'une d\'efinition mesurable, d'un estimateur et
 d'un plan d'\'echantillonnage. Ils fixent aussi les seuils \`a partir desquels le
 mod\`ele serait r\'efut\'e (tableau~\ref{tab:criteres_refutation}). Une
@@ -236,7 +237,7 @@ propri\'et\'es d'instance dans le noyau, d\'emontr\'es pour des lois de probabil
 dans la couche concr\`ete. S'y ajoutent la mise au jour des hypoth\`eses institutionnelles
 et la production de deux t\'emoins, l'un de coh\'erence (mod\`ele abstrait), l'autre de
 port\'ee. Le seuil $H^\sharp$ est certifi\'e dans les deux sens et une famille de lois
-concr\`etes satisfait toutes les hypoth\`eses. La sous-section~\ref{subsec:lean4_erreurs} recense les
+concr\`etes satisfait toutes les hypoth\`eses. La sous-section~\ref{subsec:lean4_formulations} recense les
 pr\'ecisions que la certification a apport\'ees aux \'enonc\'es.
 
 \textbf{C6. Programme de validation falsifiable}. Les protocoles
@@ -260,9 +261,9 @@ La formalisation Lean4 a conduit \`a des formulations plus pr\'ecises de trois
 l'Hypoth\`ese~\ref{ass:verdicts_efficace}, r\'esolution d'une optimisation). Elle a \'etabli par un cas
 limite la n\'ecessit\'e du r\'egime de confidentialit\'e. La le\c{c}on, selon
 laquelle la formalisation gagne \`a pr\'ec\'eder la publication, est d\'evelopp\'ee
-\`a la sous-section~\ref{subsec:verification_corrige_lecon}. Les formulations
+\`a la sous-section~\ref{subsec:verification_precise_lecon}. Les formulations
 alternatives sont pr\'esent\'ees \`a la
-sous-section~\ref{subsec:lean4_erreurs}.
+sous-section~\ref{subsec:lean4_formulations}.
 
 \textbf{Apport \'epist\'emique (un programme falsifiable).} Le
 chapitre~\ref{chap:experimentation} sp\'ecifie comment tester le
@@ -302,7 +303,7 @@ QIF                    & Total     & Total     & Absent      & Partielle & --- &
 S\'ecurit\'e utilisable    & Partielle & Absent    & Qualitative & Absent    & --- & Empirique \\
 \'Etudes juridiques      & Absent    & Absent    & Qualitative & Absent    & --- & --- \\
 CAP/FLP/Blockchain     & Partielle & Partielle & Absent      & Total     & Oui & --- \\
-\textbf{CLO-CRO (ce travail)} & \textbf{Total} & \textbf{Total} & \textbf{Total} & \textbf{Oui (conditionnel)} & \textbf{Partiel (conjecture)} & \textbf{Sp\'ecifi\'e, non d\'eploy\'e} \\
+\textbf{CLO-CRO (ce travail)} & \textbf{Total} & \textbf{Total} & \textbf{Total} & \textbf{Oui (conditionnel)} & \textbf{Partielle (conjecture)} & \textbf{Sp\'ecifi\'e, non d\'eploy\'e} \\
 \bottomrule
 \end{tabular}}
 
@@ -336,7 +337,7 @@ m\'ecaniquement le Trilemme CRO classique, du noyau alg\'ebrique aux lois de pro
 
 \textbf{Exp\'erimentale.} Le programme de validation falsifiable (C6) rend le cadre
 testable. Avec la le\c{c}on de la formalisation
-(section~\ref{subsec:verification_corrige_lecon}), il fournit \`a la
+(section~\ref{subsec:verification_precise_lecon}), il fournit \`a la
 communaut\'e des outils et des m\'ethodes transf\'erables.
 
 \end{sloppypar}
@@ -348,8 +349,8 @@ communaut\'e des outils et des m\'ethodes transf\'erables.
 \begin{sloppypar}
 
 Quatre limitations d\'elimitent le p\'erim\`etre des productions. Les
-param\`etres $\Delta$ et $\alpha$ ne sont pas encore valid\'es par des \'etudes exp\'erimentales
-et $\beta$ n'a pas encore \'et\'e calcul\'e sur les lois de preuve de syst\`emes d\'eploy\'es~; les valeurs retenues,
+param\`etres $\Delta$ et $\alpha$ ne sont pas encore valid\'es par des \'etudes exp\'erimentales.
+Le param\`etre $\beta$ n'a pas encore \'et\'e calcul\'e sur les lois de preuve de syst\`emes d\'eploy\'es. Les valeurs retenues,
 de quelques dizaines de bits, sont une calibration illustrative rendue
 plausible par la litt\'erature sur la rationalit\'e born\'ee. L'opposabilit\'e
 des constructions SOTP est heuristique et leur optimalit\'e conjectur\'ee. La formalisation Lean4 couvre le noyau
@@ -363,7 +364,7 @@ section~\ref{subsec:limitations_problemes_ouverts}.
 Les travaux futurs par production et par horizon sont d\'etaill\'es au
 tableau~\ref{tab:perspectives_horizons}.
 
-Le programme futur s'organise selon trois directions structurantes.
+Le programme futur s'organise selon quatre directions structurantes.
 
 \textbf{Validation empirique.} Les param\`etres $\Delta$, $\alpha$, $\Delta_q$ et $\eta_q$ doivent
 \^etre mesur\'es sur des acteurs institutionnels r\'eels. Le param\`etre $\beta$ doit \^etre calcul\'e
@@ -374,6 +375,11 @@ chapitre~\ref{chap:experimentation} fournit la feuille de route.
 \^etre \'etendue \`a SOTP et au cadre post-quantique, une fois les
 biblioth\`eques de th\'eorie de l'information quantique disponibles dans
 Mathlib~(section~\ref{subsubsec:extension_lean4_sotp_pq}).
+
+\textbf{Optimalit\'e des constructions.} La conjecture d'optimalit\'e des constructions SOTP
+(Conjecture~\ref{conj:optimalite_universelle}) reste \`a prouver ou \`a r\'efuter, dans le mod\`ele
+o\`u la couche Clay transmet un contexte d'esp\`ece
+(Remarque~\ref{rem:statut_optimalite}).
 
 \textbf{Extension th\'eorique.} Les variantes du Trilemme CRO pour le
 chiffrement homomorphe, le calcul multi-parties et les contextes

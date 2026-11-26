@@ -222,9 +222,9 @@ $\Opp_{\mathrm{emp}}(\text{Helios})$ & $0{,}50 \pm 0{,}05$ & C2, C4 \\
 \midrule
 \multicolumn{3}{c}{\textit{Post-quantique (C3)}} \\
 \midrule
-$\hat\Delta_q$ (r\'egulateurs form\'es) & $[25, 67]$ bits & C3 \\
+$\hat\Delta_q$ (institutions bien pr\'epar\'ees) & $[45, 67]$ bits & C3 \\
 $\hat\eta_q$ (signature lue comme cha\^{\i}ne de bits) & $0$ & C3 \\
-$\hat\eta_q$ (sc\'enario de support quantique simul\'e) & $[0{,}05;\,0{,}15]$ & C3 \\
+$\hat\eta_q$ (sc\'enario de support quantique simul\'e) & $[0{,}05;\,0{,}10]$ & C3 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -305,25 +305,25 @@ Le \textbf{Trilemme CRO conditionnel}
 central. Dans sa forme explicite, avec $\gamma = \alpha H(C) - 1 \geq 1$ :
 \begin{equation}
 \Conf \cdot \Relrec \cdot \Opp \leq \frac{1}{\gamma}\left(\frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right)
-\label{eq:trilemme_cro_resultat_corrige}
+\label{eq:trilemme_cro_resultat_precise}
 \end{equation}
-et, sous la d\'efinition admissible de l'interpr\`ete
+S'y ajoute, sous la d\'efinition admissible de l'interpr\`ete
 (D\'efinition~\ref{def:interp_admissible}), la forme raffin\'ee
-\eqref{eq:trilemme_cro_raffine}, qui rend compte du r\'egime \og rare\fg{} o\`u la seule in\'egalit\'e de Fano
-borne le produit et du r\'egime \og riche\fg{} o\`u $\Delta$ est la contrainte liante
+\eqref{eq:trilemme_cro_raffine}. Elle rend compte du r\'egime \og rare\fg{}, o\`u la seule in\'egalit\'e de Fano
+borne le produit, puis du r\'egime \og riche\fg{}, o\`u $\Delta$ est la contrainte liante
 (Remarque~\ref{rem:activite_delta}).
 Comme $\gamma \geq 1$, on obtient la forme simplifi\'ee
 \begin{equation}
 \Conf \cdot \Relrec \cdot \Opp \leq \frac{\Delta}{\lambda} + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}
-\label{eq:trilemme_cro_simplifie_corrige}
+\label{eq:trilemme_cro_simplifie_precise}
 \end{equation}
 o\`u $\kappa \geq 0$ est la constante du r\'egime de pr\'eservation de la
 confidentialit\'e $I(M;\Sigma|C) \leq \kappa/\lambda$
 (Hypoth\`ese~\ref{ass:regime}).
 
 \begin{remark}[Port\'ee de la borne]
-\label{rem:portee_borne_corrigee}
-La borne~\eqref{eq:trilemme_cro_resultat_corrige} est valide
+\label{rem:portee_borne_precisee}
+La borne~\eqref{eq:trilemme_cro_resultat_precise} est valide
 sous l'Hypoth\`ese~\ref{ass:regime} (r\'egime de pr\'eservation
 de la confidentialit\'e). Elle est structurellement identique \`a celle
 v\'erifi\'ee m\'ecaniquement dans l'annexe~\ref{chap:annexe_lean4}. La borne
@@ -345,10 +345,10 @@ Nous rappelons l'extension quantique \'etablie \`a la
 section~\ref{sec:cro_pq}.
 
 Le \textbf{Trilemme CRO post-quantique}
-(Th\'eor\`eme~\ref{thm:trilemme_pq}) g\'en\'eralise la borne classique
+(Th\'eor\`eme~\ref{thm:trilemme_pq}) g\'en\'eralise la borne classique. Il s'\'ecrit
 \begin{equation}
 \Conf^q \cdot \Relrec^q \cdot \Opp^q \leq \frac{1}{\gamma_q}\left(\frac{\Delta_q}{\lambda} + \frac{\kappa(\Delta_q+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3}\right) \leq \frac{\Delta_q + \eta_q H(C)}{\lambda} + O(\lambda^{-2}) + \negl(\lambda)
-\label{eq:trilemme_pq_resultat_corrige}
+\label{eq:trilemme_pq_resultat_precise}
 \end{equation}
 o\`u $\Delta_q = \Delta + \delta_{\text{enh}} - \delta_{\text{degr}}$
 avec $\delta_{\text{enh}} = 0$ pour la technologie actuelle (voir
@@ -356,7 +356,7 @@ section~\ref{sec:cro_pq}) tandis que $\eta_q = 0$ pour toute preuve qui est une
 cha\^{\i}ne de bits classique.
 
 \begin{remark}[Port\'ee de la borne post-quantique]
-\label{rem:portee_borne_pq_corrigee}
+\label{rem:portee_borne_pq_precisee}
 Le terme $\eta_q H(C)/\lambda$ n'appara\^it pas dans la borne explicite.
 Il est d'ordre $\lambda^{-1}$. Aucun terme en
 $O(\lambda^{-2})$ ne l'absorbe~; il est simplement absent de cette borne. Il figure uniquement dans
@@ -409,12 +409,12 @@ forme la onzi\`eme (annexe~\ref{chap:annexe_lean4}). Ces sections couvrent les
     \item La n\'egligeabilit\'e de $2^{-\lambda}$, obtenue avec les outils de Mathlib
     \item Les param\`etres institutionnels et $\gamma = \alpha H(C) - 1$
     \item La structure \texttt{ProtocolInstance} avec les propri\'et\'es
-          informationnelles (Pinsker, Fano) int\'egr\'ees
-    \item Les hypoth\`eses institutionnelles 1, 2$'$ et 3
-    \item Le Lemme 4 (garantie de confidentialit\'e) et le
-          Th\'eor\`eme 1 en trois \'etapes
-    \item Le th\'eor\`eme principal asymptotique et les t\'emoins de
-          coh\'erence et de port\'ee
+          informationnelles (Pinsker, Fano) int\'egr\'ees et les hypoth\`eses institutionnelles
+          (Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regularite})
+    \item Le Lemme~\ref{lem:confidentiality_guarantee} (garantie de confidentialit\'e)
+    \item Le Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} sous ses formes explicite,
+          publi\'ee et asymptotique
+    \item Les t\'emoins de coh\'erence et de port\'ee
     \item La classification par r\'egimes institutionnels
     \item Les extensions (section~\ref{subsec:lean4_extensions}), soit le verdict
           d\'eterministe ($\Opp = 1$), la forme raffin\'ee de la borne, sa
@@ -439,7 +439,7 @@ certification porte donc sur la d\'erivation~; les pr\'emisses restent des hypot
 Le p\'erim\`etre couvert garantit la correction du noyau alg\'ebrique
 central et son application \`a de vraies lois finies. La borne aigu\"e, les constructions
 SOTP compl\`etes et l'extension post-quantique restent \`a certifier. Les reformulations impos\'ees par Lean4 sont rassembl\'ees \`a la
-sous-section~\ref{subsec:lean4_erreurs}.
+sous-section~\ref{subsec:lean4_formulations}.
 
 \subsubsection{Coh\'erence et port\'ee du th\'eor\`eme v\'erifi\'e}
 \label{subsubsec:coherence_portee}
@@ -466,14 +466,14 @@ autorise ce point (Remarque~\ref{rem:portee_temoin}).
 
 \paragraph{T\'emoin de port\'ee}
 
-Une instance v\'erifie les Hypoth\`eses 1, 2$'$ et 3 avec $\Delta = 0$
+Une instance v\'erifie les Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regularite} avec $\Delta = 0$
 mais s'\'ecarte du r\'egime de confidentialit\'e ($I = \lambda/2 - 1$)~; elle
 pr\'esente :
 \begin{equation}
 \Conf \cdot \Rel \cdot \Opp = \frac{1}{4}
 \end{equation}
 constant pour tout $\lambda \geq 64$. Sans le r\'egime
-$I \leq \kappa/\lambda$, la borne tombe donc~; la sous-section~\ref{subsec:lean4_erreurs}
+$I \leq \kappa/\lambda$, la borne tombe donc~; la sous-section~\ref{subsec:lean4_formulations}
 d\'etaille ce cas limite.
 
 \paragraph{Hi\'erarchie de certitude}
@@ -532,7 +532,7 @@ La formalisation Lean4 (annexe~\ref{chap:annexe_lean4}) couvre le
 noyau alg\'ebrique du Trilemme CRO classique, y compris les
 t\'emoins de coh\'erence et de port\'ee. Elle couvre aussi une couche concr\`ete o\`u Fano, Pinsker et
 le trilemme sont d\'emontr\'es pour des lois finies. Pour SOTP-Low, seule une version r\'eduite des
-r\'eductions est m\'ecanis\'ee (section~\ref{sec:gamebased_mecanisation}). La
+r\'eductions est m\'ecanis\'ee (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). La
 m\'ecanisation compl\`ete de SOTP et l'extension post-quantique constituent des directions
 de recherche futures. La colonne
 \og Couverture Lean4 \fg{} rend ce p\'erim\`etre explicite.

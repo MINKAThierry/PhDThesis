@@ -39,7 +39,7 @@ des limitations et probl\`emes ouverts
 famille SOTP transforme l'impossibilit\'e en guide
 (sous-section~\ref{subsec:portee_constructive}), tirent la le\c{c}on
 m\'ethodologique de la certification
-(sous-section~\ref{subsec:verification_corrige_lecon}) et clarifient le
+(sous-section~\ref{subsec:verification_precise_lecon}) et clarifient le
 statut \'epist\'emique du programme exp\'erimental
 (sous-section~\ref{subsec:statut_protocoles_experimentaux}). La derni\`ere rassemble les
 le\c{c}ons m\'ethodologiques transf\'erables (sous-section~\ref{subsec:lecons_methodologiques}).
@@ -62,6 +62,8 @@ et pour quelle raison.
 \label{subsec:ce_que_formalisation_revele}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
+La sous-section~\ref{subsec:lean4_formulations} a pr\'esent\'e les \'enonc\'es publi\'es que la formalisation
+a pr\'ecis\'es. Celle-ci en tire les enseignements de m\'ethode.
 La v\'erification m\'ecanique du Trilemme~CRO dans Lean4 a produit,
 au-del\`a de la certification du c\oe ur alg\'ebrique et de la couche concr\`ete, six r\'ev\'elations
 \'epist\'emologiques que le raisonnement informel n'avait pas permis
@@ -103,8 +105,8 @@ Cette structure, plus simple que
 l'optimisation sur $[0,\lambda]$, pr\'eserve la borne dominante
 $\Delta/\lambda$ et la propri\'et\'e qualitative centrale du trilemme.
 La formalisation compl\`ete de l'optimisation analytique sur
-$[0,\lambda]$ n\'ecessiterait des outils d'analyse r\'eelle non encore
-disponibles dans Mathlib~\cite{MathlibAnalysis,Tsybakov2009,Scerri14}.
+$[0,\lambda]$ demanderait une \'etude de variations que ce travail n'a pas
+m\'ecanis\'ee~\cite{MathlibAnalysis,Tsybakov2009,Scerri14}.
 
 \subsubsection{La n\'egligeabilit\'e prouv\'ee par passage \`a la limite}
 \label{subsubsec:necessite_analyse_cas}
@@ -154,7 +156,7 @@ instance, $\Conf \cdot \Rel \cdot \Opp = 1/\lambda$, soit
 exactement la borne du th\'eor\`eme. Il s'agit d'un point du mod\`ele abstrait,
 qu'aucun protocole ne r\'ealise (avec $I = 0$, $\Relrec = 2^{-\lambda}$~;
 Remarque~\ref{rem:portee_temoin}). Le \textbf{t\'emoin de port\'ee}
-est une instance qui v\'erifie les Hypoth\`eses 1, 2$'$ et 3 avec
+est une instance qui v\'erifie les Hypoth\`eses~\ref{ass:extraction_bornee} \`a~\ref{ass:regularite} avec
 $\Delta = 0$ mais s'\'ecarte du r\'egime de confidentialit\'e
 ($I = \lambda/2 - 1$)~; elle pr\'esente $\Conf \cdot \Rel \cdot \Opp = 1/4$
 constant. Ces deux t\'emoins \'etablissent que les hypoth\`eses sont
@@ -452,7 +454,9 @@ $\Delta$ majore l'information que l'interpr\`ete tire de la preuve
 $I(V;\Sigma|C)$, donc sur $\Opp$, d\'epend du r\'egime du protocole. Les
 valeurs du tableau~\ref{tab:sensibilite_opp_delta} ne d\'ecoulent d'aucun mod\`ele
 de r\'eponse. Elles illustrent des tendances plausibles, que le protocole de
-la section~\ref{subsec:protocole_delta} permettrait de mesurer.
+la section~\ref{subsec:protocole_delta} permettrait de mesurer. Pour Helios, le sc\'enario standard
+associe l'opposabilit\'e de la d\'erivation (tribunal de juridiction g\'en\'erale) \`a la capacit\'e
+du comit\'e de garants (tableau~\ref{tab:interprete_calibration}).
 
 \begin{table}[htbp]
 \centering
@@ -485,7 +489,7 @@ $0{,}95$, soit quarante-cinq points. La transparence de la structure de
 preuve permet \`a l'expertise suppl\'ementaire de se traduire directement
 en capacit\'e d\'ecisionnelle.
 
-\noindent\textbf{Observation 2. Impact limit\'e sur les syst\`emes
+\noindent\textbf{Observation 2. Impact limit\'e en bits sur les syst\`emes
 \`a divulgation nulle.} Pour Helios, lorsque $\Delta$ passe de
 $30$ \`a $70$ bits, $\Opp$ varie de $0{,}30$ \`a $0{,}70$. Cet \'ecart est voisin
 des quarante-cinq points d'ECDSA. La diff\'erence se lit en bits. L'information
@@ -511,7 +515,7 @@ $\Delta$. Ces profils sont distincts des deux r\'egimes du th\'eor\`eme, que s\'
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 Le Trilemme CRO conditionnel r\'eoriente la conception de protocoles
-cryptographiques, qui passe de l'optimisation abstraite (\og quelles propri\'et\'es
+cryptographiques. Elle passe de l'optimisation abstraite (\og quelles propri\'et\'es
 de s\'ecurit\'e sont atteignables~? \fg) \`a l'ing\'enierie contrainte
 par la capacit\'e (\og quelles propri\'et\'es cette institution peut-elle
 effectivement utiliser, \'etant donn\'e sa capacit\'e mesurable
@@ -538,9 +542,11 @@ comparaison et \`a une question d'usage~; l'essentiel du travail reste l'estimat
 $H(\mathcal{C})$ et de $\Delta$.
 
 \subsubsection{M\'ethodologie de conception en six phases}
-\label{subsubsec:methodologie_cinq_phases}
+\label{subsubsec:methodologie_six_phases}
 
-La progression F$\to$B$\to$E$\to$S$\to$C$\to$X fournit un cadre de d\'ecision explicite. La
+La progression F$\to$B$\to$E$\to$S$\to$C$\to$X fournit un cadre de d\'ecision explicite. Elle
+prolonge la m\'ethodologie en cinq phases de la
+sous-sous-section~\ref{subsubsec:methodologie_cinq_phases_sotp}, propre au choix d'une variante SOTP. La
 pratique actuelle consiste souvent, elle, \`a d\'eployer le protocole
 cryptographiquement le plus puissant disponible, ind\'ependamment de
 la capacit\'e institutionnelle de l'environnement cible.
@@ -640,7 +646,7 @@ recommandations directement applicables.
 
 \noindent\textit{Recommandation 1 (ad\'equation contexte--protocole).} Le
 choix du protocole doit \^etre guid\'e par le $H(\mathcal{C})$ de
-l'institution cible. Un tribunal g\'en\'eral ($\Delta \approx 35$ bits) ne
+l'institution cible. Un tribunal dot\'e d'une expertise PKI ($\Delta \approx 35$ bits) ne
 tire aucun b\'en\'efice de zk-SNARK avanc\'es ($\Opp \approx 0{,}33$, calcul du
 sch\'ema~2 ci-dessus) l\`a o\`u ECDSA offrirait $\Opp \approx 0{,}90$
 (section~\ref{sec:derivation_ecdsa}).
@@ -743,7 +749,7 @@ Pour \textbf{NIST~PQC}, l'int\'egration de l'opposabilit\'e comme crit\`ere
 additionnel permettrait une s\'election guid\'ee par les contraintes de
 d\'eploiement r\'eelles. Pour \textbf{ISO/IEC~27xxx}, une norme sur les
 m\'etriques CLO fournirait un protocole standardis\'e de calcul de
-$H(\mathcal{C})$ et $\Delta$. Pour la \textbf{CEMAC}, une directive sur la
+$H(\mathcal{C})$ et $\Delta$. Pour la \textbf{CEMAC} (Communaut\'e \'Economique et Mon\'etaire de l'Afrique Centrale), une directive sur la
 cryptographie institutionnelle pour la monnaie mobile permettrait \`a six
 pays d'harmoniser leurs exigences r\'eglementaires.
 \end{sloppypar}
@@ -819,7 +825,7 @@ mesure de Mathlib.
 
 \textbf{Une couverture Lean4 encore partielle des constructions SOTP.}
 La formalisation couvre le noyau alg\'ebrique du Trilemme et les r\'eductions de SOTP-Low en
-situation r\'eduite (section~\ref{sec:gamebased_mecanisation}). Les r\'eductions de SOTP-Base et de
+situation r\'eduite (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). Les r\'eductions de SOTP-Base et de
 SOTP-High ainsi que l'extension post-quantique constituent une direction de recherche
 future.
 
@@ -872,10 +878,11 @@ m\'etriques CLO ne rendent pas compte des protocoles dont la s\'ecurit\'e est se
 calculatoire.
 
 \paragraph{L5. Mod\`eles quantiques simplifi\'es.}
-L'extension quantique utilise principalement le canal d\'epolarisant
-comme mod\`ele de bruit. Des ph\'enom\`enes plus fins (amortissement
-d'amplitude~\cite{Devoret2013}, d\'ephasage~\cite{Breuer2002}, effets de
-m\'emoire quantique~\cite{Rivas2012}) peuvent lui \'echapper. Des mod\`eles de canaux sp\'ecifiques pourraient donner des
+Les illustrations de l'extension quantique privil\'egient le canal d\'epolarisant
+comme mod\`ele de bruit. L'amortissement
+d'amplitude~\cite{Devoret2013} et le d\'ephasage~\cite{Breuer2002}, d\'efinis au
+chapitre~\ref{chap:cadre_formel}, y tiennent une place moindre. Les effets de
+m\'emoire quantique~\cite{Rivas2012} ne sont pas mod\'elis\'es. Des mod\`eles de canaux sp\'ecifiques pourraient donner des
 bornes plus fines.
 
 \paragraph{L6. Port\'ee limit\'ee aux preuves non interactives.}
@@ -893,10 +900,10 @@ de compromis substantiellement diff\'erentes.
 comme fixe. Or les institutions apprennent et s'adaptent~; $H(C)$ et
 $\Delta$ \'evoluent par accumulation de pr\'ec\'edents, changement
 technologique et mises \`a jour r\'eglementaires~\cite{Simon82}.
-\textbf{Fonctions de verdict d\'eterministes.} Nous mod\'elisons
-$V(\Sigma, C)$ comme d\'eterministe dans les exemples (auquel cas $\Opp = 1$,
-Remarque~\ref{rem:verdict_deterministe}), alors que le th\'eor\`eme autorise un
-verdict qui d\'epend aussi de ressources institutionnelles. La prise de d\'ecision r\'eelle
+\textbf{Ressources institutionnelles non mesur\'ees.} Les exemples supposent un verdict
+$V = \mathsf{Interpret}(\Sigma, C, K)$ qui d\'epend des ressources $K$ de l'institution
+(D\'efinition~\ref{def:interp_admissible}). La loi de $K$ n'y est pas mesur\'ee. Un verdict fonction
+de $(\Sigma, C)$ seuls donnerait $\Opp = 1$ (Remarque~\ref{rem:verdict_deterministe}). La prise de d\'ecision r\'eelle
 implique des processus stochastiques, des d\'esaccords multi-personnes et
 des biais cognitifs~\cite{Casey10,Kahneman11}. \textbf{Hypoth\`ese de
 $\beta$-r\'egularit\'e.} Le Th\'eor\`eme~\ref{thm:conditional_CRO_trilemma}
@@ -986,13 +993,13 @@ pr\'etendre avoir atteint la limite. L'impossibilit\'e devient ainsi un guide.
 
 % -----------------------------------------------------------------------
 \subsection{La le\c{c}on m\'ethodologique de la formalisation}
-\label{subsec:verification_corrige_lecon}
+\label{subsec:verification_precise_lecon}
 % -----------------------------------------------------------------------
 \begin{sloppypar}
 
 Les formulations alternatives issues de la formalisation Lean4, y compris le
 cas limite qui \'etablit la n\'ecessit\'e du r\'egime de confidentialit\'e, sont
-pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_erreurs}. La pr\'esente
+pr\'esent\'ees \`a la sous-section~\ref{subsec:lean4_formulations}. La pr\'esente
 sous-section se concentre sur la le\c{c}on m\'ethodologique qui en d\'ecoule.
 
 \paragraph{La rigueur se v\'erifie.}
@@ -1223,7 +1230,7 @@ aucun des trois champs n'a la ma\^itrise compl\`ete. En for\c{c}ant chaque
 hypoth\`ese, quantification et approximation \`a \^etre explicite, la
 v\'erification m\'ecanique approfondit la compr\'ehension du
 th\'eor\`eme lui-m\^eme. Les formulations alternatives et le cas limite sont
-document\'es \`a la sous-section~\ref{subsec:lean4_erreurs}.
+document\'es \`a la sous-section~\ref{subsec:lean4_formulations}.
 \end{sloppypar}
 
 \begin{boiteArbitre}

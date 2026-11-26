@@ -27,12 +27,12 @@
     propriétés d'une instance abstraite (`ProtocolInstance`).
   • Couche concrète (section 10) : Pinsker et Fano y sont DÉMONTRÉS pour de
     vraies lois de probabilité finies sur (C, M, Σ, V), avec M uniforme sur 2^λ
-    valeurs et indépendant de C, et une interprétation admissible (noyau de
+    valeurs et indépendant de C et une interprétation admissible (noyau de
     verdict ne dépendant que de (Σ, C)). H(C) est l'entropie de la loi et
     γ = α·H(C) − 1. Le trilemme (formes explicite, raffinée, asymptotique)
     n'utilise ni Pinsker ni l'Hypothèse 3 ni les supports communs, qui ne servent
     qu'au Lemme 4. L'inégalité I(V;Σ|C) ≤ H(V|C) y est démontrée. Une famille de
-    lois concrètes (`famModel`) satisfait toutes les hypothèses pour tout λ, et le
+    lois concrètes (`famModel`) satisfait toutes les hypothèses pour tout λ et le
     théorème asymptotique s'y applique.
   • Bloc de vérification (section 11).
   • Couche « cryptographie institutionnelle » : les Hypothèses 1 (extraction
@@ -316,7 +316,7 @@ noncomputable def witnessInstance (lam : ℕ) (hlam : 1 ≤ lam) : ProtocolInsta
       norm_num }
 
 /-- **Cohérence (non-vacuité).** Les Hypothèses 1, 2′, 3 et 4 sont
-    simultanément satisfiables dans le modèle abstrait, et la borne du
+    simultanément satisfiables dans le modèle abstrait et la borne du
     Théorème 1 y est atteinte : Conf·Rel·Opp = Δ/(γλ) = 1/λ. Le témoin est
     un point du modèle relâché ; il ne construit pas une loi de probabilité. -/
 theorem assumptions_consistent_and_bound_attained (lam : ℕ) (hlam : 1 ≤ lam) :
@@ -1346,7 +1346,7 @@ theorem trilemma_refined_concrete {lam : ℕ} {M C S V : Type*} [Fintype M] [Fin
 
 open CLOModel in
 /-- **Lemme 4 concret** : Conf ≥ 1 − √(c₀·β·I(M;Σ|C)). Il utilise Pinsker, donc les
-    supports communs, et l'Hypothèse 3 avec la constante β ≥ 1. Les paramètres de
+    supports communs et l'Hypothèse 3 avec la constante β ≥ 1. Les paramètres de
     l'instance sont H = H(C) tirée de la loi et β ; Δ et α n'interviennent pas. -/
 theorem lemma4_concrete {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
     [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C]
@@ -1393,9 +1393,9 @@ theorem conditional_CRO_trilemma_concrete {M S : ℕ → Type} {C V : Type}
 /-! ### 10.7 Une famille de lois concrètes satisfait toutes les hypothèses
 
 Témoin de non-vacuité pour tout λ : M uniforme sur 2^λ valeurs, C et Σ deux bits
-uniformes, les trois indépendants, et un verdict qui recopie la preuve. Toutes les
+uniformes, les trois indépendants et un verdict qui recopie la preuve. Toutes les
 hypothèses des théorèmes concrets, y compris les supports communs et l'Hypothèse 3,
-sont satisfaites, et le théorème asymptotique s'applique à cette famille. -/
+sont satisfaites et le théorème asymptotique s'applique à cette famille. -/
 
 /-- Loi uniforme sur (C, M, Σ) ∈ {0,1} × {0,1}^λ × {0,1} et verdict V = Σ. -/
 noncomputable def famModel (l : ℕ) : CLOModel l (Fin (2 ^ l)) (Fin 2) (Fin 2) (Fin 2) where
