@@ -781,7 +781,9 @@ $p(\lambda - \log_2(e/p)) \leq \kappa/\lambda$ donne asymptotiquement
 $\Relrec \leq (\kappa/\lambda^2)(1 + o(1))$. Dans ce protocole, o\`u $\Delta = \gamma = 1$, le facteur institutionnel vaut
 $1$. La Remarque~\ref{rem:temoin_combine} montre que la borne
 reste atteinte \`a un facteur voisin de $2$ lorsque ce facteur est actif. Ce compl\'ement est
-d\'emontr\'e ici sur papier. Il n'est pas encore certifi\'e en Lean.
+certifi\'e en Lean sur lois finies (\texttt{borne\_aigue\_atteinte}, \texttt{rapports\_borne\_aigue}
+et \texttt{regularite\_temoin}, annexe~\ref{chap:annexe_lean4}). La certification couvre l'existence
+du protocole, sa fiabilit\'e optimale, les valeurs num\'eriques et la constante $\beta \leq 1{,}03$.
 \end{remark}
 
 \begin{Preuve}[Remarque~\ref{rem:borne_aigue_portee}]
@@ -863,7 +865,8 @@ Remarque~\ref{rem:temoin_realisable}. Pour $\kappa \in \{1,4\}$,
 $\lambda \in \{64,128,256\}$ et $(\Delta,\gamma) \in \{(5,19),(10,40)\}$, la
 borne~\eqref{eq:trilemme_aigu} y est atteinte \`a un facteur compris entre $2{,}02$ et
 $2{,}13$. L'ordre $\lambda^{-2}$ et le facteur institutionnel $\Delta/\gamma$ y sont donc
-atteints ensemble.
+atteints ensemble. Ce t\'emoin est certifi\'e en Lean par les m\^emes th\'eor\`emes que la
+Remarque~\ref{rem:borne_aigue_portee} (annexe~\ref{chap:annexe_lean4}).
 \end{remark}
 
 \begin{Preuve}[Remarque~\ref{rem:temoin_combine}]
@@ -965,7 +968,8 @@ Lean4 \`a la section~\ref{sec:lean4}. Les in\'egalit\'es de Fano et de
 Pinsker, ainsi que les hypoth\`eses institutionnelles, y sont
 formalis\'ees comme propri\'et\'es des instances de protocole. Fano et Pinsker
 y sont en outre d\'emontr\'es pour des lois de probabilit\'e finies
-(sous-section~\ref{subsec:lean4_concret}). Le
+(sous-section~\ref{subsec:lean4_concret}). Le trilemme classique est ainsi certifi\'e de bout en
+bout sur lois finies, sous les seules hypoth\`eses institutionnelles. Le
 d\'etail des formulations alternatives issues de la certification est pr\'esent\'e \`a la
 section~\ref{subsec:lean4_formulations}.
 \end{remark}

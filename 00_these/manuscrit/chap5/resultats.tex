@@ -336,7 +336,7 @@ sans le remplacer. Son terme dominant est d'ordre $\kappa/\lambda^2$, ordre qui 
 pas \^etre am\'elior\'e, avec le m\^eme facteur institutionnel
 (Remarque~\ref{rem:borne_aigue_portee}). Une loi explicite atteint ce facteur, avec
 $\Opp = \Delta/\gamma$ \`a confidentialit\'e parfaite (Remarque~\ref{rem:temoin_realisable}).
-Ces compl\'ements sont d\'emontr\'es sur papier et ne sont pas encore certifi\'es en Lean.
+Ces compl\'ements sont certifi\'es en Lean sur lois finies (annexe~\ref{chap:annexe_lean4}).
 
 \subsubsection{Les th\'eor\`emes du Trilemme CRO post-quantique (\'etape E)}
 \label{subsubsec:resultats_etape_E}
@@ -423,22 +423,28 @@ forme la onzi\`eme (annexe~\ref{chap:annexe_lean4}). Ces sections couvrent les
           probabilit\'e finies (sous-section~\ref{subsec:lean4_concret})
 \end{itemize}
 
+Les versions~3.5 \`a~3.13 ajoutent dix-huit sections en fin de fichier, sans modifier les
+pr\'ec\'edentes. Elles certifient l'information classique finie, la borne aigu\"e et ses
+t\'emoins, les jeux et leurs ponts vers les m\'etriques, la construction S-OTP, le minorant par
+traits, le noyau alg\'ebrique quantique et le trilemme quantique pour l'encodage diagonal. Les
+117 \'enonc\'es certifi\'es sont imprim\'es \`a l'annexe~\ref{chap:annexe_lean4}.
+
 La formalisation \'etablit la borne
 \begin{equation}
 \Conf \cdot \Relrec \cdot \Opp \leq \frac{\Delta}{\lambda}
 + \frac{\kappa(\Delta+1)}{\lambda^2} + \frac{\kappa^2}{\lambda^3} + \varepsilon(\lambda)
 \end{equation}
-enti\`erement v\'erifi\'ee sans \texttt{sorry} ni axiome d\'eclar\'e. Les vingt
-\texttt{\#print axioms} du bloc final n'affichent que les axiomes standard
+enti\`erement v\'erifi\'ee sans \texttt{sorry} ni axiome d\'eclar\'e. Les
+\texttt{\#print axioms} du fichier n'affichent que les axiomes standard
 \texttt{propext}, \texttt{Classical.choice} et \texttt{Quot.sound}. Fano et Pinsker, absents de Mathlib, sont
 pos\'es comme propri\'et\'es des instances dans le noyau alg\'ebrique et d\'emontr\'es
 pour des lois de probabilit\'e finies dans la couche concr\`ete. L'extraction born\'ee et
 le r\'egime de confidentialit\'e sont des hypoth\`eses du th\'eor\`eme. La
 certification porte donc sur la d\'erivation~; les pr\'emisses restent des hypoth\`eses.
 
-Le p\'erim\`etre couvert garantit la correction du noyau alg\'ebrique
-central et son application \`a de vraies lois finies. La borne aigu\"e, les constructions
-SOTP compl\`etes et l'extension post-quantique restent \`a certifier. Les reformulations impos\'ees par Lean4 sont rassembl\'ees \`a la
+Le p\'erim\`etre couvert garantit la correction de tout le trilemme classique sur de vraies
+lois finies, borne aigu\"e comprise. Restent \`a certifier la queue de Chernoff de SOTP-Base et
+la couche quantique pour des \'etats quelconques. Les reformulations impos\'ees par Lean4 sont rassembl\'ees \`a la
 sous-section~\ref{subsec:lean4_formulations}.
 
 \subsubsection{Coh\'erence et port\'ee du th\'eor\`eme v\'erifi\'e}
@@ -498,20 +504,20 @@ Trilemme (forme raffin\'ee), Lemme~\ref{lem:confidentiality_guarantee}
   & \textbf{Oui} (noyau, annexe~\ref{chap:annexe_lean4}) \\
 Proposition~\ref{prop:fondement_extraction}
   & Prouv\'ee (r\`egle de cha\^ine et DPI)
-  & 1 & Preuve papier & Non \\
+  & 1 & Preuve papier & \textbf{Oui} (lois finies) \\
 Borne aigu\"e et t\'emoins r\'ealisables (Proposition~\ref{prop:borne_aigue}, Remarques~\ref{rem:temoin_realisable} et~\ref{rem:temoin_combine})
   & Borne prouv\'ee sous Hypoth\`eses~\ref{ass:extraction_bornee}, \ref{ass:verdicts_efficace} et~\ref{ass:regime}~; t\'emoins satisfaisant les quatre
-  & 3 & Preuves papier & Non \\
+  & 3 & Preuves papier & \textbf{Oui} (lois finies) \\
 Goulot, composition, bornes \'el\'ementaires (Sec.~\ref{sec:clo})  
   & Prouv\'es (formulations pr\'ecis\'ees) 
   & 3 & Preuves papier 
-  & Verdict d\'eterministe seulement \\
+  & \textbf{Oui} (lois finies) \\
 Trilemme PQ (Sec.~\ref{sec:cro_pq}) 
     & Sous Hypoth\`eses~\ref{ass:extraction_quantique}, \ref{ass:verdict_quantique} et~\ref{ass:regime_quantique}  
-  & 1 & Preuve papier & Non \\
+  & 1 & Preuve papier & Noyau~; sans hypoth\`ese pos\'ee pour l'encodage diagonal \\
 Propri\'et\'es SOTP ($\Conf$, $\Relver$) 
   & $\Conf$ statistique (masque tronqu\'e) ou sous PRG~; $\Relver$ sous DLog (Groth16 pour High) 
-  & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Partielle (SOTP-Low, situation r\'eduite) \\
+  & 3 & R\'eductions (annexe~\ref{chap:annexe_gamebased}) & Low et Base en situation r\'eduite, High sous Groth16 \\
 Minorations d'opposabilit\'e SOTP, optimalit\'e 
   & Heuristiques / conjecture 
   & --- & Non prouv\'ees & Non \\
@@ -528,13 +534,13 @@ Valeurs num\'eriques des syst\`emes d\'eploy\'es
 
 \begin{remark}[P\'erim\`etre de la couverture Lean4]
 \label{rem:perimetre_lean4}
-La formalisation Lean4 (annexe~\ref{chap:annexe_lean4}) couvre le
-noyau alg\'ebrique du Trilemme CRO classique, y compris les
-t\'emoins de coh\'erence et de port\'ee. Elle couvre aussi une couche concr\`ete o\`u Fano, Pinsker et
-le trilemme sont d\'emontr\'es pour des lois finies. Pour SOTP-Low, seule une version r\'eduite des
-r\'eductions est m\'ecanis\'ee (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). La
-m\'ecanisation compl\`ete de SOTP et l'extension post-quantique constituent des directions
-de recherche futures. La colonne
+La formalisation Lean4 (annexe~\ref{chap:annexe_lean4}) couvre tout le trilemme classique,
+du noyau alg\'ebrique et de ses t\'emoins jusqu'aux lois finies, borne aigu\"e comprise. Elle
+couvre le noyau quantique et, pour l'encodage diagonal, le trilemme quantique sans hypoth\`ese
+pos\'ee. Les r\'eductions de SOTP-Low et de SOTP-Base sont m\'ecanis\'ees en situation r\'eduite,
+celles de SOTP-High sous l'hypoth\`ese nomm\'ee de Groth16 (annexe~\ref{chap:annexe_gamebased},
+section~\ref{sec:gamebased_mecanisation}). La couche quantique pour des \'etats quelconques se
+poursuit dans le d\'ep\^ot. La colonne
 \og Couverture Lean4 \fg{} rend ce p\'erim\`etre explicite.
 \end{remark}
 

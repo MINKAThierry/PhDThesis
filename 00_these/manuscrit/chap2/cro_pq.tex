@@ -976,9 +976,13 @@ droite de~\eqref{eq:trilemme_pq} tend vers $0$ avec $\Delta_q = 0$ et $\eta_q = 
 
 \begin{remark}[Statut de v\'erification]
 \label{rem:statut_verification_pq}
-Le noyau alg\'ebrique de cette preuve est analogue \`a celui du
-Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} classique, certifi\'e
-m\'ecaniquement en Lean4 \`a la section~\ref{sec:lean4}. Les formulations
+Le noyau alg\'ebrique de cette preuve est certifi\'e m\'ecaniquement en Lean4
+(\texttt{trilemma\_pq\_explicit}, annexe~\ref{chap:annexe_lean4}). Pinsker quantique, Fano
+quantique et la borne de Holevo y sont des propri\'et\'es des instances, comme Fano et Pinsker
+dans le noyau classique. Pour l'encodage diagonal, o\`u les \'etats de la preuve commutent, ces
+trois lemmes sont d\'emontr\'es et le th\'eor\`eme vaut sans hypoth\`ese pos\'ee
+(\texttt{trilemme\_pq\_diagonal}). Le cas d'\'etats quelconques se poursuit dans le
+d\'ep\^ot~\cite{CROTrilemmaDepot}. Les formulations
 retenues pour l'analogue classique figurent \`a la
 section~\ref{subsec:lean4_formulations}.
 \end{remark}

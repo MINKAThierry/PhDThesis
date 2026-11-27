@@ -43,7 +43,7 @@ Un programme \`a horizons structur\'es conclut la section
 Le voyage de l'arbitre ne s'arr\^ete pas avec cette th\`ese. Les fondations
 sont pos\'ees (m\'etriques, bornes, constructions, certification,
 protocoles) mais le programme ouvert est plus vaste que ce qui vient
-d'\^etre r\'esolu. Il reste \`a certifier en Lean la borne aigu\"e de la Proposition~\ref{prop:borne_aigue}
+d'\^etre r\'esolu. Il reste \`a certifier en Lean la couche quantique pour des \'etats quelconques
 et \`a \'etablir l'optimalit\'e des constructions SOTP. Il faudra aussi calibrer empiriquement les param\`etres
 quantiques~$\Delta_q$ et~$\eta_q$ et \'etendre les constructions
 au calcul homomorphe et multi-parties. L'arbitre de demain
@@ -446,30 +446,26 @@ un investissement substantiel mais r\'ealiste pour une \'equipe d\'edi\'ee.
 \subsubsection{Extension de la formalisation Lean4 \`a SOTP et au cadre post-quantique}
 \label{subsubsec:extension_lean4_sotp_pq}
 
-La formalisation Lean4 actuelle (annexe~\ref{chap:annexe_lean4}) couvre
-le noyau alg\'ebrique du Trilemme CRO classique, t\'emoins de coh\'erence et de port\'ee
-compris, ainsi que la couche concr\`ete sur lois finies. Outre la certification de la
-borne aigu\"e, deux
-extensions restent \`a d\'evelopper.
+La formalisation Lean4 actuelle (annexe~\ref{chap:annexe_lean4}) couvre tout le trilemme
+classique sur lois finies, borne aigu\"e comprise, le noyau alg\'ebrique quantique et le trilemme
+quantique pour l'encodage diagonal. Ses 5\,407 lignes d\'epassent l'estimation que donnait la
+version pr\'ec\'edente de ce manuscrit. Trois extensions restent \`a d\'evelopper.
 
 \begin{itemize}
-    \item \textbf{Extension SOTP.} La m\'ecanisation r\'eduite de SOTP-Low (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation})
-          sert de point de d\'epart. La formalisation compl\`ete des trois
-          variantes demanderait d'abord celle de la distance statistique du masque tronqu\'e et des
-          r\'eductions \`a PRG et DLog. Elle demanderait aussi celle de la solidit\'e de connaissance
-          de Groth16 et de la projection de Johnson-Lindenstrauss. Il faudrait compter 1000 \`a 1500 lignes
-          de plus.
-    \item \textbf{Extension post-quantique.} La formalisation du
-          Trilemme CRO PQ n\'ecessiterait l'int\'egration des
-          in\'egalit\'es quantiques (Pinsker quantique, Gentle
-          Measurement, Fano quantique) dans une biblioth\`eque de
-          th\'eorie de l'information quantique. L'effort est estim\'e \`a
-          1000--1500 lignes additionnelles.
+    \item \textbf{Queue de Chernoff de SOTP-Base.} Les r\'eductions des trois variantes sont
+          m\'ecanis\'ees (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}).
+          Pour SOTP-Base, la queue de Chernoff du lemme de Johnson-Lindenstrauss reste une
+          pr\'emisse. Sa d\'emonstration demande la loi gaussienne et la fonction g\'en\'eratrice
+          des moments de Mathlib, puis le passage d'un espace fini \`a un espace mesur\'e.
+    \item \textbf{Pinsker quantique g\'en\'eral.} Pour des \'etats quelconques, il passe par le
+          projecteur de Helstrom et l'in\'egalit\'e de traitement des donn\'ees de la biblioth\`eque
+          Physlib.
+    \item \textbf{Holevo et Fano quantiques.} Ils demandent la commutation de la trace partielle
+          avec un canal local, qui manque encore \`a Physlib, puis le lemme de mesure douce.
 \end{itemize}
 
-Cette extension, estim\'ee \`a 2000--3000 lignes additionnelles au total,
-constituerait la premi\`ere certification m\'ecanique compl\`ete d'un
-cadre cryptographique institutionnel.
+Ces extensions compl\'eteraient la premi\`ere certification m\'ecanique d'un cadre
+cryptographique institutionnel.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
@@ -635,10 +631,10 @@ CASH soumises \`a standardisation.
 \textbf{Production} & \textbf{Court terme} & \textbf{Moyen terme} & \textbf{Long terme} \\
 \midrule
 C1 (CLO) & D\'eploiement du protocole (chap.~\ref{chap:experimentation}, non ex\'ecut\'e) & Outils ML d'estimation & Standards ISO/IEC \\
-C2 (CRO classique) & Certification Lean4 de la borne aigu\"e & Extensions FHE/MPC & Caract\'erisation $\mathcal{R}$ \\
+C2 (CRO classique) & Borne aigu\"e certifi\'ee~; extension aux lois continues & Extensions FHE/MPC & Caract\'erisation $\mathcal{R}$ \\
 C3 (CRO post-quantique) & Mesure de $\Delta_q$ (ML-DSA, SLH-DSA) & Th\'eorie $\eta_q$ (options D, E) & PQC certifi\'e CLO \\
 C4 (SOTP) & Mod\`ele \`a contexte priv\'e (B2), R\'eduction SOTP$\to$ZK-NR & Preuve ou r\'efutation de la conjecture d'optimalit\'e & Th\'eorie unifi\'ee, impl\'ementations de r\'ef\'erence \\
-C5 (Lean4) & Extension couverture SOTP et PQ & Certification UC & V\'erificateur automatique, int\'egration Mathlib et Coq/Isabelle \\
+C5 (Lean4) & Chernoff de SOTP-Base, Pinsker, Holevo et Fano quantiques & Certification UC & V\'erificateur automatique, int\'egration Mathlib et Coq/Isabelle \\
 C6 (Protocoles) & D\'eploiement Helios audit post-\'electoral & Validation multi-institutionnelle & Standards empiriques \\
 \bottomrule
 \end{tabular}
@@ -679,7 +675,7 @@ programme longitudinal repr\'esente une direction de recherche \`a 3--5 ans.
 L'arbitre retient que le voyage ne s'arr\^ete pas ici. Les bornes existent
 sous hypoth\`eses, tandis que les constructions ont des propri\'et\'es prouv\'ees et une
 opposabilit\'e encore heuristique. La borne aigu\"e de terme dominant
-$O(\lambda^{-2})$ reste \`a certifier en Lean, tandis que les extensions au calcul homomorphe
+$O(\lambda^{-2})$ est certifi\'ee en Lean, tandis que les extensions au calcul homomorphe
 et multi-parties restent \`a \'etablir. Les param\`etres quantiques
 $\Delta_q$ et $\eta_q$ restent quant \`a eux \`a calibrer sur des acteurs r\'eels. Ce qui a
 \'et\'e construit est prouv\'e l\`a o\`u il est dit prouv\'e et conjectur\'e l\`a o\`u il est dit conjectur\'e.

@@ -823,11 +823,13 @@ sur $(C, M, \Sigma, V)$ (sous-section~\ref{subsec:lean4_concret}). Une formalisa
 pour des lois quelconques n\'ecessiterait les biblioth\`eques de th\'eorie de la
 mesure de Mathlib.
 
-\textbf{Une couverture Lean4 encore partielle des constructions SOTP.}
-La formalisation couvre le noyau alg\'ebrique du Trilemme et les r\'eductions de SOTP-Low en
-situation r\'eduite (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). Les r\'eductions de SOTP-Base et de
-SOTP-High ainsi que l'extension post-quantique constituent une direction de recherche
-future.
+\textbf{Une couverture Lean4 des constructions SOTP sous hypoth\`eses nomm\'ees.}
+La formalisation couvre tout le trilemme classique. Elle m\'ecanise les r\'eductions de SOTP-Low
+et de SOTP-Base en situation r\'eduite et celles de SOTP-High sous l'hypoth\`ese nomm\'ee de
+Groth16 (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). Pour
+SOTP-Base, la queue de Chernoff du lemme de Johnson-Lindenstrauss reste une pr\'emisse.
+L'extension post-quantique n'est certifi\'ee sans hypoth\`ese pos\'ee que pour l'encodage
+diagonal.
 
 \subsubsection{Limitations m\'ethodologiques (L1--L6)}
 \label{subsubsec:limitations_methodologiques}
@@ -916,8 +918,8 @@ fasse autant \`a un facteur constant pr\`es reste ouvert (Conjecture~\ref{conj:o
 \end{sloppypar}
 
 \begin{boiteArbitre}
-L'arbitre dresse l'inventaire de ce qui manque. Fano et Pinsker ne sont d\'emontr\'es que pour des lois finies, tandis que la couverture Lean4 ne retient de SOTP que les r\'eductions de SOTP-Low
-en situation r\'eduite et laisse de c\^ot\'e l'extension post-quantique. Six limitations m\'ethodologiques sont
+L'arbitre dresse l'inventaire de ce qui manque. Fano et Pinsker ne sont d\'emontr\'es que pour des lois finies. La couverture Lean4 pose encore la queue de Chernoff de SOTP-Base et la s\^uret\'e de Groth16,
+et ne certifie l'extension post-quantique sans hypoth\`ese que pour l'encodage diagonal. Six limitations m\'ethodologiques sont
 nomm\'ees sans d\'etour, parmi lesquelles les estimations analytiques, l'entropie non
 standardis\'ee, le r\'ealisme calculatoire, le bruit quantique simplifi\'e
 et la restriction aux preuves non interactives. Quatre limitations conceptuelles touchent

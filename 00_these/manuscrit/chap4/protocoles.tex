@@ -307,6 +307,10 @@ $I(V;\Sigma) = I(V;\Sigma,T) \geq I(V;T)$. La borne de $k$ bits vient de
 $I(V;T_j) \leq H(T_j) \leq 1$.
 \end{Preuve}
 
+La Proposition~\ref{prop:minorant_traits} est certifi\'ee en Lean pour $k$ traits quelconques
+(\texttt{minorant\_traits} et \texttt{minorant\_k\_bits}, annexe~\ref{chap:annexe_lean4}). La
+r\'ecurrence sur $k$ s'appuie sur le cas de deux traits (\texttt{traits\_superadditif}).
+
 \noindent\textbf{Estimation.} Chaque terme $I(g_j(V);T_j|M,C)$ porte sur un trait binaire
 et sur une statistique \`a petit support, par exemple la r\'eponse \`a un item ou un score
 agr\'eg\'e. Il s'estime donc avec les effectifs du protocole. La somme des contributions
@@ -1176,7 +1180,9 @@ Ce choix d\'ecoule du positionnement \'epist\'emologique retenu dans l'introduct
 sous-section~\ref{subsec:note_methodo}, selon lequel ce travail est d'abord th\'eorique. La
 certification m\'ecanique en Lean4 garantit la correction de la d\'erivation du noyau
 alg\'ebrique \`a partir des hypoth\`eses, Fano et Pinsker y \'etant pos\'es comme
-propri\'et\'es des instances puis d\'emontr\'es pour des lois finies. La v\'erit\'e des hypoth\`eses elles-m\^emes rel\`eve de la
+propri\'et\'es des instances puis d\'emontr\'es pour des lois finies. Elle couvre aussi la
+Proposition~\ref{prop:minorant_traits}, sur laquelle repose le protocole de mesure de $\Delta$
+(sous-section~\ref{subsec:protocole_delta}). La v\'erit\'e des hypoth\`eses elles-m\^emes rel\`eve de la
 validation comportementale, que seules des mesures peuvent \'etablir. Trois pr\'ealables
 non techniques conditionnent aussi le d\'eploiement. Il faut l'accord des
 juridictions et r\'egulateurs approch\'es et l'approbation d'un comit\'e

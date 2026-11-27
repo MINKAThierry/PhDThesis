@@ -31,7 +31,9 @@ sans \texttt{sorry}. Le seuil $H^\sharp$ est certifi\'e dans les deux sens. Deux
 formalisent la coh\'erence (une instance du
 mod\`ele abstrait atteint la borne rel\^ach\'ee) et la port\'ee (une instance hors
 r\'egime atteint $1/4$). Une famille de lois concr\`etes satisfait en outre toutes les
-hypoth\`eses pour tout $\lambda$. Cette d\'emarche illustre la valeur
+hypoth\`eses pour tout $\lambda$. La certification couvre aujourd'hui tous les \'enonc\'es du
+trilemme classique, dont la borne aigu\"e et ses t\'emoins, ainsi que le trilemme quantique pour
+l'encodage diagonal (annexe~\ref{chap:annexe_lean4}). Cette d\'emarche illustre la valeur
 \'epist\'emique de la v\'erification formelle, qui certifie des \'enonc\'es et contraint aussi
 \`a \'enoncer ce qui \'etait rest\'e implicite. Elle a conduit \`a des formulations
 plus pr\'ecises de trois \'enonc\'es publi\'es (sous-section~\ref{subsec:lean4_formulations}).
@@ -43,9 +45,11 @@ chapitre~\ref{chap:experimentation}. Le param\`etre $\beta$ se calcule sur les l
 mais les valeurs retenues pour les syst\`emes de r\'ef\'erence restent des estimations. Les m\'etriques CLO
 des syst\`emes de r\'ef\'erence ont \'et\'e fix\'ees par calibration param\'etrique
 r\'etrospective, sans exp\'erimentation directe et ne valident pas les
-heuristiques SOTP. La formalisation Lean4 couvre le noyau
-alg\'ebrique et les lois finies. Les r\'eductions de s\'ecurit\'e des constructions SOTP n'y figurent que
-pour SOTP-Low, en situation r\'eduite (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). Les illustrations quantiques du
+heuristiques SOTP. La formalisation Lean4 porte sur des lois finies. Les r\'eductions de
+SOTP-Low et de SOTP-Base y sont m\'ecanis\'ees en situation r\'eduite et celles de SOTP-High sous
+l'hypoth\`ese nomm\'ee de Groth16 (annexe~\ref{chap:annexe_gamebased},
+section~\ref{sec:gamebased_mecanisation}). La couche quantique pour des \'etats quelconques reste
+\`a certifier. Les illustrations quantiques du
 chapitre~\ref{chap:cadre_formel} privil\'egient le canal d\'epolarisant, qui ne rend pas compte de tous les
 bruits des dispositifs r\'eels.
 

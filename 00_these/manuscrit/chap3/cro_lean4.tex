@@ -104,6 +104,13 @@ Lean4. Nous prouvons \'egalement que $(1/2)^\lambda$ est n\'egligeable, par un
 passage \`a la limite (\texttt{Tendsto}) et un argument de filtre. Nous comblons ainsi
 une lacune fr\'equente dans les expositions informelles.
 
+Les versions~3.5 \`a~3.13 du fichier \'etendent cette couverture \`a tous les \'enonc\'es du
+trilemme classique qui rel\`event d'une formalisation, soit la borne aigu\"e et les t\'emoins
+r\'ealisables, l'information classique finie, les jeux et leurs ponts vers les m\'etriques, la
+construction S-OTP et le minorant par traits. Elles couvrent aussi le noyau alg\'ebrique quantique
+et le trilemme quantique pour l'encodage diagonal. Au total, 132 des 145 \'enonc\'es du manuscrit
+qui rel\`event d'une formalisation sont certifi\'es (annexe~\ref{chap:annexe_lean4}).
+
 \subsubsection{Ce que la formalisation ne couvre pas}
 \label{subsubsec:ce_que_ne_couvre_pas}
 
@@ -117,17 +124,18 @@ lois de probabilit\'e finies (sous-section~\ref{subsec:lean4_concret})~; seule l
 d\'emonstration pour des lois quelconques, qui demanderait la th\'eorie de la mesure de
 Mathlib, reste un travail futur.
 
-\textbf{Les constructions SOTP ne sont couvertes que partiellement par Lean4.}
-La formalisation couvre le noyau alg\'ebrique du Trilemme. Les r\'eductions de SOTP-Low sont m\'ecanis\'ees
-en situation r\'eduite (annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). Celles de SOTP-Base et de SOTP-High
-constituent une direction de recherche future.
+\textbf{Les constructions SOTP sont couvertes sous hypoth\`eses nomm\'ees.}
+Les r\'eductions de SOTP-Low et de SOTP-Base sont m\'ecanis\'ees en situation r\'eduite
+(annexe~\ref{chap:annexe_gamebased}, section~\ref{sec:gamebased_mecanisation}). Pour SOTP-Base,
+la queue de Chernoff du lemme de Johnson-Lindenstrauss reste une pr\'emisse. SOTP-High h\'erite
+de la s\^uret\'e de Groth16, pos\'ee comme hypoth\`ese nomm\'ee.
 
-\textbf{L'extension quantique du Trilemme CRO n'est pas couverte.}
-La formalisation pr\'esent\'ee ici se limite au cadre classique. L'extension
-aux syst\`emes post-quantiques n\'ecessite une
-infrastructure th\'eorique distincte incluant les in\'egalit\'es de Pinsker
-quantique, le lemme de mesure douce (sous-sous-section~\ref{subsubsec:gentle_measurement}) et les bornes de Fano
-quantique. Cette extension est rel\'egu\'ee aux travaux futurs.
+\textbf{L'extension quantique n'est couverte que pour l'encodage diagonal.}
+Pour des \'etats qui commutent, Pinsker quantique, Fano quantique et la borne de Holevo sont
+d\'emontr\'es, et le trilemme quantique vaut sans hypoth\`ese pos\'ee. Pour des \'etats
+quelconques, ces trois lemmes restent des propri\'et\'es des instances. Leur d\'emonstration, avec
+le lemme de mesure douce (sous-sous-section~\ref{subsubsec:gentle_measurement}), se poursuit
+dans le d\'ep\^ot~\cite{CROTrilemmaDepot}.
 \end{sloppypar}
 
 % -----------------------------------------------------------------------
@@ -345,7 +353,8 @@ rend mesurables les param\`etres qui gouvernent la borne~\cite{Grossklags10,Herl
 Notre formalisation prouve la borne explicite, de terme dominant
 $\Delta/(\gamma\lambda)$ et de termes correctifs en $O(\lambda^{-2})$, sous le r\'egime de
 confidentialit\'e (Hypoth\`ese~\ref{ass:regime}), enti\`erement v\'erifi\'ee. La borne aigu\"e
-de la Proposition~\ref{prop:borne_aigue} n'est pas encore certifi\'ee.
+de la Proposition~\ref{prop:borne_aigue} est certifi\'ee sur lois finies, ainsi que l'exactitude
+de son ordre $\lambda^{-2}$ (Remarques~\ref{rem:borne_aigue_portee} et~\ref{rem:temoin_combine}).
 
 \subsubsection{Simplifications et justifications}
 \label{subsubsec:simplifications}
@@ -954,9 +963,10 @@ $\beta = 1$ et $\kappa = 0$, d'o\`u $\gamma = \alpha H(C) - 1 = 1$.
 Le th\'eor\`eme \texttt{concrete\_asymptotic\_applies} montre que la forme asymptotique
 s'applique effectivement \`a cette famille. Les hypoth\`eses concr\`etes ne sont donc pas
 vides. Les deux t\'emoins de la sous-section~\ref{subsubsec:temoins_lean4} restent des
-points du mod\`ele abstrait. La borne aigu\"e de la Proposition~\ref{prop:borne_aigue}, le
-t\'emoin r\'ealisable de la Remarque~\ref{rem:temoin_realisable} et la partie quantique ne
-sont pas encore certifi\'es.
+points du mod\`ele abstrait. La borne aigu\"e de la Proposition~\ref{prop:borne_aigue}, les
+t\'emoins r\'ealisables des Remarques~\ref{rem:temoin_realisable} et~\ref{rem:temoin_combine} et
+le trilemme quantique pour l'encodage diagonal sont certifi\'es dans les sections suivantes du
+fichier (annexe~\ref{chap:annexe_lean4}).
 \end{sloppypar}
 
 \subsection{Ce que la formalisation a r\'ev\'el\'e}
@@ -1089,6 +1099,16 @@ Les formulations alternatives des preuves classique et post-quantique sont
 celles pr\'esent\'ees aux sections~\ref{sec:cro_classique}
 et~\ref{sec:cro_pq} de cette th\`ese. Les versions publi\'ees initiales
 restent accessibles pour r\'ef\'erence~\cite{MINKA2026CRO,MINKA2026PQCRO}.
+
+\paragraph{Stabilit\'e des \'enonc\'es de la th\`ese.}
+La certification ne s'est pas arr\^et\'ee au noyau alg\'ebrique. Entre la version~3.4 du
+fichier et la version~3.13, elle est pass\'ee de 42 \`a 132 \'enonc\'es du manuscrit, sur 145 qui
+rel\`event d'une formalisation. Aucun \'enonc\'e du manuscrit n'a d\^u \^etre modifi\'e pour \^etre
+certifi\'e. Tous les \'enonc\'es du trilemme classique sont couverts. Les treize \'enonc\'es qui
+restent rel\`event de la couche quantique pour des \'etats quelconques~; ils sont recens\'es dans
+le d\'ep\^ot~\cite{CROTrilemmaDepot} et leur statut figure \`a l'annexe~\ref{chap:annexe_lean4}.
+Ce qui pouvait encore \^etre remis en cause par la formalisation est donc circonscrit et
+publi\'e, et ne touche pas le trilemme classique.
 
 \paragraph{La le\c{c}on m\'ethodologique.}
 Les formulations alternatives et le cas limite qui \'etablit la n\'ecessit\'e

@@ -105,12 +105,14 @@ hypoth\`eses institutionnelles y sont aussi pos\'ees. La formalisation a produit
 deux t\'emoins, l'un de coh\'erence (un point du mod\`ele abstrait o\`u la
 borne est atteinte, non r\'ealisable par un protocole), l'autre de port\'ee
 (une instance hors r\'egime atteint $1/4$). Une famille de lois concr\`etes satisfait
-en outre toutes les hypoth\`eses pour tout $\lambda$. Le d\'etail de ce que la certification a mis au jour, hypoth\`eses,
+en outre toutes les hypoth\`eses pour tout $\lambda$. Les versions suivantes du fichier ont port\'e la
+certification \`a 132 des 145 \'enonc\'es qui rel\`event d'une formalisation, dont tous ceux du trilemme
+classique, sans qu'aucun \'enonc\'e du manuscrit ait d\^u \^etre modifi\'e. Le d\'etail de ce que la certification a mis au jour, hypoth\`eses,
 constantes et r\'egime de validit\'e, est pr\'esent\'e \`a la
 sous-section~\ref{subsec:lean4_formulations}. Les contributions C5.1 \`a C5.6 y r\'epondent.
-L'objectif est atteint pour le trilemme classique, jusqu'aux lois finies~; l'extension
-quantique et la m\'ecanisation compl\`ete de SOTP restent \`a faire, au-del\`a de la
-m\'ecanisation r\'eduite de l'annexe~\ref{chap:annexe_gamebased}.
+L'objectif est atteint pour le trilemme classique, jusqu'aux lois finies. Le trilemme quantique est
+certifi\'e sans hypoth\`ese pos\'ee pour l'encodage diagonal et les r\'eductions SOTP sous hypoth\`eses
+nomm\'ees (annexe~\ref{chap:annexe_gamebased}). La couche quantique pour des \'etats quelconques reste \`a faire.
 
 \textbf{Obj~\ref{obj:obj6_experimentation}. Exp\'erimentation.} Comment rendre
 ces bornes testables~? Six protocoles de mesure, compl\'et\'es par un protocole combin\'e, dotent chacun des
@@ -139,7 +141,7 @@ Obj1 Formalisation (F) & C1 Cadre CLO & M\'etriques $\Conf$, $\Relrec$/$\Relver$
 Obj2 Bornes (B) & C2 Trilemme CRO & Borne $\gamma^{-1}(\Delta/\lambda + \kappa(\Delta+1)/\lambda^2 + \kappa^2/\lambda^3)$, forme raffin\'ee, borne aigu\"e & C2.1--C2.7 & Atteint, sous hypoth\`eses \'enonc\'ees \\
 Obj3 Quantique (E) & C3 Trilemme PQ & Borne avec $\Delta_q$, $\gamma_q$~; $\eta_q$ unique & C3.1--C3.4 & Atteint, sous hypoth\`eses \'enonc\'ees \\
 Obj4 Constructions (S) & C4 Famille SOTP & Paradigme Gold-Iron-Clay~; $\Conf$, $\Relver$ prouv\'ees~; optimalit\'e conjectur\'ee & C4.1--C4.5 & Partiellement atteint \\
-Obj5 Certification (C) & C5 Lean4 & Noyau certifi\'e~; Fano et Pinsker sur lois finies~; t\'emoins & C5.1--C5.6 & Atteint pour le cas classique \\
+Obj5 Certification (C) & C5 Lean4 & Trilemme classique certifi\'e sur lois finies~; quantique diagonal~; SOTP sous hypoth\`eses nomm\'ees & C5.1--C5.6 & Atteint pour le cas classique \\
 Obj6 Exp\'erimentation (X) & C6 Programme & Protocoles sp\'ecifi\'es et r\'efutables~; calibration & C6.1--C6.3 & Partiellement atteint (non d\'eploy\'e) \\
 \bottomrule
 \end{tabular}
@@ -237,7 +239,9 @@ propri\'et\'es d'instance dans le noyau, d\'emontr\'es pour des lois de probabil
 dans la couche concr\`ete. S'y ajoutent la mise au jour des hypoth\`eses institutionnelles
 et la production de deux t\'emoins, l'un de coh\'erence (mod\`ele abstrait), l'autre de
 port\'ee. Le seuil $H^\sharp$ est certifi\'e dans les deux sens et une famille de lois
-concr\`etes satisfait toutes les hypoth\`eses. La sous-section~\ref{subsec:lean4_formulations} recense les
+concr\`etes satisfait toutes les hypoth\`eses. La certification couvre aussi la borne aigu\"e et ses t\'emoins,
+le trilemme quantique pour l'encodage diagonal et les r\'eductions SOTP, soit 117 \'enonc\'es imprim\'es
+\`a l'annexe~\ref{chap:annexe_lean4}. La sous-section~\ref{subsec:lean4_formulations} recense les
 pr\'ecisions que la certification a apport\'ees aux \'enonc\'es.
 
 \textbf{C6. Programme de validation falsifiable}. Les protocoles
@@ -353,9 +357,9 @@ param\`etres $\Delta$ et $\alpha$ ne sont pas encore valid\'es par des \'etudes 
 Le param\`etre $\beta$ n'a pas encore \'et\'e calcul\'e sur les lois de preuve de syst\`emes d\'eploy\'es. Les valeurs retenues,
 de quelques dizaines de bits, sont une calibration illustrative rendue
 plausible par la litt\'erature sur la rationalit\'e born\'ee. L'opposabilit\'e
-des constructions SOTP est heuristique et leur optimalit\'e conjectur\'ee. La formalisation Lean4 couvre le noyau
-alg\'ebrique et les lois finies~; la borne aigu\"e, l'extension post-quantique et les constructions SOTP restent
-hors de son p\'erim\`etre, \`a l'exception des r\'eductions de SOTP-Low en situation r\'eduite. Les constructions SOTP disposent d'impl\'ementations
+des constructions SOTP est heuristique et leur optimalit\'e conjectur\'ee. La formalisation Lean4 couvre tout le trilemme classique sur lois finies~; l'extension
+post-quantique n'y est certifi\'ee sans hypoth\`ese que pour l'encodage diagonal, et SOTP-Base comme SOTP-High
+reposent sur des hypoth\`eses nomm\'ees. Les constructions SOTP disposent d'impl\'ementations
 de r\'ef\'erence dans le d\'ep\^ot compagnon, sans d\'eploiement en conditions
 r\'eelles. Une
 analyse compl\`ete des limitations est pr\'esent\'ee \`a la
