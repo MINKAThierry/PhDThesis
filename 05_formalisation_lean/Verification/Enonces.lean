@@ -4,7 +4,7 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.8). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.9). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
   Renvois : manuscrit v36 (« Aux fondements de la cryptographie
@@ -15,7 +15,7 @@
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
   Importation. Les définitions et les preuves sont dans un seul fichier. La
-  versions 3.5 à 3.8 prolongent la 3.4 par ajout des sections 12 à 19 en
+  versions 3.5 à 3.9 prolongent la 3.4 par ajout des sections 12 à 21 en
   fin de fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
   restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
@@ -804,5 +804,39 @@ def EchellesDistinctes : Prop :=
     (X : CLOModel lam M C S V), X.Conf = 1 →
       (∀ D : C → S → M, X.Conf * X.Rel D * X.Opp = X.Opp / (2 : ℝ) ^ lam) ∧
         X.Conf * relver 1 0 * X.Opp = X.Opp
+
+
+/-! ## 10. Extension v3.9, lot L5b : encodage classique diagonal
+
+Renvois au manuscrit v36. Énoncés démontrés dans la section 20 de
+`ConditionalCRO.lean` (version 3.9). Un état diagonal ρ = Σ_s p(s)|s⟩⟨s| est la
+matrice complexe `diagState p` ; son spectre est tiré du polynôme caractéristique. -/
+
+/-- Remarques 2.9 (p. 53) et 2.26 (p. 73) : pour deux états diagonaux de même masse,
+    ½‖ρ_p − ρ_q‖₁ = TV(p, q). -/
+def DistanceTraceTV : Prop :=
+  ∀ {S : Type u₁} [Fintype S] [DecidableEq S] (p q : S → ℝ), ∑ s, p s = ∑ s, q s →
+    traceDistDiag p q = tv p q
+
+/-- Remarques 2.9 (p. 53) et 2.26 (p. 73) : en encodage diagonal, Conf^q = Conf. -/
+def ConfQuantiqueDiagonale : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [DecidableEq S] [Nonempty C] [Nonempty M], X.ConfQdiag = X.Conf
+
+/-- Remarque 2.25 (p. 70) : pour ρ = Σ_x P_X(x)|x⟩⟨x|, S(ρ) = H(X). -/
+def VonNeumannShannon : Prop :=
+  ∀ {S : Type u₁} [Fintype S] [DecidableEq S] (p : S → ℝ),
+    vonNeumann (diagState p) (diagState_isHermitian p) = shannon p
+
+/-- Remarque 2.34 (p. 76), cas limite de l'inégalité (68) de la version publiée :
+    pour deux états orthogonaux équiprobables (λ = 1), la mesure dans la base
+    calculatoire porte 1 bit sur M, alors que le membre de droite de (68) vaut 1/2. -/
+def CasLimiteLemme6 : Prop :=
+  miN mesureBase / Real.log 2 = 1 ∧
+    (1 / 4 : ℝ) * ∑ m₀ : Bool, ∑ m₁ : Bool, ((1 : ℝ) / 2) *
+      traceNorm (diagState (ketBit m₀) - diagState (ketBit m₁))
+        (diagState_sub_isHermitian _ _) = 1 / 2 ∧
+    (1 / 2 : ℝ) < 1
 
 end Enonces

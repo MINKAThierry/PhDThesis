@@ -1,20 +1,20 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2 et L3 (ConditionalCRO.lean v3.8). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
-| démontré | 68 |
+| démontré | 72 |
 | démontré, une inégalité posée dans le modèle abstrait | 10 |
 | mécanisé en situation réduite | 4 |
 | hypothèse formalisée | 18 |
-| non formalisé | 45 |
+| non formalisé | 41 |
 | hors champ formel | 25 |
 | **Total** | **170** |
 
-Sur 145 énoncés relevant d'une formalisation, 100 sont aujourd'hui couverts, soit 69 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a et de 85 (59 %) après le lot L2. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 145 énoncés relevant d'une formalisation, 104 sont aujourd'hui couverts, soit 72 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 et de 100 (69 %) après le lot L3. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
@@ -27,7 +27,7 @@ Sur 145 énoncés relevant d'une formalisation, 100 sont aujourd'hui couverts, s
 | Conjecture | 0 | 0 | 1 | 0 |
 | Hypothèse | 0 | 12 | 0 | 0 |
 | Définition | 19 | 5 | 21 | 0 |
-| Remarque | 33 | 0 | 9 | 25 |
+| Remarque | 37 | 0 | 5 | 25 |
 
 ## Détail par chapitre
 
@@ -70,7 +70,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition 2.7 | 51 | Jeu EXT-OPP | `def:jeu_ext_opp` | démontré | extErr, HVSC | L3 |
 | Remarque 2.8 | 52 | Pont EXT-OPP ↔ Opp | `rem:jeu_ext_opp_link` | démontré | CLOModel.IV_eq_HV_sub, CLOModel.ext_opp_bridge, ext_opp_bridge_K | L3 |
 | Définition 2.8 | 52 | Confidentialité quantique | `def:conf_quantique_clo` | non formalisé |  | L5c |
-| Remarque 2.9 | 53 | Compatibilité avec la confidentialité classique | `rem:compatibilite_conf` | non formalisé |  | L5b |
+| Remarque 2.9 | 53 | Compatibilité avec la confidentialité classique | `rem:compatibilite_conf` | démontré | traceDist_eq_tv, CLOModel.confQ_diag_eq | L5b |
 | Définition 2.9 | 53 | Perte d'interprétabilité quantique | `def:perte_interp_quantique` | non formalisé |  | L5c |
 | Remarque 2.10 | 53 | Interprétation physique | `rem:interpretation_physique` | hors champ formel |  | — |
 | Définition 2.10 | 55 | Capacité d'extraction institutionnelle | `def:delta_extraction` | hypothèse formalisée | InstitutionalParams | — |
@@ -104,7 +104,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition 2.15 | 69 | Information mutuelle quantique | `def:information_mutuelle_quantique` | non formalisé |  | L5c |
 | Définition 2.16 | 69 | Information quantique accessible | `def:info_accessible` | non formalisé |  | L5c |
 | Définition 2.17 | 69 | Entropie min-max lissée | `def:entropie_min_max_lissee` | non formalisé |  | L5c |
-| Remarque 2.25 | 70 | Relation avec l'entropie de Shannon | `rem:relation_shannon` | non formalisé |  | L5b |
+| Remarque 2.25 | 70 | Relation avec l'entropie de Shannon | `rem:relation_shannon` | démontré | vonNeumann_diag | L5b |
 | Lemme 2.4 | 70 | Inégalité de Pinsker quantique | `lem:pinsker_quantique` | hypothèse formalisée | champs pinsker_q, fano_q, holevo de QuantumProtocolInstance | L5c |
 | Lemme 2.5 | 70 | Mesure douce (gentle measurement) | `lem:mesure_douce` | non formalisé |  | L5c |
 | Lemme 2.6 | 71 | Inégalité de Fano quantique | `lem:fano_quantique` | hypothèse formalisée | champs pinsker_q, fano_q, holevo de QuantumProtocolInstance | L5c |
@@ -118,7 +118,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition 2.24 | 73 | Confidentialité quantique | `def:conf_quantique` | non formalisé |  | L5c |
 | Définition 2.25 | 73 | Fiabilité quantique | `def:fiabilite_quantique` | non formalisé |  | L5c |
 | Définition 2.26 | 73 | Opposabilité quantique | `def:opposabilite_quantique` | non formalisé |  | L5c |
-| Remarque 2.26 | 73 | Compatibilité avec la confidentialité classique | `rem:compatibilite_classique` | non formalisé |  | L5b |
+| Remarque 2.26 | 73 | Compatibilité avec la confidentialité classique | `rem:compatibilite_classique` | démontré | traceDist_eq_tv, CLOModel.confQ_diag_eq | L5b |
 | Définition 2.27 | 74 | Perte d'interprétabilité quantique | `def:perte_interp_quantique_pq` | démontré | CLOModel.etaQ, etaQ_bounds | L5a |
 | Remarque 2.27 | 74 | Encadrement de η_q | `rem:encadrement_eta_q` | démontré | CLOModel.etaQ, etaQ_bounds | L5a |
 | Remarque 2.28 | 74 | Interprétation physique | `rem:interpretation_physique_pq` | hors champ formel |  | — |
@@ -134,7 +134,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Hypothèse 2.7 | 76 | Régularité de protocole quantique | `ass:regularite_quantique` | hypothèse formalisée | QuantumAssumptions, prémisse χmax ≤ κ/λ | L5a |
 | Hypothèse 2.8 | 76 | Régime de préservation de la confidentialité quantique | `ass:regime_quantique` | hypothèse formalisée | QuantumAssumptions, prémisse χmax ≤ κ/λ | L5a |
 | Remarque 2.33 | 76 | Statut de l'Hypothèse ass:regime_quantique | `rem:statut_regime_quantique` | démontré, une inégalité posée dans le modèle abstrait | statut_regime_q | L5a |
-| Remarque 2.34 | 76 | Lemme 6 de la version publiée | `rem:retrait_lemma6` | non formalisé |  | L5b |
+| Remarque 2.34 | 76 | Lemme 6 de la version publiée | `rem:retrait_lemma6` | démontré | cas_limite_lemme6 | L5b |
 | Lemme 2.8 | 77 | Garantie de confidentialité quantique | `lem:q_conf_mi_pq` | démontré, une inégalité posée dans le modèle abstrait | QuantumProtocolInstance.conf_guarantee | L5a |
 | Remarque 2.35 | 77 | Constantes de Pinsker classique et quantique | `rem:raccord_pinsker` | démontré | constantes_pinsker | L5a |
 | Remarque 2.36 | 77 | Interprétation du Lemme lem:q_conf_mi_pq | `rem:interp_lemme7` | démontré | dilithium_Dmax | L5a |

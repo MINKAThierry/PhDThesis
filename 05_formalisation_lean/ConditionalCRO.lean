@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.8 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
+  Version 3.9 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -3833,3 +3833,189 @@ end ExtensionL3
 #print axioms ConditionalCRO.ext_opp_bridge_K
 #print axioms ConditionalCRO.product_from_games
 #print axioms ConditionalCRO.echelles_distinctes
+
+/-! ## 20. Encodage classique diagonal (version 3.9, lot L5b)
+
+Ajout du 27 novembre 2026. Cette section relie le cadre quantique au cadre classique
+pour les états diagonaux ρ = Σ_s p(s)|s⟩⟨s|. Le spectre d'un tel état est tiré du
+polynôme caractéristique (Mathlib). Elle démontre les Remarques 2.9 et 2.26 (distance
+de trace égale à la variation totale, Conf^q = Conf), la Remarque 2.25 (S(ρ) = H(X)) et
+le cas limite de la Remarque 2.34 sur l'inégalité (68) de la version publiée. -/
+
+section ExtensionL5b
+
+open Finset Matrix
+
+namespace ConditionalCRO
+
+/-! ### 20.1 États diagonaux et spectre
+
+Un encodage classique associe à une loi p sur un alphabet fini S l'état diagonal
+ρ = Σ_s p(s)|s⟩⟨s|. Le spectre d'un tel état est la famille des p(s), à l'ordre près. -/
+
+/-- État diagonal (encodage classique) associé à une famille réelle p. -/
+noncomputable def diagState {S : Type*} [Fintype S] [DecidableEq S] (p : S → ℝ) :
+    Matrix S S ℂ :=
+  diagonal (fun s => (p s : ℂ))
+
+lemma diagState_isHermitian {S : Type*} [Fintype S] [DecidableEq S] (p : S → ℝ) :
+    (diagState p).IsHermitian := by
+  unfold diagState
+  rw [isHermitian_diagonal_iff]
+  intro s
+  simp [isSelfAdjoint_iff]
+
+lemma diagState_sub {S : Type*} [Fintype S] [DecidableEq S] (p q : S → ℝ) :
+    diagState p - diagState q = diagState (fun s => p s - q s) := by
+  unfold diagState
+  rw [diagonal_sub]
+  congr 1
+  funext s
+  push_cast
+  ring
+
+lemma diagState_sub_isHermitian {S : Type*} [Fintype S] [DecidableEq S] (p q : S → ℝ) :
+    (diagState p - diagState q).IsHermitian := by
+  rw [diagState_sub]; exact diagState_isHermitian _
+
+/-- Le spectre d'un état diagonal est la famille de ses coefficients (multiensembles). -/
+lemma eigenvalues_diag {S : Type*} [Fintype S] [DecidableEq S] (d : S → ℝ)
+    (h : (diagState d).IsHermitian) :
+    Multiset.map h.eigenvalues univ.val = Multiset.map d univ.val := by
+  have h1 := h.roots_charpoly_eq_eigenvalues
+  unfold diagState at h1
+  rw [charpoly_diagonal, Polynomial.roots_prod _ _
+    (by simp [prod_ne_zero_iff, Polynomial.X_sub_C_ne_zero])] at h1
+  simp only [Polynomial.roots_X_sub_C, Multiset.bind_singleton] at h1
+  have inj : Function.Injective (fun x : ℝ => (x : ℂ)) := Complex.ofReal_injective
+  apply Multiset.map_injective inj
+  rw [Multiset.map_map, Multiset.map_map]
+  exact h1.symm
+
+/-- Toute somme spectrale Σ f(λᵢ) d'un état diagonal vaut Σ_s f(d(s)). -/
+lemma sum_eigenvalues_diag {S : Type*} [Fintype S] [DecidableEq S] (d : S → ℝ)
+    {A : Matrix S S ℂ} (hAd : A = diagState d) (h : A.IsHermitian) (f : ℝ → ℝ) :
+    ∑ i, f (h.eigenvalues i) = ∑ s, f (d s) := by
+  subst hAd
+  have e := congrArg (fun m => (Multiset.map f m).sum) (eigenvalues_diag d h)
+  simp only [Multiset.map_map] at e
+  exact e
+
+/-! ### 20.2 Distance de trace et Conf^q (Remarques 2.9 et 2.26) -/
+
+/-- Norme de trace d'une matrice hermitienne, somme des valeurs absolues du spectre. -/
+noncomputable def traceNorm {S : Type*} [Fintype S] [DecidableEq S] (A : Matrix S S ℂ)
+    (hA : A.IsHermitian) : ℝ :=
+  ∑ i, |hA.eigenvalues i|
+
+/-- Distance de trace ½‖ρ_p − ρ_q‖₁ entre deux états diagonaux. -/
+noncomputable def traceDistDiag {S : Type*} [Fintype S] [DecidableEq S] (p q : S → ℝ) : ℝ :=
+  (1 / 2) * traceNorm (diagState p - diagState q) (diagState_sub_isHermitian p q)
+
+/-- ‖ρ_p − ρ_q‖₁ = Σ_s |p(s) − q(s)|. -/
+lemma traceNorm_diag_sub {S : Type*} [Fintype S] [DecidableEq S] (p q : S → ℝ) :
+    traceNorm (diagState p - diagState q) (diagState_sub_isHermitian p q) =
+      ∑ s, |p s - q s| :=
+  sum_eigenvalues_diag (fun s => p s - q s) (diagState_sub p q) _ (fun x => |x|)
+
+/-- **Remarques 2.9 et 2.26.** Pour deux états diagonaux de même masse, la distance de
+    trace se réduit à la variation totale : ½‖ρ_p − ρ_q‖₁ = TV(p, q). -/
+theorem traceDist_eq_tv {S : Type*} [Fintype S] [DecidableEq S] (p q : S → ℝ)
+    (h : ∑ s, p s = ∑ s, q s) : traceDistDiag p q = tv p q := by
+  unfold traceDistDiag tv
+  rw [traceNorm_diag_sub]
+  have e : ∀ s, |p s - q s| = 2 * max (p s - q s) 0 - (p s - q s) := fun s => by
+    rcases le_or_gt 0 (p s - q s) with h0 | h0
+    · rw [abs_of_nonneg h0, max_eq_left h0]; ring
+    · rw [abs_of_neg h0, max_eq_right h0.le]; ring
+  simp only [e, sum_sub_distrib, ← mul_sum]
+  rw [h]; ring
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  (X : CLOModel lam M C S V)
+
+/-- Distance de trace entre les états de la preuve pour deux messages, en encodage
+    diagonal ρ_Σ^{m,c} = Σ_s P_{Σ|M,C}(s|m,c)|s⟩⟨s|. -/
+noncomputable def TVq [DecidableEq S] (x : C × M × M) : ℝ := traceDistDiag (X.qS x.1 x.2.1) (X.qS x.1 x.2.2)
+
+/-- Conf^q = 1 − max ½‖ρ_Σ^{m₀,c} − ρ_Σ^{m₁,c}‖₁ (Définitions 2.8 et 2.24), en encodage diagonal. -/
+noncomputable def ConfQdiag [DecidableEq S] [Nonempty C] [Nonempty M] : ℝ :=
+  1 - (univ : Finset (C × M × M)).sup' univ_nonempty X.TVq
+
+/-- Les lois de Σ sachant (M, C) ont la même masse pour deux messages (M uniforme). -/
+lemma sum_qS_eq (c : C) (m₀ m₁ : M) : ∑ s, X.qS c m₀ s = ∑ s, X.qS c m₁ s := by
+  unfold qS
+  rw [← sum_div, ← sum_div, X.unif c m₀, X.unif c m₁]
+
+/-- **Remarques 2.9 et 2.26.** En encodage diagonal, Conf^q = Conf : la confidentialité
+    quantique généralise strictement la confidentialité classique. -/
+theorem confQ_diag_eq [DecidableEq S] [Nonempty C] [Nonempty M] : X.ConfQdiag = X.Conf := by
+  unfold ConfQdiag Conf TVmax
+  congr 1
+  congr 1
+  funext x
+  exact traceDist_eq_tv _ _ (X.sum_qS_eq x.1 x.2.1 x.2.2)
+
+end CLOModel
+
+/-! ### 20.3 Entropie de von Neumann d'un état diagonal (Remarque 2.25) -/
+
+/-- Entropie de von Neumann (bits) d'une matrice hermitienne. -/
+noncomputable def vonNeumann {S : Type*} [Fintype S] [DecidableEq S] (A : Matrix S S ℂ)
+    (hA : A.IsHermitian) : ℝ :=
+  (-∑ i, hA.eigenvalues i * Real.log (hA.eigenvalues i)) / Real.log 2
+
+/-- Entropie de Shannon (bits) d'une loi finie. -/
+noncomputable def shannon {S : Type*} [Fintype S] (p : S → ℝ) : ℝ :=
+  (-∑ s, p s * Real.log (p s)) / Real.log 2
+
+/-- **Remarque 2.25.** Pour ρ = Σ_x P_X(x)|x⟩⟨x|, S(ρ) = H(X). -/
+theorem vonNeumann_diag {S : Type*} [Fintype S] [DecidableEq S] (p : S → ℝ) :
+    vonNeumann (diagState p) (diagState_isHermitian p) = shannon p := by
+  unfold vonNeumann shannon
+  rw [sum_eigenvalues_diag p rfl _ (fun x => x * Real.log x)]
+
+/-! ### 20.4 Cas limite de l'inégalité (68) publiée (Remarque 2.34)
+
+Deux messages équiprobables (λ = 1) encodés dans deux états orthogonaux |0⟩⟨0| et
+|1⟩⟨1|. La mesure dans la base calculatoire retrouve M : I(M;Y) = 1 bit, donc
+I_acc ≥ 1. Le membre de droite de (68), E_{m₀,m₁}[(λ/2)‖ρ^{m₀} − ρ^{m₁}‖₁] avec deux
+tirages indépendants, vaut 1/2. -/
+
+/-- État |m⟩⟨m| sur un bit. -/
+noncomputable def ketBit (m : Bool) : Bool → ℝ := fun s => if s = m then 1 else 0
+
+/-- Loi jointe du message et de l'issue de la mesure dans la base calculatoire. -/
+noncomputable def mesureBase (m y : Bool) : ℝ := (1 / 2) * ketBit m y
+
+/-- **Remarque 2.34.** L'issue de la mesure porte 1 bit sur M, alors que le membre de
+    droite de (68) vaut 1/2 < 1. -/
+theorem cas_limite_lemme6 :
+    miN mesureBase / Real.log 2 = 1 ∧
+      (1 / 4 : ℝ) * ∑ m₀ : Bool, ∑ m₁ : Bool, ((1 : ℝ) / 2) *
+        traceNorm (diagState (ketBit m₀) - diagState (ketBit m₁))
+          (diagState_sub_isHermitian _ _) = 1 / 2 ∧
+      (1 / 2 : ℝ) < 1 := by
+  refine ⟨?_, ?_, by norm_num⟩
+  · have hl : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+    rw [div_eq_one_iff_eq hl]
+    simp only [miN, mesureBase, ketBit, Fintype.sum_bool]
+    norm_num
+    ring
+  · simp only [traceNorm_diag_sub, ketBit, Fintype.sum_bool]
+    norm_num
+
+end ConditionalCRO
+
+end ExtensionL5b
+
+/-! ## 21. Bloc de vérification de l'encodage diagonal (version 3.9) -/
+
+#print axioms ConditionalCRO.eigenvalues_diag
+#print axioms ConditionalCRO.sum_eigenvalues_diag
+#print axioms ConditionalCRO.traceDist_eq_tv
+#print axioms ConditionalCRO.CLOModel.confQ_diag_eq
+#print axioms ConditionalCRO.vonNeumann_diag
+#print axioms ConditionalCRO.cas_limite_lemme6

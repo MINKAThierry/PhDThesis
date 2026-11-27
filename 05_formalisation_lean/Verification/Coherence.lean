@@ -3,7 +3,7 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.8), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.9), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
@@ -13,8 +13,9 @@
   constVerdict et detVerdict, puis (section 7, version 3.6) gammaQ,
   QuantumProtocolInstance, QuantumAssumptions, QuantumProtocolFamily, deltaQ
   et etaQ, puis (section 8, version 3.7) bProd, QuantumSharpInstance et
-  witModel, enfin (section 9, version 3.8) advDist, succIND, relver,
-  winBindRel, binEntN et condEnt.
+  witModel, puis (section 9, version 3.8) advDist, succIND, relver,
+  winBindRel, binEntN et condEnt, enfin (section 10, version 3.9) shannon,
+  vonNeumann, traceDistDiag et ConfQdiag.
   La section 5 montre que les hypothèses imposent H(V|C) ≥ 1, ce qui exclut la
   division par zéro dans Opp (en Lean, x/0 = 0).
 -/
@@ -498,5 +499,29 @@ lemma condEnt_extremes :
     norm_num
     rw [show (1 : ℝ) / 2 = 2⁻¹ by norm_num, Real.log_inv]
     ring
+
+/-! ## 10. Définitions de l'encodage diagonal (version 3.9, lot L5b) -/
+
+/-- `shannon` et `vonNeumann` : 1 bit pour un bit uniforme, 0 pour une loi de Dirac. -/
+lemma entropies_extremes :
+    vonNeumann (diagState (fun _ : Bool => (1 / 2 : ℝ))) (diagState_isHermitian _) = 1 ∧
+      vonNeumann (diagState (ketBit true)) (diagState_isHermitian _) = 0 := by
+  rw [vonNeumann_diag, vonNeumann_diag]
+  have hl : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  constructor
+  · simp only [shannon, Fintype.sum_bool]
+    rw [div_eq_one_iff_eq hl, show (1 : ℝ) / 2 = 2⁻¹ by norm_num, Real.log_inv]
+    ring
+  · simp [shannon, ketBit]
+
+/-- `traceDistDiag` : 0 entre un état et lui-même, 1 entre |0⟩⟨0| et |1⟩⟨1|. -/
+lemma traceDist_extremes :
+    traceDistDiag (ketBit true) (ketBit true) = 0 ∧
+      traceDistDiag (ketBit true) (ketBit false) = 1 := by
+  constructor <;> simp only [traceDistDiag, traceNorm_diag_sub, ketBit, Fintype.sum_bool] <;> norm_num
+
+/-- `ConfQdiag` : Conf^q = 1 pour `famModel`, Conf^q = 0 pour `copyModel`. -/
+lemma confQ_extremes (l : ℕ) : (famModel l).ConfQdiag = 1 ∧ copyModel.ConfQdiag = 0 := by
+  rw [confQ_diag_eq, confQ_diag_eq]; exact ⟨fam_Conf l, copy_Conf⟩
 
 end Coherence
