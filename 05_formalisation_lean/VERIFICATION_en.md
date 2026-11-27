@@ -39,6 +39,7 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 | Check | Where | Result |
 |---|---|---|
 | Version 3.5: `ConditionalCRO`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning |
+| Version 3.5 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 45995428572 passed (commit 2fc83b7): 47 statements and 40 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | `#print axioms`, version 3.5 | local, 27 November 2026 | 44 in the file, 47 on `Principal.lean` and 40 on `Coherence.lean`, all limited to `[propext, Classical.choice, Quot.sound]` |
 | `lake build ConditionalCRO Verification`, version 3.4 | local, 26 November 2026, Lean 4.35.0, Mathlib v4.35.0 | passed, no warning in `Verification` |
 | `bash verifier.sh`, steps 1 to 6 | local | passed, see `results/verification.log` |
@@ -186,7 +187,7 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 4. **Institutional assumptions are posited.** Assumptions 2.1, 2.2 and 2.4 are premises, not theorems. This is their status in the thesis. Their information-theoretic grounding (Proposition 2.1, p. 55) is formalised since version 3.5 (`fondement_extraction`). It shows that I(V;Σ|M,C) ≤ Δ implies Assumption 2.1, without proving it for an actual institution.
 5. **Silent premises.** The condition `hcard` (|V| ≤ 2^(αH(C))) appears in the concrete theorems without being used by the proofs. The decoder `D` of `lemma4_concrete` only serves to build the instance. Assumption 2.3 is carried by `InstitutionalAssumptions` without being used by the trilemmas. These premises do not make the statements false. They make them look slightly stronger than they are.
 6. **Abstract consistency witness.** `assumptions_consistent_and_bound_attained` is a point of the relaxed model (Rel = 1/λ with I = 0). An actual distribution would give Rel = 2^(−λ) (`fam_Rel`, line 156 of `Coherence.lean`). The family `famModel` has Δ = γ = 1, so the institutional factor is not active there.
-7. **Local build with targeted imports.** See the caveat above. Version 3.4 with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Version 3.5 is built by the same workflow when it is pushed. Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
+7. **Local build with targeted imports.** See the caveat above. Version 3.4 with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Version 3.5 was built by it on 27 November 2026 (run 45995428572). Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
 8. **Statements written by copying.** The statements of `Enonces.lean` were written from the existing theorems. The build guarantees that they match the proofs. Their faithfulness to the manuscript text remains for the reader to judge, with the table above.
 
 ## Reproducibility
