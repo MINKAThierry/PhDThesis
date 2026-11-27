@@ -1,0 +1,49 @@
+# Dossier de vérification Lean des preuves game-based de SOTP
+# (04_sotp/preuves_game_based/lean/VERIFICATION_fr.md).
+# Il ne tourne que si la mécanisation change, ou à la demande.
+# Il compile GameBasedSOTP et la bibliothèque Verification, puis exécute
+# verifier.sh : énoncés sans preuve, mots interdits, compilation, #print axioms,
+# leanchecker et nanoda_bin (vérificateurs fournis avec la chaîne Lean 4.35.0).
+name: Vérification Lean SOTP
+
+on:
+  push:
+    paths:
+      - "04_sotp/preuves_game_based/lean/**"
+      - ".github/workflows/verification_lean_sotp.yml"
+  pull_request:
+    paths:
+      - "04_sotp/preuves_game_based/lean/**"
+      - ".github/workflows/verification_lean_sotp.yml"
+  workflow_dispatch:
+
+jobs:
+  verification:
+    runs-on: ubuntu-latest
+    env:
+      LEAN_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Lean, télécharger le cache Mathlib et compiler
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: "04_sotp/preuves_game_based/lean"
+          use-mathlib-cache: "true"
+          build: "true"
+          build-args: "GameBasedSOTP Verification"
+          test: "false"
+          lint: "false"
+
+      - name: Audit du dossier de vérification
+        working-directory: 04_sotp/preuves_game_based/lean
+        run: bash verifier.sh
+
+      - name: Conserver les journaux
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-lean-sotp
+          path: |
+            04_sotp/preuves_game_based/lean/results/verification.log
+            04_sotp/preuves_game_based/lean/results/axiomes.txt

@@ -1,7 +1,7 @@
 /-
   Preuves game-based de SOTP-Low en situation réduite — Annexe de thèse
   =====================================================================
-  Version 1.0 (22 novembre 2026).
+  Version 1.1 (27 novembre 2026), qui reprend la 1.0 sans la modifier.
 
   OBJET
   Test de faisabilité de la mécanisation des preuves game-based de l'annexe A,

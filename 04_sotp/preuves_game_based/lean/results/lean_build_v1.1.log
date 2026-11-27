@@ -1,0 +1,8 @@
+# Version 1.1, compilée le 27 novembre 2026 avec Lean 4.35.0 et Mathlib v4.35.0 (imports ciblés à la place de import Mathlib, seule différence).
+# Aucune erreur, aucun avertissement. Sortie complète :
+'GameBasedSOTP.otp_uniform' depends on axioms: [propext, Classical.choice, Quot.sound]
+'GameBasedSOTP.ind_conf_eq_prg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'GameBasedSOTP.ind_conf_perfect_otp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'GameBasedSOTP.pedersen_extract' depends on axioms: [propext, Classical.choice, Quot.sound]
+'GameBasedSOTP.bind_rel_gives_dlog' depends on axioms: [propext, Classical.choice, Quot.sound]
+'GameBasedSOTP.win_bind_le_dlog' depends on axioms: [propext, Classical.choice, Quot.sound]
