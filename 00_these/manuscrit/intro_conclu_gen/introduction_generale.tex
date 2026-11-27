@@ -246,7 +246,7 @@ Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3660105), ce cadre mes
 \begin{equation}
   \Opp(\mathcal{P}) = \frac{I(V;\Sigma \mid C)}{H(V \mid C)}.
 \end{equation}
-Cette derni\`ere est la fraction de l'incertitude institutionnelle que la preuve r\'esout. L'opposabilit\'e n'a pas d'\'equivalent dans la litt\'erature ant\'erieure~\cite{Smith09,Alvim12} et le th\'eor\`eme du goulot d'\'etranglement contextuel la relie \`a la granularit\'e des verdicts.
+Cette derni\`ere est la fraction de l'incertitude institutionnelle que la preuve r\'esout. L'opposabilit\'e s'inspire des mesures de fuite quantitative~\cite{Smith09,Alvim12} (sous-sous-section~\ref{subsubsec:qif}) et n'a pas d'\'equivalent direct dans la litt\'erature cryptographique classique. Le th\'eor\`eme du goulot d'\'etranglement contextuel la relie \`a la granularit\'e des verdicts.
 
 \paragraph{C2. Nous \'etablissons le Trilemme CRO conditionnel~\cite{MINKA2026CRO}~(section~\ref{sec:cro_classique}).}
 Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3669065), ce r\'esultat porte sur le triplet confidentialit\'e, fiabilit\'e, opposabilit\'e (\emph{Confidentiality-Reliability-Opposability}, CRO). Il prouve la borne
@@ -268,11 +268,11 @@ Publi\'e dans \emph{IEEE Access} (DOI 10.1109/ACCESS.2026.3722742), ce r\'esulta
 o\`u $\Delta_q$ est la capacit\'e d'extraction adapt\'ee au quantique et $\eta_q$ la perte d'interpr\'etabilit\'e. La borne explicite garde la forme classique avec $\Delta_q$~; le terme $\eta_q H(C)$ ne figure que dans cette majoration affaiblie. Cette perte est nulle pour les preuves qui sont des cha\^ines de bits, dont les signatures ML-DSA et SLH-DSA~\cite{Dilithium2022,SPHINCS2022}.
 
 \paragraph{C4. Nous proposons le paradigme Gold-Iron-Clay et la famille Semantic One-Time Pad (SOTP)~(section~\ref{sec:sotp_construction}).}
-Soumis \`a \emph{IEEE Transactions on Information Theory}, ce travail confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte institutionnel \`a trois couches distinctes. Il en tire trois constructions de r\'ef\'erence pour les deux r\'egimes que s\'epare le seuil $H^\sharp$ du th\'eor\`eme. En contexte rare, SOTP-Low transmet le contexte exact et SOTP-Base en donne une repr\'esentation par Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84} qui pr\'eserve la proximit\'e entre contextes. En contexte riche, SOTP-High s'appuie sur Groth16~\cite{Groth16}. Leur confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees par r\'eduction et leur optimalit\'e est conjectur\'ee.
+Ce travail confie la confidentialit\'e, la fiabilit\'e de v\'erification et la pr\'esentation du contexte institutionnel \`a trois couches distinctes. Il en tire trois constructions de r\'ef\'erence pour les deux r\'egimes que s\'epare le seuil $H^\sharp$ du th\'eor\`eme. En contexte rare, SOTP-Low transmet le contexte exact et SOTP-Base en donne une repr\'esentation par Johnson-Lindenstrauss~\cite{JohnsonLindenstrauss84} qui pr\'eserve la proximit\'e entre contextes. En contexte riche, SOTP-High s'appuie sur Groth16~\cite{Groth16}. Leur confidentialit\'e et leur fiabilit\'e de v\'erification sont prouv\'ees par r\'eduction et leur optimalit\'e est conjectur\'ee.
 
 \paragraph{C5. Nous certifions m\'ecaniquement le Trilemme en Lean4, du noyau
 alg\'ebrique aux lois de probabilit\'e finies (section~\ref{sec:lean4}).}
-Soumis au \emph{Journal of Automated Reasoning}, cet article pr\'esente la premi\`ere formalisation en Lean4 du noyau alg\'ebrique d'un th\'eor\`eme d'impossibilit\'e en cryptographie institutionnelle~\cite{moura2015lean,Lean4,Mathlib}. La th\`ese y ajoute une couche o\`u Fano et Pinsker sont d\'emontr\'es pour des lois finies ainsi que la certification du seuil $H^\sharp$ dans les deux sens. La formalisation a mis au jour, dans les preuves de~\cite{MINKA2026CRO} et de~\cite{MINKA2026PQCRO}, deux hypoth\`eses rest\'ees implicites, l'efficacit\'e du verdict et le r\'egime de fuite. Le code, v\'erifi\'e sans \texttt{sorry}, est publi\'e avec Lean et Mathlib fig\'es en version~4.35.0~\cite{CROTrilemmaDepot}.
+Le manuscrit correspondant pr\'esente la premi\`ere formalisation en Lean4 du noyau alg\'ebrique d'un th\'eor\`eme d'impossibilit\'e en cryptographie institutionnelle~\cite{moura2015lean,Lean4,Mathlib}. La th\`ese y ajoute une couche o\`u Fano et Pinsker sont d\'emontr\'es pour des lois finies ainsi que la certification du seuil $H^\sharp$ dans les deux sens. La formalisation a mis au jour, dans les preuves de~\cite{MINKA2026CRO} et de~\cite{MINKA2026PQCRO}, deux hypoth\`eses rest\'ees implicites, l'efficacit\'e du verdict et le r\'egime de fuite. Le code, v\'erifi\'e sans \texttt{sorry}, est publi\'e avec Lean et Mathlib fig\'es en version~4.35.0~\cite{CROTrilemmaDepot}.
 
 \paragraph{C6. Nous sp\'ecifions un programme de validation falsifiable
 (chapitre~\ref{chap:experimentation}).}
@@ -287,7 +287,7 @@ Le chapitre~\ref{chap:experimentation} sp\'ecifie, jusqu'au niveau op\'erationne
 % ----------------------------------------------------------------------------
 \begin{sloppypar}
 
-La th\`ese s'appuie sur cinq manuscrits, trois publi\'es et deux soumis, auxquels s'ajoute un programme exp\'erimental sp\'ecifi\'e. Le tableau~\ref{tab:etat_productions} relie chaque objectif \`a sa question, \`a sa production, \`a son \'etat et \`a sa r\'ef\'erence. L'\'etat d\'etaill\'e de chaque contribution, y compris celles qui sont propres \`a la th\`ese ou issues de la formalisation Lean, figure au tableau~\ref{tab:contributions_these} du chapitre~\ref{chap:contexte}.
+La th\`ese s'appuie sur cinq manuscrits, auxquels s'ajoute un programme exp\'erimental sp\'ecifi\'e. Trois sont publi\'es. Les deux autres, C4 et C5, ont \'et\'e soumis avant la formalisation de toutes les preuves et leur retrait a \'et\'e demand\'e aux revues en novembre 2026. Ce retrait applique la le\c{c}on C5.6, selon laquelle la certification pr\'ec\`ede la soumission (sous-section~\ref{subsec:verification_precise_lecon}). Le manuscrit C4 pr\'esentait l'optimalit\'e de SOTP comme un th\'eor\`eme, que la th\`ese \'enonce comme conjecture. Le tableau~\ref{tab:etat_productions} relie chaque objectif \`a sa question, \`a sa production, \`a son \'etat et \`a sa r\'ef\'erence. L'\'etat d\'etaill\'e de chaque contribution, y compris celles qui sont propres \`a la th\`ese ou issues de la formalisation Lean, figure au tableau~\ref{tab:contributions_these} du chapitre~\ref{chap:contexte}.
 
 \begin{table}[htbp]
 \centering
@@ -301,8 +301,8 @@ La th\`ese s'appuie sur cinq manuscrits, trois publi\'es et deux soumis, auxquel
 Q1 & Obj1 Formalisation & C1 Cadre CLO & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3660105~\cite{MINKA2026CLO} \\
 Q2 & Obj2 Bornes classiques & C2 Trilemme CRO & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3669065~\cite{MINKA2026CRO} \\
 Q2 & Obj3 Extension quantique & C3 Trilemme PQ & Publi\'e & \textit{IEEE Access}, DOI 10.1109/ACCESS.2026.3722742~\cite{MINKA2026PQCRO} \\
-Q1 & Obj4 Constructions & C4 Gold-Iron-Clay et SOTP & Soumis & \textit{IEEE Trans. Inf. Theory}~; section~\ref{sec:sotp_construction}~; d\'ep\^ot \texttt{04\_sotp/}~\cite{CROTrilemmaDepot} \\
-Q2 & Obj5 Certification & C5 Lean4 & Soumis & \textit{J. Autom. Reasoning}~; section~\ref{sec:lean4}~; d\'ep\^ot \texttt{05\_formalisation\_lean/} \\
+Q1 & Obj4 Constructions & C4 Gold-Iron-Clay et SOTP & Manuscrit & Retrait demand\'e (\textit{IEEE Trans. Inf. Theory})~; section~\ref{sec:sotp_construction}~; d\'ep\^ot \texttt{04\_sotp/}~\cite{CROTrilemmaDepot} \\
+Q2 & Obj5 Certification & C5 Lean4 & Manuscrit & Retrait demand\'e (\textit{J. Autom. Reasoning})~; section~\ref{sec:lean4}~; d\'ep\^ot \texttt{05\_formalisation\_lean/} \\
 Q2 & Obj6 Exp\'erimentation & C6 Programme & Sp\'ecifi\'e & Chapitre~\ref{chap:experimentation}~; d\'ep\^ot \texttt{07\_protocoles\_terrain/} \\
 \bottomrule
 \end{tabular}

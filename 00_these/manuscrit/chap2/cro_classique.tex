@@ -153,7 +153,7 @@ d\`es que
 I(V;\Sigma|M,C) \leq \Delta,
 \label{eq:extraction_bornee_forte}
 \end{equation}
-et $\Delta$ s'interpr\`ete exactement comme l'information que
+et $\Delta$ s'interpr\`ete comme le plafond de l'information que
 l'institution tire de la preuve \emph{au-del\`a du message}.
 \end{proposition}
 
@@ -899,7 +899,7 @@ donne un rapport compris entre $2{,}02$ et $2{,}13$.
 
 \begin{remark}[Port\'ee du Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel}]
 \label{rem:scope_trilemme_classique}
-L'Hypoth\`ese~\ref{ass:regime} est n\'ecessaire. Sans borne sur
+L'Hypoth\`ese~\ref{ass:regime} est n\'ecessaire, au sens o\`u elle ne peut pas \^etre retir\'ee de l'\'enonc\'e. Sa forme $\kappa/\lambda$ est celle sous laquelle la borne est d\'emontr\'ee et sa minimalit\'e n'est pas \'etablie. Sans borne sur
 $I(M;\Sigma|C)$, le produit $\Conf \cdot \Rel \cdot \Opp$ n'a pas besoin
 de d\'ecro\^itre avec $\lambda$. En effet, le protocole qui r\'ev\`ele $M$ avec
 probabilit\'e $1/2$ et produit sinon une preuve uniform\'ement
@@ -1068,8 +1068,8 @@ sont plus fins que ce qu'il sait extraire.
 \begin{minipage}{\linewidth}
   \small\textit{Note :} La borne centrale
   $\Conf \cdot \Rel \cdot \Opp \lesssim \Delta/\lambda$ (forme simplifi\'ee) limite l'optimisation simultan\'ee.
-  Les \'etiquettes des ar\^etes indiquent le m\'ecanisme de contrainte principal
-  reliant chaque paire de propri\'et\'es.
+  Les \'etiquettes des ar\^etes nomment le m\'ecanisme qui relie les deux propri\'et\'es.
+  Sur l'ar\^ete $\Rel$--$\Opp$, les deux bornes croissent avec la m\^eme fuite $I(M;\Sigma|C)$. La capacit\'e $\Delta$ y borne l'\'ecart entre l'information du verdict et celle du message. La tension porte sur le produit des trois.
 \end{minipage}
 
 \end{figure}
@@ -1156,9 +1156,9 @@ param\`etres de calibration. Il suppose un verdict de domaine dont l'entropie at
 $\gamma = 104$ bits, ce que la th\`ese ne mesure pas. \`A l'\'echelle d'une d\'ecision, le
 chapitre~\ref{chap:experimentation} d\'enombre huit verdicts pour une entropie d'esp\`ece
 $H(C) \approx 11$ bits (Tableau~\ref{tab:parametres_reference}), d'o\`u $\hat\alpha \approx 0{,}27$ et
-$\hat\gamma = 2$. Le m\^eme syst\`eme rel\`eve alors du contexte rare. L'existence du r\'egime riche
+$\hat\gamma = 2$. Le m\^eme syst\`eme rel\`eve alors du contexte rare. La valeur $\Delta \approx 73$ bits d\'epasse alors $\hat\gamma + 1 = 3$. Elle y d\'ecrit une capacit\'e d\'eclar\'ee, non la capacit\'e minimale $\Delta^*$ de la Remarque~\ref{rem:delta_capacite}. L'existence du r\'egime riche
 ne repose pas sur cet exemple. La Remarque~\ref{rem:temoin_realisable} en donne une loi
-explicite pour tout $\Delta \leq \gamma$. Savoir quelles institutions l'occupent rel\`eve du programme
+explicite pour tout entier $\Delta < \gamma$. Savoir quelles institutions l'occupent rel\`eve du programme
 de mesure.
 
 % -----------------------------------------------------------------------

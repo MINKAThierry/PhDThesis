@@ -339,7 +339,7 @@ pr\'eenregistr\'ees~\cite{MINKA2026CRO,MINKA2026SOTP}~:
 \item $\hat\Delta_{\text{r\'egulateur senior}} \approx 65$ bits
 \item $\hat I(V;\Sigma \mid M,C)$ plus \'elev\'e sur des preuves ECDSA que sur des preuves Helios, pour tout sous-groupe
 \item Facteur d'amplification institutionnelle de $1{,}25$ (juge g\'en\'eral, $25$ bits) \`a $3{,}7$
-      (r\'egulateur expert, $73$ bits) par rapport \`a la capacit\'e individuelle de r\'ef\'erence ($\approx 20$ bits)
+      (r\'egulateur expert de la calibration, $73$ bits, capacit\'e d'institution hors des strates du tableau~\ref{tab:stratification_delta}) par rapport \`a la capacit\'e individuelle de r\'ef\'erence ($\approx 20$ bits)
 \end{enumerate}
 Les pr\'edictions~1, 2, 3 et~5 portent sur des valeurs absolues que le minorant par
 traits ne peut pas atteindre (effet de plateau de la
@@ -503,7 +503,7 @@ verdicts \`a quatre d\'ecisions, signal expert binaire d'un bit) est
 \'etabli \`a la section~\ref{sec:derivation_helios}. Le
 pr\'esent protocole met \`a l'\'epreuve l'hypoth\`ese d'uniformit\'e des verdicts qui
 sous-tend cette valeur. Il mesure la distribution empirique $H_{\mathrm{emp}}(V|C)$
-au lieu de la postuler.
+au lieu de la postuler. L'interpr\`ete du protocole, une commission de garants, n'est pas le tribunal de juridiction g\'en\'erale de la d\'erivation (tableau~\ref{tab:interprete_calibration}). La comparaison suppose donc que l'espace de verdicts de la d\'erivation est transpos\'e \`a la commission.
 
 \noindent\textbf{Crit\`ere de validation.}
 \begin{itemize}
@@ -834,8 +834,8 @@ s\'emantique.
 \label{subsubsec:objectif_eta_q}
 
 \noindent\textbf{Objectif.} Mesurer empiriquement le coefficient de perte
-d'interpr\'etabilit\'e quantique $\eta_q$, d\'efini
-par~\cite{MINKA2026PQCRO}~:
+d'interpr\'etabilit\'e quantique $\eta_q$, introduit
+dans~\cite{MINKA2026PQCRO} et d\'efini ici par la D\'efinition~\ref{def:perte_interp_quantique}~:
 \begin{equation}
 I(V^q; \Lambda(\rho_\Sigma)|C)_\rho \;\geq\; I(V^q; \rho_\Sigma|C)_\rho - \eta_q \cdot H(C)
 \label{eq:perte_interpretabilite_op}

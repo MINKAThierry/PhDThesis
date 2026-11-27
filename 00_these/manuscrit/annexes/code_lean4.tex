@@ -13,7 +13,7 @@ sous-section~\ref{subsec:lean4_extensions}, seuil $H^\sharp$ compris. Elle ajout
 
 \medskip
 \noindent\textbf{Caract\'eristiques du code.} Le fichier compile sans erreur
-ni \texttt{sorry} et sans avertissement. La version 3.4 a \'et\'e v\'erifi\'ee le 22 novembre 2026 avec Lean~v4.35.0 et
+ni \texttt{sorry}. Le fichier tel qu'imprim\'e, avec \texttt{import Mathlib} complet, a \'et\'e recompil\'e le 26 novembre 2026 par l'int\'egration continue du d\'ep\^ot (commit \texttt{af1a8f8}, Lean~4.35.0). La compilation r\'eussit et les vingt \texttt{\#print axioms} n'affichent que les trois axiomes standards. Lean y \'emet un seul avertissement, qui sugg\`ere d'ajouter le mot-cl\'e \texttt{module} en t\^ete du fichier et ne porte sur aucune preuve. La compilation \`a imports cibl\'es d\'ecrite ci-apr\`es n'\'emet aucun avertissement. La version 3.4 a \'et\'e v\'erifi\'ee le 22 novembre 2026 avec Lean~v4.35.0 et
 Mathlib~v4.35.0, compil\'es depuis les sources. Pour cette seule compilation, la ligne \texttt{import Mathlib} du
 listing a \'et\'e remplac\'ee par les modules effectivement utilis\'es, le reste du fichier \'etant inchang\'e (journal \texttt{results/lean\_build\_v3.4.log} du d\'ep\^ot).
 La version 2.2 avait \'et\'e v\'erifi\'ee sur \url{https://live.lean-lang.org} en octobre 2026.

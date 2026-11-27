@@ -288,7 +288,7 @@ Le code Lean4 n'impose que $0 \le \Rel \le 1$.
 \subsubsection{\'Enonc\'e du th\'eor\`eme original}
 \label{subsubsec:enonce_theoreme_original}
 
-\begin{theorem}[Trilemme CRO conditionnel, \'enonc\'e publi\'e~\cite{MINKA2026CRO}]\label{thm:original_lean4}
+\begin{theorem}[Trilemme CRO conditionnel, \'enonc\'e publi\'e~\cite{MINKA2026CRO} r\'e\'ecrit dans les notations de la th\`ese]\label{thm:original_lean4}
 Sous les Hypoth\`eses~\ref{ass:fano_axiom},~\ref{ass:pinsker_axiom} et
 pour un protocole $\beta$-r\'egulier avec messages uniformes
 ($H(M)=\lambda$) et $\lambda \ge 64$, on a
@@ -298,10 +298,10 @@ pour un protocole $\beta$-r\'egulier avec messages uniformes
 \end{equation}
 \end{theorem}
 
-Cet \'enonc\'e est celui de l'article. La formalisation le pr\'ecise en posant le r\'egime de
+La borne est celle de l'article. Ses hypoth\`eses sont r\'e\'ecrites ici dans les notations de la th\`ese. L'Hypoth\`ese~2 publi\'ee posait la seule borne $|\mathcal{V}_\lambda| \leq 2^{\alpha H(C)}$ avec $\alpha \geq 1$. La preuve publi\'ee invoquait en outre l'efficacit\'e du verdict. L'Hypoth\`ese~\ref{ass:pinsker_axiom} r\'eunit les deux conditions (sous-section~\ref{subsec:lean4_formulations}). La formalisation pr\'ecise l'\'enonc\'e en posant le r\'egime de
 l'Hypoth\`ese~\ref{ass:regime}, sous lequel il d\'ecoule de la forme explicite
 (Remarque~\ref{rem:corollaire_publie}). La r\'egularit\'e $\beta$ y garantit la confidentialit\'e
-(Lemme~\ref{lem:confidentiality_guarantee}). La preuve originale encha\^ine
+(Lemme~\ref{lem:confidentiality_guarantee}). Dans sa formulation pr\'ecis\'ee, la preuve encha\^ine
 quatre arguments.
 \begin{enumerate}
     \item L'in\'egalit\'e de Fano~\cite{Fano61,CoverThomas06} donne
@@ -927,7 +927,7 @@ Seule la majoration $\Conf \leq 1$ intervient dans le produit. La contrainte qui
 porte r\'eellement sur $\Conf$ vient du Lemme~\ref{lem:confidentiality_guarantee}, qui
 la minore par $1 - \sqrt{c_0\,\beta\, I(M;\Sigma|C)}$ sous
 l'Hypoth\`ese~\ref{ass:regularite}. Jointe \`a l'Hypoth\`ese~\ref{ass:regime}, cette minoration
-donne $\Conf \geq 1 - \sqrt{c_0\,\beta\,\kappa/\lambda}$. Le trilemme borne donc ce que
+donne $\Conf \geq 1 - \sqrt{c_0\,\beta\,\kappa/\lambda}$ par croissance de la racine (Remarque~\ref{rem:interp_lemme4}). Cette d\'eduction est faite sur papier et n'est pas un th\'eor\`eme du fichier Lean. Le trilemme borne donc ce que
 $\Rel$ et $\Opp$ peuvent valoir ensemble, tandis que le lemme garantit que la
 confidentialit\'e reste proche de $1$ dans le m\^eme r\'egime.
 L'entropie $H(C)$ y est celle de la loi et le coefficient $\gamma = \alpha H(C) - 1$
@@ -1075,7 +1075,7 @@ Ces formulations alternatives sont issues de la formalisation. La relecture
 des articles ne les avait pas fait appara\^itre. Elles sont n\'ees \`a deux
 moments pr\'ecis. D'abord, l'\'enonc\'e publi\'e du Lemme~4 n'a pas pu \^etre
 d\'emontr\'e \`a partir des hypoth\`eses disponibles. Il a donc fallu
-r\'eexaminer la preuve et \`a pr\'eciser le sens de l'in\'egalit\'e. Un \'echec
+r\'eexaminer la preuve et pr\'eciser le sens de l'in\'egalit\'e. Un \'echec
 de preuve formelle ne tranche pas \`a lui seul~; l'examen qui l'a suivi a
 \'etabli la formulation retenue. Ensuite, la formalisation du noyau
 alg\'ebrique a montr\'e que l'optimisation publi\'ee ne pouvait pas \^etre

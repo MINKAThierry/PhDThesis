@@ -382,8 +382,8 @@ cha\^ine uniforme vaut $r(2^\lambda - r)/(q\,2^\lambda) \leq 2^\lambda/(4q) \leq
 $h \neq 1$, l'engagement $\sigma_2$ est uniforme et ind\'ependant de $s$. Il en
 r\'esulte $\TV(P_{\sigma|m_0,c}, P_{\sigma|m_1,c}) \leq 2^{-\lambda}$, d'o\`u
 $\Conf(\mathrm{SOTP\text{-}Low}) \geq 1 - 2^{-\lambda}$ au sens statistique et une fuite
-$I(M;\Sigma|C)$ n\'egligeable. Pour un groupe d'ordre $q \approx 2^{252}$ et $\lambda = 128$, la
-majoration $2^\lambda/(4q)$ donne $2^{-126}$, valeur encore n\'egligeable. La confidentialit\'e devient statistique, ce qui renforce la partie~1
+$I(M;\Sigma|C)$ n\'egligeable. Pour un groupe d'ordre $q \approx 2^{252}$ et $\lambda = 128$, la condition $|q| \geq 2\lambda$ n'est remplie qu'\`a quatre bits pr\`es. La
+majoration g\'en\'erale $2^\lambda/(4q)$ donne alors $2^{-126}$ au lieu de $2^{-\lambda-1}$, d'o\`u $\Conf \geq 1 - 2^{-125}$. L'\'ecart \`a $1$ reste n\'egligeable. La confidentialit\'e devient statistique, ce qui renforce la partie~1
 de la Proposition~\ref{thm:saturation_sotp_low} sans la modifier. La liaison n'utilise aucune
 propri\'et\'e de $G$ et reste inchang\'ee. La r\'eduction de la partie~1 est m\'ecanis\'ee en Lean, en
 situation r\'eduite, pour toute fonction $G$ (annexe~\ref{chap:annexe_gamebased}).
