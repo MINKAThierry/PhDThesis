@@ -193,8 +193,6 @@ theorem krausAD_normalise (g : ℝ) (h0 : 0 ≤ g) (h1 : g ≤ 1) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [krausAD, Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply, hs, hg]
-  push_cast
-  ring
 
 /-- **Définition 2.19.** Canal d'amortissement d'amplitude de paramètre g ∈ [0, 1]. -/
 def amortissement (g : ℝ) (h0 : 0 ≤ g) (h1 : g ≤ 1) : CPTPMap (Fin 2) (Fin 2) :=
@@ -220,7 +218,6 @@ theorem krausPh_normalise (p : ℝ) (h0 : 0 ≤ p) (h1 : p ≤ 1) :
   fin_cases i <;> fin_cases j <;>
     simp [krausPh, pauliZ, Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
       Matrix.smul_apply, Matrix.one_apply, hs, hp]
-  all_goals push_cast; ring
 
 /-- **Définition 2.20.** Canal de déphasage de paramètre p ∈ [0, 1]. -/
 def dephasage (p : ℝ) (h0 : 0 ≤ p) (h1 : p ≤ 1) : CPTPMap (Fin 2) (Fin 2) :=
