@@ -52,12 +52,12 @@ Les participants reçoivent les six bulletins et la clé publique d'exercice. Il
 
 | Bulletin | Empreinte (16 premiers caractères) | Preuves « 0 ou 1 » | Preuve « somme égale à 1 » | Ce qui est en cause |
 |---|---|---|---|---|
-| EX-1 | `0ce4f30f9905fc19` | acceptées | acceptée | rien, bulletin bien formé (liste 1) |
-| EX-2 | `2f75d017f2aaa88b` | acceptées | acceptée | rien, bulletin bien formé (liste 2) |
-| EX-3 | `884666c85fff87e6` | 1re rejetée | acceptée | une preuve modifiée après sa création |
-| EX-4 | `3ddb28c0964ffda8` | acceptées | rejetée | deux choix exprimés, chaque chiffré est bien 0 ou 1 |
-| EX-5 | `346ae1ca7fde60be` | 1re rejetée | rejetée | valeur 2 chiffrée pour la liste 1 |
-| EX-6 | `0ce4f30f9905fc19` | acceptées | acceptée | même empreinte que EX-1, bulletin rejoué |
+| EX-1 | `a26b335241a050fb` | acceptées | acceptée | rien, bulletin bien formé (liste 1) |
+| EX-2 | `2e589926c8b8dcf2` | acceptées | acceptée | rien, bulletin bien formé (liste 2) |
+| EX-3 | `8a8288bad82d6cd4` | 1re rejetée | acceptée | une preuve modifiée après sa création |
+| EX-4 | `3cfb2bcd0f74b301` | acceptées | rejetée | deux choix exprimés, chaque chiffré est bien 0 ou 1 |
+| EX-5 | `73c967c1fceb0d9c` | 1re rejetée | rejetée | valeur 2 chiffrée pour la liste 1 |
+| EX-6 | `a26b335241a050fb` | acceptées | acceptée | même empreinte que EX-1, bulletin rejoué |
 
 Discussion après correction. EX-4 montre que chaque preuve locale peut réussir alors que le bulletin est mal formé. EX-6 montre qu'une vérification cryptographique réussie ne dit rien de l'unicité du dépôt. Le formateur ne dit pas quel verdict il aurait rendu.
 

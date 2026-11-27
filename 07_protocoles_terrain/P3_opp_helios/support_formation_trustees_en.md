@@ -52,12 +52,12 @@ Participants receive the six ballots and the exercise public key. They verify ea
 
 | Ballot | Fingerprint (first 16 characters) | “0 or 1” proofs | “Sum equals 1” proof | What is at stake |
 |---|---|---|---|---|
-| EX-1 | `0ce4f30f9905fc19` | accepted | accepted | nothing, well-formed ballot (list 1) |
-| EX-2 | `2f75d017f2aaa88b` | accepted | accepted | nothing, well-formed ballot (list 2) |
-| EX-3 | `884666c85fff87e6` | 1st rejected | accepted | a proof modified after its creation |
-| EX-4 | `3ddb28c0964ffda8` | accepted | rejected | two choices expressed, each ciphertext is indeed 0 or 1 |
-| EX-5 | `346ae1ca7fde60be` | 1st rejected | rejected | value 2 encrypted for list 1 |
-| EX-6 | `0ce4f30f9905fc19` | accepted | accepted | same fingerprint as EX-1, replayed ballot |
+| EX-1 | `a26b335241a050fb` | accepted | accepted | nothing, well-formed ballot (list 1) |
+| EX-2 | `2e589926c8b8dcf2` | accepted | accepted | nothing, well-formed ballot (list 2) |
+| EX-3 | `8a8288bad82d6cd4` | 1st rejected | accepted | a proof modified after its creation |
+| EX-4 | `3cfb2bcd0f74b301` | accepted | rejected | two choices expressed, each ciphertext is indeed 0 or 1 |
+| EX-5 | `73c967c1fceb0d9c` | 1st rejected | rejected | value 2 encrypted for list 1 |
+| EX-6 | `a26b335241a050fb` | accepted | accepted | same fingerprint as EX-1, replayed ballot |
 
 Discussion after correction. EX-4 shows that every local proof can succeed while the ballot is malformed. EX-6 shows that a successful cryptographic verification says nothing about the uniqueness of the cast. The trainer does not say what verdict they would have given.
 
