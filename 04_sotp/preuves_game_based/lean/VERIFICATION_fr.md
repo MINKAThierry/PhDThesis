@@ -31,6 +31,7 @@ Le script échoue si `Enonces.lean` contient une preuve, si `sorry`, `admit`, `n
 |---|---|---|
 | Version 1.1 : `GameBasedSOTP`, puis `Enonces`, `Principal` et `Coherence` | local, 27 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 à imports ciblés | réussi, aucune erreur ni aucun avertissement ; 6 `#print axioms` dans le fichier, 6 sur `Principal.lean` et 5 sur `Coherence.lean`, tous standard |
 | Version 1.0 sur live.lean-lang.org et en local | 22 novembre 2026 | réussi, six `#print axioms` standard |
+| Version 1.2 avec `import Mathlib` complet, `verifier.sh` étapes 1 à 6 | faite par GitHub le 27 novembre 2026 | workflow `verification_lean_sotp.yml`, exécution 46011771993 réussie (commit f73fa3d) : 12 énoncés et 7 lemmes de cohérence limités aux trois axiomes standard, `leanchecker` sur les quatre modules, `nanoda_bin` sur `Principal.lean` |
 | Version 1.2 : `GameBasedSOTP`, puis `Enonces`, `Principal` et `Coherence` | local, 27 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 à imports ciblés | réussi, aucune erreur ni aucun avertissement ; 12 `#print axioms` dans le fichier, 12 sur `Principal.lean` et 7 sur `Coherence.lean`, tous standard |
 | Version 1.1 avec `import Mathlib` complet, `verifier.sh` étapes 1 à 6 | faite par GitHub le 27 novembre 2026 | workflow `verification_lean_sotp.yml`, exécution 46004902085 réussie (commit 771e24b) : 6 énoncés et 5 lemmes de cohérence limités aux trois axiomes standard, `leanchecker` sur les quatre modules, `nanoda_bin` sur `Principal.lean` |
 
