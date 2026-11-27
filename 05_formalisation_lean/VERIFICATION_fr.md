@@ -38,6 +38,7 @@ Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/
 
 | Contrôle | Où | Résultat |
 |---|---|---|
+| Version 3.13, `Enonces.lean` sans renvois de pages (annexe B de la thèse v37) | faite par GitHub le 27 novembre 2026 | workflow `verification_lean.yml`, exécution 46065365187 réussie (commit 1950c07) : 117 énoncés et 69 lemmes de cohérence, mêmes résultats |
 | Version 3.13 avec `import Mathlib` complet, `verifier.sh` étapes 1 à 6 | faite par GitHub le 27 novembre 2026 | workflow `verification_lean.yml`, exécution 46059764129 réussie (commit cc3f3c1) : 117 énoncés et 69 lemmes de cohérence limités aux trois axiomes standard, `leanchecker` sur les quatre modules, `nanoda_bin` sur `Principal.lean` |
 | Version 3.13 : `ConditionalCRO`, puis `Enonces`, `Principal` et `Coherence` | local, 27 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 à imports ciblés | réussi, aucune erreur ni aucun avertissement ; 123 `#print axioms` dans le fichier, 117 sur `Principal.lean` et 69 sur `Coherence.lean`, tous standard |
 | Version 3.12 avec `import Mathlib` complet, `verifier.sh` étapes 1 à 6 | faite par GitHub le 27 novembre 2026 | workflow `verification_lean.yml`, exécution 46058753895 réussie (commit 516276a) : 113 énoncés et 66 lemmes de cohérence limités aux trois axiomes standard, `leanchecker` sur les quatre modules, `nanoda_bin` sur `Principal.lean` |

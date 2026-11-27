@@ -38,6 +38,7 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 
 | Check | Where | Result |
 |---|---|---|
+| Version 3.13, `Enonces.lean` without page references (Appendix B of thesis v37) | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 46065365187 passed (commit 1950c07): 117 statements and 69 coherence lemmas, same results |
 | Version 3.13 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 46059764129 passed (commit cc3f3c1): 117 statements and 69 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | Version 3.13: `ConditionalCRO`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 123 `#print axioms` in the file, 117 on `Principal.lean` and 69 on `Coherence.lean`, all standard |
 | Version 3.12 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 46058753895 passed (commit 516276a): 113 statements and 66 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
