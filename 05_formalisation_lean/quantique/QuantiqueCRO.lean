@@ -171,6 +171,63 @@ theorem conf_depolarisation_totale {C M : Type*} [Fintype C] [Fintype M] [Nonemp
 
 end Canaux
 
+/-! ## 5. Canaux définis par opérateurs de Kraus (Définitions 2.19 à 2.21)
+
+Chaque canal est construit par `CPTPMap.of_kraus_CPTPMap` de Physlib, qui demande la
+normalisation Σ_k K_kᴴ K_k = I. Cette normalisation est démontrée pour chaque canal. -/
+
+section Kraus
+
+/-- Opérateurs de Kraus du canal d'amortissement d'amplitude (Définition 2.19). -/
+def krausAD (g : ℝ) : Fin 2 → Matrix (Fin 2) (Fin 2) ℂ :=
+  ![!![1, 0; 0, ((Real.sqrt (1 - g) : ℝ) : ℂ)], !![0, ((Real.sqrt g : ℝ) : ℂ); 0, 0]]
+
+/-- **Définition 2.19.** Normalisation des opérateurs d'amortissement, E₀ᴴE₀ + E₁ᴴE₁ = I. -/
+theorem krausAD_normalise (g : ℝ) (h0 : 0 ≤ g) (h1 : g ≤ 1) :
+    ∑ k, (krausAD g k).conjTranspose * krausAD g k = 1 := by
+  have hs : ((Real.sqrt (1 - g) : ℝ) : ℂ) * ((Real.sqrt (1 - g) : ℝ) : ℂ) = ((1 - g : ℝ) : ℂ) := by
+    rw [← Complex.ofReal_mul, Real.mul_self_sqrt (by linarith)]
+  have hg : ((Real.sqrt g : ℝ) : ℂ) * ((Real.sqrt g : ℝ) : ℂ) = ((g : ℝ) : ℂ) := by
+    rw [← Complex.ofReal_mul, Real.mul_self_sqrt h0]
+  rw [Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [krausAD, Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply, hs, hg]
+  push_cast
+  ring
+
+/-- **Définition 2.19.** Canal d'amortissement d'amplitude de paramètre g ∈ [0, 1]. -/
+def amortissement (g : ℝ) (h0 : 0 ≤ g) (h1 : g ≤ 1) : CPTPMap (Fin 2) (Fin 2) :=
+  CPTPMap.of_kraus_CPTPMap (krausAD g) (krausAD_normalise g h0 h1)
+
+/-- Matrice de Pauli Z. -/
+def pauliZ : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -1]
+
+/-- Opérateurs de Kraus du canal de déphasage (Définition 2.20) : √(1 − p)·I et √p·Z. -/
+def krausPh (p : ℝ) : Fin 2 → Matrix (Fin 2) (Fin 2) ℂ :=
+  ![((Real.sqrt (1 - p) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ),
+    ((Real.sqrt p : ℝ) : ℂ) • pauliZ]
+
+/-- **Définition 2.20.** Normalisation des opérateurs de déphasage, (1 − p)·I + p·ZᴴZ = I. -/
+theorem krausPh_normalise (p : ℝ) (h0 : 0 ≤ p) (h1 : p ≤ 1) :
+    ∑ k, (krausPh p k).conjTranspose * krausPh p k = 1 := by
+  have hs : ((Real.sqrt (1 - p) : ℝ) : ℂ) * ((Real.sqrt (1 - p) : ℝ) : ℂ) = ((1 - p : ℝ) : ℂ) := by
+    rw [← Complex.ofReal_mul, Real.mul_self_sqrt (by linarith)]
+  have hp : ((Real.sqrt p : ℝ) : ℂ) * ((Real.sqrt p : ℝ) : ℂ) = ((p : ℝ) : ℂ) := by
+    rw [← Complex.ofReal_mul, Real.mul_self_sqrt h0]
+  rw [Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [krausPh, pauliZ, Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
+      Matrix.smul_apply, Matrix.one_apply, hs, hp]
+  all_goals push_cast; ring
+
+/-- **Définition 2.20.** Canal de déphasage de paramètre p ∈ [0, 1]. -/
+def dephasage (p : ℝ) (h0 : 0 ≤ p) (h1 : p ≤ 1) : CPTPMap (Fin 2) (Fin 2) :=
+  CPTPMap.of_kraus_CPTPMap (krausPh p) (krausPh_normalise p h0 h1)
+
+end Kraus
+
 end QuantiqueCRO
 
 /-! ## Bloc de vérification -/
@@ -189,3 +246,5 @@ end QuantiqueCRO
 #print axioms QuantiqueCRO.dpi_quantique
 #print axioms QuantiqueCRO.depolarisant_extremes
 #print axioms QuantiqueCRO.conf_depolarisation_totale
+#print axioms QuantiqueCRO.krausAD_normalise
+#print axioms QuantiqueCRO.krausPh_normalise
