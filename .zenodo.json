@@ -1,11 +1,32 @@
 {
-  "title": "Aux Fondements de la Cryptographie Institutionnelle — dépôt de recherche de la thèse",
+  "title": "Aux fondements de la cryptographie institutionnelle, dépôt de recherche de la thèse",
   "upload_type": "software",
-  "version": "1.0.0-pre",
-  "creators": [{"name": "Minka Mi Nguidjoï, Thierry Emmanuel", "affiliation": "LIMSI, ENSP, Université de Yaoundé I"}],
+  "version": "these-v37",
+  "creators": [
+    {
+      "name": "Minka Mi Nguidjoï, Thierry Emmanuel",
+      "affiliation": "LIMSI, ENSP, Université de Yaoundé I",
+      "orcid": "0000-0003-4901-8626"
+    }
+  ],
   "access_right": "open",
   "license": "MIT",
-  "keywords": ["institutional cryptography", "legal opposability", "CRO trilemma", "SOTP", "Lean 4"],
-  "description": "Dépôt compagnon de la thèse : articles publiés, préprints, propositions (SOTP, formalisation Lean 4, protocoles de terrain, calibration).",
-  "notes": "Double licence. Le champ license ne peut porter qu'une seule licence ; il indique celle du code. Le code (Python, Lean 4, Circom, JavaScript, scripts shell) est sous licence MIT (fichier LICENSE). Les textes, formulaires, gabarits, données et figures sont sous licence Creative Commons Attribution 4.0 International, CC BY 4.0 (fichier LICENSE-CC-BY-4.0). Les articles P1, P2 et P3 reproduits dans 01_publie/ conservent la licence CC BY 4.0 de l'éditeur (IEEE Access, © 2026 The Authors). Le manuscrit de thèse (00_these/) est sous CC BY 4.0 ; le listing Lean de son annexe B relève de la licence MIT du code. / Dual licence. The license field can hold only one licence; it gives the licence of the code. Code (Python, Lean 4, Circom, JavaScript, shell scripts) is under the MIT licence (file LICENSE). Texts, forms, templates, data and figures are under Creative Commons Attribution 4.0 International, CC BY 4.0 (file LICENSE-CC-BY-4.0). Articles P1, P2 and P3 reproduced in 01_publie/ keep the publisher's CC BY 4.0 licence (IEEE Access, © 2026 The Authors). The thesis manuscript (00_these/) is under CC BY 4.0; the Lean listing of its Appendix B falls under the MIT licence of the code."
+  "keywords": [
+    "institutional cryptography",
+    "legal opposability",
+    "CRO trilemma",
+    "post-quantum CRO",
+    "SOTP",
+    "Lean 4",
+    "formal verification"
+  ],
+  "description": "Dépôt compagnon de la thèse de doctorat soutenue le 23 décembre 2026 à l'ENSP de Yaoundé. Il contient les articles publiés, les préprints, la proposition SOTP, les protocoles de terrain et la formalisation Lean 4. La version these-v37 fige le code cité par le manuscrit v37 : ConditionalCRO.lean v3.13 (trilemme CRO classique entièrement certifié, trilemme post-quantique certifié pour l'encodage diagonal), GameBasedSOTP.lean v1.3 et QuantiqueCRO.lean v1.2, sans sorry ni axiome déclaré.",
+  "notes": "Double licence. Le champ license ne peut porter qu'une seule licence ; il indique celle du code. Le code (Python, Lean 4, Circom, JavaScript, scripts shell) est sous licence MIT (fichier LICENSE). Les textes, formulaires, gabarits, données et figures sont sous licence Creative Commons Attribution 4.0 International, CC BY 4.0 (fichier LICENSE-CC-BY-4.0). Les articles P1, P2 et P3 reproduits dans 01_publie/ conservent la licence CC BY 4.0 de l'éditeur (IEEE Access, © 2026 The Authors). Le manuscrit de thèse (00_these/) est sous CC BY 4.0 ; le listing Lean de son annexe B relève de la licence MIT du code. / Dual licence. The license field can hold only one licence; it gives the licence of the code. Code (Python, Lean 4, Circom, JavaScript, shell scripts) is under the MIT licence (file LICENSE). Texts, forms, templates, data and figures are under Creative Commons Attribution 4.0 International, CC BY 4.0 (file LICENSE-CC-BY-4.0). Articles P1, P2 and P3 reproduced in 01_publie/ keep the publisher's CC BY 4.0 licence (IEEE Access, © 2026 The Authors). The thesis manuscript (00_these/) is under CC BY 4.0; the Lean listing of its Appendix B falls under the MIT licence of the code.",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/MINKAThierry/PhDThesis/tree/these-v37",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
 }
