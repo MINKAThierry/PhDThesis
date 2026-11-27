@@ -1,0 +1,15 @@
+name = "QuantiqueCRO"
+version = "1.0.0"
+defaultTargets = ["QuantiqueCRO"]
+
+[[require]]
+name = "physlib"
+git = "https://github.com/leanprover-community/physlib.git"
+rev = "31f35373ab937172abc689c128177c98405dc936"
+
+[[lean_lib]]
+name = "QuantiqueCRO"
+
+[[lean_lib]]
+name = "Verification"
+globs = ["Verification.+"]

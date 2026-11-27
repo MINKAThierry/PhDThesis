@@ -1,0 +1,145 @@
+/-
+  Couche quantique de la cryptographie institutionnelle, version 1.0 (27 novembre 2026)
+  =====================================================================================
+  Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
+            Flavien Serge Mani Onana,
+            Thomas Djotio Ndié
+  LIMSI - École Nationale Supérieure Polytechnique, Université de Yaoundé I
+
+  OBJET
+  Lot L5c de la feuille de route. Le noyau quantique de `ConditionalCRO.lean`
+  (section 14) pose Pinsker quantique, Fano quantique et la borne de Holevo comme
+  champs d'une instance abstraite. Ce fichier commence à fonder cette couche sur de
+  vrais états quantiques (matrices densité), avec la bibliothèque Physlib (partie
+  QuantumInfo, ex-Lean-QuantumInfo). Il donne les définitions quantiques du chapitre 2
+  et démontre, à partir des théorèmes de Physlib, la DPI quantique de l'entropie
+  relative, la positivité de l'information mutuelle conditionnelle (sous-additivité
+  forte), la sous-additivité et les bornes de l'entropie de von Neumann.
+
+  DÉPÔT SEULEMENT
+  Physlib n'est pas chargée par live.lean-lang.org et fixe Lean et Mathlib en v4.36.0.
+  Ce fichier forme donc un projet Lake distinct, vérifié par le workflow GitHub
+  `verification_lean_quantique.yml`. Il ne s'importe pas dans `ConditionalCRO.lean`.
+
+  CE QUI N'EST PAS ENCORE DANS CE FICHIER
+  Pinsker quantique (Lemmes 1.4 et 2.4), mesure douce (Lemmes 1.5 et 2.5), Fano
+  quantique (Lemmes 1.6 et 2.6) et borne de Holevo avec mesure de Helstrom (Lemme 2.7).
+  Physlib ne les contient pas sous cette forme. Ils restent posés dans le noyau
+  quantique de `ConditionalCRO.lean`.
+-/
+
+import QuantumInfo.Entropy.SSA
+import QuantumInfo.Entropy.DPI
+import QuantumInfo.States.Mixed.TraceDistance
+
+noncomputable section
+
+namespace QuantiqueCRO
+
+/-! ## 1. Confidentialité quantique (Définitions 2.8 et 2.24) -/
+
+/-- Conf^q = 1 − max_{c, m₀, m₁} ½‖ρ^{m₀,c} − ρ^{m₁,c}‖₁, pour une famille d'états de la
+    preuve indexée par le contexte et le message. -/
+def confQ {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C] [Nonempty M] [Fintype S]
+    [DecidableEq S] (ρ : C → M → MState S) : ℝ :=
+  1 - (Finset.univ : Finset (C × M × M)).sup' Finset.univ_nonempty
+    (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2))
+
+/-- **Définitions 2.8 et 2.24.** Conf^q prend ses valeurs dans [0, 1]. -/
+theorem confQ_bornes {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C] [Nonempty M]
+    [Fintype S] [DecidableEq S] (ρ : C → M → MState S) : 0 ≤ confQ ρ ∧ confQ ρ ≤ 1 := by
+  unfold confQ
+  constructor
+  · have h : (Finset.univ : Finset (C × M × M)).sup' Finset.univ_nonempty
+        (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2)) ≤ 1 :=
+      Finset.sup'_le _ _ fun x _ => TrDistance.le_one _ _
+    linarith
+  · obtain ⟨c⟩ := (inferInstance : Nonempty C)
+    obtain ⟨m⟩ := (inferInstance : Nonempty M)
+    have h0 := TrDistance.ge_zero (ρ c m) (ρ c m)
+    have h1 : TrDistance (ρ c m) (ρ c m) ≤ (Finset.univ : Finset (C × M × M)).sup'
+        Finset.univ_nonempty (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2)) :=
+      Finset.le_sup' (fun x : C × M × M => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2))
+        (Finset.mem_univ (c, m, m))
+    linarith
+
+/-- La distance de trace d'un état à lui-même est nulle. -/
+theorem trDistance_self {S : Type*} [Fintype S] [DecidableEq S] (σ : MState S) :
+    TrDistance σ σ = 0 := by
+  unfold TrDistance
+  rw [sub_self, Matrix.traceNorm_zero, mul_zero]
+
+/-- **Définition 2.8.** Une famille d'états qui ne dépend pas du message a Conf^q = 1. -/
+theorem confQ_eq_one_of_indep {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C]
+    [Nonempty M] [Fintype S] [DecidableEq S] (σ : C → MState S) :
+    confQ (fun c (_ : M) => σ c) = 1 := by
+  unfold confQ
+  have h : (Finset.univ : Finset (C × M × M)).sup' Finset.univ_nonempty
+      (fun x => TrDistance (σ x.1) (σ x.1)) = 0 := by
+    simp only [trDistance_self]
+    obtain ⟨c⟩ := (inferInstance : Nonempty C)
+    obtain ⟨m⟩ := (inferInstance : Nonempty M)
+    exact le_antisymm (Finset.sup'_le _ _ fun _ _ => le_rfl)
+      (Finset.le_sup' (fun _ : C × M × M => (0 : ℝ)) (Finset.mem_univ (c, m, m)))
+  rw [h, sub_zero]
+
+/-! ## 2. Entropies quantiques (Définitions 2.14 et 2.15) -/
+
+variable {d d₁ d₂ d₃ : Type*} [Fintype d] [DecidableEq d] [Fintype d₁] [DecidableEq d₁]
+  [Fintype d₂] [DecidableEq d₂] [Fintype d₃] [DecidableEq d₃]
+
+/-- **Définition 2.14.** S(A|B) = S(AB) − S(B). -/
+theorem entropie_conditionnelle_def (ρ : MState (d₁ × d₂)) :
+    qConditionalEnt ρ = Sᵥₙ ρ - Sᵥₙ ρ.traceLeft := rfl
+
+/-- **Définition 2.15.** I(A;B) = S(A) + S(B) − S(AB). -/
+theorem information_mutuelle_def (ρ : MState (d₁ × d₂)) :
+    qMutualInfo ρ = Sᵥₙ ρ.traceLeft + Sᵥₙ ρ.traceRight - Sᵥₙ ρ := rfl
+
+/-- Bornes de l'entropie de von Neumann : 0 ≤ S(ρ) ≤ log d (nats). -/
+theorem vonNeumann_bornes (ρ : MState d) :
+    0 ≤ Sᵥₙ ρ ∧ Sᵥₙ ρ ≤ Real.log (Fintype.card d) := by
+  refine ⟨Sᵥₙ_nonneg ρ, ?_⟩
+  have h := Sᵥₙ_le_log_d ρ
+  rwa [Finset.card_univ] at h
+
+/-- **Lemme 2.8, D_max.** D(ρ̄‖I/d) = log d − S(ρ̄) est positive. -/
+theorem Dmax_nonneg (ρ : MState d) : 0 ≤ Real.log (Fintype.card d) - Sᵥₙ ρ := by
+  linarith [(vonNeumann_bornes ρ).2]
+
+/-- Sous-additivité : S(AB) ≤ S(A) + S(B). -/
+theorem sous_additivite (ρ : MState (d₁ × d₂)) :
+    Sᵥₙ ρ ≤ Sᵥₙ ρ.traceRight + Sᵥₙ ρ.traceLeft :=
+  Sᵥₙ_subadditivity ρ
+
+/-- **Définition 2.15.** L'information mutuelle quantique est positive. -/
+theorem information_mutuelle_nonneg (ρ : MState (d₁ × d₂)) : 0 ≤ qMutualInfo ρ := by
+  unfold qMutualInfo
+  linarith [Sᵥₙ_subadditivity ρ]
+
+/-- Sous-additivité forte (Lieb et Ruskai) : I(A;B|C) ≥ 0. -/
+theorem cmi_quantique_nonneg (ρ : MState (d₁ × d₂ × d₃)) : 0 ≤ qcmi ρ :=
+  qcmi_nonneg ρ
+
+/-! ## 3. DPI quantique (équation (1.14)) -/
+
+/-- **Équation (1.14).** Pour tout canal Φ (application complètement positive qui préserve
+    la trace), 𝐃(Φ(ρ)‖Φ(σ)) ≤ 𝐃(ρ‖σ). C'est l'outil de la preuve du Lemme 2.4. -/
+theorem dpi_quantique (Φ : CPTPMap d₁ d₂) (ρ σ : MState d₁) : 𝐃(Φ ρ‖Φ σ) ≤ 𝐃(ρ‖σ) :=
+  sandwichedRenyiEntropy_DPI le_rfl ρ σ Φ
+
+end QuantiqueCRO
+
+/-! ## Bloc de vérification -/
+
+#print axioms QuantiqueCRO.confQ_bornes
+#print axioms QuantiqueCRO.trDistance_self
+#print axioms QuantiqueCRO.confQ_eq_one_of_indep
+#print axioms QuantiqueCRO.entropie_conditionnelle_def
+#print axioms QuantiqueCRO.information_mutuelle_def
+#print axioms QuantiqueCRO.vonNeumann_bornes
+#print axioms QuantiqueCRO.Dmax_nonneg
+#print axioms QuantiqueCRO.sous_additivite
+#print axioms QuantiqueCRO.information_mutuelle_nonneg
+#print axioms QuantiqueCRO.cmi_quantique_nonneg
+#print axioms QuantiqueCRO.dpi_quantique

@@ -1,0 +1,48 @@
+# Dossier de vérification Lean de la couche quantique
+# (05_formalisation_lean/quantique/VERIFICATION_fr.md).
+# Projet distinct : Lean et Mathlib v4.36.0, bibliothèque Physlib (QuantumInfo).
+# Il ne tourne que si la couche quantique change, ou à la demande.
+name: Vérification Lean quantique
+
+on:
+  push:
+    paths:
+      - "05_formalisation_lean/quantique/**"
+      - ".github/workflows/verification_lean_quantique.yml"
+  pull_request:
+    paths:
+      - "05_formalisation_lean/quantique/**"
+      - ".github/workflows/verification_lean_quantique.yml"
+  workflow_dispatch:
+
+jobs:
+  verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    env:
+      LEAN_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Lean, télécharger le cache Mathlib et compiler
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: "05_formalisation_lean/quantique"
+          use-mathlib-cache: "true"
+          build: "true"
+          build-args: "QuantiqueCRO Verification"
+          test: "false"
+          lint: "false"
+
+      - name: Audit du dossier de vérification
+        working-directory: 05_formalisation_lean/quantique
+        run: bash verifier.sh
+
+      - name: Conserver les journaux
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verification-lean-quantique
+          path: |
+            05_formalisation_lean/quantique/results/verification.log
+            05_formalisation_lean/quantique/results/axiomes.txt
