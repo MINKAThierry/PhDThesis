@@ -1,20 +1,20 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis les lots L4 et L6 (GameBasedSOTP.lean v1.3, ConditionalCRO.lean v3.11). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis les lots L4 et L6 (GameBasedSOTP.lean v1.3, ConditionalCRO.lean v3.11) et la première étape du lot L5c (quantique/QuantiqueCRO.lean v1.0, Physlib). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
-| démontré | 78 |
+| démontré | 82 |
 | démontré, une inégalité posée dans le modèle abstrait | 15 |
 | mécanisé en situation réduite | 9 |
 | hypothèse formalisée | 20 |
-| non formalisé | 23 |
+| non formalisé | 19 |
 | hors champ formel | 25 |
 | **Total** | **170** |
 
-Sur 145 énoncés relevant d'une formalisation, 122 sont aujourd'hui couverts, soit 84 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b de 107 (74 %) après la première partie du lot L4 de 109 (75 %) après la deuxième et de 118 (81 %) à la fin du lot L4. La Conjecture 3.1 est classée « hypothèse formalisée » : elle est énoncée sans preuve ni axiome. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 145 énoncés relevant d'une formalisation, 126 sont aujourd'hui couverts, soit 87 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b de 107 (74 %) après la première partie du lot L4 de 109 (75 %) après la deuxième de 118 (81 %) à la fin du lot L4 et de 122 (84 %) après le lot L6. La Conjecture 3.1 est classée « hypothèse formalisée » : elle est énoncée sans preuve ni axiome. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
@@ -26,7 +26,7 @@ Sur 145 énoncés relevant d'une formalisation, 122 sont aujourd'hui couverts, s
 | Corollaire | 3 | 1 | 0 | 0 |
 | Conjecture | 0 | 1 | 0 | 0 |
 | Hypothèse | 0 | 12 | 0 | 0 |
-| Définition | 22 | 6 | 17 | 0 |
+| Définition | 26 | 6 | 13 | 0 |
 | Remarque | 40 | 0 | 2 | 25 |
 
 ## Détail par chapitre
@@ -69,7 +69,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Remarque 2.7 | 51 | Pont BIND-REL ↔ Relver | `rem:jeu_bind_rel_link` | démontré | relver, relver_ge, relver_of_liant, rel_of_conf_one | L3 |
 | Définition 2.7 | 51 | Jeu EXT-OPP | `def:jeu_ext_opp` | démontré | extErr, HVSC | L3 |
 | Remarque 2.8 | 52 | Pont EXT-OPP ↔ Opp | `rem:jeu_ext_opp_link` | démontré | CLOModel.IV_eq_HV_sub, CLOModel.ext_opp_bridge, ext_opp_bridge_K | L3 |
-| Définition 2.8 | 52 | Confidentialité quantique | `def:conf_quantique_clo` | non formalisé |  | L5c |
+| Définition 2.8 | 52 | Confidentialité quantique | `def:conf_quantique_clo` | démontré | QuantiqueCRO.confQ, confQ_bornes, confQ_eq_one_of_indep | L5c |
 | Remarque 2.9 | 53 | Compatibilité avec la confidentialité classique | `rem:compatibilite_conf` | démontré | traceDist_eq_tv, CLOModel.confQ_diag_eq | L5b |
 | Définition 2.9 | 53 | Perte d'interprétabilité quantique | `def:perte_interp_quantique` | non formalisé |  | L5c |
 | Remarque 2.10 | 53 | Interprétation physique | `rem:interpretation_physique` | hors champ formel |  | — |
@@ -100,8 +100,8 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Remarque 2.23 | 64 | Statut de vérification | `rem:statut_verification_classique` | hors champ formel |  | — |
 | Corollaire 2.1 | 64 | Forme simplifiée | `cor:forme_simplifiee` | démontré | forme_simplifiee | L2 |
 | Remarque 2.24 | 65 | Portée des études de cas | `rem:portee_cas_etude` | démontré | portee_cas_etude | L2 |
-| Définition 2.14 | 69 | Entropie de von Neumann | `def:entropie_conditionnelle_quantique` | non formalisé |  | L5c |
-| Définition 2.15 | 69 | Information mutuelle quantique | `def:information_mutuelle_quantique` | non formalisé |  | L5c |
+| Définition 2.14 | 69 | Entropie de von Neumann | `def:entropie_conditionnelle_quantique` | démontré | qConditionalEnt (Physlib), entropie_conditionnelle_def | L5c |
+| Définition 2.15 | 69 | Information mutuelle quantique | `def:information_mutuelle_quantique` | démontré | qMutualInfo (Physlib), information_mutuelle_nonneg | L5c |
 | Définition 2.16 | 69 | Information quantique accessible | `def:info_accessible` | non formalisé |  | L5c |
 | Définition 2.17 | 69 | Entropie min-max lissée | `def:entropie_min_max_lissee` | non formalisé |  | L5c |
 | Remarque 2.25 | 70 | Relation avec l'entropie de Shannon | `rem:relation_shannon` | démontré | vonNeumann_diag | L5b |
@@ -115,7 +115,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition 2.21 | 72 | Canal d'effacement | `def:canal_effacement` | non formalisé |  | L5c |
 | Définition 2.22 | 72 | Norme diamant | `def:norme_diamant` | non formalisé |  | L5c |
 | Définition 2.23 | 73 | Protocole de preuve quantique | `def:protocole_pq` | non formalisé |  | L5c |
-| Définition 2.24 | 73 | Confidentialité quantique | `def:conf_quantique` | non formalisé |  | L5c |
+| Définition 2.24 | 73 | Confidentialité quantique | `def:conf_quantique` | démontré | QuantiqueCRO.confQ, confQ_bornes, confQ_eq_one_of_indep | L5c |
 | Définition 2.25 | 73 | Fiabilité quantique | `def:fiabilite_quantique` | non formalisé |  | L5c |
 | Définition 2.26 | 73 | Opposabilité quantique | `def:opposabilite_quantique` | non formalisé |  | L5c |
 | Remarque 2.26 | 73 | Compatibilité avec la confidentialité classique | `rem:compatibilite_classique` | démontré | traceDist_eq_tv, CLOModel.confQ_diag_eq | L5b |
