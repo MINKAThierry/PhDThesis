@@ -8,17 +8,17 @@
 
 import Verification.Principal
 
-open QuantiqueCRO
+open QuantiqueCRO Classical
 
 namespace Coherence
 
 /-- Une famille constante a Conf^q = 1. -/
-lemma confQ_constante {S : Type*} [Fintype S] [DecidableEq S] (σ : MState S) :
+lemma confQ_constante {S : Type*} [Fintype S] (σ : MState S) :
     confQ (fun (_ : Unit) (_ : Bool) => σ) = 1 :=
   confQ_eq_one_of_indep (fun _ => σ)
 
 /-- Pour deux états quelconques, Conf^q reste dans [0, 1]. -/
-lemma confQ_deux_etats {S : Type*} [Fintype S] [DecidableEq S] (σ₀ σ₁ : MState S) :
+lemma confQ_deux_etats {S : Type*} [Fintype S] (σ₀ σ₁ : MState S) :
     0 ≤ confQ (fun (_ : Unit) (b : Bool) => if b then σ₁ else σ₀) ∧
       confQ (fun (_ : Unit) (b : Bool) => if b then σ₁ else σ₀) ≤ 1 :=
   confQ_bornes _

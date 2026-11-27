@@ -36,18 +36,26 @@ noncomputable section
 
 namespace QuantiqueCRO
 
-/-! ## 1. Confidentialité quantique (Définitions 2.8 et 2.24) -/
+/-! ## 1. Confidentialité quantique (Définitions 2.8 et 2.24)
+
+Les lemmes de Physlib sur la distance de trace (`TrDistance.ge_zero`, `TrDistance.le_one`)
+sont énoncés avec l'égalité décidable classique. Cette section ouvre donc `Classical`
+et ne demande pas d'instance `DecidableEq` sur l'espace de la preuve. -/
+
+section Confidentialite
+
+open Classical
 
 /-- Conf^q = 1 − max_{c, m₀, m₁} ½‖ρ^{m₀,c} − ρ^{m₁,c}‖₁, pour une famille d'états de la
     preuve indexée par le contexte et le message. -/
 def confQ {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C] [Nonempty M] [Fintype S]
-    [DecidableEq S] (ρ : C → M → MState S) : ℝ :=
+    (ρ : C → M → MState S) : ℝ :=
   1 - (Finset.univ : Finset (C × M × M)).sup' Finset.univ_nonempty
     (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2))
 
 /-- **Définitions 2.8 et 2.24.** Conf^q prend ses valeurs dans [0, 1]. -/
 theorem confQ_bornes {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C] [Nonempty M]
-    [Fintype S] [DecidableEq S] (ρ : C → M → MState S) : 0 ≤ confQ ρ ∧ confQ ρ ≤ 1 := by
+    [Fintype S] (ρ : C → M → MState S) : 0 ≤ confQ ρ ∧ confQ ρ ≤ 1 := by
   unfold confQ
   obtain ⟨x, -, hx⟩ := Finset.exists_mem_eq_sup' (Finset.univ_nonempty (α := C × M × M))
     (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2))
@@ -57,14 +65,14 @@ theorem confQ_bornes {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C] [Nonem
   constructor <;> linarith
 
 /-- La distance de trace d'un état à lui-même est nulle. -/
-theorem trDistance_self {S : Type*} [Fintype S] [DecidableEq S] (σ : MState S) :
+theorem trDistance_self {S : Type*} [Fintype S] (σ : MState S) :
     TrDistance σ σ = 0 := by
   unfold TrDistance
   rw [sub_self, Matrix.traceNorm_zero, mul_zero]
 
 /-- **Définition 2.8.** Une famille d'états qui ne dépend pas du message a Conf^q = 1. -/
 theorem confQ_eq_one_of_indep {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C]
-    [Nonempty M] [Fintype S] [DecidableEq S] (σ : C → MState S) :
+    [Nonempty M] [Fintype S] (σ : C → MState S) :
     confQ (fun c (_ : M) => σ c) = 1 := by
   unfold confQ
   obtain ⟨x, -, hx⟩ := Finset.exists_mem_eq_sup' (Finset.univ_nonempty (α := C × M × M))
@@ -73,6 +81,8 @@ theorem confQ_eq_one_of_indep {C M S : Type*} [Fintype C] [Fintype M] [Nonempty 
       (fun x => TrDistance (σ x.1) (σ x.1)) = 0 := by
     rw [hx]; exact trDistance_self _
   rw [h, sub_zero]
+
+end Confidentialite
 
 /-! ## 2. Entropies quantiques (Définitions 2.14 et 2.15) -/
 

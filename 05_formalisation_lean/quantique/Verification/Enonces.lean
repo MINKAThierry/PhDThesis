@@ -9,6 +9,8 @@
 
 import QuantiqueCRO
 
+open Classical
+
 universe u₁ u₂ u₃
 
 namespace Enonces
@@ -16,13 +18,13 @@ namespace Enonces
 /-- Définitions 2.8 (p. 52) et 2.24 (p. 73) : Conf^q ∈ [0, 1]. -/
 def ConfQuantiqueBornes : Prop :=
   ∀ {C : Type u₁} {M : Type u₂} {S : Type u₃} [Fintype C] [Fintype M] [Nonempty C]
-    [Nonempty M] [Fintype S] [DecidableEq S] (ρ : C → M → MState S),
+    [Nonempty M] [Fintype S] (ρ : C → M → MState S),
     0 ≤ QuantiqueCRO.confQ ρ ∧ QuantiqueCRO.confQ ρ ≤ 1
 
 /-- Définition 2.8 (p. 52) : une famille d'états indépendante du message a Conf^q = 1. -/
 def ConfQuantiqueIndependante : Prop :=
   ∀ {C : Type u₁} {M : Type u₂} {S : Type u₃} [Fintype C] [Fintype M] [Nonempty C]
-    [Nonempty M] [Fintype S] [DecidableEq S] (σ : C → MState S),
+    [Nonempty M] [Fintype S] (σ : C → MState S),
     QuantiqueCRO.confQ (fun c (_ : M) => σ c) = 1
 
 /-- Définition 2.14 (p. 69) : S(A|B) = S(AB) − S(B). -/
