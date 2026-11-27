@@ -1,33 +1,33 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9) et la première partie du lot L4 (GameBasedSOTP.lean v1.2). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
-| démontré | 72 |
+| démontré | 73 |
 | démontré, une inégalité posée dans le modèle abstrait | 10 |
-| mécanisé en situation réduite | 4 |
+| mécanisé en situation réduite | 6 |
 | hypothèse formalisée | 18 |
-| non formalisé | 41 |
+| non formalisé | 38 |
 | hors champ formel | 25 |
 | **Total** | **170** |
 
-Sur 145 énoncés relevant d'une formalisation, 104 sont aujourd'hui couverts, soit 72 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 et de 100 (69 %) après le lot L3. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 145 énoncés relevant d'une formalisation, 107 sont aujourd'hui couverts, soit 74 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 et de 104 (72 %) après le lot L5b. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
 | Type | Démontré | Posé ou réduit | Non formalisé | Hors champ |
 |---|---|---|---|---|
-| Théorème | 12 | 2 | 4 | 0 |
+| Théorème | 12 | 3 | 3 | 0 |
 | Lemme | 9 | 3 | 5 | 0 |
-| Proposition | 2 | 0 | 4 | 0 |
+| Proposition | 2 | 1 | 3 | 0 |
 | Corollaire | 3 | 0 | 1 | 0 |
 | Conjecture | 0 | 0 | 1 | 0 |
 | Hypothèse | 0 | 12 | 0 | 0 |
 | Définition | 19 | 5 | 21 | 0 |
-| Remarque | 37 | 0 | 5 | 25 |
+| Remarque | 38 | 0 | 4 | 25 |
 
 ## Détail par chapitre
 
@@ -154,9 +154,9 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Théorème 3.1 | 89 | Propriétés de sécurité S-OTP | `thm:proprietes_sotp` | non formalisé |  | L4 |
 | Remarque 3.2 | 89 | Portée du Théorème thm:proprietes_sotp | `rem:portee_sotp` | non formalisé |  | L4 |
 | Remarque 3.3 | 90 | Argument heuristique d'optimalité de S-OTP dans la classe OTP | `thm:optimalite_sotp` | hors champ formel |  | L4 |
-| Proposition 3.1 | 95 | Propriétés cryptographiques de SOTP-Low | `thm:saturation_sotp_low` | non formalisé |  | L4 |
+| Proposition 3.1 | 95 | Propriétés cryptographiques de SOTP-Low | `thm:saturation_sotp_low` | mécanisé en situation réduite | ind_conf_complet, win_bind_complet (GameBasedSOTP) | L4 |
 | Remarque 3.4 | 95 | Heuristique de conception de SOTP-Low (non prouvée) | `rem:facteur_limitant_low` | hors champ formel |  | L4 |
-| Remarque 3.5 | 96 | Masque par troncature | `rem:masque_troncature` | non formalisé |  | L4 |
+| Remarque 3.5 | 96 | Masque par troncature | `rem:masque_troncature` | démontré | card_mod_eq, trunc_dist, trunc_bound, trunc_ecdsa (GameBasedSOTP) | L4 |
 | Proposition 3.2 | 98 | Propriétés cryptographiques de SOTP-Base | `thm:saturation_sotp_base` | non formalisé |  | L4 |
 | Remarque 3.6 | 98 | Heuristique de conception de SOTP-Base (non prouvée) | `rem:heuristique_sotp_base` | hors champ formel |  | L4 |
 | Proposition 3.3 | 100 | Propriétés cryptographiques de SOTP-High | `thm:saturation_sotp_high` | non formalisé |  | L4 |
@@ -226,7 +226,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Théorème A.3 | 227 | Dimensionnement JL de SOTP-Base (section sec:sotp_construction) | `thm:ann_sotp_base_opp` | non formalisé |  | L4 |
 | Corollaire A.1 | 227 | Réductions pour SOTP-Base | `cor:ann_sotp_base_reductions` | non formalisé |  | L4 |
 | Théorème A.4 | 227 | Sécurité de SOTP-High héritée de Groth16 (section sec:sotp_constructio | `thm:ann_sotp_high` | non formalisé |  | L4 |
-| Théorème A.5 | 228 | Bornes game-based complètes de SOTP-Low (section sec:sotp_construction | `thm:ann_sotp_low_games` | non formalisé |  | L4 |
+| Théorème A.5 | 228 | Bornes game-based complètes de SOTP-Low (section sec:sotp_construction | `thm:ann_sotp_low_games` | mécanisé en situation réduite | ind_conf_complet, win_bind_complet (GameBasedSOTP) | L4 |
 | Remarque A.5 | 229 | Absence de borne game-based pour l'opposabilité de SOTP-Low | `rem:ann_sotp_low_opp_statut` | hors champ formel |  | — |
 | Corollaire A.2 | 229 | Produit CLO depuis les jeux (section sec:sotp_construction) | `cor:ann_cro_from_games` | démontré | product_from_games | L3 |
 | Remarque A.6 | 230 | Pourquoi ce corollaire ne contredit pas le Trilemme | `rem:ann_pas_de_contradiction` | démontré | echelles_distinctes | L3 |

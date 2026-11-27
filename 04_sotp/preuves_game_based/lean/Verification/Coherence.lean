@@ -3,11 +3,11 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `GameBasedSOTP.lean` (version 1.1), un cas qui la satisfait et un cas qui ne la
+  `GameBasedSOTP.lean` (version 1.2), un cas qui la satisfait et un cas qui ne la
   satisfait pas, ou deux valeurs extrêmes. Il ne contient ni `sorry` ni `axiom`.
 
   Définitions testées : avg, ind, winIND et advIND, accB et advPRG, com, accepts,
-  winsBIND et extract.
+  winsBIND et extract, puis (version 1.2) winIND2, advIND2, truncLaw et distStat.
 -/
 
 import Verification.Principal
@@ -63,5 +63,21 @@ lemma bind_extremes :
   · refine ⟨⟨by decide, ?_⟩, ⟨by decide, ?_⟩, by decide⟩ <;> rfl
   · exact div_self (by decide)
   · exact fun h => h.2.2 rfl
+
+/-! ## 4. Jeu IND-CONF avec couche Iron et masque par troncature (version 1.2) -/
+
+/-- `winIND2`, `advIND2` : un adversaire constant gagne une fois sur deux, avantage nul. -/
+lemma ind2_constant :
+    advIND2 (q := 2) (fun _ => (0 : ZMod 2)) (fun b => if b then 1 else 0) (fun _ _ => true) = 0 := by
+  simp [advIND2, winIND2, avg, ind]
+
+/-- `truncLaw`, `distStat` : pour q = N la troncature est exacte (distance 0) ; pour
+    q = 3 et N = 2 la distance vaut 1/6. -/
+lemma trunc_valeurs :
+    distStat (truncLaw (1 * 2 + 0) 2) (fun _ => 1 / ((2 : ℕ) : ℝ)) = 0 ∧
+      distStat (truncLaw (1 * 2 + 1) 2) (fun _ => 1 / ((2 : ℕ) : ℝ)) = 1 / 6 := by
+  rw [trunc_dist 2 1 0 (by norm_num) (by norm_num) (by norm_num),
+    trunc_dist 2 1 1 (by norm_num) (by norm_num) (by norm_num)]
+  norm_num
 
 end Coherence

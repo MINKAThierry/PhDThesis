@@ -1,7 +1,7 @@
 /-
   Preuves game-based de SOTP-Low en situation réduite — Annexe de thèse
   =====================================================================
-  Version 1.1 (27 novembre 2026), qui reprend la 1.0 sans la modifier.
+  Version 1.2 (27 novembre 2026), qui reprend la 1.0 sans la modifier.
 
   OBJET
   Test de faisabilité de la mécanisation des preuves game-based de l'annexe A,
@@ -273,3 +273,269 @@ end GameBasedSOTP
 #print axioms GameBasedSOTP.pedersen_extract
 #print axioms GameBasedSOTP.bind_rel_gives_dlog
 #print axioms GameBasedSOTP.win_bind_le_dlog
+
+/-! ## Extension de la version 1.2 (27 novembre 2026, lot L4)
+
+Les sections 5 et 6 complètent la mécanisation de SOTP-Low. La section 5 ajoute la
+couche Iron au jeu IND-CONF et établit les bornes complètes du Théorème A.5. La
+section 6 calcule la distance statistique du masque par troncature (Remarque 3.5). -/
+
+namespace GameBasedSOTP
+
+/-! ## 5. Bornes game-based complètes de SOTP-Low (version 1.2)
+
+Le jeu IND-CONF comprend ici la couche Iron. L'adversaire reçoit σ₁ = m_b + G(s) et
+σ₂ = g^s·h^ρ = g^(s + xρ) avec h = g^x (lemme `com_eq`). Comme g^· est injectif sur
+ZMod q (lemme `zpowq_inj`), un adversaire qui lit σ₂ est une fonction de l'exposant
+e = s + xρ. La clé x, la graine s et l'aléa ρ sont uniformes dans ZMod q. -/
+
+section Complet
+
+variable {q : ℕ} [Fact q.Prime] {M : Type*} [AddCommGroup M] [Fintype M]
+
+/-- Probabilité de succès dans IND-CONF avec la couche Iron. -/
+noncomputable def winIND2 (G : ZMod q → M) (m : Bool → M) (A : M → ZMod q → Bool) : ℝ :=
+  avg (fun x : ZMod q => avg (fun b : Bool => avg (fun s : ZMod q =>
+    avg (fun ρ : ZMod q => ind (A (m b + G s) (s + x * ρ) = b)))))
+
+/-- Avantage dans IND-CONF avec la couche Iron. -/
+noncomputable def advIND2 (G : ZMod q → M) (m : Bool → M) (A : M → ZMod q → Bool) : ℝ :=
+  |winIND2 G m A - 1 / 2|
+
+/-- Réducteur B : sur le défi y, il tire b et un exposant e uniforme, envoie (m_b + y, e)
+    à A et rend 1 si A trouve b. -/
+noncomputable def accB2 (m : Bool → M) (A : M → ZMod q → Bool) (y : M) : ℝ :=
+  avg (fun b : Bool => avg (fun e : ZMod q => ind (A (m b + y) e = b)))
+
+/-- Avantage de B dans le jeu PRG, graine uniforme dans ZMod q. -/
+noncomputable def advPRG2 (G : ZMod q → M) (m : Bool → M) (A : M → ZMod q → Bool) : ℝ :=
+  |avg (fun s : ZMod q => accB2 m A (G s)) - avg (fun y : M => accB2 m A y)|
+
+omit [Fact q.Prime] in
+lemma ind_nonneg_le_one (p : Prop) [Decidable p] : 0 ≤ ind p ∧ ind p ≤ 1 := by
+  unfold ind; split_ifs <;> norm_num
+
+omit [Fact q.Prime] in
+lemma avg_bounds {X : Type*} [Fintype X] [Nonempty X] (f : X → ℝ)
+    (h : ∀ x, 0 ≤ f x ∧ f x ≤ 1) : 0 ≤ avg f ∧ avg f ≤ 1 := by
+  constructor
+  · have := avg_mono (f := fun _ : X => (0 : ℝ)) (g := f) (fun x => (h x).1)
+    rwa [avg_const] at this
+  · have := avg_mono (f := f) (g := fun _ : X => (1 : ℝ)) (fun x => (h x).2)
+    rwa [avg_const] at this
+
+/-- Pour h ≠ 1 (x ≠ 0), l'exposant s + xρ est uniforme et indépendant de s. -/
+lemma avg_affine (s x : ZMod q) (hx : x ≠ 0) (f : ZMod q → ℝ) :
+    avg (fun ρ : ZMod q => f (s + x * ρ)) = avg f := by
+  unfold avg
+  congr 1
+  exact Fintype.sum_equiv ((Equiv.mulLeft₀ x hx).trans (Equiv.addLeft s)) _ _ (fun _ => rfl)
+
+omit [Fact q.Prime] in
+lemma avg_bool_ind (z : Bool) : avg (fun b : Bool => ind (z = b)) = 1 / 2 := by
+  unfold avg ind; cases z <;> simp
+
+/-- Sur un défi uniforme, B rend 1 avec probabilité 1/2. -/
+lemma accB2_uniform (m : Bool → M) (A : M → ZMod q → Bool) :
+    avg (fun y : M => accB2 m A y) = 1 / 2 := by
+  have h1 : avg (fun y : M => accB2 m A y) =
+      avg (fun b : Bool => avg (fun e : ZMod q => avg (fun y : M => ind (A (m b + y) e = b)))) := by
+    unfold accB2
+    rw [avg_comm]
+    congr 1; funext b
+    rw [avg_comm]
+  rw [h1]
+  have h2 : ∀ b e, avg (fun y : M => ind (A (m b + y) e = b)) = avg (fun y : M => ind (A y e = b)) :=
+    fun b e => otp_uniform (m b) (fun z => ind (A z e = b))
+  simp only [h2]
+  rw [avg_comm]
+  have h3 : ∀ e : ZMod q, avg (fun b : Bool => avg (fun y : M => ind (A y e = b))) = 1 / 2 := by
+    intro e
+    rw [avg_comm]
+    have : Nonempty M := ⟨0⟩
+    simp only [avg_bool_ind]
+    exact avg_const _
+  simp only [h3]
+  have : Nonempty (ZMod q) := ⟨0⟩
+  exact avg_const _
+
+/-- **Théorème A.5, (A.17), en situation réduite.** Avec la couche Iron,
+    Adv^IND-CONF(A) ≤ Adv^PRG(B) + 1/q. Le terme 1/q est la probabilité de h = 1. -/
+theorem ind_conf_complet (G : ZMod q → M) (m : Bool → M) (A : M → ZMod q → Bool) :
+    advIND2 G m A ≤ advPRG2 G m A + 1 / q := by
+  have hq : (1 : ℝ) < q := by exact_mod_cast (Fact.out : q.Prime).one_lt
+  have hcard : (Fintype.card (ZMod q) : ℝ) = q := by rw [ZMod.card]
+  have hne : Nonempty (ZMod q) := ⟨0⟩
+  set W : ZMod q → ℝ := fun x => avg (fun b : Bool => avg (fun s : ZMod q =>
+    avg (fun ρ : ZMod q => ind (A (m b + G s) (s + x * ρ) = b)))) with hW
+  set Ws := avg (fun s : ZMod q => accB2 m A (G s)) with hWs
+  have hsim : ∀ x, x ≠ 0 → W x = Ws := by
+    intro x hx
+    simp only [hW, hWs, accB2]
+    rw [avg_comm]
+    congr 1; funext s; congr 1; funext b
+    exact avg_affine s x hx (fun e => ind (A (m b + G s) e = b))
+  have hWb : ∀ x, 0 ≤ W x ∧ W x ≤ 1 := fun x =>
+    avg_bounds _ fun b => avg_bounds _ fun s => avg_bounds _ fun ρ => ind_nonneg_le_one _
+  have hWsb : 0 ≤ Ws ∧ Ws ≤ 1 := avg_bounds _ fun s =>
+    avg_bounds _ fun b => avg_bounds _ fun e => ind_nonneg_le_one _
+  have hsum : ∑ x, W x = W 0 + ((q : ℝ) - 1) * Ws := by
+    rw [← Finset.add_sum_erase _ _ (mem_univ (0 : ZMod q))]
+    rw [sum_congr rfl fun x hx => hsim x (ne_of_mem_erase hx), sum_const, card_erase_of_mem
+      (mem_univ _), card_univ, nsmul_eq_mul, ZMod.card]
+    push_cast [Nat.cast_sub (Fact.out : q.Prime).one_lt.le]
+    ring
+  have hwin : winIND2 G m A = Ws + (W 0 - Ws) / q := by
+    show avg W = _
+    unfold avg
+    rw [hsum, hcard]
+    field_simp
+    ring
+  have hprg : advPRG2 G m A = |Ws - 1 / 2| := by
+    unfold advPRG2; rw [accB2_uniform]
+  unfold advIND2
+  rw [hwin, hprg]
+  have hd : |(W 0 - Ws) / q| ≤ 1 / q := by
+    rw [abs_div, abs_of_pos (by linarith : (0 : ℝ) < q)]
+    apply div_le_div_of_nonneg_right _ (by linarith)
+    rw [abs_le]; constructor <;> linarith [hWb 0, hWsb]
+  calc |Ws + (W 0 - Ws) / q - 1 / 2| = |(Ws - 1 / 2) + (W 0 - Ws) / q| := by ring_nf
+    _ ≤ |Ws - 1 / 2| + |(W 0 - Ws) / q| := abs_add_le _ _
+    _ ≤ |Ws - 1 / 2| + 1 / q := by linarith
+
+end Complet
+
+section DLogComplet
+
+variable {q : ℕ} [Fact q.Prime] {Γ : Type*} [Group Γ] {M : Type*} [AddCommGroup M]
+
+/-- **Théorème A.5, (A.18), en situation réduite.** Win^BIND-REL(A) ≤ Adv^DLOG(B) + 1/q. -/
+theorem win_bind_complet (g : Γ) (hg : orderOf g = q) (PRG : ZMod q → M)
+    (A : Γ → M × Γ × Opening (ZMod q) M q × Opening (ZMod q) M q)
+    [∀ x, Decidable (winsBIND g x PRG (A (zpowq g x)).1 (A (zpowq g x)).2.1
+      (A (zpowq g x)).2.2.1 (A (zpowq g x)).2.2.2)] :
+    avg (fun x : ZMod q => ind (winsBIND g x PRG (A (zpowq g x)).1 (A (zpowq g x)).2.1
+        (A (zpowq g x)).2.2.1 (A (zpowq g x)).2.2.2))
+      ≤ avg (fun x : ZMod q =>
+          ind (extract (A (zpowq g x)).2.2.1 (A (zpowq g x)).2.2.2 = x)) + 1 / q := by
+  have h := win_bind_le_dlog g hg PRG A
+  have : (0 : ℝ) ≤ 1 / q := by positivity
+  linarith
+
+end DLogComplet
+
+/-! ## 6. Masque par troncature (Remarque 3.5) -/
+
+/-- Nombre de graines s < q telles que s mod N = y, pour q = kN + r et r < N. -/
+lemma card_mod_eq (N k r y : ℕ) (hN : 0 < N) (hr : r < N) (hy : y < N) :
+    ((range (k * N + r)).filter (fun s => s % N = y)).card = k + if y < r then 1 else 0 := by
+  have h := Nat.count_modEq_card_eq_ceil (k * N + r) hN y
+  rw [Nat.count_eq_card_filter_range] at h
+  have e : (range (k * N + r)).filter (fun s => s ≡ y [MOD N]) =
+      (range (k * N + r)).filter (fun s => s % N = y) := by
+    apply filter_congr; intro s _; unfold Nat.ModEq; rw [Nat.mod_eq_of_lt hy]
+  rw [e, Nat.mod_eq_of_lt hy] at h
+  have hNq : (0 : ℚ) < N := by exact_mod_cast hN
+  have key : ⌈(((k * N + r : ℕ) : ℚ) - (y : ℚ)) / N⌉ = (k : ℤ) + if y < r then 1 else 0 := by
+    have : (((k * N + r : ℕ) : ℚ) - y) / N = ((r : ℚ) - y) / N + (k : ℤ) := by
+      push_cast; field_simp; ring
+    rw [this, Int.ceil_add_intCast, add_comm]
+    congr 1
+    split_ifs with hyr
+    · rw [Int.ceil_eq_iff]; push_cast
+      have h1 : (y : ℚ) < r := by exact_mod_cast hyr
+      have h2 : (r : ℚ) < N := by exact_mod_cast hr
+      constructor
+      · rw [lt_div_iff₀ hNq]; linarith
+      · rw [div_le_iff₀ hNq]; linarith
+    · rw [Int.ceil_eq_iff]; push_cast
+      have h1 : (r : ℚ) ≤ y := by exact_mod_cast (not_lt.mp hyr)
+      have h2 : (y : ℚ) < N := by exact_mod_cast hy
+      constructor
+      · rw [lt_div_iff₀ hNq]; linarith
+      · rw [div_le_iff₀ hNq]; linarith
+  rw [key] at h
+  exact_mod_cast h
+
+/-- Loi de G(s) = s mod N pour s uniforme dans {0, …, q − 1}. -/
+noncomputable def truncLaw (q N : ℕ) (y : Fin N) : ℝ :=
+  (((range q).filter (fun s => s % N = y.val)).card : ℝ) / q
+
+/-- Distance statistique entre deux lois sur Fin N. -/
+noncomputable def distStat {N : ℕ} (P Q : Fin N → ℝ) : ℝ := ∑ y, max (P y - Q y) 0
+
+/-- **Remarque 3.5.** Pour q = kN + r avec r < N, la distance statistique entre s mod N
+    (s uniforme modulo q) et la loi uniforme sur N valeurs vaut r(N − r)/(qN). -/
+theorem trunc_dist (N k r : ℕ) (hN : 0 < N) (hr : r < N) (hq : 0 < k * N + r) :
+    distStat (truncLaw (k * N + r) N) (fun _ => 1 / (N : ℝ)) =
+      r * (N - r) / ((k * N + r : ℕ) * N) := by
+  set q := k * N + r with hqdef
+  have hNr : (0 : ℝ) < N := by exact_mod_cast hN
+  have hqr : (0 : ℝ) < q := by exact_mod_cast hq
+  have hqv : (q : ℝ) = k * N + r := by rw [hqdef]; push_cast; ring
+  have term : ∀ y : Fin N, max (truncLaw q N y - 1 / N) 0 =
+      if y.val < r then ((N : ℝ) - r) / (q * N) else 0 := by
+    intro y
+    unfold truncLaw
+    rw [card_mod_eq N k r y.val hN hr y.isLt]
+    split_ifs with h
+    · rw [max_eq_left]
+      · push_cast; field_simp; rw [hqv]; ring
+      · push_cast
+        rw [sub_nonneg, div_le_div_iff₀ hNr hqr, hqv]
+        have : (r : ℝ) < N := by exact_mod_cast hr
+        nlinarith
+    · rw [max_eq_right]
+      push_cast
+      rw [sub_nonpos, div_le_div_iff₀ hqr hNr, hqv]
+      have : (0 : ℝ) ≤ r := by positivity
+      nlinarith
+  unfold distStat
+  simp only [term]
+  rw [Fin.sum_univ_eq_sum_range (fun i => if i < r then ((N : ℝ) - r) / (q * N) else 0) N,
+    sum_ite, sum_const_zero, add_zero, sum_const, nsmul_eq_mul]
+  have hc : ((range N).filter (fun i => i < r)).card = r := by
+    rw [show (range N).filter (fun i => i < r) = range r by
+      ext i; simp only [mem_filter, mem_range]; constructor
+      · exact fun h => h.2
+      · exact fun h => ⟨lt_trans h hr, h⟩]
+    exact card_range r
+  rw [hc]
+  ring
+
+/-- Majoration r(N − r)/(qN) ≤ N/(4q), puis N/(4q) ≤ 1/(2N) dès que N² ≤ 2q, c'est-à-dire
+    2^(−λ−1) pour N = 2^λ et |q| ≥ 2λ. -/
+theorem trunc_bound (N q r : ℕ) (hN : 0 < N) (hq : 0 < q) :
+    (r : ℝ) * (N - r) / (q * N) ≤ N / (4 * q) ∧
+      ((N : ℝ) ^ 2 ≤ 2 * q → (N : ℝ) / (4 * q) ≤ 1 / (2 * N)) := by
+  have hNr : (0 : ℝ) < N := by exact_mod_cast hN
+  have hqr : (0 : ℝ) < q := by exact_mod_cast hq
+  constructor
+  · rw [div_le_div_iff₀ (by positivity) (by positivity)]
+    nlinarith [sq_nonneg ((N : ℝ) - 2 * r)]
+  · intro h
+    rw [div_le_div_iff₀ (by positivity) (by positivity)]
+    nlinarith
+
+/-- **Remarque 3.5, valeurs numériques.** Pour q ≥ 2^252 et λ = 128,
+    2^λ/(4q) ≤ 2^(−126), donc 2·2^λ/(4q) ≤ 2^(−125). -/
+theorem trunc_ecdsa (q : ℝ) (hq : (2 : ℝ) ^ 252 ≤ q) :
+    (2 : ℝ) ^ 128 / (4 * q) ≤ 1 / 2 ^ 126 ∧ 2 * ((2 : ℝ) ^ 128 / (4 * q)) ≤ 1 / 2 ^ 125 := by
+  have hq0 : (0 : ℝ) < q := lt_of_lt_of_le (by positivity) hq
+  have h1 : (2 : ℝ) ^ 128 / (4 * q) ≤ 1 / 2 ^ 126 := by
+    rw [div_le_div_iff₀ (by positivity) (by positivity)]
+    nlinarith
+  refine ⟨h1, ?_⟩
+  have : (2 : ℝ) * (1 / 2 ^ 126) = 1 / 2 ^ 125 := by norm_num
+  linarith
+
+end GameBasedSOTP
+
+/-! ## Bloc de vérification de la version 1.2 -/
+
+#print axioms GameBasedSOTP.ind_conf_complet
+#print axioms GameBasedSOTP.win_bind_complet
+#print axioms GameBasedSOTP.card_mod_eq
+#print axioms GameBasedSOTP.trunc_dist
+#print axioms GameBasedSOTP.trunc_bound
+#print axioms GameBasedSOTP.trunc_ecdsa
