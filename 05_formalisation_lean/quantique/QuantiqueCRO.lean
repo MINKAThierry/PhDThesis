@@ -228,8 +228,8 @@ variable {d : Type*} [Fintype d] [DecidableEq d]
 /-- Opérateurs de Kraus du canal d'effacement (Définition 2.21), de d vers d ⊕ {⊥}
     (codé `Option d`, `none` = ⊥) : K_⊥ = √(1 − e)·(plongement) et K_k = √e·|⊥⟩⟨k|. -/
 def krausEr (e : ℝ) : Option d → Matrix (Option d) d ℂ
-  | none => fun o j => if o = some j then ((Real.sqrt (1 - e) : ℝ) : ℂ) else 0
-  | some k => fun o j => if o = none ∧ j = k then ((Real.sqrt e : ℝ) : ℂ) else 0
+  | none => Matrix.of fun o j => if o = some j then ((Real.sqrt (1 - e) : ℝ) : ℂ) else 0
+  | some k => Matrix.of fun o j => if o = none ∧ j = k then ((Real.sqrt e : ℝ) : ℂ) else 0
 
 /-- **Définition 2.21.** Normalisation des opérateurs d'effacement, Σ_κ K_κᴴ K_κ = I. -/
 theorem krausEr_normalise (e : ℝ) (h0 : 0 ≤ e) (h1 : e ≤ 1) :
@@ -242,9 +242,10 @@ theorem krausEr_normalise (e : ℝ) (h0 : 0 ≤ e) (h1 : e ≤ 1) :
   rw [Matrix.sum_apply, Fintype.sum_option]
   by_cases hab : a = b
   · subst hab
-    simp [krausEr, Matrix.mul_apply, Matrix.conjTranspose_apply, Fintype.sum_option, hs, he]
-    push_cast; ring
-  · simp [krausEr, Matrix.mul_apply, Matrix.conjTranspose_apply, Fintype.sum_option, hab]
+    simp [krausEr, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.of_apply, Fintype.sum_option,
+      hs, he]
+  · simp [krausEr, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.of_apply, Fintype.sum_option,
+      hab]
 
 /-- **Définition 2.21.** Canal d'effacement de paramètre e ∈ [0, 1]. -/
 def effacement (e : ℝ) (h0 : 0 ≤ e) (h1 : e ≤ 1) : CPTPMap d (Option d) :=
