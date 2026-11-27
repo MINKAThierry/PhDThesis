@@ -2,7 +2,7 @@
 
 *Version française : [VERIFICATION_fr.md](VERIFICATION_fr.md)*
 
-This dossier accompanies `QuantiqueCRO.lean`, version 1.1 of 27 November 2026 (lot L5c of the [roadmap](../FEUILLE_DE_ROUTE_FORMALISATION_fr.md), in French). It follows the structure of [`../VERIFICATION_en.md`](../VERIFICATION_en.md), taken from the repository of the Lean proof of the Riemann hypothesis.
+This dossier accompanies `QuantiqueCRO.lean`, version 1.2 of 27 November 2026 (lot L5c of the [roadmap](../FEUILLE_DE_ROUTE_FORMALISATION_fr.md), in French). It follows the structure of [`../VERIFICATION_en.md`](../VERIFICATION_en.md), taken from the repository of the Lean proof of the Riemann hypothesis.
 
 ## Why a separate project
 
@@ -13,10 +13,10 @@ The quantum core of `ConditionalCRO.lean` (Section 14) takes quantum Pinsker, qu
 | Order | File | Role |
 |---|---|---|
 | 1 | this document | Map, traceability and limits |
-| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 13 statements, without proof, with their reference to manuscript v36 |
+| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 16 statements, without proof, with their reference to manuscript v36 |
 | 3 | [`Verification/Principal.lean`](Verification/Principal.lean) | One line per statement |
-| 4 | [`Verification/Coherence.lean`](Verification/Coherence.lean) | Non-vacuity tests of `confQ` |
-| 5 | [`QuantiqueCRO.lean`](QuantiqueCRO.lean) | The proofs, 192 lines |
+| 4 | [`Verification/Coherence.lean`](Verification/Coherence.lean) | Non-vacuity tests of `confQ`, `krausAD` and `krausEr` |
+| 5 | [`QuantiqueCRO.lean`](QuantiqueCRO.lean) | The proofs, 278 lines |
 
 ## How to check
 
@@ -30,6 +30,7 @@ bash verifier.sh
 
 | Check | Where | Result |
 |---|---|---|
+| Version 1.2, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean_quantique.yml`, run 46041616405 passed: 16 statements and 4 coherence lemmas limited to the three standard axioms, no warning, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | Version 1.1, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean_quantique.yml`, run 46037284662 passed: 13 statements and 2 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | Version 1.0, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean_quantique.yml`, run 46029211703 passed: 10 statements and 2 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | Local build | working container | not done: the Mathlib v4.36.0 cache is not reachable there |
@@ -51,6 +52,9 @@ bash verifier.sh
 | Quantum DPI of the relative entropy | `eq:qdpi` | (1.14), p. 18 | `dpi_quantique` | 138 | 72 / 24 | proved (Physlib) |
 | Depolarising channel, Δ_1 = replacement by I/d, Δ_0 = identity | `def:canal_depolarisant` | Definition 2.18, p. 72 | `depolarisant_extremes` | 158 | 78 / 26 | proved |
 | Conf^q = 1 after total depolarisation | `def:canal_depolarisant` | Definition 2.18, p. 72 | `conf_depolarisation_totale` | 165 | 84 / 27 | proved |
+| Amplitude-damping channel, E₀ᴴE₀ + E₁ᴴE₁ = I | `def:canal_amortissement` | Definition 2.19, p. 72 | `krausAD_normalise` | 187 | 91 / 29 | proved |
+| Dephasing channel, (1 − p)·I + p·ZᴴZ = I | `def:canal_dephasage` | Definition 2.20, p. 72 | `krausPh_normalise` | 211 | 96 / 30 | proved |
+| Erasure channel into d ⊕ {⊥}, Σ_κ K_κᴴ K_κ = I | `def:canal_effacement` | Definition 2.21, p. 72 | `krausEr_normalise` | 236 | 101 / 31 | proved |
 
 "Proved (Physlib)" means that the theorem of this dossier applies a proved Physlib theorem directly (`Sᵥₙ_le_log_d`, `Sᵥₙ_subadditivity`, `qcmi_nonneg`, `qMutualInfo_strong_subadditivity`, `sandwichedRenyiEntropy_DPI`). The `#print axioms` confirm that none of them uses a Physlib `sorry`.
 
@@ -59,7 +63,7 @@ bash verifier.sh
 1. **Lemmas still assumed.** Quantum Pinsker (Lemmas 1.4 and 2.4), gentle measurement (Lemmas 1.5 and 2.5), quantum Fano (Lemmas 1.6 and 2.6) and the Holevo bound with Helstrom measurement (Lemma 2.7) are not in Physlib in this form. They remain fields of the quantum core of `ConditionalCRO.lean`. The planned route is: quantum Pinsker via the Helstrom measurement, the finite Pinsker of `ConditionalCRO.lean` and `dpi_quantique`; quantum Fano by reduction to the classical case on the outcome of a POVM.
 2. **No formal link with `ConditionalCRO.lean`.** The two projects do not use the same Lean version. The link between `confQ` and the `Conf` field of `QuantumProtocolInstance` is therefore described, not proved.
 3. **Classical decidable equality.** Physlib's trace-distance lemmas are stated with classical decidable equality. Section 1 opens `Classical` to match, which does not change the meaning of the statements.
-4. **Channels and diamond norm.** The depolarising channel (Definition 2.18) is written as a convex mixture of Physlib channels. Definitions 2.19 to 2.22 (amplitude damping, dephasing, erasure, diamond norm) are not written yet; they need explicit Kraus operators.
+4. **Channels and diamond norm.** The depolarising channel (Definition 2.18) is written as a convex mixture of Physlib channels. Since version 1.2, the amplitude-damping (qubit), dephasing (qubit) and erasure (any dimension) channels are built from Kraus operators, with their normalisation proved. The diamond norm (Definition 2.22) is not written yet.
 5. **Holevo bound.** `info_mutuelle_oubli` gives the DPI of mutual information when a subsystem is discarded. Deriving Lemma 2.7 for an arbitrary measurement requires writing the measurement as an isometry followed by discarding, or showing that the partial trace commutes with a local channel. Neither is in Physlib today.
 
 ## Reproducibility
@@ -69,4 +73,4 @@ bash verifier.sh
 | Lean | v4.36.0 ([`lean-toolchain`](lean-toolchain)) |
 | Physlib | commit `31f35373ab937172abc689c128177c98405dc936` ([`lake-manifest.json`](lake-manifest.json)) |
 | Mathlib | v4.36.0, commit `fc4f59e577feb1a4956671bc04ac18aaaf8cd842` |
-| SHA-256 of `QuantiqueCRO.lean` | `e2e52a0f26e100a311d7115333c00069bc33116db8d4ba6d4dd13886146f3bb9` (version 1.1) |
+| SHA-256 of `QuantiqueCRO.lean` | `74f1b8bead92277d967f0be9350de922badfcbac4773e081ac38e87b919a9a9d` (version 1.2) |
