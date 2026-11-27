@@ -2,7 +2,7 @@
   Dossier de vérification. Point d'entrée mince
   =============================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème
-  existant de `ConditionalCRO.lean` (version 3.5) prouve exactement
+  existant de `ConditionalCRO.lean` (version 3.6) prouve exactement
   l'énoncé écrit séparément. Si un énoncé et sa preuve divergent, ce fichier ne
   compile pas. C'est le seul fichier qu'un relecteur doit ouvrir, avec
   `Enonces.lean`. Le script `verifier.sh` exécute `#print axioms` sur chaque
@@ -73,5 +73,24 @@ theorem principal_info_conditionnelle_positive : Enonces.InfoConditionnellePosit
 theorem principal_fondement_extraction : Enonces.FondementExtraction := CLOModel.fondement_extraction
 theorem principal_verdict_deterministe_concret : Enonces.VerdictDeterministeConcret := CLOModel.opp_eq_one_of_det_concrete
 theorem principal_garantie_conf_decroissante : Enonces.GarantieConfDecroissante := conf_guarantee_antitone
+
+-- 7. Extension v3.6, lot L5a (noyau algébrique quantique)
+theorem principal_garantie_conf_quantique : Enonces.GarantieConfQuantique := QuantumProtocolInstance.conf_guarantee
+theorem principal_trilemme_quantique_explicite : Enonces.TrilemmeQuantiqueExplicite := trilemma_pq_explicit
+theorem principal_trilemme_quantique_publie : Enonces.TrilemmeQuantiquePublie := trilemma_pq_published
+theorem principal_trilemme_quantique_asymptotique : Enonces.TrilemmeQuantiqueAsymptotique := conditional_CRO_trilemma_pq
+theorem principal_trilemme_quantique_raffine : Enonces.TrilemmeQuantiqueRaffine := trilemma_pq_refined
+theorem principal_seuil_hdiese_quantique : Enonces.SeuilHdieseQuantique := seuil_Hsharp_q
+theorem principal_forme_simplifiee_quantique : Enonces.FormeSimplifieeQuantique := forme_simplifiee_pq
+theorem principal_cardinal_sans_efficacite_quantique : Enonces.CardinalSansEfficaciteQuantique := verdict_q_card_not_efficient
+theorem principal_raccord_gamma_quantique : Enonces.RaccordGammaQuantique := raccord_gamma_q
+theorem principal_statut_regime_quantique : Enonces.StatutRegimeQuantique := statut_regime_q
+theorem principal_constantes_pinsker : Enonces.ConstantesPinsker := constantes_pinsker
+theorem principal_decomposition_delta_q : Enonces.DecompositionDeltaQ := deltaQ_le
+theorem principal_encadrement_eta_q : Enonces.EncadrementEtaQ := etaQ_bounds
+theorem principal_capacite_quantique_hors_dpi : Enonces.CapaciteQuantiqueHorsDPI := capacite_q_non_dpi
+theorem principal_temoin_portee_quantique : Enonces.TemoinPorteeQuantique := regime_q_necessary
+theorem principal_temoin_coherence_quantique : Enonces.TemoinCoherenceQuantique := assumptions_q_consistent
+theorem principal_dmax_mldsa : Enonces.DmaxMLDSA := dilithium_Dmax
 
 end Principal

@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.5 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
+  Version 3.6 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -2349,3 +2349,442 @@ Même exigence qu'en section 11 : chaque ligne doit afficher
 #print axioms ConditionalCRO.miN_eq_entN2_of_det
 #print axioms ConditionalCRO.CLOModel.opp_eq_one_of_det_concrete
 #print axioms ConditionalCRO.conf_guarantee_antitone
+
+/-! ## 14. Noyau algébrique quantique (version 3.6, lot L5a)
+
+Ajout du 27 novembre 2026. Cette section formalise le Trilemme CRO conditionnel
+quantique (Théorème 2.5 du manuscrit v36) sur le modèle du noyau classique : les
+lemmes d'information quantique (Fano quantique, Holevo, Pinsker quantique) sont des
+champs de `QuantumProtocolInstance`, les Hypothèses 2.5 à 2.7 forment
+`QuantumAssumptions` et le régime (Hypothèse 2.8) est une prémisse. La Définition 2.27
+et la Remarque 2.27 sont démontrées sur les lois finies de la section 12. -/
+
+section ExtensionL5a
+
+open Finset
+
+namespace ConditionalCRO
+
+/-! ### 14.1 Paramètres et instance d'un protocole post-quantique
+
+Comme le noyau classique des sections 3 à 7, le noyau quantique travaille sur des
+réels. Les lemmes d'information quantique y sont des champs de l'instance : Fano
+quantique (Lemme 2.6), borne de Holevo (Lemme 2.7) et Pinsker quantique (Lemme 2.4).
+L'information mutuelle I(M;Σ|C) est la moyenne des informations de Holevo, majorée par
+leur maximum χmax (preuve de la Remarque 2.33). -/
+
+/-- Paramètres institutionnels quantiques (Δ_q, α_q, θ_q, β_q, ζ_q, η_q) et H(C). -/
+structure QuantumParams where
+  H  : ℝ      -- H(C) (bits)
+  Δq : ℝ      -- capacité d'extraction quantique
+  αq : ℝ      -- granularité quantique des verdicts
+  θq : ℝ      -- non-dégénérescence du verdict
+  βq : ℝ      -- régularité quantique
+  ζq : ℝ      -- terme de régularité relatif à l'état mélangé
+  ηq : ℝ      -- perte d'interprétabilité quantique
+  hH  : 0 ≤ H
+  hΔq : 0 ≤ Δq
+  hαq : 0 < αq
+  hθq : 0 < θq ∧ θq ≤ 1
+  hβq : 1 ≤ βq
+  hζq : 0 ≤ ζq
+  hηq : 0 ≤ ηq
+
+/-- γ_q = θ_q·α_q·H(C) (Hypothèse 2.6). -/
+def gammaQ (p : QuantumParams) : ℝ := p.θq * p.αq * p.H
+
+/-- Point du modèle abstrait quantique. -/
+structure QuantumProtocolInstance (lam : ℕ) where
+  params : QuantumParams
+  Conf : ℝ    -- Conf^q = 1 − TDmax (Définition 2.24)
+  Rel  : ℝ    -- Rel^q, estimateur quantique optimal (Définition 2.25)
+  Opp  : ℝ    -- Opp^q = I(V;Σ|C)/H(V|C) (Définition 2.26)
+  I    : ℝ    -- I(M;Σ|C), moyenne des informations de Holevo
+  χmax : ℝ    -- max_c χ(E_{m,c})
+  Iacc : ℝ    -- information accessible
+  IV   : ℝ    -- I(V;Σ|C)
+  HV   : ℝ    -- H(V|C)
+  TDmax : ℝ   -- max ½‖ρ^{m₀,c} − ρ^{m₁,c}‖₁
+  Dmsg : ℝ    -- max D(ρ^{m₀,c} ‖ ρ^{m₁,c})
+  Dmax : ℝ    -- max_c D(ρ̄^c ‖ I/d)
+  hConf : Conf = 1 - TDmax
+  hOpp  : Opp = IV / HV
+  hTD   : 0 ≤ TDmax ∧ TDmax ≤ 1
+  hRel  : 0 ≤ Rel ∧ Rel ≤ 1
+  hI    : 0 ≤ I
+  hIV   : 0 ≤ IV
+  hDmax : 0 ≤ Dmax
+  fano_q : Rel * lam - 1 ≤ Iacc          -- Lemme 2.6 (Fano quantique)
+  holevo : Iacc ≤ I                      -- Lemme 2.7 (borne de Holevo)
+  moyenne_le_max : I ≤ χmax              -- moyenne ≤ maximum (Remarque 2.33)
+  pinsker_q : TDmax ^ 2 ≤ Dmsg / 2       -- Lemme 2.4 (Pinsker quantique)
+
+/-- Hypothèses 2.5 à 2.7. Le régime (Hypothèse 2.8) est une prémisse des théorèmes. -/
+structure QuantumAssumptions {lam : ℕ} (P : QuantumProtocolInstance lam) : Prop where
+  /-- Hypothèse 2.5 (extraction quantique bornée) : I(V;Σ|C) ≤ I(M;Σ|C) + Δ_q. -/
+  A5 : P.IV ≤ P.I + P.params.Δq
+  /-- Hypothèse 2.6 (verdict efficace quantique) : H(V|C) ≥ γ_q … -/
+  A6 : gammaQ P.params ≤ P.HV
+  /-- … avec γ_q ≥ 1. -/
+  A6γ : 1 ≤ gammaQ P.params
+  /-- Hypothèse 2.7 (régularité quantique) : D ≤ β_q·χ + ζ_q·D(ρ̄ ‖ I/d). -/
+  A7 : P.Dmsg ≤ P.params.βq * P.χmax + P.params.ζq * P.Dmax
+
+namespace QuantumProtocolInstance
+
+variable {lam : ℕ} (P : QuantumProtocolInstance lam)
+
+/-- Fano quantique et Holevo donnent la relation de Fano sur I(M;Σ|C). -/
+lemma fano_I : P.Rel * lam - 1 ≤ P.I := P.fano_q.trans P.holevo
+
+/-- **Lemme 2.8 (garantie de confidentialité quantique).** Sous l'Hypothèse 2.7,
+    Conf^q ≥ 1 − ½·√(2β_q·χmax + 2ζ_q·Dmax). -/
+theorem conf_guarantee (A7 : P.Dmsg ≤ P.params.βq * P.χmax + P.params.ζq * P.Dmax) :
+    1 - (1 / 2) * Real.sqrt (2 * P.params.βq * P.χmax + 2 * P.params.ζq * P.Dmax) ≤ P.Conf := by
+  rw [P.hConf]
+  have h0 := P.hTD.1
+  have hsq : P.TDmax ^ 2 ≤ (1 / 2 * Real.sqrt (2 * P.params.βq * P.χmax + 2 * P.params.ζq * P.Dmax)) ^ 2 := by
+    have hpos : 0 ≤ 2 * P.params.βq * P.χmax + 2 * P.params.ζq * P.Dmax := by
+      have := P.pinsker_q; nlinarith [sq_nonneg P.TDmax]
+    rw [mul_pow, Real.sq_sqrt hpos]
+    have := P.pinsker_q
+    linarith
+  have hb : 0 ≤ 1 / 2 * Real.sqrt (2 * P.params.βq * P.χmax + 2 * P.params.ζq * P.Dmax) := by positivity
+  have := (sq_le_sq₀ h0 hb).1 hsq
+  linarith
+
+end QuantumProtocolInstance
+
+/-! ### 14.2 Trilemme CRO conditionnel quantique (Théorème 2.5) -/
+
+/-- **Théorème 2.5, forme explicite.** Sous les Hypothèses 2.5, 2.6 et le régime
+    χmax ≤ κ/λ (Hypothèse 2.8), pour λ ≥ 1 :
+    Conf^q·Rel^q·Opp^q ≤ (1/γ_q)(Δ_q/λ + κ(Δ_q+1)/λ² + κ²/λ³). -/
+theorem trilemma_pq_explicit {lam : ℕ} (P : QuantumProtocolInstance lam)
+    (hA : QuantumAssumptions P) (κ : ℝ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam)
+    (A8 : P.χmax ≤ κ / lam) :
+    P.Conf * P.Rel * P.Opp ≤ (1 / gammaQ P.params) *
+      (P.params.Δq / lam + κ * (P.params.Δq + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3) := by
+  have hC1 : P.Conf ≤ 1 := by rw [P.hConf]; linarith [P.hTD.1]
+  exact product_bound_explicit hC1 P.hRel.1 P.fano_I P.hI P.hIV P.hOpp hA.A5 hA.A6 hA.A6γ hκ hlam
+    (P.moyenne_le_max.trans A8)
+
+/-- **Remarque 2.41 (la majoration publiée comme corollaire).** Sous les mêmes
+    hypothèses, Conf^q·Rel^q·Opp^q ≤ (Δ_q + η_q·H(C))/λ + K/λ² + ε₀(λ) avec
+    K = κ(Δ_q+1) + κ² et ε₀ négligeable. -/
+theorem trilemma_pq_published {lam : ℕ} (P : QuantumProtocolInstance lam)
+    (hA : QuantumAssumptions P) (κ : ℝ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam)
+    (A8 : P.χmax ≤ κ / lam) :
+    P.Conf * P.Rel * P.Opp ≤ (P.params.Δq + P.params.ηq * P.params.H) / lam +
+      (κ * (P.params.Δq + 1) + κ ^ 2) / (lam : ℝ) ^ 2 + ε₀ lam := by
+  have h := trilemma_pq_explicit P hA κ hκ hlam A8
+  have hl : (1 : ℝ) ≤ lam := by exact_mod_cast hlam
+  have hl0 : (0 : ℝ) < lam := by linarith
+  have hΔ := P.params.hΔq
+  have hB : 0 ≤ P.params.Δq / lam + κ * (P.params.Δq + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3 := by
+    positivity
+  have hγ1 : 1 / gammaQ P.params ≤ 1 := by rw [div_le_one (by linarith [hA.A6γ])]; exact hA.A6γ
+  have h1 := h.trans (mul_le_of_le_one_left hB hγ1)
+  have h3 : κ ^ 2 / (lam : ℝ) ^ 3 ≤ κ ^ 2 / (lam : ℝ) ^ 2 := by
+    have e : κ ^ 2 / (lam : ℝ) ^ 3 = κ ^ 2 / (lam : ℝ) ^ 2 * (1 / lam) := by field_simp
+    rw [e]
+    exact mul_le_of_le_one_right (by positivity) (by rw [div_le_one hl0]; exact hl)
+  have hη : 0 ≤ P.params.ηq * P.params.H / lam := by
+    have := P.params.hηq; have := P.params.hH; positivity
+  have hε := ε₀_nonneg lam
+  have e1 : (P.params.Δq + P.params.ηq * P.params.H) / lam =
+      P.params.Δq / lam + P.params.ηq * P.params.H / lam := add_div _ _ _
+  have e2 : (κ * (P.params.Δq + 1) + κ ^ 2) / (lam : ℝ) ^ 2 =
+      κ * (P.params.Δq + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 2 := add_div _ _ _
+  linarith
+
+/-- Famille de protocoles post-quantiques indexée par λ, à paramètres fixes. -/
+structure QuantumProtocolFamily where
+  params : QuantumParams
+  inst : ∀ lam : ℕ, QuantumProtocolInstance lam
+  hparams : ∀ lam, (inst lam).params = params
+
+/-- **Théorème 2.5, forme asymptotique.** Sous les Hypothèses 2.5 à 2.8, il existe K
+    et ε négligeable tels que, pour λ ≥ 64,
+    Conf^q·Rel^q·Opp^q ≤ (Δ_q + η_q·H(C))/λ + K/λ² + ε(λ). -/
+theorem conditional_CRO_trilemma_pq (F : QuantumProtocolFamily) (κ : ℝ) (hκ : 0 ≤ κ)
+    (hA : ∀ lam, 64 ≤ lam → QuantumAssumptions (F.inst lam))
+    (A8 : ∀ lam, 64 ≤ lam → (F.inst lam).χmax ≤ κ / lam) :
+    ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
+      (F.inst lam).Conf * (F.inst lam).Rel * (F.inst lam).Opp ≤
+        (F.params.Δq + F.params.ηq * F.params.H) / lam + K / (lam : ℝ) ^ 2 + ε lam := by
+  refine ⟨κ * (F.params.Δq + 1) + κ ^ 2, ε₀, negligible_eps0, fun lam hlam => ?_⟩
+  have h := trilemma_pq_published (F.inst lam) (hA lam hlam) κ hκ (by omega) (A8 lam hlam)
+  rwa [F.hparams lam] at h
+
+/-! ### 14.3 Forme raffinée, seuil H♯_q et forme simplifiée -/
+
+/-- **Remarque 2.39 (forme raffinée quantique).** Avec Opp^q ≤ 1,
+    Conf^q·Rel^q·Opp^q ≤ ((1 + κ/λ)/λ)·min{1, (κ/λ + Δ_q)/γ_q}. -/
+theorem trilemma_pq_refined {lam : ℕ} (P : QuantumProtocolInstance lam)
+    (hA : QuantumAssumptions P) (κ : ℝ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam)
+    (A8 : P.χmax ≤ κ / lam) (hIVHV : P.IV ≤ P.HV) :
+    P.Conf * P.Rel * P.Opp ≤
+      ((κ / lam + 1) / lam) * min 1 ((κ / lam + P.params.Δq) / gammaQ P.params) := by
+  have hC1 : P.Conf ≤ 1 := by rw [P.hConf]; linarith [P.hTD.1]
+  exact product_bound_refined hC1 P.hRel.1 P.fano_I P.hIV P.hOpp hA.A5 hA.A6 hA.A6γ hκ hlam
+    (P.moyenne_le_max.trans A8) hIVHV
+
+/-- **Remarque 2.39, seuil.** Le facteur institutionnel quantique est < 1 si et
+    seulement si Δ_q < γ_q − κ/λ, c'est-à-dire H(C) > H♯_q = (Δ_q + κ/λ)/(θ_q·α_q).
+    Le paramètre η_q n'y intervient pas. -/
+theorem seuil_Hsharp_q (p : QuantumParams) (κ lam : ℝ) (hγ : 0 < gammaQ p) :
+    (min 1 ((κ / lam + p.Δq) / gammaQ p) < 1 ↔ p.Δq < gammaQ p - κ / lam) ∧
+      (p.Δq < gammaQ p - κ / lam ↔ (p.Δq + κ / lam) / (p.θq * p.αq) < p.H) := by
+  refine ⟨factor_lt_one_iff p.Δq (gammaQ p) κ lam hγ, ?_⟩
+  have hθα : 0 < p.θq * p.αq := mul_pos p.hθq.1 p.hαq
+  unfold gammaQ
+  rw [div_lt_iff₀ hθα]
+  constructor <;> intro h <;> linarith
+
+/-- **Corollaire 2.2 (forme simplifiée quantique).** Pour D = Δ_q + η_q·H(C) > 0, le
+    rapport du majorant D/λ + K/λ² à D/λ tend vers 1 quand λ → ∞. -/
+theorem forme_simplifiee_pq (D K : ℝ) (hD : 0 < D) :
+    Tendsto (fun lam : ℕ => (D / lam + K / (lam : ℝ) ^ 2) / (D / lam)) atTop (nhds 1) := by
+  have e : ∀ lam : ℕ, 1 ≤ lam →
+      (D / lam + K / (lam : ℝ) ^ 2) / (D / lam) = 1 + K / D * (1 / (lam : ℝ)) := by
+    intro lam hl
+    have hl0 : (0 : ℝ) < lam := by exact_mod_cast hl
+    field_simp
+  have h : Tendsto (fun lam : ℕ => 1 + K / D * (1 / (lam : ℝ))) atTop (nhds 1) := by
+    have h0 : Tendsto (fun lam : ℕ => 1 / (lam : ℝ)) atTop (nhds 0) :=
+      tendsto_one_div_atTop_nhds_zero_nat
+    simpa using (h0.const_mul (K / D)).const_add 1
+  refine h.congr' ?_
+  filter_upwards [eventually_ge_atTop 1] with lam hl
+  exact (e lam hl).symm
+
+/-! ### 14.4 Statut des hypothèses quantiques (Remarques 2.31 à 2.33) -/
+
+/-- **Remarque 2.31.** La borne k_λ ≤ 2^(α_q·H(C)) n'entraîne pas H(V|C) ≥ θ_q·α_q·H(C).
+    Contre-exemple : verdict constant de la famille témoin (H(C) = 1), pour tous
+    θ_q, α_q > 0. -/
+theorem verdict_q_card_not_efficient (l : ℕ) (θq αq : ℝ) (hθ : 0 < θq) (hα : 0 < αq) :
+    ((Fintype.card (Fin 1) : ℝ) ≤ (2 : ℝ) ^ (αq * (famModel l).constVerdict.HC)) ∧
+      (famModel l).constVerdict.HV < θq * αq * (famModel l).constVerdict.HC := by
+  have hHC : (famModel l).constVerdict.HC = 1 := CLOModel.fam_HC l
+  have hHV : (famModel l).constVerdict.HV = 0 :=
+    CLOModel.HV_eq_zero_of_card_one _ (Fintype.card_fin 1)
+  rw [hHC, hHV]
+  refine ⟨?_, by positivity⟩
+  simp only [Fintype.card_fin, Nat.cast_one, mul_one]
+  exact Real.one_le_rpow (by norm_num) hα.le
+
+/-- **Remarque 2.32 (raccord avec l'Hypothèse 2.2).** Avec α_q = α, γ_q = γ si et
+    seulement si θ_q = 1 − 1/(αH(C)) ; sous γ ≥ 1, ce choix est dans [1/2, 1). -/
+theorem raccord_gamma_q (α H θq : ℝ) (hαH : 0 < α * H) :
+    (θq * α * H = α * H - 1 ↔ θq = 1 - 1 / (α * H)) ∧
+      (1 ≤ α * H - 1 → (1 / 2 ≤ 1 - 1 / (α * H) ∧ 1 - 1 / (α * H) < 1)) := by
+  have hne : α * H ≠ 0 := hαH.ne'
+  constructor
+  · rw [mul_assoc]
+    constructor
+    · intro h
+      apply mul_right_cancel₀ hne
+      rw [h, sub_mul, one_mul, one_div_mul_cancel hne]
+    · intro h
+      rw [h, sub_mul, one_mul, one_div_mul_cancel hne]
+  · intro h
+    have h2 : 2 ≤ α * H := by linarith
+    refine ⟨?_, by have := one_div_pos.2 hαH; linarith⟩
+    have : 1 / (α * H) ≤ 1 / 2 := one_div_le_one_div_of_le (by norm_num) h2
+    linarith
+
+/-- **Remarque 2.33 (statut de l'Hypothèse 2.8).** Le régime χmax ≤ κ/λ entraîne
+    I_acc ≤ I(M;Σ|C) ≤ κ/λ et, sous l'Hypothèse 2.7,
+    Conf^q ≥ 1 − ½·√(2β_q·κ/λ + 2ζ_q·Dmax). -/
+theorem statut_regime_q {lam : ℕ} (P : QuantumProtocolInstance lam) (κ : ℝ)
+    (A7 : P.Dmsg ≤ P.params.βq * P.χmax + P.params.ζq * P.Dmax) (A8 : P.χmax ≤ κ / lam) :
+    P.Iacc ≤ P.I ∧ P.I ≤ κ / lam ∧
+      1 - (1 / 2) * Real.sqrt (2 * P.params.βq * (κ / lam) + 2 * P.params.ζq * P.Dmax) ≤ P.Conf := by
+  refine ⟨P.holevo, P.moyenne_le_max.trans A8, le_trans ?_ (P.conf_guarantee A7)⟩
+  have hβ : 0 ≤ P.params.βq := by linarith [P.params.hβq]
+  have : 2 * P.params.βq * P.χmax + 2 * P.params.ζq * P.Dmax ≤
+      2 * P.params.βq * (κ / lam) + 2 * P.params.ζq * P.Dmax := by nlinarith
+  linarith [Real.sqrt_le_sqrt this]
+
+/-! ### 14.5 Constantes, encadrement de η_q, décomposition de Δ_q -/
+
+/-- **Remarque 2.35.** Les constantes de Pinsker vérifient (ln 2)/2 < 1/2 < c₀. -/
+theorem constantes_pinsker : Real.log 2 / 2 < 1 / 2 ∧ (1 : ℝ) / 2 < c0 := by
+  have h := Real.log_two_lt_d9
+  exact ⟨by linarith, c0_gt_half⟩
+
+/-- **Définition 2.30.** Δ_q = Δ + δ_enh − δ_degr. -/
+def deltaQ (Δ δenh δdegr : ℝ) : ℝ := Δ + δenh - δdegr
+
+/-- Sans renforcement (δ_enh = 0), la capacité quantique ne dépasse pas Δ. -/
+theorem deltaQ_le (Δ δdegr : ℝ) (h : 0 ≤ δdegr) : deltaQ Δ 0 δdegr ≤ Δ := by
+  unfold deltaQ; linarith
+
+/-- Perte d'interprétabilité d'un canal T agissant sur la preuve, dans le modèle fini :
+    le plus petit η tel que I(V;T(Σ)|C) ≥ I(V;Σ|C) − η·H(C) (Définition 2.27). -/
+noncomputable def CLOModel.etaQ {lam : ℕ} {M C S S' V : Type*} [Fintype M] [Fintype C]
+    [Fintype S] [Fintype S'] [Fintype V] (X : CLOModel lam M C S V) (T : C → S → S' → ℝ) : ℝ :=
+  (X.IV - X.IVpost T) / X.HC
+
+/-- **Remarque 2.27 (encadrement de η_q) sur lois finies.** Pour H(C) > 0,
+    0 ≤ η_q ≤ log₂|V|/H(C), η_q réalise la Définition 2.27 avec égalité, et η_q ≤ α
+    dès que |V| ≤ 2^(αH(C)). -/
+theorem etaQ_bounds {lam : ℕ} {M C S S' V : Type*} [Fintype M] [Fintype C] [Fintype S]
+    [Fintype S'] [Fintype V] [Nonempty V] (X : CLOModel lam M C S V) (T : C → S → S' → ℝ)
+    (hT : ∀ c s t, 0 ≤ T c s t) (hT1 : ∀ c s, ∑ t, T c s t = 1) (hHC : 0 < X.HC) (α : ℝ) :
+    0 ≤ X.etaQ T ∧ X.IVpost T = X.IV - X.etaQ T * X.HC ∧
+      X.etaQ T ≤ Real.log (Fintype.card V) / Real.log 2 / X.HC ∧
+      ((Fintype.card V : ℝ) ≤ (2 : ℝ) ^ (α * X.HC) → X.etaQ T ≤ α) := by
+  have hpost := (X.opp_post T hT hT1).1
+  have hpost0 : 0 ≤ X.IVpost T := by
+    unfold CLOModel.IVpost
+    refine div_nonneg (sum_nonneg fun c _ => mul_nonneg (X.pC_nonneg c) (miN_nonneg _
+      (fun v t => sum_nonneg fun s _ => mul_nonneg (X.qSV_nonneg c s v) (hT c s t)) ?_))
+      CLOModel.log_two_pos'.le
+    have e : ∑ v, ∑ t, ∑ s, X.qSV c s v * T c s t = ∑ v, ∑ s, X.qSV c s v := by
+      refine sum_congr rfl fun v _ => ?_
+      rw [Finset.sum_comm]
+      exact sum_congr rfl fun s _ => by rw [← mul_sum, hT1, mul_one]
+    rw [e, Finset.sum_comm]
+    exact X.qSV_sum_le c
+  have hG := X.goulot_contexte α
+  have hIVle : X.IV ≤ Real.log (Fintype.card V) / Real.log 2 := X.IV_le_HV.trans X.HV_le_log_card
+  unfold CLOModel.etaQ
+  refine ⟨div_nonneg (by linarith) hHC.le, by field_simp; ring, ?_, ?_⟩
+  · exact div_le_div_of_nonneg_right (by linarith) hHC.le
+  · intro hcard
+    have h3 := hG.2.2 hcard
+    rw [div_le_iff₀ hHC]
+    linarith
+
+/-! ### 14.6 Capacité institutionnelle quantique (Remarque 2.29) -/
+
+/-- **Remarque 2.29.** L'inégalité de traitement des données ne fournit pas
+    l'Hypothèse 2.5 : dans la famille témoin, le verdict recopie un bit de la preuve
+    indépendant du message, d'où I(V;Σ|C) = 1 alors que I(M;Σ|C) = 0. L'inégalité
+    d'extraction y exige Δ_q ≥ 1, et ce bit est exactement I(V;Σ|M,C) (Proposition 2.1). -/
+theorem capacite_q_non_dpi (l : ℕ) :
+    (famModel l).I = 0 ∧ (famModel l).IV = 1 ∧ ¬ ((famModel l).IV ≤ (famModel l).I + 0) ∧
+      (famModel l).IVSM = 1 := by
+  have hI := CLOModel.fam_I l
+  have hIV := CLOModel.fam_IV l
+  obtain ⟨heq, hle, -, -⟩ := (famModel l).fondement_extraction
+  have hIVM0 : 0 ≤ (famModel l).IVM := by
+    unfold CLOModel.IVM
+    refine div_nonneg (sum_nonneg fun c _ => mul_nonneg (CLOModel.pC_nonneg _ c) (miN_nonneg _
+      (fun v m => sum_nonneg fun s _ => mul_nonneg (CLOModel.qMS_nonneg _ c m s)
+        (CLOModel.ker_nonneg _ c s v)) ?_)) CLOModel.log_two_pos'.le
+    have e : ∑ v, ∑ m, ∑ s, (famModel l).qMS c m s * (famModel l).ker c s v =
+        ∑ m, ∑ s, (famModel l).qMS c m s := by
+      rw [Finset.sum_comm]
+      refine sum_congr rfl fun m _ => ?_
+      rw [Finset.sum_comm]
+      exact sum_congr rfl fun s _ => by rw [← mul_sum, (famModel l).ker_sum, mul_one]
+    rw [e]
+    exact CLOModel.qMS_sum_le _ c
+  refine ⟨hI, hIV, by rw [hI, hIV]; norm_num, ?_⟩
+  rw [hI] at hle
+  have : (famModel l).IVM = 0 := le_antisymm hle hIVM0
+  rw [hIV, this, zero_add] at heq
+  exact heq.symm
+
+/-! ### 14.7 Portée du Théorème 2.5 : le régime est nécessaire (Remarque 2.37) -/
+
+/-- Paramètres du témoin de portée quantique : H(C) = 2, Δ_q = 0, α_q = 1, θ_q = 1/2
+    (γ_q = 1), β_q = 1, ζ_q = 0, η_q = 0 (encodage classique diagonal). -/
+noncomputable def ScopeParamsQ : QuantumParams :=
+  { H := 2, Δq := 0, αq := 1, θq := 1 / 2, βq := 1, ζq := 0, ηq := 0,
+    hH := by norm_num, hΔq := le_refl _, hαq := by norm_num, hθq := by norm_num,
+    hβq := le_refl _, hζq := le_refl _, hηq := le_refl _ }
+
+/-- Instance hors régime : la preuve révèle M avec probabilité 1/2,
+    I(M;Σ|C) = χmax = I_acc = λ/2. -/
+noncomputable def scopeInstanceQ (lam : ℕ) (hlam : 64 ≤ lam) : QuantumProtocolInstance lam :=
+  { params := ScopeParamsQ, Conf := 1 / 2, Rel := 1 / 2, Opp := 1, I := lam / 2,
+    χmax := lam / 2, Iacc := lam / 2, IV := 1, HV := 1, TDmax := 1 / 2, Dmsg := 1 / 2,
+    Dmax := 0,
+    hConf := by norm_num, hOpp := by norm_num, hTD := by norm_num, hRel := by norm_num,
+    hI := by positivity, hIV := by norm_num, hDmax := le_refl _,
+    fano_q := by linarith, holevo := le_refl _, moyenne_le_max := le_refl _,
+    pinsker_q := by norm_num }
+
+/-- **Remarque 2.37 (l'Hypothèse 2.8 est nécessaire).** Pour tout λ ≥ 64, une instance
+    satisfait les Hypothèses 2.5 à 2.7 avec Δ_q = η_q = 0 et Conf^q·Rel^q·Opp^q = 1/4,
+    alors que χmax = λ/2 viole le régime. -/
+theorem regime_q_necessary (lam : ℕ) (hlam : 64 ≤ lam) :
+    QuantumAssumptions (scopeInstanceQ lam hlam) ∧
+      (scopeInstanceQ lam hlam).params.Δq = 0 ∧ (scopeInstanceQ lam hlam).params.ηq = 0 ∧
+      (scopeInstanceQ lam hlam).Conf * (scopeInstanceQ lam hlam).Rel *
+        (scopeInstanceQ lam hlam).Opp = 1 / 4 ∧
+      (scopeInstanceQ lam hlam).χmax = lam / 2 := by
+  have hl : (64 : ℝ) ≤ lam := by exact_mod_cast hlam
+  refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_, ?_, ?_, ?_⟩ <;>
+    simp [scopeInstanceQ, ScopeParamsQ, gammaQ] <;> norm_num <;> linarith
+
+/-! ### 14.8 Cohérence du modèle abstrait quantique -/
+
+/-- Témoin de cohérence : une instance satisfait les Hypothèses 2.5 à 2.8 (κ = 0) et
+    atteint la borne explicite Δ_q/(γ_q·λ) avec Δ_q = 1, γ_q = 1. -/
+noncomputable def WitnessParamsQ : QuantumParams :=
+  { H := 2, Δq := 1, αq := 1, θq := 1 / 2, βq := 1, ζq := 0, ηq := 0,
+    hH := by norm_num, hΔq := by norm_num, hαq := by norm_num, hθq := by norm_num,
+    hβq := le_refl _, hζq := le_refl _, hηq := le_refl _ }
+
+noncomputable def witnessInstanceQ (lam : ℕ) (hlam : 1 ≤ lam) : QuantumProtocolInstance lam :=
+  { params := WitnessParamsQ, Conf := 1, Rel := 1 / lam, Opp := 1, I := 0, χmax := 0,
+    Iacc := 0, IV := 1, HV := 1, TDmax := 0, Dmsg := 0, Dmax := 0,
+    hConf := by norm_num, hOpp := by norm_num, hTD := by norm_num,
+    hRel := by
+      have hl : (1 : ℝ) ≤ lam := by exact_mod_cast hlam
+      exact ⟨by positivity, by rw [div_le_one (by linarith)]; exact hl⟩,
+    hI := le_refl _, hIV := by norm_num, hDmax := le_refl _,
+    fano_q := by
+      have hl : (0 : ℝ) < lam := by exact_mod_cast hlam
+      rw [div_mul_cancel₀ _ hl.ne']; norm_num,
+    holevo := le_refl _, moyenne_le_max := le_refl _, pinsker_q := by norm_num }
+
+/-- **Cohérence.** Les Hypothèses 2.5 à 2.8 sont satisfiables simultanément et la
+    borne explicite du Théorème 2.5 est atteinte : produit = Δ_q/(γ_q·λ) = 1/λ. -/
+theorem assumptions_q_consistent (lam : ℕ) (hlam : 1 ≤ lam) :
+    QuantumAssumptions (witnessInstanceQ lam hlam) ∧
+      (witnessInstanceQ lam hlam).χmax ≤ 0 / lam ∧
+      (witnessInstanceQ lam hlam).Conf * (witnessInstanceQ lam hlam).Rel *
+        (witnessInstanceQ lam hlam).Opp =
+        (witnessInstanceQ lam hlam).params.Δq / (gammaQ (witnessInstanceQ lam hlam).params * lam) := by
+  refine ⟨⟨?_, ?_, ?_, ?_⟩, ?_, ?_⟩ <;>
+    simp [witnessInstanceQ, WitnessParamsQ, gammaQ]
+
+/-! ### 14.9 Ordre de grandeur de D_max pour ML-DSA-65 (Remarque 2.36) -/
+
+/-- **Remarque 2.36.** Une signature ML-DSA-65 compte 3 309 octets, soit 26 472 bits.
+    Si H(Σ|C = c) ≤ λ + 256 avec λ ≤ 256, alors D_max = 26 472 − H(Σ|C = c) ≥ 25 960 bits :
+    le minorant du Lemme 2.8 cesse d'être informatif dès que ζ_q n'est pas infime. -/
+theorem dilithium_Dmax (lam Hs : ℝ) (hlam : lam ≤ 256) (hH : Hs ≤ lam + 256) :
+    (25960 : ℝ) ≤ 3309 * 8 - Hs := by
+  linarith
+
+end ConditionalCRO
+
+end ExtensionL5a
+
+/-! ## 15. Bloc de vérification du noyau quantique (version 3.6) -/
+
+#print axioms ConditionalCRO.QuantumProtocolInstance.conf_guarantee
+#print axioms ConditionalCRO.trilemma_pq_explicit
+#print axioms ConditionalCRO.trilemma_pq_published
+#print axioms ConditionalCRO.conditional_CRO_trilemma_pq
+#print axioms ConditionalCRO.trilemma_pq_refined
+#print axioms ConditionalCRO.seuil_Hsharp_q
+#print axioms ConditionalCRO.forme_simplifiee_pq
+#print axioms ConditionalCRO.verdict_q_card_not_efficient
+#print axioms ConditionalCRO.raccord_gamma_q
+#print axioms ConditionalCRO.statut_regime_q
+#print axioms ConditionalCRO.constantes_pinsker
+#print axioms ConditionalCRO.deltaQ_le
+#print axioms ConditionalCRO.etaQ_bounds
+#print axioms ConditionalCRO.capacite_q_non_dpi
+#print axioms ConditionalCRO.regime_q_necessary
+#print axioms ConditionalCRO.assumptions_q_consistent
+#print axioms ConditionalCRO.dilithium_Dmax

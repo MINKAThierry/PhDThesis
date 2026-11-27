@@ -4,7 +4,7 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.5). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.6). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
   Renvois : manuscrit v36 (« Aux fondements de la cryptographie
@@ -15,8 +15,8 @@
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
   Importation. Les définitions et les preuves sont dans un seul fichier. La
-  version 3.5 prolonge la 3.4 par ajout des sections 12 et 13 en fin de
-  fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
+  versions 3.5 et 3.6 prolongent la 3.4 par ajout des sections 12 à 15 en
+  fin de fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
   restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
 -/
@@ -475,5 +475,130 @@ def GarantieConfDecroissante : Prop :=
   ∀ {β I₁ I₂ : ℝ}, 0 ≤ β → I₁ ≤ I₂ →
     1 - Real.sqrt (c0 * β * I₂) ≤ 1 - Real.sqrt (c0 * β * I₁) ∧
       1 - Real.sqrt (c0 * β * 0) = 1
+
+/-! ## 7. Extension v3.6, lot L5a : noyau algébrique quantique
+
+Renvois au manuscrit v36. Ces énoncés sont démontrés dans la section 14 de
+`ConditionalCRO.lean` (version 3.6). Dans le modèle abstrait quantique, Fano quantique
+(Lemme 2.6, p. 71), la borne de Holevo (Lemme 2.7, p. 71) et Pinsker quantique
+(Lemme 2.4, p. 70) sont des champs de `QuantumProtocolInstance`, comme Fano et Pinsker
+dans le modèle abstrait classique. `QuantumAssumptions` porte les Hypothèses 2.5 à 2.7
+(p. 75 et 76) ; le régime (Hypothèse 2.8, p. 76) est une prémisse. Les définitions
+nouvelles sont testées dans `Coherence.lean`, section 7. -/
+
+/-- Lemme 2.8 (p. 77), garantie de confidentialité quantique (2.108), sous l'Hypothèse 2.7 :
+    Conf^q ≥ 1 − ½·√(2β_q·χmax + 2ζ_q·Dmax). -/
+def GarantieConfQuantique : Prop :=
+  ∀ {lam : ℕ} (P : QuantumProtocolInstance lam),
+    P.Dmsg ≤ P.params.βq * P.χmax + P.params.ζq * P.Dmax →
+      1 - 1 / 2 * Real.sqrt (2 * P.params.βq * P.χmax + 2 * P.params.ζq * P.Dmax) ≤ P.Conf
+
+/-- Théorème 2.5 (p. 77), forme explicite (2.110), sous les Hypothèses 2.5, 2.6 et 2.8. -/
+def TrilemmeQuantiqueExplicite : Prop :=
+  ∀ {lam : ℕ} (P : QuantumProtocolInstance lam), QuantumAssumptions P →
+    ∀ (κ : ℝ), 0 ≤ κ → 1 ≤ lam → P.χmax ≤ κ / lam →
+      P.Conf * P.Rel * P.Opp ≤ 1 / gammaQ P.params *
+        (P.params.Δq / lam + κ * (P.params.Δq + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3)
+
+/-- Remarque 2.41 (p. 80), la majoration publiée comme corollaire :
+    produit ≤ (Δ_q + η_q·H(C))/λ + K/λ² + ε₀(λ). -/
+def TrilemmeQuantiquePublie : Prop :=
+  ∀ {lam : ℕ} (P : QuantumProtocolInstance lam), QuantumAssumptions P →
+    ∀ (κ : ℝ), 0 ≤ κ → 1 ≤ lam → P.χmax ≤ κ / lam →
+      P.Conf * P.Rel * P.Opp ≤ (P.params.Δq + P.params.ηq * P.params.H) / lam +
+        (κ * (P.params.Δq + 1) + κ ^ 2) / (lam : ℝ) ^ 2 + ε₀ lam
+
+/-- Théorème 2.5 (p. 77), forme asymptotique, pour une famille à paramètres fixes. -/
+def TrilemmeQuantiqueAsymptotique : Prop :=
+  ∀ (F : QuantumProtocolFamily) (κ : ℝ), 0 ≤ κ →
+    (∀ lam : ℕ, 64 ≤ lam → QuantumAssumptions (F.inst lam)) →
+    (∀ lam : ℕ, 64 ≤ lam → (F.inst lam).χmax ≤ κ / lam) →
+      ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
+        (F.inst lam).Conf * (F.inst lam).Rel * (F.inst lam).Opp ≤
+          (F.params.Δq + F.params.ηq * F.params.H) / lam + K / (lam : ℝ) ^ 2 + ε lam
+
+/-- Remarque 2.39 (p. 79), forme raffinée quantique (2.117). -/
+def TrilemmeQuantiqueRaffine : Prop :=
+  ∀ {lam : ℕ} (P : QuantumProtocolInstance lam), QuantumAssumptions P →
+    ∀ (κ : ℝ), 0 ≤ κ → 1 ≤ lam → P.χmax ≤ κ / lam → P.IV ≤ P.HV →
+      P.Conf * P.Rel * P.Opp ≤
+        (κ / lam + 1) / lam * min 1 ((κ / lam + P.params.Δq) / gammaQ P.params)
+
+/-- Remarque 2.39 (p. 79), seuil : facteur < 1 ⟺ Δ_q < γ_q − κ/λ ⟺ H(C) > H♯_q. -/
+def SeuilHdieseQuantique : Prop :=
+  ∀ (p : QuantumParams) (κ lam : ℝ), 0 < gammaQ p →
+    (min 1 ((κ / lam + p.Δq) / gammaQ p) < 1 ↔ p.Δq < gammaQ p - κ / lam) ∧
+      (p.Δq < gammaQ p - κ / lam ↔ (p.Δq + κ / lam) / (p.θq * p.αq) < p.H)
+
+/-- Corollaire 2.2 (p. 80), forme simplifiée (2.118) : le rapport du majorant à
+    (Δ_q + η_q·H(C))/λ tend vers 1. -/
+def FormeSimplifieeQuantique : Prop :=
+  ∀ (D K : ℝ), 0 < D →
+    Tendsto (fun lam : ℕ => (D / lam + K / (lam : ℝ) ^ 2) / (D / lam)) atTop (nhds 1)
+
+/-- Remarque 2.31 (p. 76) : k_λ ≤ 2^(α_q·H(C)) n'entraîne pas H(V|C) ≥ θ_q·α_q·H(C). -/
+def CardinalSansEfficaciteQuantique : Prop :=
+  ∀ (l : ℕ) (θq αq : ℝ), 0 < θq → 0 < αq →
+    ((Fintype.card (Fin 1) : ℝ) ≤ (2 : ℝ) ^ (αq * (famModel l).constVerdict.HC)) ∧
+      (famModel l).constVerdict.HV < θq * αq * (famModel l).constVerdict.HC
+
+/-- Remarque 2.32 (p. 76), raccord γ_q = γ ⟺ θ_q = 1 − 1/(αH(C)) ∈ [1/2, 1). -/
+def RaccordGammaQuantique : Prop :=
+  ∀ (α H θq : ℝ), 0 < α * H →
+    (θq * α * H = α * H - 1 ↔ θq = 1 - 1 / (α * H)) ∧
+      (1 ≤ α * H - 1 → 1 / 2 ≤ 1 - 1 / (α * H) ∧ 1 - 1 / (α * H) < 1)
+
+/-- Remarque 2.33 (p. 76), statut du régime quantique. -/
+def StatutRegimeQuantique : Prop :=
+  ∀ {lam : ℕ} (P : QuantumProtocolInstance lam) (κ : ℝ),
+    P.Dmsg ≤ P.params.βq * P.χmax + P.params.ζq * P.Dmax → P.χmax ≤ κ / lam →
+      P.Iacc ≤ P.I ∧ P.I ≤ κ / lam ∧
+        1 - 1 / 2 * Real.sqrt (2 * P.params.βq * (κ / lam) + 2 * P.params.ζq * P.Dmax) ≤ P.Conf
+
+/-- Remarque 2.35 (p. 77) : (ln 2)/2 < 1/2 < c₀. -/
+def ConstantesPinsker : Prop := Real.log 2 / 2 < 1 / 2 ∧ (1 : ℝ) / 2 < c0
+
+/-- Définition 2.30 (p. 75) : sans renforcement, Δ_q ≤ Δ. -/
+def DecompositionDeltaQ : Prop := ∀ (Δ δdegr : ℝ), 0 ≤ δdegr → deltaQ Δ 0 δdegr ≤ Δ
+
+/-- Définition 2.27 et Remarque 2.27 (p. 74), sur lois finies : 0 ≤ η_q ≤ log₂|V|/H(C),
+    égalité dans la définition et η_q ≤ α si |V| ≤ 2^(αH(C)). -/
+def EncadrementEtaQ : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {S' : Type u₄} {V : Type u₅}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype S'] [Fintype V] [Nonempty V]
+    (X : CLOModel lam M C S V) (T : C → S → S' → ℝ),
+    (∀ c s t, 0 ≤ T c s t) → (∀ c s, ∑ t, T c s t = 1) → 0 < X.HC → ∀ (α : ℝ),
+      0 ≤ X.etaQ T ∧ X.IVpost T = X.IV - X.etaQ T * X.HC ∧
+        X.etaQ T ≤ Real.log (Fintype.card V) / Real.log 2 / X.HC ∧
+        ((Fintype.card V : ℝ) ≤ (2 : ℝ) ^ (α * X.HC) → X.etaQ T ≤ α)
+
+/-- Remarque 2.29 (p. 74) : la DPI ne fournit pas l'Hypothèse 2.5 ; I(V;Σ|C) = 1,
+    I(M;Σ|C) = 0 et I(V;Σ|M,C) = 1 dans la famille témoin. -/
+def CapaciteQuantiqueHorsDPI : Prop :=
+  ∀ (l : ℕ), (famModel l).I = 0 ∧ (famModel l).IV = 1 ∧
+    ¬ ((famModel l).IV ≤ (famModel l).I + 0) ∧ (famModel l).IVSM = 1
+
+/-- Remarque 2.37 (p. 79) : l'Hypothèse 2.8 est nécessaire. -/
+def TemoinPorteeQuantique : Prop :=
+  ∀ (lam : ℕ) (hlam : 64 ≤ lam),
+    QuantumAssumptions (scopeInstanceQ lam hlam) ∧
+      (scopeInstanceQ lam hlam).params.Δq = 0 ∧ (scopeInstanceQ lam hlam).params.ηq = 0 ∧
+      (scopeInstanceQ lam hlam).Conf * (scopeInstanceQ lam hlam).Rel *
+        (scopeInstanceQ lam hlam).Opp = 1 / 4 ∧
+      (scopeInstanceQ lam hlam).χmax = lam / 2
+
+/-- Cohérence du modèle abstrait quantique : les Hypothèses 2.5 à 2.8 sont satisfiables
+    et la borne explicite du Théorème 2.5 est atteinte. -/
+def TemoinCoherenceQuantique : Prop :=
+  ∀ (lam : ℕ) (hlam : 1 ≤ lam),
+    QuantumAssumptions (witnessInstanceQ lam hlam) ∧
+      (witnessInstanceQ lam hlam).χmax ≤ 0 / lam ∧
+      (witnessInstanceQ lam hlam).Conf * (witnessInstanceQ lam hlam).Rel *
+        (witnessInstanceQ lam hlam).Opp =
+        (witnessInstanceQ lam hlam).params.Δq / (gammaQ (witnessInstanceQ lam hlam).params * lam)
+
+/-- Remarque 2.36 (p. 77) : D_max ≥ 25 960 bits pour ML-DSA-65. -/
+def DmaxMLDSA : Prop :=
+  ∀ (lam Hs : ℝ), lam ≤ 256 → Hs ≤ lam + 256 → (25960 : ℝ) ≤ 3309 * 8 - Hs
 
 end Enonces

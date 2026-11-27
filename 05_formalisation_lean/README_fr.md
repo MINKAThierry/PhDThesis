@@ -4,14 +4,14 @@
 
 [English version](README_en.md)
 
-`ConditionalCRO.lean`, version 3.5, est un fichier unique qui certifie le Trilemme CRO conditionnel classique, du noyau algébrique aux lois de probabilité finies. Il ne contient aucun `sorry` et ne déclare aucun `axiom`. Le manuscrit qui présentait le noyau algébrique avait été soumis au *Journal of Automated Reasoning* ; son retrait a été demandé en novembre 2026. La couche concrète (section 10 du fichier) est propre à la thèse. La version 3.5 y ajoute, en section 12, les résultats d'information classique du chapitre 2 : DPI, Théorèmes 2.1 à 2.3, Proposition 2.1 et plusieurs remarques. Le plan qui doit étendre la formalisation à tout le manuscrit est décrit dans [`FEUILLE_DE_ROUTE_FORMALISATION_fr.md`](FEUILLE_DE_ROUTE_FORMALISATION_fr.md) ; l'état énoncé par énoncé est dans [`INVENTAIRE_LEAN_MANUSCRIT_fr.md`](INVENTAIRE_LEAN_MANUSCRIT_fr.md).
+`ConditionalCRO.lean`, version 3.6, est un fichier unique qui certifie le Trilemme CRO conditionnel classique, du noyau algébrique aux lois de probabilité finies. Il ne contient aucun `sorry` et ne déclare aucun `axiom`. Le manuscrit qui présentait le noyau algébrique avait été soumis au *Journal of Automated Reasoning* ; son retrait a été demandé en novembre 2026. La couche concrète (section 10 du fichier) est propre à la thèse. La version 3.5 y ajoute, en section 12, les résultats d'information classique du chapitre 2 : DPI, Théorèmes 2.1 à 2.3, Proposition 2.1 et plusieurs remarques. La version 3.6 y ajoute, en section 14, le noyau algébrique du Trilemme CRO conditionnel quantique (Théorème 2.5, Corollaire 2.2, Lemme 2.8 et Remarques 2.27 à 2.41), où Fano quantique, Holevo et Pinsker quantique sont posés comme le sont Fano et Pinsker dans le noyau classique. Le plan qui doit étendre la formalisation à tout le manuscrit est décrit dans [`FEUILLE_DE_ROUTE_FORMALISATION_fr.md`](FEUILLE_DE_ROUTE_FORMALISATION_fr.md) ; l'état énoncé par énoncé est dans [`INVENTAIRE_LEAN_MANUSCRIT_fr.md`](INVENTAIRE_LEAN_MANUSCRIT_fr.md).
 
 | Élément | Valeur |
 |---|---|
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lakefile.toml`](lakefile.toml), [`lake-manifest.json`](lake-manifest.json)) |
 | Licence | MIT |
-| Sortie de référence | [`results/lean_build_v3.5.log`](results/lean_build_v3.5.log) ; versions antérieures : `lean_build.log` (v2.2), `lean_build_v3.0.log` à `lean_build_v3.4.log` |
+| Sortie de référence | [`results/lean_build_v3.6.log`](results/lean_build_v3.6.log) ; versions antérieures : `lean_build.log` (v2.2), `lean_build_v3.0.log` à `lean_build_v3.5.log` |
 
 ## Compiler
 
@@ -26,7 +26,7 @@ lake env lean ConditionalCRO.lean    # affiche les #check et les #print axioms
 
 ## Dossier de vérification
 
-Le dossier [`VERIFICATION_fr.md`](VERIFICATION_fr.md) permet de juger ce qui est prouvé sans lire tout le code. Il est additif et ne modifie pas les preuves de `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) contient les 47 énoncés de la thèse sans preuve. [`Verification/Principal.lean`](Verification/Principal.lean) relie chacun au théorème existant en une ligne. [`Verification/Coherence.lean`](Verification/Coherence.lean) teste la non-vacuité des définitions propres. Le script [`verifier.sh`](verifier.sh) audite les sources, la compilation, les axiomes et le noyau. Ses sorties sont dans [`results/verification.log`](results/verification.log) et [`results/axiomes.txt`](results/axiomes.txt). Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) l'exécute sur GitHub.
+Le dossier [`VERIFICATION_fr.md`](VERIFICATION_fr.md) permet de juger ce qui est prouvé sans lire tout le code. Il est additif et ne modifie pas les preuves de `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) contient les 64 énoncés de la thèse sans preuve. [`Verification/Principal.lean`](Verification/Principal.lean) relie chacun au théorème existant en une ligne. [`Verification/Coherence.lean`](Verification/Coherence.lean) teste la non-vacuité des définitions propres. Le script [`verifier.sh`](verifier.sh) audite les sources, la compilation, les axiomes et le noyau. Ses sorties sont dans [`results/verification.log`](results/verification.log) et [`results/axiomes.txt`](results/axiomes.txt). Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) l'exécute sur GitHub.
 
 ## Ce qui est certifié
 
@@ -43,6 +43,8 @@ Le dossier [`VERIFICATION_fr.md`](VERIFICATION_fr.md) permet de juger ce qui est
 | 11 | Bloc `#check` et `#print axioms` | Contrôle des axiomes |
 | 12 (v3.5) | `dpi_finite`, `tv_pushforward_le`, `bornes_mesures`, `goulot_contexte`, `capacite_le_gamma_add_one`, `conf_post`, `rel_post`, `opp_post`, `composition_parallele`, `chain_rule`, `fondement_extraction`, `opp_eq_one_of_det_concrete` | Information classique finie du chapitre 2 : DPI, Théorèmes 2.1 à 2.3, Proposition 2.1, Remarques 2.3 à 2.5, 2.11, 2.12, 2.15 et 3.9 |
 | 13 (v3.5) | Bloc `#print axioms` de l'extension | Contrôle des axiomes des 24 théorèmes ajoutés |
+| 14 (v3.6) | `QuantumProtocolInstance`, `QuantumAssumptions`, `conf_guarantee`, `trilemma_pq_explicit`, `conditional_CRO_trilemma_pq`, `trilemma_pq_refined`, `seuil_Hsharp_q`, `etaQ_bounds`, `regime_q_necessary` | Noyau algébrique quantique : Théorème 2.5, Corollaire 2.2, Lemme 2.8, Hypothèses 2.5 à 2.8, Définitions 2.27 et 2.30, Remarques 2.27, 2.29, 2.31 à 2.33, 2.35 à 2.37, 2.39 et 2.41 |
+| 15 (v3.6) | Bloc `#print axioms` du noyau quantique | Contrôle des axiomes des 17 théorèmes ajoutés |
 
 ### Énoncé compilé du théorème principal
 
@@ -59,7 +61,7 @@ ConditionalCRO.conditional_CRO_trilemma : ∀ (F : ConditionalCRO.ProtocolFamily
 
 ## Ce qui est posé comme hypothèse
 
-Dans le noyau algébrique (sections 1 à 9), les inégalités de Fano et de Pinsker sont intégrées comme **propriétés de chaque instance de protocole** (champs `fano` et `pinsker` de `ProtocolInstance`), Fano sous la forme relâchée $I\ge\mathrm{Rel}\cdot\lambda-1$. La couche concrète (section 10) les **démontre** pour des lois de probabilité finies sur $(C,M,\Sigma,V)$, avec $M$ uniforme sur $2^\lambda$ valeurs et indépendant de $C$ et une interprétation admissible ; seule leur dérivation pour des lois quelconques reste à faire. Les hypothèses institutionnelles 1, 2′ et 4 sont des hypothèses explicites des théorèmes ; l'Hypothèse 3 et une condition de supports communs ne servent qu'au Lemme 4. La formalisation ne couvre ni l'extension quantique du trilemme ni SOTP ; une mécanisation réduite des réductions game-based de SOTP-Low se trouve dans [`../04_sotp/preuves_game_based/lean/`](../04_sotp/preuves_game_based/lean/).
+Dans le noyau algébrique (sections 1 à 9), les inégalités de Fano et de Pinsker sont intégrées comme **propriétés de chaque instance de protocole** (champs `fano` et `pinsker` de `ProtocolInstance`), Fano sous la forme relâchée $I\ge\mathrm{Rel}\cdot\lambda-1$. La couche concrète (section 10) les **démontre** pour des lois de probabilité finies sur $(C,M,\Sigma,V)$, avec $M$ uniforme sur $2^\lambda$ valeurs et indépendant de $C$ et une interprétation admissible ; seule leur dérivation pour des lois quelconques reste à faire. Les hypothèses institutionnelles 1, 2′ et 4 sont des hypothèses explicites des théorèmes ; l'Hypothèse 3 et une condition de supports communs ne servent qu'au Lemme 4. Le noyau quantique (section 14) pose Fano quantique, la borne de Holevo et Pinsker quantique comme champs de `QuantumProtocolInstance` ; leur démonstration relève de Physlib et n'est pas faite. La formalisation ne couvre pas encore SOTP ; une mécanisation réduite des réductions game-based de SOTP-Low se trouve dans [`../04_sotp/preuves_game_based/lean/`](../04_sotp/preuves_game_based/lean/).
 
 ## Portée des témoins
 
@@ -69,7 +71,7 @@ Une `ProtocolInstance` est un point du modèle abstrait. Le **témoin de cohére
 
 | Fichier | Contenu |
 |---|---|
-| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.5 (commentaires en français) ; l'en-tête porte les noms des auteurs, omis du listing de l'annexe B |
+| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.6 (commentaires en français) ; l'en-tête porte les noms des auteurs, omis du listing de l'annexe B |
 | [`lakefile.toml`](lakefile.toml), [`lean-toolchain`](lean-toolchain), [`lake-manifest.json`](lake-manifest.json) | Versions figées de Lean et de Mathlib |
 | [`results/`](results/) | Sorties de `lake env lean ConditionalCRO.lean` pour chaque version |
 | [`cas_limite/`](cas_limite/) | Script du cas limite du Théorème 1 de P2 dans sa formulation initiale |

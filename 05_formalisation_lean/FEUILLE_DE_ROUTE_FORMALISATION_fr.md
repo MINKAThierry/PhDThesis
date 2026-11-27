@@ -7,7 +7,8 @@ Version du 27 novembre 2026, établie sur le manuscrit v36 et la formalisation e
 | Lot | État | Version | Couverture après le lot |
 |---|---|---|---|
 | L1 information classique finie | **terminé le 27 novembre 2026** (24 théorèmes ajoutés, 18 énoncés dans `Enonces.lean`) | `ConditionalCRO.lean` v3.5 | 57 sur 144 (40 %) |
-| L5a noyau quantique | prochain lot | v3.6 prévue | 75 sur 144 (52 %) |
+| L5a noyau quantique | **terminé le 27 novembre 2026** (17 théorèmes ajoutés, 17 énoncés dans `Enonces.lean`) | `ConditionalCRO.lean` v3.6 | 79 sur 144 (55 %) |
+| L2 bornes avancées | prochain lot | v3.7 prévue | — |
 
 ## Point de départ
 
@@ -62,6 +63,7 @@ Le manuscrit compte 170 énoncés numérotés. Parmi eux, 144 relèvent d'une fo
   - *Énoncés.* Théorème 2.5 et Corollaire 2.2, Hypothèses 2.5 à 2.8 et Définition 2.30. Remarques 2.27 (encadrement de η_q), 2.31 à 2.33, 2.35 à 2.37 et 2.39 à 2.41.
   - *Méthode.* On procède comme pour le cas classique en v2.x. Une `QuantumProtocolInstance` sur des réels porte comme champs les lemmes quantiques posés et le trilemme quantique en découle. C'est le gain le plus rapide du chantier.
   - *Effort estimé.* 2 sessions.
+  - *État.* Terminé en v3.6. Le gain dépasse la prévision (79 énoncés au lieu de 75), car les Hypothèses 2.5 à 2.8 et les Lemmes 2.4, 2.6 et 2.7 sont désormais posés en Lean. La Remarque 2.40 (borne aiguë quantique) passe au lot L2, puisqu'elle dépend de la Proposition 2.2.
 - **L5b, encodage classique diagonal.**
   - *Énoncés.* Remarques 2.9, 2.25 et 2.26, ainsi que le contre-exemple de la Remarque 2.34 (lemme 6 publié, I_acc = 1 bit contre 1/2).
   - *Méthode.* Des états diagonaux réduits à des lois finies, en Mathlib seul.

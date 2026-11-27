@@ -21,7 +21,7 @@ Ce dépôt réunit l'ensemble des travaux de la thèse de doctorat de Thierry Em
 | [02_preprints/](02_preprints/README_fr.md) | Fiches des neuf préprints IACR ePrint | PRÉPRINT |
 | [03_resultats_these/](03_resultats_these/README_fr.md) | Ce que la thèse ajoute ou précise par rapport aux articles | PROPOSITION |
 | [04_sotp/](04_sotp/README_fr.md) | Famille SOTP, spécification, preuves game-based, implémentations de référence (Low, Base, High exécutable Circom/Groth16) | PROPOSITION |
-| [05_formalisation_lean/](05_formalisation_lean/README_fr.md) | Formalisation Lean 4 du Trilemme conditionnel (v3.5) | PROPOSITION |
+| [05_formalisation_lean/](05_formalisation_lean/README_fr.md) | Formalisation Lean 4 du Trilemme conditionnel (v3.6) | PROPOSITION |
 | [06_calcul/](06_calcul/README_fr.md) | Scripts, données et résultats de la calibration illustrative | PROPOSITION |
 | [07_protocoles_terrain/](07_protocoles_terrain/README_fr.md) | Protocoles de mesure, formulaires de terrain et scripts d'analyse | PROPOSITION |
 | [docs/](docs/README_fr.md) | Correspondance entre la thèse et le dépôt, historique, procédure de publication | PROPOSITION |

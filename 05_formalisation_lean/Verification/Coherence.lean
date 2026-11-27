@@ -3,14 +3,16 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.5), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.6), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
   Définitions testées : γ = αH(C) − 1, InstitutionalParams,
   InstitutionalAssumptions, tv, klN, miN, CLOModel, Conf, Rel et Opp, puis
   (section 6, version 3.5) entN1, condMI, HS, IVM, IVSM, IVpost, post,
-  constVerdict et detVerdict.
+  constVerdict et detVerdict, puis (section 7, version 3.6) gammaQ,
+  QuantumProtocolInstance, QuantumAssumptions, QuantumProtocolFamily, deltaQ
+  et etaQ.
   La section 5 montre que les hypothèses imposent H(V|C) ≥ 1, ce qui exclut la
   division par zéro dans Opp (en Lean, x/0 = 0).
 -/
@@ -350,5 +352,72 @@ lemma IVpost_identite {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fin
   simp only [mul_ite, mul_one, mul_zero]
   rw [Finset.sum_ite_eq']
   simp
+
+/-! ## 7. Définitions du noyau quantique (version 3.6, lot L5a) -/
+
+/-- `gammaQ` : γ_q = 1 pour le témoin (θ_q = 1/2, α_q = 1, H(C) = 2) ; γ_q = 1/2 < 1
+    pour H(C) = 1, cas exclu par l'Hypothèse 2.6. -/
+lemma gammaQ_temoin : gammaQ WitnessParamsQ = 1 := by
+  simp [gammaQ, WitnessParamsQ]
+
+noncomputable def ParamsQPetits : QuantumParams :=
+  { H := 1, Δq := 0, αq := 1, θq := 1 / 2, βq := 1, ζq := 0, ηq := 0,
+    hH := by norm_num, hΔq := le_refl _, hαq := by norm_num, hθq := by norm_num,
+    hβq := le_refl _, hζq := le_refl _, hηq := le_refl _ }
+
+lemma gammaQ_petit : gammaQ ParamsQPetits < 1 := by
+  simp [gammaQ, ParamsQPetits]; norm_num
+
+/-- `QuantumAssumptions` : instance dégénérée où H(V|C) = 0, exclue par l'Hypothèse 2.6. -/
+noncomputable def degenerateInstanceQ (lam : ℕ) : QuantumProtocolInstance lam :=
+  { params := WitnessParamsQ, Conf := 1, Rel := 0, Opp := 0, I := 0, χmax := 0, Iacc := 0,
+    IV := 1, HV := 0, TDmax := 0, Dmsg := 0, Dmax := 0,
+    hConf := by norm_num, hOpp := by norm_num, hTD := by norm_num, hRel := by norm_num,
+    hI := le_refl _, hIV := by norm_num, hDmax := le_refl _,
+    fano_q := by norm_num, holevo := le_refl _, moyenne_le_max := le_refl _,
+    pinsker_q := by norm_num }
+
+lemma degenereQ_exclu (lam : ℕ) : ¬ QuantumAssumptions (degenerateInstanceQ lam) := by
+  intro hA
+  have h1 := hA.A6γ
+  have h2 := hA.A6
+  simp [degenerateInstanceQ, gammaQ_temoin] at h2
+  linarith
+
+/-- Le cas qui satisfait QuantumAssumptions, rappelé de la section 14. -/
+lemma temoinQ_satisfait (lam : ℕ) (hlam : 1 ≤ lam) :
+    QuantumAssumptions (witnessInstanceQ lam hlam) :=
+  (assumptions_q_consistent lam hlam).1
+
+/-- `QuantumProtocolFamily` : une famille à paramètres fixes satisfait les Hypothèses
+    2.5 à 2.8 pour tout λ, et le théorème asymptotique s'y applique. -/
+noncomputable def familleQ : QuantumProtocolFamily :=
+  { params := WitnessParamsQ,
+    inst := fun lam =>
+      { params := WitnessParamsQ, Conf := 1, Rel := 0, Opp := 1, I := 0, χmax := 0, Iacc := 0,
+        IV := 1, HV := 1, TDmax := 0, Dmsg := 0, Dmax := 0,
+        hConf := by norm_num, hOpp := by norm_num, hTD := by norm_num, hRel := by norm_num,
+        hI := le_refl _, hIV := by norm_num, hDmax := le_refl _,
+        fano_q := by norm_num, holevo := le_refl _, moyenne_le_max := le_refl _,
+        pinsker_q := by norm_num },
+    hparams := fun _ => rfl }
+
+lemma familleQ_hypotheses (lam : ℕ) : QuantumAssumptions (familleQ.inst lam) := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> simp [familleQ, WitnessParamsQ, gammaQ]
+
+lemma familleQ_asymptotique :
+    ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
+      (familleQ.inst lam).Conf * (familleQ.inst lam).Rel * (familleQ.inst lam).Opp ≤
+        (familleQ.params.Δq + familleQ.params.ηq * familleQ.params.H) / lam + K / (lam : ℝ) ^ 2 + ε lam :=
+  conditional_CRO_trilemma_pq familleQ 0 le_rfl (fun lam _ => familleQ_hypotheses lam)
+    (fun lam _ => by simp [familleQ])
+
+/-- `deltaQ` : hypothèse de travail de ML-DSA-65, Δ_q = 35 + 0 − 7 = 28 bits. -/
+lemma deltaQ_mldsa : deltaQ 35 0 7 = 28 := by norm_num [deltaQ]
+
+/-- `etaQ` : le canal identité ne fait rien perdre, η_q = 0. -/
+lemma etaQ_identite (l : ℕ) :
+    (famModel l).etaQ (fun _ s t => if s = t then (1 : ℝ) else 0) = 0 := by
+  simp [CLOModel.etaQ, IVpost_identite]
 
 end Coherence

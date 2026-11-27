@@ -2,16 +2,16 @@
 
 [Version française](VERIFICATION_fr.md)
 
-This dossier lets a reader judge what the formalisation proves without reading the 2,352 lines of `ConditionalCRO.lean`. It follows the model of the repository of the Lean proof of the Riemann hypothesis (November 2026). Statements are isolated from proofs, a thin entry point links them to the theorems and a script audits the axioms. The limits are stated plainly.
+This dossier lets a reader judge what the formalisation proves without reading the 2,790 lines of `ConditionalCRO.lean`. It follows the model of the repository of the Lean proof of the Riemann hypothesis (November 2026). Statements are isolated from proofs, a thin entry point links them to the theorems and a script audits the axioms. The limits are stated plainly.
 
-The dossier is **additive**. Version 3.5 of `ConditionalCRO.lean` (27 November 2026) extends version 3.4 by appending sections 12 and 13 at the end of the file. Its lines 5 to 1575 remain identical to listing B.1 in Appendix B of the thesis, up to the four author lines of the header. Only line 4, which carries the version number, has changed. Line numbers cited for version 3.4 therefore remain valid. The verification files import `ConditionalCRO`.
+The dossier is **additive**. Versions 3.5 and 3.6 of `ConditionalCRO.lean` (27 November 2026) extend version 3.4 by appending sections 12 to 15 at the end of the file. Its lines 5 to 1575 remain identical to listing B.1 in Appendix B of the thesis, up to the four author lines of the header. Only line 4, which carries the version number, has changed. Line numbers cited for version 3.4 therefore remain valid. The verification files import `ConditionalCRO`.
 
 ## What to read and in which order
 
 | Order | File | Role |
 |---|---|---|
 | 1 | this document | Map, traceability and limits |
-| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 47 statements of the thesis, with no proof at all, each with its reference to manuscript v36 |
+| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 64 statements of the thesis, with no proof at all, each with its reference to manuscript v36 |
 | 3 | [`Verification/Principal.lean`](Verification/Principal.lean) | One line per statement, of the form `theorem principal_x : Enonces.X := existingName` |
 | 4 | [`Verification/Coherence.lean`](Verification/Coherence.lean) | Non-vacuity tests of the project's own definitions |
 | 5 | [`results/verification.log`](results/verification.log), [`results/axiomes.txt`](results/axiomes.txt) | Outputs of the audit script |
@@ -30,7 +30,7 @@ bash verifier.sh          # or bash verifier.sh --cache to chain both
 
 The script fails in six cases. The first is a proof in `Enonces.lean` (keyword `by`, or a declaration other than `def Name : Prop :=`). The second is a `sorry`, `admit`, `native_decide` or `axiom` in the sources, comments excluded. The third is a line of `Principal.lean` that does not link a statement to an existing theorem. The fourth is a build failure. The fifth is a `#print axioms` that shows anything other than `[propext, Classical.choice, Quot.sound]`. The sixth is a rejection by an independent kernel checker.
 
-This last step uses two tools shipped with the Lean 4.35.0 toolchain. `leanchecker` replays the declarations in Lean's kernel. `nanoda_bin` is a second checker, written in Rust, that reads an export produced by `leanexport`. The export covers the theorems of `Principal.lean` (29 in version 3.4, 47 in version 3.5) and all their dependencies, Mathlib included. Only the three standard axioms are admitted.
+This last step uses two tools shipped with the Lean 4.35.0 toolchain. `leanchecker` replays the declarations in Lean's kernel. `nanoda_bin` is a second checker, written in Rust, that reads an export produced by `leanexport`. The export covers the theorems of `Principal.lean` (29 in version 3.4, 47 in version 3.5, 64 in version 3.6) and all their dependencies, Mathlib included. Only the three standard axioms are admitted.
 
 The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) runs this script on GitHub whenever the folder changes. It complements the `lean` job of `ci.yml` without replacing it.
 
@@ -38,6 +38,7 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 
 | Check | Where | Result |
 |---|---|---|
+| Version 3.6: `ConditionalCRO`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 61 `#print axioms` in the file, 64 on `Principal.lean` and 48 on `Coherence.lean`, all standard |
 | Version 3.5: `ConditionalCRO`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning |
 | Version 3.5 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 45995428572 passed (commit 2fc83b7): 47 statements and 40 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | `#print axioms`, version 3.5 | local, 27 November 2026 | 44 in the file, 47 on `Principal.lean` and 40 on `Coherence.lean`, all limited to `[propext, Classical.choice, Quot.sound]` |
@@ -55,7 +56,7 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 
 ## Traceability table
 
-Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identical to v35 for the statements of version 3.4. "File" is the line in `ConditionalCRO.lean`; the line in listing B.1 is four less. `E` and `P` are the lines in `Enonces.lean` and `Principal.lean`. All 47 theorems show `[propext, Classical.choice, Quot.sound]`. Lines from 1634 onwards belong to section 12 (version 3.5), which is not in listing B.1.
+Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identical to v35 for the statements of version 3.4. "File" is the line in `ConditionalCRO.lean`; the line in listing B.1 is four less. `E` and `P` are the lines in `Enonces.lean` and `Principal.lean`. All 64 theorems show `[propext, Classical.choice, Quot.sound]`. Lines from 1634 onwards belong to sections 12 (version 3.5) and 14 (version 3.6), which are not in listing B.1.
 
 ### Proved statements
 
@@ -109,9 +110,27 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | Deterministic verdict on finite laws, Opp = 1 | `rem:verdict_deterministe`, `rem:opp_lean4_admissible` | Remark 2.4 (p. 48) and Remark 3.9 (p. 108) | `opp_eq_one_of_det_concrete` | 2289 | 465 / 74 | proved |
 | The lower bound 1 − √(c₀βI) decreases with I and equals 1 at I = 0 | `rem:interpretation_lemme`, `rem:interp_lemme4` | Remark 2.3 (p. 47) and Remark 2.15 (p. 58) | `conf_guarantee_antitone` | 2312 | 474 / 75 | proved |
 | Tension between confidentiality and mutual information | `lem:compromis_conf_mi` | Lemma 2.1, p. 46 | `lemma4_concrete` | 1351 | 268 / 50 | proved under Assumption 2.3 and common supports; same statement as Lemma 2.3 |
+| Quantum confidentiality guarantee, Conf^q ≥ 1 − ½√(2β_qχmax + 2ζ_qDmax) | `lem:q_conf_mi_pq` | Lemma 2.8, (2.108), p. 77 | `conf_guarantee` | 2442 | 491 / 78 | proved, quantum Pinsker assumed (e) |
+| Quantum trilemma, explicit form | `thm:trilemme_pq` | Theorem 2.5, (2.110), p. 77 | `trilemma_pq_explicit` | 2463 | 497 / 79 | proved, quantum Fano and Holevo assumed (e) |
+| Quantum trilemma, published bound | `rem:corollaire_publie_pq` | Remark 2.41, p. 80 | `trilemma_pq_published` | 2475 | 505 / 80 | proved (e) |
+| Quantum trilemma, asymptotic form | `thm:trilemme_pq` | Theorem 2.5, p. 77 | `conditional_CRO_trilemma_pq` | 2510 | 512 / 81 | proved (e) |
+| Quantum trilemma, refined form | `rem:forme_raffinee_pq` | Remark 2.39, (2.117), p. 79 | `trilemma_pq_refined` | 2524 | 521 / 82 | proved (e) |
+| Threshold H♯_q, factor < 1 ⟺ H(C) > (Δ_q + κ/λ)/(θ_qα_q) | `rem:forme_raffinee_pq` | Remark 2.39, p. 79 | `seuil_Hsharp_q` | 2536 | 528 / 83 | proved |
+| Simplified quantum form, ratio → 1 | `cor:forme_simplifiee_pq` | Corollary 2.2, (2.118), p. 80 | `forme_simplifiee_pq` | 2547 | 535 / 84 | proved |
+| k_λ ≤ 2^(α_qH(C)) does not imply H(V\|C) ≥ γ_q | `rem:statut_verdict_quantique` | Remark 2.31, p. 76 | `verdict_q_card_not_efficient` | 2567 | 540 / 85 | proved |
+| Link γ_q = γ, θ_q = 1 − 1/(αH(C)) ∈ [1/2, 1) | `rem:raccord_gamma_q` | Remark 2.32, p. 76 | `raccord_gamma_q` | 2580 | 546 / 86 | proved |
+| Status of the quantum regime | `rem:statut_regime_quantique` | Remark 2.33, p. 76 | `statut_regime_q` | 2601 | 552 / 87 | proved (e) |
+| Pinsker constants, (ln 2)/2 < 1/2 < c₀ | `rem:raccord_pinsker` | Remark 2.35, p. 77 | `constantes_pinsker` | 2614 | 559 / 88 | proved |
+| Decomposition of Δ_q, Δ_q ≤ Δ without enhancement | `def:decomposition_delta_q` | Definition 2.30, p. 75 | `deltaQ_le` | 2622 | 562 / 89 | proved |
+| Bounds on η_q on finite laws | `def:perte_interp_quantique_pq`, `rem:encadrement_eta_q` | Definition 2.27 and Remark 2.27, p. 74 | `etaQ_bounds` | 2634 | 566 / 90 | proved |
+| The DPI does not yield Assumption 2.5 | `rem:capacite_institutionnelle_quantique` | Remark 2.29, p. 74 | `capacite_q_non_dpi` | 2668 | 577 / 91 | proved |
+| The quantum regime is necessary | `rem:scope_trilemme_pq` | Remark 2.37, p. 79 | `regime_q_necessary` | 2716 | 582 / 92 | proved |
+| Consistency of the quantum model, bound attained | `thm:trilemme_pq` | Theorem 2.5, p. 77 | `assumptions_q_consistent` | 2750 | 592 / 93 | proved (b) |
+| D_max ≥ 25,960 bits for ML-DSA-65 | `rem:interp_lemme7` | Remark 2.36, p. 77 | `dilithium_Dmax` | 2764 | 601 / 94 | proved |
 
 (a) In the abstract model, Fano (I ≥ Rel·λ − 1) and Pinsker (TV² ≤ c₀·KL) are fields of `ProtocolInstance`. The concrete layer proves them (lines 1077 and 1128).
 (b) A point of the abstract model, not realisable by a distribution (Remark 3.10, p. 114).
+(e) Quantum core (section 14). Like Fano and Pinsker in the classical abstract model, quantum Fano (Lemma 2.6), the Holevo bound (Lemma 2.7) and quantum Pinsker (Lemma 2.4) are fields of `QuantumProtocolInstance`. They are not proved in this dossier (batch L5c of the roadmap).
 (c) The institutional assumptions are explicit premises of the theorem. They carry the content specific to institutional cryptography (Δ, γ = αH(C) − 1, κ).
 
 ### Named assumptions
@@ -136,7 +155,7 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | Conf ≥ 1 − √(c₀βκ/λ), last sentence of Theorem 2.4 | `thm:trilemme_cro_conditionnel` | Theorem 2.4, p. 58 | not stated as such in Lean; it follows from Lemma 2.3 and Assumption 2.4 by monotonicity of the square root |
 | Sharp bound on reliability | `prop:borne_aigue` | Proposition 2.2, p. 62 | proved on paper, not formalised |
 | Realisable witness of the institutional factor | `rem:temoin_realisable` | Remark 2.20, p. 63 | proved on paper, not formalised |
-| Quantum trilemma and quantum lemmas | `thm:trilemme_pq` | Theorem 2.5, p. 77 | not formalised |
+| Quantum information lemmas (Pinsker, gentle measurement, Fano, Holevo) | `lem:pinsker_quantique`, `lem:fano_quantique`, `lem:holevo_helstrom` | Lemmas 2.4 to 2.7, pp. 70 and 71 | assumed as fields in the quantum core, not proved |
 | Properties of SOTP | `thm:proprietes_sotp` | Theorem 3.1, p. 89 | outside this dossier; reduced mechanisation in `04_sotp/` |
 
 ### Consistency tests of the project's own definitions
@@ -158,6 +177,9 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | `IVM`, `IVSM` | I(V;Σ\|M,C) = 1 for `famModel`, where the proof says nothing about the message | I(V;M\|C) = 0 for `famModel` | 287 to 312 |
 | `constVerdict`, `detVerdict` | Opp = 1 and H(V\|C) = 1 for the verdict V = Σ | Opp = 0 and H(V\|C) = 0 for a constant verdict | 314 to 328 |
 | `post`, `IVpost` | the identity post-processing reproduces the law and I(V;Σ\|C) | — | 330 to 351 |
+| `gammaQ`, `QuantumAssumptions` (version 3.6) | γ_q = 1 and assumptions satisfied for the witness | γ_q = 1/2 < 1; instance with H(V\|C) = 0 excluded | 360 to 393 |
+| `QuantumProtocolFamily` | family with fixed parameters, assumptions satisfied for every λ and asymptotic theorem applied | — | 394 to 415 |
+| `deltaQ`, `etaQ` | Δ_q = 35 − 7 = 28 bits (ML-DSA-65); η_q = 0 for the identity channel | — | 416 to 424 |
 
 ## Map of the proof in plain language
 
@@ -177,6 +199,8 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 
 **Extension 3.5 (section 12).** `log_sum_ineq` also gives the finite DPI `dpi_finite` (1634), the non-negativity `condMI_nonneg` (2110) and the bound `entN2_le_log_card`. The chain rule `chain_rule` (2071) is a term-by-term computation. Together with `miN_kernel_only_on_s`, it gives `fondement_extraction` (2200), that is, Proposition 2.1. The DPI for total variation `tv_pushforward_le` (1691) gives the composition rules `conf_post` (1906) and `composition_parallele` (2008). These proofs are of medium length, with no difficulty comparable to Fano and Pinsker.
 
+**Extension 3.6 (section 14).** The quantum core reuses `product_bound_explicit` (1202), `product_bound_refined` (1240) and `factor_lt_one_iff` (459) unchanged: the proof of Theorem 2.5 is the classical one once quantum Fano and Holevo are chained into `fano_I`. Lemma 2.8 follows from quantum Pinsker and Assumption 2.7. The bounds on η_q (`etaQ_bounds`) reuse the DPI and the contextual bottleneck of section 12.
+
 **Where the difficulty lies.** Mathematically, the difficulty lies in Fano and Pinsker on finite distributions. The trilemma itself is short once these two inequalities are available. Its content comes from the institutional assumptions, which bring in Δ, γ = αH(C) − 1 and κ.
 
 ## Limits stated plainly
@@ -187,7 +211,7 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 4. **Institutional assumptions are posited.** Assumptions 2.1, 2.2 and 2.4 are premises, not theorems. This is their status in the thesis. Their information-theoretic grounding (Proposition 2.1, p. 55) is formalised since version 3.5 (`fondement_extraction`). It shows that I(V;Σ|M,C) ≤ Δ implies Assumption 2.1, without proving it for an actual institution.
 5. **Silent premises.** The condition `hcard` (|V| ≤ 2^(αH(C))) appears in the concrete theorems without being used by the proofs. The decoder `D` of `lemma4_concrete` only serves to build the instance. Assumption 2.3 is carried by `InstitutionalAssumptions` without being used by the trilemmas. These premises do not make the statements false. They make them look slightly stronger than they are.
 6. **Abstract consistency witness.** `assumptions_consistent_and_bound_attained` is a point of the relaxed model (Rel = 1/λ with I = 0). An actual distribution would give Rel = 2^(−λ) (`fam_Rel`, line 156 of `Coherence.lean`). The family `famModel` has Δ = γ = 1, so the institutional factor is not active there.
-7. **Local build with targeted imports.** See the caveat above. Version 3.4 with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Version 3.5 was built by it on 27 November 2026 (run 45995428572). Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
+7. **Local build with targeted imports.** See the caveat above. Version 3.4 with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Version 3.5 was built by it on 27 November 2026 (run 45995428572) and version 3.6 is built by it when pushed. Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
 8. **Statements written by copying.** The statements of `Enonces.lean` were written from the existing theorems. The build guarantees that they match the proofs. Their faithfulness to the manuscript text remains for the reader to judge, with the table above.
 
 ## Reproducibility
@@ -197,4 +221,4 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lake-manifest.json`](lake-manifest.json)) |
 | Lake libraries | `ConditionalCRO` (default target) and `Verification` (files `Verification/*.lean`) |
-| SHA-256 of `ConditionalCRO.lean` | `0cb46412411b63c7c3e06d1e3f480f72173333204882f38b4883f3f954f9235f` (version 3.5) |
+| SHA-256 of `ConditionalCRO.lean` | `ed64c7a451f9c52a4ff36f4dbcb263441ac6b5d5955687b66f7ad484ee813288` (version 3.6) |

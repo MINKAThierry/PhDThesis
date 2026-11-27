@@ -1,33 +1,33 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après le lot L1 (ConditionalCRO.lean v3.5). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1 et L5a (ConditionalCRO.lean v3.6). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
-| démontré | 37 |
-| démontré, une inégalité posée dans le modèle abstrait | 5 |
+| démontré | 47 |
+| démontré, une inégalité posée dans le modèle abstrait | 10 |
 | mécanisé en situation réduite | 4 |
-| hypothèse formalisée | 11 |
-| non formalisé | 87 |
+| hypothèse formalisée | 18 |
+| non formalisé | 65 |
 | hors champ formel | 26 |
 | **Total** | **170** |
 
-Sur 144 énoncés relevant d'une formalisation, 57 sont aujourd'hui couverts, soit 40 %. Avant le lot L1, la couverture était de 42 énoncés (29 %). Les 26 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 144 énoncés relevant d'une formalisation, 79 sont aujourd'hui couverts, soit 55 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1. Les 26 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
 | Type | Démontré | Posé ou réduit | Non formalisé | Hors champ |
 |---|---|---|---|---|
-| Théorème | 11 | 2 | 5 | 0 |
-| Lemme | 8 | 0 | 9 | 0 |
+| Théorème | 12 | 2 | 4 | 0 |
+| Lemme | 9 | 3 | 5 | 0 |
 | Proposition | 1 | 0 | 5 | 0 |
-| Corollaire | 0 | 0 | 4 | 0 |
+| Corollaire | 1 | 0 | 3 | 0 |
 | Conjecture | 0 | 0 | 1 | 0 |
-| Hypothèse | 0 | 8 | 4 | 0 |
-| Définition | 11 | 5 | 29 | 0 |
-| Remarque | 11 | 0 | 30 | 26 |
+| Hypothèse | 0 | 12 | 0 | 0 |
+| Définition | 13 | 5 | 27 | 0 |
+| Remarque | 21 | 0 | 20 | 26 |
 
 ## Détail par chapitre
 
@@ -105,10 +105,10 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition 2.16 | 69 | Information quantique accessible | `def:info_accessible` | non formalisé |  | L5c |
 | Définition 2.17 | 69 | Entropie min-max lissée | `def:entropie_min_max_lissee` | non formalisé |  | L5c |
 | Remarque 2.25 | 70 | Relation avec l'entropie de Shannon | `rem:relation_shannon` | non formalisé |  | L5b |
-| Lemme 2.4 | 70 | Inégalité de Pinsker quantique | `lem:pinsker_quantique` | non formalisé |  | L5c |
+| Lemme 2.4 | 70 | Inégalité de Pinsker quantique | `lem:pinsker_quantique` | hypothèse formalisée | champs pinsker_q, fano_q, holevo de QuantumProtocolInstance | L5c |
 | Lemme 2.5 | 70 | Mesure douce (gentle measurement) | `lem:mesure_douce` | non formalisé |  | L5c |
-| Lemme 2.6 | 71 | Inégalité de Fano quantique | `lem:fano_quantique` | non formalisé |  | L5c |
-| Lemme 2.7 | 71 | Borne de Holevo-Helstrom | `lem:holevo_helstrom` | non formalisé |  | L5c |
+| Lemme 2.6 | 71 | Inégalité de Fano quantique | `lem:fano_quantique` | hypothèse formalisée | champs pinsker_q, fano_q, holevo de QuantumProtocolInstance | L5c |
+| Lemme 2.7 | 71 | Borne de Holevo-Helstrom | `lem:holevo_helstrom` | hypothèse formalisée | champs pinsker_q, fano_q, holevo de QuantumProtocolInstance | L5c |
 | Définition 2.18 | 72 | Canal dépolarisant | `def:canal_depolarisant` | non formalisé |  | L5c |
 | Définition 2.19 | 72 | Canal d'amortissement | `def:canal_amortissement` | non formalisé |  | L5c |
 | Définition 2.20 | 72 | Canal de déphasage | `def:canal_dephasage` | non formalisé |  | L5c |
@@ -119,32 +119,32 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition 2.25 | 73 | Fiabilité quantique | `def:fiabilite_quantique` | non formalisé |  | L5c |
 | Définition 2.26 | 73 | Opposabilité quantique | `def:opposabilite_quantique` | non formalisé |  | L5c |
 | Remarque 2.26 | 73 | Compatibilité avec la confidentialité classique | `rem:compatibilite_classique` | non formalisé |  | L5b |
-| Définition 2.27 | 74 | Perte d'interprétabilité quantique | `def:perte_interp_quantique_pq` | non formalisé |  | L5c |
-| Remarque 2.27 | 74 | Encadrement de η_q | `rem:encadrement_eta_q` | non formalisé |  | L5a |
+| Définition 2.27 | 74 | Perte d'interprétabilité quantique | `def:perte_interp_quantique_pq` | démontré | CLOModel.etaQ, etaQ_bounds | L5a |
+| Remarque 2.27 | 74 | Encadrement de η_q | `rem:encadrement_eta_q` | démontré | CLOModel.etaQ, etaQ_bounds | L5a |
 | Remarque 2.28 | 74 | Interprétation physique | `rem:interpretation_physique_pq` | hors champ formel |  | — |
 | Définition 2.28 | 74 | Vérificateur institutionnel quantique | `def:verificateur_institutionnel_quantique` | non formalisé |  | L5c |
 | Définition 2.29 | 74 | Protocole d'interaction quantique | `def:protocole_interaction_quantique` | non formalisé |  | L5c |
-| Remarque 2.29 | 74 | Capacité institutionnelle quantique | `rem:capacite_institutionnelle_quantique` | non formalisé |  | L5a |
+| Remarque 2.29 | 74 | Capacité institutionnelle quantique | `rem:capacite_institutionnelle_quantique` | démontré | capacite_q_non_dpi | L5a |
 | Remarque 2.30 | 75 | Version de la preuve | `rem:version_preuve_pq` | hors champ formel |  | — |
-| Hypothèse 2.5 | 75 | Extraction institutionnelle bornée quantique | `ass:extraction_quantique` | non formalisé |  | L5a |
-| Définition 2.30 | 75 | Décomposition de Δ_q | `def:decomposition_delta_q` | non formalisé |  | L5a |
-| Hypothèse 2.6 | 75 | Verdict efficace quantique | `ass:verdict_quantique` | non formalisé |  | L5a |
-| Remarque 2.31 | 76 | Statut de l'Hypothèse ass:verdict_quantique | `rem:statut_verdict_quantique` | non formalisé |  | L5a |
-| Remarque 2.32 | 76 | Raccord avec l'Hypothèse ass:verdicts_efficace | `rem:raccord_gamma_q` | non formalisé |  | L5a |
-| Hypothèse 2.7 | 76 | Régularité de protocole quantique | `ass:regularite_quantique` | non formalisé |  | L5a |
-| Hypothèse 2.8 | 76 | Régime de préservation de la confidentialité quantique | `ass:regime_quantique` | non formalisé |  | L5a |
-| Remarque 2.33 | 76 | Statut de l'Hypothèse ass:regime_quantique | `rem:statut_regime_quantique` | non formalisé |  | L5a |
+| Hypothèse 2.5 | 75 | Extraction institutionnelle bornée quantique | `ass:extraction_quantique` | hypothèse formalisée | QuantumAssumptions, prémisse χmax ≤ κ/λ | L5a |
+| Définition 2.30 | 75 | Décomposition de Δ_q | `def:decomposition_delta_q` | démontré | deltaQ, deltaQ_le | L5a |
+| Hypothèse 2.6 | 75 | Verdict efficace quantique | `ass:verdict_quantique` | hypothèse formalisée | QuantumAssumptions, prémisse χmax ≤ κ/λ | L5a |
+| Remarque 2.31 | 76 | Statut de l'Hypothèse ass:verdict_quantique | `rem:statut_verdict_quantique` | démontré | verdict_q_card_not_efficient | L5a |
+| Remarque 2.32 | 76 | Raccord avec l'Hypothèse ass:verdicts_efficace | `rem:raccord_gamma_q` | démontré | raccord_gamma_q | L5a |
+| Hypothèse 2.7 | 76 | Régularité de protocole quantique | `ass:regularite_quantique` | hypothèse formalisée | QuantumAssumptions, prémisse χmax ≤ κ/λ | L5a |
+| Hypothèse 2.8 | 76 | Régime de préservation de la confidentialité quantique | `ass:regime_quantique` | hypothèse formalisée | QuantumAssumptions, prémisse χmax ≤ κ/λ | L5a |
+| Remarque 2.33 | 76 | Statut de l'Hypothèse ass:regime_quantique | `rem:statut_regime_quantique` | démontré, une inégalité posée dans le modèle abstrait | statut_regime_q | L5a |
 | Remarque 2.34 | 76 | Lemme 6 de la version publiée | `rem:retrait_lemma6` | non formalisé |  | L5b |
-| Lemme 2.8 | 77 | Garantie de confidentialité quantique | `lem:q_conf_mi_pq` | non formalisé |  | L5c |
-| Remarque 2.35 | 77 | Constantes de Pinsker classique et quantique | `rem:raccord_pinsker` | non formalisé |  | L5a |
-| Remarque 2.36 | 77 | Interprétation du Lemme lem:q_conf_mi_pq | `rem:interp_lemme7` | non formalisé |  | L5a |
-| Théorème 2.5 | 77 | Trilemme CRO conditionnel quantique | `thm:trilemme_pq` | non formalisé |  | L5a |
-| Remarque 2.37 | 79 | Portée du Théorème thm:trilemme_pq | `rem:scope_trilemme_pq` | non formalisé |  | L5a |
+| Lemme 2.8 | 77 | Garantie de confidentialité quantique | `lem:q_conf_mi_pq` | démontré, une inégalité posée dans le modèle abstrait | QuantumProtocolInstance.conf_guarantee | L5a |
+| Remarque 2.35 | 77 | Constantes de Pinsker classique et quantique | `rem:raccord_pinsker` | démontré | constantes_pinsker | L5a |
+| Remarque 2.36 | 77 | Interprétation du Lemme lem:q_conf_mi_pq | `rem:interp_lemme7` | démontré | dilithium_Dmax | L5a |
+| Théorème 2.5 | 77 | Trilemme CRO conditionnel quantique | `thm:trilemme_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_pq_explicit, conditional_CRO_trilemma_pq | L5a |
+| Remarque 2.37 | 79 | Portée du Théorème thm:trilemme_pq | `rem:scope_trilemme_pq` | démontré | regime_q_necessary | L5a |
 | Remarque 2.38 | 79 | Statut de vérification | `rem:statut_verification_pq` | hors champ formel |  | — |
-| Remarque 2.39 | 79 | Forme raffinée quantique | `rem:forme_raffinee_pq` | non formalisé |  | L5a |
-| Remarque 2.40 | 80 | Borne aiguë dans le cadre quantique | `rem:borne_aigue_pq` | non formalisé |  | L5a |
-| Remarque 2.41 | 80 | La majoration publiée comme corollaire | `rem:corollaire_publie_pq` | non formalisé |  | L5a |
-| Corollaire 2.2 | 80 | Forme simplifiée quantique | `cor:forme_simplifiee_pq` | non formalisé |  | L5a |
+| Remarque 2.39 | 79 | Forme raffinée quantique | `rem:forme_raffinee_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_pq_refined, seuil_Hsharp_q | L5a |
+| Remarque 2.40 | 80 | Borne aiguë dans le cadre quantique | `rem:borne_aigue_pq` | non formalisé |  | L2 |
+| Remarque 2.41 | 80 | La majoration publiée comme corollaire | `rem:corollaire_publie_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_pq_published | L5a |
+| Corollaire 2.2 | 80 | Forme simplifiée quantique | `cor:forme_simplifiee_pq` | démontré | forme_simplifiee_pq | L5a |
 
 ### Chapitre 3
 
