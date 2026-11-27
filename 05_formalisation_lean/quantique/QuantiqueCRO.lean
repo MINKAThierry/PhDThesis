@@ -49,19 +49,12 @@ def confQ {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C] [Nonempty M] [Fin
 theorem confQ_bornes {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C] [Nonempty M]
     [Fintype S] [DecidableEq S] (ρ : C → M → MState S) : 0 ≤ confQ ρ ∧ confQ ρ ≤ 1 := by
   unfold confQ
-  constructor
-  · have h : (Finset.univ : Finset (C × M × M)).sup' Finset.univ_nonempty
-        (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2)) ≤ 1 :=
-      Finset.sup'_le _ _ fun x _ => TrDistance.le_one (ρ x.1 x.2.1) (ρ x.1 x.2.2)
-    linarith
-  · obtain ⟨c⟩ := (inferInstance : Nonempty C)
-    obtain ⟨m⟩ := (inferInstance : Nonempty M)
-    have h0 := TrDistance.ge_zero (ρ c m) (ρ c m)
-    have h1 : TrDistance (ρ c m) (ρ c m) ≤ (Finset.univ : Finset (C × M × M)).sup'
-        Finset.univ_nonempty (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2)) :=
-      Finset.le_sup' (fun x : C × M × M => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2))
-        (Finset.mem_univ (c, m, m))
-    linarith
+  obtain ⟨x, -, hx⟩ := Finset.exists_mem_eq_sup' (Finset.univ_nonempty (α := C × M × M))
+    (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2))
+  rw [hx]
+  have h0 := TrDistance.ge_zero (ρ x.1 x.2.1) (ρ x.1 x.2.2)
+  have h1 := TrDistance.le_one (ρ x.1 x.2.1) (ρ x.1 x.2.2)
+  constructor <;> linarith
 
 /-- La distance de trace d'un état à lui-même est nulle. -/
 theorem trDistance_self {S : Type*} [Fintype S] [DecidableEq S] (σ : MState S) :
@@ -74,13 +67,11 @@ theorem confQ_eq_one_of_indep {C M S : Type*} [Fintype C] [Fintype M] [Nonempty 
     [Nonempty M] [Fintype S] [DecidableEq S] (σ : C → MState S) :
     confQ (fun c (_ : M) => σ c) = 1 := by
   unfold confQ
+  obtain ⟨x, -, hx⟩ := Finset.exists_mem_eq_sup' (Finset.univ_nonempty (α := C × M × M))
+    (fun x => TrDistance (σ x.1) (σ x.1))
   have h : (Finset.univ : Finset (C × M × M)).sup' Finset.univ_nonempty
       (fun x => TrDistance (σ x.1) (σ x.1)) = 0 := by
-    simp only [trDistance_self]
-    obtain ⟨c⟩ := (inferInstance : Nonempty C)
-    obtain ⟨m⟩ := (inferInstance : Nonempty M)
-    exact le_antisymm (Finset.sup'_le _ _ fun _ _ => le_rfl)
-      (Finset.le_sup' (fun _ : C × M × M => (0 : ℝ)) (Finset.mem_univ (c, m, m)))
+    rw [hx]; exact trDistance_self _
   rw [h, sub_zero]
 
 /-! ## 2. Entropies quantiques (Définitions 2.14 et 2.15) -/
