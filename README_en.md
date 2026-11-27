@@ -21,7 +21,7 @@ This repository gathers all the work of the doctoral thesis of Thierry Emmanuel 
 | [02_preprints/](02_preprints/README_en.md) | Records of the nine IACR ePrint preprints | PREPRINT |
 | [03_resultats_these/](03_resultats_these/README_en.md) | What the thesis adds to or refines in the articles | PROPOSAL |
 | [04_sotp/](04_sotp/README_en.md) | SOTP family, specification, game-based proofs, reference implementations (Low, Base, executable High in Circom/Groth16) | PROPOSAL |
-| [05_formalisation_lean/](05_formalisation_lean/README_en.md) | Lean 4 formalisation of the conditional Trilemma (v3.4) | PROPOSAL |
+| [05_formalisation_lean/](05_formalisation_lean/README_en.md) | Lean 4 formalisation of the conditional Trilemma (v3.5) | PROPOSAL |
 | [06_calcul/](06_calcul/README_en.md) | Scripts, data and results of the illustrative calibration | PROPOSAL |
 | [07_protocoles_terrain/](07_protocoles_terrain/README_en.md) | Measurement protocols, field forms and analysis scripts | PROPOSAL |
 | [docs/](docs/README_en.md) | Thesis-to-repository correspondence, history, publication procedure | PROPOSAL |

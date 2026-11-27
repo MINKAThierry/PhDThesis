@@ -21,7 +21,7 @@
 #      Un outil absent est signalé comme non testé, sans échec.
 #   Option --sans-noyau : saute l'étape 6.
 # Sorties : results/verification.log et results/axiomes.txt.
-# Le fichier ConditionalCRO.lean n'est jamais modifié.
+# Le script ne modifie jamais ConditionalCRO.lean ni les fichiers de Verification.
 
 set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1

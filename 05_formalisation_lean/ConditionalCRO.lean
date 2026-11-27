@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.4 (22 novembre 2026).
+  Version 3.5 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -1573,3 +1573,779 @@ Chaque `#print axioms` doit afficher uniquement
 #print axioms ConditionalCRO.conditional_CRO_trilemma_concrete
 #print axioms ConditionalCRO.concrete_assumptions_satisfiable
 #print axioms ConditionalCRO.concrete_asymptotic_applies
+
+
+/-! ## 12. Extension de la couche concrète (version 3.5, lot L1)
+
+Ajout du 27 novembre 2026. Les sections 1 à 11 ci-dessus sont celles de la version
+3.4, inchangées. Cette section démontre sur lois finies les résultats d'information
+classique du chapitre 2 du manuscrit v36 : DPI (Lemmes 1.3 et A.2), Théorèmes 2.1 à
+2.3, Proposition 2.1, Remarques 2.3 à 2.5, 2.11, 2.12, 2.15 et 3.9. Elle n'utilise
+que Mathlib et aucune hypothèse nouvelle. -/
+
+section ExtensionL1
+
+open Finset
+
+namespace ConditionalCRO
+
+/-! ### 12.1 Symétrie, entropie de la première marginale, borne par le cardinal -/
+
+/-- Entropie (nats) de la première marginale de w. -/
+noncomputable def entN1 {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ) : ℝ :=
+  -∑ a, (∑ b, w a b) * Real.log (∑ b, w a b)
+
+/-- Symétrie de l'information mutuelle, I(A;B) = I(B;A). -/
+theorem miN_symm {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ) :
+    miN w = miN (fun b a => w a b) := by
+  unfold miN
+  rw [Finset.sum_comm]
+  refine sum_congr rfl fun b _ => sum_congr rfl fun a _ => ?_
+  rw [mul_comm (∑ b', w a b')]
+
+/-- I(A;B) ≤ H(A). -/
+theorem miN_le_entN1 {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ)
+    (hw : ∀ a b, 0 ≤ w a b) : miN w ≤ entN1 w := by
+  rw [miN_symm]
+  exact miN_le_entN2 (fun b a => w a b) (fun b a => hw a b)
+
+/-- L'entropie d'une loi sur β est au plus log |β| (nats). -/
+theorem entN2_le_log_card {α β : Type*} [Fintype α] [Fintype β] [Nonempty β]
+    (w : α → β → ℝ) (hw : ∀ a b, 0 ≤ w a b) (h1 : ∑ a, ∑ b, w a b = 1) :
+    entN2 w ≤ Real.log (Fintype.card β) := by
+  classical
+  set r : β → ℝ := fun b => ∑ a, w a b with hr
+  have hr0 : ∀ b, 0 ≤ r b := fun b => sum_nonneg fun a _ => hw a b
+  have hr1 : ∑ b, r b = 1 := by rw [hr]; simp only; rw [Finset.sum_comm]; exact h1
+  have l := log_sum_ineq univ r (fun _ => (1 : ℝ)) (fun b _ => hr0 b)
+    (fun _ _ => zero_le_one) (fun _ _ _ => one_pos)
+  simp only [div_one, sum_const, card_univ, nsmul_eq_mul, mul_one] at l
+  rw [hr1, one_mul, one_div, Real.log_inv] at l
+  have e : entN2 w = -∑ b, r b * Real.log (r b) := rfl
+  rw [e]
+  linarith
+
+/-! ### 12.2 Inégalité de traitement des données (DPI), forme finie
+
+Chaîne de Markov X → Y → Z : la loi jointe de (X, Y) est p et Z est tiré de Y par
+un noyau stochastique k. La loi jointe de (X, Z) est alors x, z ↦ Σ_y p x y · k y z. -/
+
+/-- **DPI finie** (Lemmes 1.3 et A.2). I(X;Z) ≤ I(X;Y). -/
+theorem dpi_finite {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
+    (p : α → β → ℝ) (k : β → γ → ℝ) (hp : ∀ a b, 0 ≤ p a b) (hk : ∀ b g, 0 ≤ k b g)
+    (hk1 : ∀ b, ∑ g, k b g = 1) :
+    miN (fun a g => ∑ b, p a b * k b g) ≤ miN p := by
+  classical
+  set pA : α → ℝ := fun a => ∑ b, p a b with hpA
+  set pB : β → ℝ := fun b => ∑ a, p a b with hpB
+  set w : α → γ → ℝ := fun a g => ∑ b, p a b * k b g with hw
+  -- marginales de w
+  have mA : ∀ a, ∑ g', w a g' = pA a := by
+    intro a; simp only [hw, hpA]; rw [Finset.sum_comm]
+    exact sum_congr rfl fun b _ => by rw [← mul_sum, hk1, mul_one]
+  have mZ : ∀ g, ∑ a', w a' g = ∑ b, pB b * k b g := by
+    intro g; simp only [hw, hpB]; rw [Finset.sum_comm]
+    exact sum_congr rfl fun b _ => by rw [sum_mul]
+  -- inégalité log-somme pour chaque (a, g)
+  have key : ∀ a g, w a g * Real.log (w a g / (pA a * ∑ b, pB b * k b g))
+      ≤ ∑ b, p a b * k b g * Real.log (p a b / (pA a * pB b)) := by
+    intro a g
+    have hpos : ∀ b, 0 < p a b * k b g → 0 < pA a * (pB b * k b g) := by
+      intro b h
+      have hp' : 0 < p a b := lt_of_le_of_ne (hp a b) (fun e => by rw [← e, zero_mul] at h; exact lt_irrefl 0 h)
+      have hk' : 0 < k b g := by
+        rcases (hk b g).lt_or_eq with h' | h'
+        · exact h'
+        · rw [← h', mul_zero] at h; exact absurd h (lt_irrefl 0)
+      have h1 : p a b ≤ pA a := single_le_sum (f := fun b => p a b) (fun _ _ => hp _ _) (mem_univ b)
+      have h2 : p a b ≤ pB b := single_le_sum (f := fun a => p a b) (fun _ _ => hp _ _) (mem_univ a)
+      exact mul_pos (lt_of_lt_of_le hp' h1) (mul_pos (lt_of_lt_of_le hp' h2) hk')
+    have l := log_sum_ineq univ (fun b => p a b * k b g) (fun b => pA a * (pB b * k b g))
+      (fun b _ => mul_nonneg (hp a b) (hk b g))
+      (fun b _ => mul_nonneg (sum_nonneg fun _ _ => hp _ _)
+        (mul_nonneg (sum_nonneg fun _ _ => hp _ _) (hk b g)))
+      (fun b _ => hpos b)
+    have eB : ∑ b, pA a * (pB b * k b g) = pA a * ∑ b, pB b * k b g := by rw [mul_sum]
+    rw [eB] at l
+    refine le_trans l (le_of_eq (sum_congr rfl fun b _ => ?_))
+    rcases (hk b g).lt_or_eq with h | h
+    · rw [show pA a * (pB b * k b g) = (pA a * pB b) * k b g by ring,
+        mul_div_mul_right _ _ h.ne']
+    · rw [← h]; simp
+  calc miN w = ∑ a, ∑ g, w a g * Real.log (w a g / (pA a * ∑ b, pB b * k b g)) := by
+        unfold miN; exact sum_congr rfl fun a _ => sum_congr rfl fun g _ => by rw [mA, mZ]
+    _ ≤ ∑ a, ∑ g, ∑ b, p a b * k b g * Real.log (p a b / (pA a * pB b)) :=
+        sum_le_sum fun a _ => sum_le_sum fun g _ => key a g
+    _ = miN p := by
+        unfold miN
+        refine sum_congr rfl fun a _ => ?_
+        rw [Finset.sum_comm]
+        refine sum_congr rfl fun b _ => ?_
+        simp only [mul_comm (p a b) (k b _), mul_assoc, ← sum_mul, hk1, one_mul]
+        rfl
+
+/-! ### 12.3 DPI pour la variation totale -/
+
+/-- Un post-traitement stochastique T ne crée pas de distinguabilité :
+    tv(P·T, Q·T) ≤ tv(P, Q). -/
+theorem tv_pushforward_le {σ τ : Type*} [Fintype σ] [Fintype τ] (P Q : σ → ℝ)
+    (T : σ → τ → ℝ) (hT : ∀ s t, 0 ≤ T s t) (hT1 : ∀ s, ∑ t, T s t = 1) :
+    tv (fun t => ∑ s, P s * T s t) (fun t => ∑ s, Q s * T s t) ≤ tv P Q := by
+  classical
+  unfold tv
+  have h : ∀ t, max ((∑ s, P s * T s t) - ∑ s, Q s * T s t) 0
+      ≤ ∑ s, max (P s - Q s) 0 * T s t := by
+    intro t
+    apply max_le
+    · rw [← sum_sub_distrib]
+      exact sum_le_sum fun s _ => by
+        rw [← sub_mul]; exact mul_le_mul_of_nonneg_right (le_max_left _ _) (hT s t)
+    · exact sum_nonneg fun s _ => mul_nonneg (le_max_right _ _) (hT s t)
+  calc ∑ t, max ((∑ s, P s * T s t) - ∑ s, Q s * T s t) 0
+      ≤ ∑ t, ∑ s, max (P s - Q s) 0 * T s t := sum_le_sum fun t _ => h t
+    _ = ∑ s, max (P s - Q s) 0 := by
+        rw [Finset.sum_comm]
+        exact sum_congr rfl fun s _ => by rw [← mul_sum, hT1, mul_one]
+
+end ConditionalCRO
+
+namespace ConditionalCRO
+
+/-! ### 12.4 Modèle CLO : bornes élémentaires, goulot contextuel, capacité Δ* -/
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  (X : CLOModel lam M C S V)
+
+/-- H(Σ|C) en bits (entropie de la preuve sachant le contexte). -/
+noncomputable def HS : ℝ := (∑ c, X.pC c * entN1 (X.qSV c)) / Real.log 2
+
+/-- Pour un contexte de probabilité non nulle, la loi de (Σ, V) sachant C = c est de masse 1. -/
+lemma qSV_sum (c : C) (hc : 0 < X.pC c) : ∑ s, ∑ v, X.qSV c s v = 1 := by
+  unfold qSV
+  simp only [← mul_sum, X.ker_sum, mul_one]
+  rw [Finset.sum_comm]
+  exact X.qMS_sum c hc
+
+/-- I(V;Σ|C) ≤ H(Σ|C). -/
+lemma IV_le_HS : X.IV ≤ X.HS := by
+  unfold IV HS
+  apply div_le_div_of_nonneg_right _ log_two_pos'.le
+  exact sum_le_sum fun c _ => mul_le_mul_of_nonneg_left
+    (miN_le_entN1 _ (X.qSV_nonneg c)) (X.pC_nonneg c)
+
+/-- H(V|C) ≤ log₂ |V|. -/
+lemma HV_le_log_card [Nonempty V] : X.HV ≤ Real.log (Fintype.card V) / Real.log 2 := by
+  unfold HV
+  apply div_le_div_of_nonneg_right _ log_two_pos'.le
+  calc ∑ c, X.pC c * entN2 (X.qSV c) ≤ ∑ c, X.pC c * Real.log (Fintype.card V) := by
+        refine sum_le_sum fun c _ => ?_
+        rcases (X.pC_nonneg c).lt_or_eq with h | h
+        · exact mul_le_mul_of_nonneg_left
+            (entN2_le_log_card _ (X.qSV_nonneg c) (X.qSV_sum c h)) h.le
+        · rw [← h]; simp
+    _ = Real.log (Fintype.card V) := by rw [← sum_mul, X.sum_pC, one_mul]
+
+/-- **Théorème 2.1 (bornes élémentaires des métriques CLO).**
+    Conf, Rel et, pour H(V|C) > 0, Opp sont dans [0, 1]. -/
+theorem bornes_mesures [DecidableEq M] [Nonempty M] [Nonempty C] (D : C → S → M) :
+    (0 ≤ X.Conf ∧ X.Conf ≤ 1) ∧ (0 ≤ X.Rel D ∧ X.Rel D ≤ 1) ∧
+      (0 < X.HV → 0 ≤ X.Opp ∧ X.Opp ≤ 1) := by
+  refine ⟨⟨?_, ?_⟩, X.Rel_mem D, fun h => ⟨div_nonneg X.IV_nonneg h.le, ?_⟩⟩
+  · unfold Conf; linarith [X.TVmax_le_one]
+  · unfold Conf; linarith [X.TVmax_nonneg]
+  · unfold Opp; rw [div_le_one h]; exact X.IV_le_HV
+
+/-- **Théorème 2.2 (goulot d'étranglement contextuel).**
+    I(V;Σ|C) ≤ min{H(Σ|C), H(V|C)} ≤ log₂|V|, et log₂|V| ≤ αH(C) dès que
+    |V| ≤ 2^(αH(C)) (granularité des verdicts, Définition 2.11). -/
+theorem goulot_contexte [Nonempty V] (α : ℝ) :
+    X.IV ≤ min X.HS X.HV ∧ min X.HS X.HV ≤ Real.log (Fintype.card V) / Real.log 2 ∧
+      ((Fintype.card V : ℝ) ≤ (2 : ℝ) ^ (α * X.HC) →
+        Real.log (Fintype.card V) / Real.log 2 ≤ α * X.HC) := by
+  refine ⟨le_min X.IV_le_HS X.IV_le_HV, (min_le_right _ _).trans X.HV_le_log_card, ?_⟩
+  intro hcard
+  have hpos : (0 : ℝ) < Fintype.card V := by exact_mod_cast Fintype.card_pos
+  have h := Real.log_le_log hpos hcard
+  rw [Real.log_rpow (by norm_num)] at h
+  rw [div_le_iff₀ log_two_pos']
+  exact h
+
+/-- **Remarque 2.11 (capacité de l'institution).** Pour tout protocole et toute
+    institution dont les verdicts vérifient |V| ≤ 2^(αH(C)), la différence
+    I(V;Σ|C) − I(M;Σ|C) est au plus γ + 1 = αH(C). Le supremum Δ* qui définit la
+    capacité vérifie donc Δ* ≤ γ + 1. -/
+theorem capacite_le_gamma_add_one [Nonempty V] (prm : InstitutionalParams)
+    (hH : prm.H = X.HC) (hcard : (Fintype.card V : ℝ) ≤ (2 : ℝ) ^ (prm.α * prm.H)) :
+    X.IV - X.I ≤ gamma prm + 1 := by
+  have h1 := (X.goulot_contexte prm.α).2.2 (by rw [← hH]; exact hcard)
+  have h2 := X.HV_le_log_card
+  have h3 := X.I_nonneg
+  have h4 := X.IV_le_HV
+  unfold gamma
+  rw [hH]
+  linarith
+
+/-- Un verdict à une seule valeur a une entropie conditionnelle nulle. -/
+lemma HV_eq_zero_of_card_one (h : Fintype.card V = 1) : X.HV = 0 := by
+  classical
+  obtain ⟨v₀, hv₀⟩ := Fintype.card_eq_one_iff.1 h
+  have hc : ∀ c, entN2 (X.qSV c) = 0 := by
+    intro c
+    unfold entN2
+    have e : ∀ v, ∑ s, X.qSV c s v = ∑ s, ∑ v', X.qSV c s v' := by
+      intro v
+      refine sum_congr rfl fun s _ => ?_
+      rw [Fintype.sum_eq_single v (fun v' hv' => absurd ((hv₀ v').trans (hv₀ v).symm) hv')]
+    rcases (X.pC_nonneg c).lt_or_eq with hpos | hz
+    · simp only [e, X.qSV_sum c hpos, Real.log_one, mul_zero, sum_const_zero, neg_zero]
+    · have z : ∀ s v, X.qSV c s v = 0 := by
+        intro s v
+        unfold qSV qMS
+        rw [← hz]; simp
+      simp [z]
+  unfold HV
+  simp [hc]
+
+end CLOModel
+
+/-- Verdict constant : on remplace l'interprétation par un verdict à une seule valeur. -/
+noncomputable def CLOModel.constVerdict {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
+    [Fintype S] [Fintype V] (X : CLOModel lam M C S V) : CLOModel lam M C S (Fin 1)
+  where
+  P := X.P
+  P_nonneg := X.P_nonneg
+  P_sum := X.P_sum
+  card_M := X.card_M
+  unif := X.unif
+  ker := fun _ _ _ => 1
+  ker_nonneg := fun _ _ _ => zero_le_one
+  ker_sum := fun _ _ => by simp
+
+/-- **Remarque 2.12 (statut de l'Hypothèse 2.2).** La borne supérieure sur la taille
+    de l'espace des verdicts n'entraîne pas la borne inférieure H(V|C) ≥ αH(C) − 1.
+    Contre-exemple : la famille témoin à H(C) = 1 bit, munie d'un verdict constant, avec
+    α = 2. On a |V| = 1 ≤ 2^(αH(C)) mais H(V|C) = 0 < αH(C) − 1 = 1. -/
+theorem verdict_card_not_efficient (l : ℕ) :
+    ((Fintype.card (Fin 1) : ℝ) ≤ (2 : ℝ) ^ (2 * (famModel l).constVerdict.HC)) ∧
+      (famModel l).constVerdict.HV < 2 * (famModel l).constVerdict.HC - 1 := by
+  have hHC : (famModel l).constVerdict.HC = 1 := CLOModel.fam_HC l
+  have hHV : (famModel l).constVerdict.HV = 0 :=
+    CLOModel.HV_eq_zero_of_card_one _ (Fintype.card_fin 1)
+  rw [hHC, hHV]
+  norm_num
+
+end ConditionalCRO
+
+namespace ConditionalCRO
+
+/-! ### 12.5 Règles de composition (Théorème 2.3, Remarque 2.5)
+
+Un post-traitement est un noyau stochastique T(c, σ₁, σ₂) qui calcule la nouvelle
+preuve σ₂ à partir de (σ₁, c), sans autre accès au message. Le protocole composé
+publie σ₂. La publication conjointe de deux preuves est un modèle sur S₁ × S₂ ; chaque
+protocole composant en est le post-traitement par projection. -/
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S S' V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype S']
+  [Fintype V] (X : CLOModel lam M C S V)
+
+/-- Expression de la fiabilité d'un décodeur sans indicatrice. -/
+lemma Rel_eq [DecidableEq M] (D : C → S → M) : X.Rel D = ∑ c, ∑ s, X.P c (D c s) s := by
+  unfold Rel
+  refine sum_congr rfl fun c _ => ?_
+  rw [Finset.sum_comm]
+  refine sum_congr rfl fun s _ => ?_
+  rw [Finset.sum_ite_eq]
+  simp
+
+/-- Le protocole composé P₁ ∘ P₂ : la preuve publiée σ₂ est tirée de (σ₁, c) par T,
+    et l'institution l'interprète par un noyau `ker'`. -/
+noncomputable def post {V' : Type*} [Fintype V'] (T : C → S → S' → ℝ)
+    (hT : ∀ c s t, 0 ≤ T c s t) (hT1 : ∀ c s, ∑ t, T c s t = 1)
+    (ker' : C → S' → V' → ℝ) (hk : ∀ c t v, 0 ≤ ker' c t v) (hk1 : ∀ c t, ∑ v, ker' c t v = 1) :
+    CLOModel lam M C S' V' where
+  P := fun c m t => ∑ s, X.P c m s * T c s t
+  P_nonneg := fun c m t => sum_nonneg fun s _ => mul_nonneg (X.P_nonneg c m s) (hT c s t)
+  P_sum := by
+    rw [← X.P_sum]
+    refine sum_congr rfl fun c _ => sum_congr rfl fun m _ => ?_
+    rw [Finset.sum_comm]
+    exact sum_congr rfl fun s _ => by rw [← mul_sum, hT1, mul_one]
+  card_M := X.card_M
+  unif := by
+    intro c m
+    have e : ∀ m, ∑ t, ∑ s, X.P c m s * T c s t = ∑ s, X.P c m s := fun m => by
+      rw [Finset.sum_comm]
+      exact sum_congr rfl fun s _ => by rw [← mul_sum, hT1, mul_one]
+    simp only [e]
+    exact X.unif c m
+  ker := ker'
+  ker_nonneg := hk
+  ker_sum := hk1
+
+variable {V' : Type*} [Fintype V'] (T : C → S → S' → ℝ) (hT : ∀ c s t, 0 ≤ T c s t)
+  (hT1 : ∀ c s, ∑ t, T c s t = 1) (ker' : C → S' → V' → ℝ) (hk : ∀ c t v, 0 ≤ ker' c t v)
+  (hk1 : ∀ c t, ∑ v, ker' c t v = 1)
+
+/-- La loi de σ₂ sachant (m, c) est l'image par T de celle de σ₁. -/
+lemma post_qS (c : C) (m : M) (t : S') :
+    (X.post T hT hT1 ker' hk hk1).qS c m t = ∑ s, X.qS c m s * T c s t := by
+  unfold qS post
+  simp only
+  have e : ∑ t', ∑ s, X.P c m s * T c s t' = ∑ s, X.P c m s := by
+    rw [Finset.sum_comm]
+    exact sum_congr rfl fun s _ => by rw [← mul_sum, hT1, mul_one]
+  rw [e, sum_div]
+  exact sum_congr rfl fun s _ => by ring
+
+/-- **Théorème 2.3, composition séquentielle (confidentialité).**
+    Conf(P₁ ∘ P₂) ≥ Conf(P₁). -/
+theorem conf_post [Nonempty M] [Nonempty C] :
+    X.Conf ≤ (X.post T hT hT1 ker' hk hk1).Conf := by
+  unfold Conf
+  have h : (X.post T hT hT1 ker' hk hk1).TVmax ≤ X.TVmax := by
+    unfold TVmax
+    apply Finset.sup'_le
+    intro x _
+    have e : (X.post T hT hT1 ker' hk hk1).TV x =
+        tv (fun t => ∑ s, X.qS x.1 x.2.1 s * T x.1 s t)
+          (fun t => ∑ s, X.qS x.1 x.2.2 s * T x.1 s t) := by
+      unfold TV
+      congr 1 <;> funext t <;> exact X.post_qS T hT hT1 ker' hk hk1 _ _ t
+    rw [e]
+    exact (tv_pushforward_le _ _ (T x.1) (hT x.1) (hT1 x.1)).trans
+      (Finset.le_sup' X.TV (mem_univ x))
+  linarith
+
+/-- **Théorème 2.3, composition séquentielle (fiabilité).** Tout décodeur qui lit σ₂
+    est dominé par un décodeur qui lit σ₁ : Relrec(P₁ ∘ P₂) ≤ Relrec(P₁). -/
+theorem rel_post [DecidableEq M] [Nonempty S'] (D' : C → S' → M) :
+    ∃ D : C → S → M, (X.post T hT hT1 ker' hk hk1).Rel D' ≤ X.Rel D := by
+  classical
+  -- pour chaque (c, s), une valeur t* qui maximise X.P c (D' c t) s
+  have hmax : ∀ c s, ∃ t₀, ∀ t, X.P c (D' c t) s ≤ X.P c (D' c t₀) s := by
+    intro c s
+    obtain ⟨t₀, -, ht₀⟩ := Finset.exists_max_image univ (fun t => X.P c (D' c t) s) univ_nonempty
+    exact ⟨t₀, fun t => ht₀ t (mem_univ t)⟩
+  choose tstar htstar using hmax
+  refine ⟨fun c s => D' c (tstar c s), ?_⟩
+  rw [Rel_eq, Rel_eq]
+  unfold post
+  simp only
+  refine sum_le_sum fun c _ => ?_
+  rw [Finset.sum_comm]
+  refine sum_le_sum fun s _ => ?_
+  calc ∑ t, X.P c (D' c t) s * T c s t ≤ ∑ t, X.P c (D' c (tstar c s)) s * T c s t :=
+        sum_le_sum fun t _ => mul_le_mul_of_nonneg_right (htstar c s t) (hT c s t)
+    _ = X.P c (D' c (tstar c s)) s := by rw [← mul_sum, hT1, mul_one]
+
+/-- Pour un post-traitement déterministe f, la fiabilité d'un décodeur D' de σ₂ est
+    celle du décodeur D' ∘ f de σ₁. -/
+theorem rel_post_det [DecidableEq M] [DecidableEq S'] (f : C → S → S') (D' : C → S' → M) :
+    (X.post (fun c s t => if f c s = t then 1 else 0) (fun _ _ _ => by split_ifs <;> norm_num)
+      (fun _ _ => by simp) ker' hk hk1).Rel D' = X.Rel (fun c s => D' c (f c s)) := by
+  rw [Rel_eq, Rel_eq]
+  unfold post
+  simp only
+  refine sum_congr rfl fun c _ => ?_
+  rw [Finset.sum_comm]
+  refine sum_congr rfl fun s _ => ?_
+  simp only [mul_ite, mul_one, mul_zero]
+  rw [Finset.sum_ite_eq]
+  simp
+
+/-- I(V;Σ₂|C) pour le verdict V de P₁ (verdict fixé) et la preuve post-traitée σ₂. -/
+noncomputable def IVpost : ℝ :=
+  (∑ c, X.pC c * miN (fun v t => ∑ s, X.qSV c s v * T c s t)) / Real.log 2
+
+include hT hT1 in
+/-- **Remarque 2.5 (opposabilité composée, verdict fixé).**
+    V — (Σ₁, C) — (Σ₂, C) est une chaîne de Markov, donc I(V;Σ₂|C) ≤ I(V;Σ₁|C) et,
+    pour H(V|C) > 0, Opp(P₁ ∘ P₂) ≤ Opp(P₁). -/
+theorem opp_post :
+    X.IVpost T ≤ X.IV ∧ (0 < X.HV → X.IVpost T / X.HV ≤ X.Opp) := by
+  have h : X.IVpost T ≤ X.IV := by
+    unfold IVpost IV
+    apply div_le_div_of_nonneg_right _ log_two_pos'.le
+    refine sum_le_sum fun c _ => mul_le_mul_of_nonneg_left ?_ (X.pC_nonneg c)
+    rw [miN_symm (X.qSV c)]
+    exact dpi_finite (fun v s => X.qSV c s v) (T c) (fun v s => X.qSV_nonneg c s v)
+      (hT c) (hT1 c)
+  exact ⟨h, fun hpos => by unfold Opp; exact div_le_div_of_nonneg_right h hpos.le⟩
+
+end CLOModel
+
+/-! ### 12.6 Composition parallèle
+
+La publication conjointe de (σ₁, σ₂) est un modèle X sur S₁ × S₂. Chaque protocole
+composant est le post-traitement de X par la projection correspondante. Le résultat
+vaut sans supposer σ₁ et σ₂ indépendantes sachant (M, C) ; il contient donc le cas
+indépendant du Théorème 2.3. -/
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S₁ S₂ V : Type*} [Fintype M] [Fintype C] [Fintype S₁] [Fintype S₂]
+  [Fintype V] [DecidableEq S₁] [DecidableEq S₂] (X : CLOModel lam M C (S₁ × S₂) V)
+  (k₁ : C → S₁ → V → ℝ) (hk₁ : ∀ c t v, 0 ≤ k₁ c t v) (hk₁1 : ∀ c t, ∑ v, k₁ c t v = 1)
+  (k₂ : C → S₂ → V → ℝ) (hk₂ : ∀ c t v, 0 ≤ k₂ c t v) (hk₂1 : ∀ c t, ∑ v, k₂ c t v = 1)
+
+/-- Premier protocole composant (publication de σ₁ seule). -/
+noncomputable def proj₁ : CLOModel lam M C S₁ V :=
+  X.post (fun _ s t => if s.1 = t then 1 else 0) (fun _ _ _ => by split_ifs <;> norm_num)
+    (fun _ _ => by simp) k₁ hk₁ hk₁1
+
+/-- Second protocole composant (publication de σ₂ seule). -/
+noncomputable def proj₂ : CLOModel lam M C S₂ V :=
+  X.post (fun _ s t => if s.2 = t then 1 else 0) (fun _ _ _ => by split_ifs <;> norm_num)
+    (fun _ _ => by simp) k₂ hk₂ hk₂1
+
+/-- **Théorème 2.3, composition parallèle.**
+    Conf(P₁ ∥ P₂) ≤ min{Conf(P₁), Conf(P₂)} et tout décodeur de P₁ ou de P₂ se relève
+    en un décodeur de P₁ ∥ P₂ de même fiabilité, d'où Relrec(P₁ ∥ P₂) ≥ max. -/
+theorem composition_parallele [DecidableEq M] [Nonempty M] [Nonempty C]
+    (D₁ : C → S₁ → M) (D₂ : C → S₂ → M) :
+    X.Conf ≤ min (X.proj₁ k₁ hk₁ hk₁1).Conf (X.proj₂ k₂ hk₂ hk₂1).Conf ∧
+      (X.proj₁ k₁ hk₁ hk₁1).Rel D₁ = X.Rel (fun c s => D₁ c s.1) ∧
+      (X.proj₂ k₂ hk₂ hk₂1).Rel D₂ = X.Rel (fun c s => D₂ c s.2) :=
+  ⟨le_min (X.conf_post _ _ _ _ _ _) (X.conf_post _ _ _ _ _ _),
+    X.rel_post_det k₁ hk₁ hk₁1 (fun _ s => s.1) D₁,
+    X.rel_post_det k₂ hk₂ hk₂1 (fun _ s => s.2) D₂⟩
+
+end CLOModel
+
+/-! ### 12.7 Pas de règle générale pour l'opposabilité en parallèle (Remarque 2.5) -/
+
+/-- Inégalité de Fréchet : ab ≥ a + b − 1 pour a, b ∈ [0, 1]. Le minorant publié
+    Conf(P₁) + Conf(P₂) − 1 n'entraîne donc pas le produit. -/
+theorem frechet {a b : ℝ} (ha : a ≤ 1) (hb : b ≤ 1) : a + b - 1 ≤ a * b := by
+  nlinarith [mul_nonneg (sub_nonneg.2 ha) (sub_nonneg.2 hb)]
+
+/-- Information mutuelle de V et d'un bit Σ, pour la loi jointe w (indices V puis Σ). -/
+private lemma miN_uniform_indep :
+    miN (fun (_ : Fin 2) (_ : Fin 2) => (1 / 4 : ℝ)) = 0 := by
+  simp only [miN, Fin.sum_univ_two]
+  norm_num
+
+/-- **Remarque 2.5, sous-additivité en défaut.** Σ₁ = B₁, Σ₂ = B₂ deux bits uniformes
+    indépendants et V = B₁ ⊕ B₂ : I(V;Σ₁) = 0 mais I(V;(Σ₁,Σ₂)) = log 2 (un bit). -/
+theorem xor_not_subadditive :
+    miN (fun (v : Fin 2) (s : Fin 2 × Fin 2) =>
+        if v = s.1 + s.2 then (1 / 4 : ℝ) else 0) = Real.log 2 ∧
+      miN (fun (_ : Fin 2) (_ : Fin 2) => (1 / 4 : ℝ)) = 0 := by
+  refine ⟨?_, miN_uniform_indep⟩
+  simp only [miN, Fintype.sum_prod_type, Fin.sum_univ_two]
+  norm_num
+  ring
+
+/-- **Remarque 2.5, sur-additivité en défaut.** Σ₁ = Σ₂ = V uniforme sur un bit :
+    I(V;(Σ₁,Σ₂)) = log 2 < 2·log 2 = I(V;Σ₁) + I(V;Σ₂). -/
+theorem copy_not_superadditive :
+    miN (fun (v : Fin 2) (s : Fin 2 × Fin 2) =>
+        if s.1 = v ∧ s.2 = v then (1 / 2 : ℝ) else 0) = Real.log 2 ∧
+      miN (fun (v : Fin 2) (s : Fin 2) => if s = v then (1 / 2 : ℝ) else 0) = Real.log 2 ∧
+      Real.log 2 < 2 * Real.log 2 := by
+  refine ⟨?_, ?_, by linarith [Real.log_pos (by norm_num : (1 : ℝ) < 2)]⟩
+  · simp only [miN, Fintype.sum_prod_type, Fin.sum_univ_two]
+    norm_num
+    ring
+  · simp only [miN, Fin.sum_univ_two]
+    norm_num
+    ring
+
+end ConditionalCRO
+
+namespace ConditionalCRO
+
+/-! ### 12.8 Règle de chaîne et information mutuelle conditionnelle -/
+
+/-- Information mutuelle conditionnelle I(A;G|B) (nats) de la loi jointe u(a, b, g). -/
+noncomputable def condMI {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
+    (u : α → β → γ → ℝ) : ℝ :=
+  ∑ a, ∑ b, ∑ g, u a b g * Real.log (u a b g * (∑ a', ∑ g', u a' b g') /
+    ((∑ g', u a b g') * (∑ a', u a' b g)))
+
+/-- **Règle de chaîne.** I(A; B, G) = I(A; B) + I(A; G | B). -/
+theorem chain_rule {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
+    (u : α → β → γ → ℝ) (hu : ∀ a b g, 0 ≤ u a b g) :
+    miN (fun a (bg : β × γ) => u a bg.1 bg.2) = miN (fun a b => ∑ g, u a b g) + condMI u := by
+  classical
+  unfold miN condMI
+  rw [← sum_add_distrib]
+  refine sum_congr rfl fun a _ => ?_
+  rw [Fintype.sum_prod_type]
+  simp only
+  rw [← sum_add_distrib]
+  refine sum_congr rfl fun b _ => ?_
+  -- marginales
+  set pA := ∑ x : β × γ, u a x.1 x.2 with hpA
+  have hpA' : pA = ∑ b', ∑ g, u a b' g := by rw [hpA, Fintype.sum_prod_type]
+  set uAB := ∑ g', u a b g' with huAB
+  set pB := ∑ a', ∑ g', u a' b g' with hpB
+  have hpB' : ∑ a', ∑ g, u a' b g = pB := rfl
+  rw [show (∑ b', ∑ g, u a b' g) = pA from hpA'.symm]
+  rw [show uAB * Real.log (uAB / (pA * pB)) = ∑ g, u a b g * Real.log (uAB / (pA * pB)) by
+    rw [huAB, sum_mul]]
+  rw [← sum_add_distrib]
+  refine sum_congr rfl fun g _ => ?_
+  set pBG := ∑ a', u a' b g with hpBG
+  rcases (hu a b g).lt_or_eq with h | h
+  · have h1 : u a b g ≤ uAB := single_le_sum (f := fun g' => u a b g') (fun _ _ => hu _ _ _) (mem_univ g)
+    have h2 : u a b g ≤ pBG := single_le_sum (f := fun a' => u a' b g) (fun _ _ => hu _ _ _) (mem_univ a)
+    have h3 : uAB ≤ pB := single_le_sum (f := fun a' => ∑ g', u a' b g') (fun _ _ => sum_nonneg fun _ _ => hu _ _ _) (mem_univ a)
+    have h4 : uAB ≤ pA := by
+      rw [hpA']; exact single_le_sum (f := fun b' => ∑ g, u a b' g) (fun _ _ => sum_nonneg fun _ _ => hu _ _ _) (mem_univ b)
+    have pAB : 0 < uAB := lt_of_lt_of_le h h1
+    have ppBG : 0 < pBG := lt_of_lt_of_le h h2
+    have ppB : 0 < pB := lt_of_lt_of_le pAB h3
+    have ppA : 0 < pA := lt_of_lt_of_le pAB h4
+    rw [← mul_add, ← Real.log_mul (by positivity) (by positivity)]
+    congr 2
+    field_simp
+  · rw [← h]; simp
+
+/-- Positivité de l'information mutuelle conditionnelle. -/
+theorem condMI_nonneg {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
+    (u : α → β → γ → ℝ) (hu : ∀ a b g, 0 ≤ u a b g) : 0 ≤ condMI u := by
+  classical
+  unfold condMI
+  rw [Finset.sum_comm]
+  refine sum_nonneg fun b _ => ?_
+  set pB := ∑ a', ∑ g', u a' b g' with hpB
+  -- log-somme sur α × γ, à b fixé
+  let A : α × γ → ℝ := fun x => u x.1 b x.2
+  let B : α × γ → ℝ := fun x => (∑ g', u x.1 b g') * (∑ a', u a' b x.2) / pB
+  rcases (sum_nonneg (fun a' _ => sum_nonneg fun g' _ => hu a' b g') : 0 ≤ pB).lt_or_eq with hp | hp
+  · have hAB : ∀ x ∈ (univ : Finset (α × γ)), 0 < A x → 0 < B x := by
+      intro x _ hx
+      have h1 : u x.1 b x.2 ≤ ∑ g', u x.1 b g' :=
+        single_le_sum (f := fun g' => u x.1 b g') (fun _ _ => hu _ _ _) (mem_univ x.2)
+      have h2 : u x.1 b x.2 ≤ ∑ a', u a' b x.2 :=
+        single_le_sum (f := fun a' => u a' b x.2) (fun _ _ => hu _ _ _) (mem_univ x.1)
+      exact div_pos (mul_pos (lt_of_lt_of_le hx h1) (lt_of_lt_of_le hx h2)) hp
+    have l := log_sum_ineq univ A B (fun x _ => hu _ _ _)
+      (fun x _ => div_nonneg (mul_nonneg (sum_nonneg fun _ _ => hu _ _ _)
+        (sum_nonneg fun _ _ => hu _ _ _)) hp.le) hAB
+    have eA : ∑ x, A x = pB := by rw [Fintype.sum_prod_type]
+    have eB : ∑ x, B x = pB := by
+      simp only [B]
+      rw [← sum_div, Fintype.sum_prod_type]
+      simp only [← mul_sum]
+      rw [← sum_mul]
+      have : ∑ g, ∑ a', u a' b g = pB := by rw [hpB, Finset.sum_comm]
+      rw [this]
+      exact mul_div_cancel_right₀ _ (show pB ≠ 0 from hp.ne')
+    rw [eA, eB, div_self hp.ne', Real.log_one, mul_zero, Fintype.sum_prod_type] at l
+    refine le_trans l (le_of_eq (sum_congr rfl fun a _ => sum_congr rfl fun g _ => ?_))
+    simp only [A, B]
+    congr 2
+    rw [div_div_eq_mul_div]
+  · have z : ∀ a g, u a b g = 0 := by
+      intro a g
+      have hz := (sum_eq_zero_iff_of_nonneg (fun a' _ => sum_nonneg fun g' _ => hu a' b g')).1 hp.symm a (mem_univ a)
+      exact (sum_eq_zero_iff_of_nonneg (fun g' _ => hu a b g')).1 hz g (mem_univ g)
+    simp [z]
+
+/-- Si le noyau k ne dépend que de s, I(V; (M, Σ)) = I(V; Σ) : V ne dépend de M qu'à
+    travers Σ. -/
+theorem miN_kernel_only_on_s {μ σ ν : Type*} [Fintype μ] [Fintype σ] [Fintype ν]
+    (q : μ → σ → ℝ) (k : σ → ν → ℝ) (hq : ∀ m s, 0 ≤ q m s)
+    (hk1 : ∀ s, ∑ v, k s v = 1) :
+    miN (fun v (ms : μ × σ) => q ms.1 ms.2 * k ms.2 v) =
+      miN (fun v s => (∑ m, q m s) * k s v) := by
+  classical
+  unfold miN
+  refine sum_congr rfl fun v _ => ?_
+  rw [Fintype.sum_prod_type, Finset.sum_comm]
+  refine sum_congr rfl fun s _ => ?_
+  -- les deux marginales en v coïncident
+  have eV : ∑ x : μ × σ, q x.1 x.2 * k x.2 v = ∑ s', (∑ m, q m s') * k s' v := by
+    rw [Fintype.sum_prod_type, Finset.sum_comm]
+    exact sum_congr rfl fun s' _ => by rw [sum_mul]
+  simp only [eV]
+  set pV := ∑ s', (∑ m, q m s') * k s' v
+  have eS : ∀ m, ∑ v', q m s * k s v' = q m s := fun m => by rw [← mul_sum, hk1, mul_one]
+  have eS' : ∑ v', (∑ m, q m s) * k s v' = ∑ m, q m s := by rw [← mul_sum, hk1, mul_one]
+  simp only [eS, eS']
+  have key : ∀ x, 0 ≤ x → x * k s v * Real.log (x * k s v / (pV * x)) =
+      x * k s v * Real.log (k s v / pV) := by
+    intro x hx
+    rcases hx.lt_or_eq with h | h
+    · congr 2; field_simp
+    · rw [← h]; simp
+  rw [key _ (sum_nonneg fun m _ => hq m s), sum_mul, sum_mul]
+  exact sum_congr rfl fun m _ => key _ (hq m s)
+
+/-! ### 12.9 Fondement informationnel de l'extraction bornée (Proposition 2.1) -/
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  (X : CLOModel lam M C S V)
+
+/-- I(V;M|C) en bits. -/
+noncomputable def IVM : ℝ :=
+  (∑ c, X.pC c * miN (fun v m => ∑ s, X.qMS c m s * X.ker c s v)) / Real.log 2
+
+/-- I(V;Σ|M,C) en bits : l'information que l'institution tire de la preuve au-delà
+    du message. -/
+noncomputable def IVSM : ℝ :=
+  (∑ c, X.pC c * condMI (fun v m s => X.qMS c m s * X.ker c s v)) / Real.log 2
+
+/-- **Proposition 2.1.** Pour toute interprétation admissible,
+    I(V;Σ|C) = I(V;M|C) + I(V;Σ|M,C) ≤ I(M;Σ|C) + I(V;Σ|M,C).
+    En conséquence, I(V;Σ|M,C) ≤ Δ entraîne l'Hypothèse 2.1 (extraction bornée). -/
+theorem fondement_extraction :
+    X.IV = X.IVM + X.IVSM ∧ X.IVM ≤ X.I ∧ X.IV ≤ X.I + X.IVSM ∧
+      ∀ Δ : ℝ, X.IVSM ≤ Δ → X.IV ≤ X.I + Δ := by
+  have heq : X.IV = X.IVM + X.IVSM := by
+    unfold IV IVM IVSM
+    rw [← add_div, ← sum_add_distrib]
+    congr 1
+    refine sum_congr rfl fun c _ => ?_
+    rw [← mul_add]
+    congr 1
+    have hu : ∀ v m s, 0 ≤ X.qMS c m s * X.ker c s v :=
+      fun v m s => mul_nonneg (X.qMS_nonneg c m s) (X.ker_nonneg c s v)
+    rw [← chain_rule _ hu, miN_symm (X.qSV c)]
+    exact (miN_kernel_only_on_s (X.qMS c) (X.ker c) (X.qMS_nonneg c) (X.ker_sum c)).symm
+  have hle : X.IVM ≤ X.I := by
+    unfold IVM I
+    apply div_le_div_of_nonneg_right _ log_two_pos'.le
+    refine sum_le_sum fun c _ => mul_le_mul_of_nonneg_left ?_ (X.pC_nonneg c)
+    rw [miN_symm]
+    exact dpi_finite (X.qMS c) (X.ker c) (X.qMS_nonneg c) (X.ker_nonneg c) (X.ker_sum c)
+  refine ⟨heq, hle, by linarith, fun Δ h => by linarith⟩
+
+/-- I(V;Σ|M,C) ≥ 0. -/
+lemma IVSM_nonneg : 0 ≤ X.IVSM :=
+  div_nonneg (sum_nonneg fun c _ => mul_nonneg (X.pC_nonneg c)
+    (condMI_nonneg _ fun v m s => mul_nonneg (X.qMS_nonneg c m s) (X.ker_nonneg c s v)))
+    log_two_pos'.le
+
+end CLOModel
+
+/-! ### 12.10 Verdict déterministe sur le modèle concret (Remarques 2.4 et 3.9)
+
+Un verdict V = f(Σ, C) est le cas particulier de l'interprétation admissible où les
+ressources K sont constantes : son noyau vaut 1 en f(c, σ) et 0 ailleurs. -/
+
+/-- Pour une loi jointe w(s, v) = r(s)·[f s = v], I(Σ;V) = H(V). -/
+theorem miN_eq_entN2_of_det {σ ν : Type*} [Fintype σ] [Fintype ν] [DecidableEq ν]
+    (r : σ → ℝ) (f : σ → ν) (hr : ∀ s, 0 ≤ r s) :
+    miN (fun s v => if f s = v then r s else 0) =
+      entN2 (fun s v => if f s = v then r s else 0) := by
+  classical
+  have hrow : ∀ s, ∑ v, (if f s = v then r s else 0) = r s := fun s => by
+    rw [Finset.sum_ite_eq]; simp
+  unfold miN entN2
+  simp only [hrow]
+  set pV : ν → ℝ := fun v => ∑ s, if f s = v then r s else 0 with hpV
+  have lhs : ∀ s, ∑ v, (if f s = v then r s else 0) *
+      Real.log ((if f s = v then r s else 0) / (r s * pV v)) =
+      -(r s * Real.log (pV (f s))) := by
+    intro s
+    rw [Fintype.sum_eq_single (f s) (fun v hv => by simp [Ne.symm hv])]
+    simp only [↓reduceIte]
+    rcases (hr s).lt_or_eq with h | h
+    · have hp : 0 < pV (f s) := lt_of_lt_of_le h (by
+        rw [hpV]; simp only
+        exact single_le_sum (f := fun s' => if f s' = f s then r s' else 0)
+          (fun s' _ => by split_ifs <;> simp [hr s']) (mem_univ s) |>.trans_eq' (by simp))
+      rw [show r s / (r s * pV (f s)) = (pV (f s))⁻¹ by field_simp, Real.log_inv]
+      ring
+    · rw [← h]; simp
+  rw [sum_congr rfl fun s _ => lhs s, sum_neg_distrib]
+  congr 1
+  calc ∑ s, r s * Real.log (pV (f s))
+      = ∑ s, ∑ v, (if f s = v then r s else 0) * Real.log (pV v) := by
+        refine sum_congr rfl fun s _ => ?_
+        rw [Fintype.sum_eq_single (f s) (fun v hv => by simp [Ne.symm hv])]
+        simp
+    _ = ∑ v, pV v * Real.log (pV v) := by
+        rw [Finset.sum_comm]
+        exact sum_congr rfl fun v _ => by rw [hpV, sum_mul]
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  [DecidableEq V]
+
+/-- Le modèle X dont l'interprétation est remplacée par le verdict déterministe f. -/
+noncomputable def detVerdict (X : CLOModel lam M C S V) (f : C → S → V) : CLOModel lam M C S V where
+  P := X.P
+  P_nonneg := X.P_nonneg
+  P_sum := X.P_sum
+  card_M := X.card_M
+  unif := X.unif
+  ker := fun c s v => if f c s = v then 1 else 0
+  ker_nonneg := fun _ _ _ => by split_ifs <;> norm_num
+  ker_sum := fun c s => by rw [Finset.sum_ite_eq]; simp
+
+/-- **Remarques 2.4 et 3.9 sur lois finies.** Pour un verdict déterministe,
+    I(V;Σ|C) = H(V|C), donc Opp = 1 dès que H(V|C) > 0. -/
+theorem opp_eq_one_of_det_concrete (X : CLOModel lam M C S V) (f : C → S → V) :
+    (X.detVerdict f).IV = (X.detVerdict f).HV ∧
+      (0 < (X.detVerdict f).HV → (X.detVerdict f).Opp = 1) := by
+  have h : (X.detVerdict f).IV = (X.detVerdict f).HV := by
+    unfold IV HV
+    congr 1
+    refine sum_congr rfl fun c _ => ?_
+    congr 1
+    have e : (X.detVerdict f).qSV c =
+        fun s v => if f c s = v then ∑ m, (X.detVerdict f).qMS c m s else 0 := by
+      funext s v
+      unfold qSV detVerdict
+      simp only [mul_ite, mul_one, mul_zero]
+    rw [e]
+    exact miN_eq_entN2_of_det _ (f c) fun s => sum_nonneg fun m _ => qMS_nonneg _ c m s
+  exact ⟨h, fun hpos => by unfold Opp; rw [h, div_self hpos.ne']⟩
+
+end CLOModel
+
+/-! ### 12.11 Lecture du Lemme 2.3 (Remarques 2.3 et 2.15) -/
+
+/-- Le minorant 1 − √(c₀βI) de la confidentialité décroît avec la fuite I et vaut 1
+    pour une fuite nulle. -/
+theorem conf_guarantee_antitone {β I₁ I₂ : ℝ} (hβ : 0 ≤ β) (h : I₁ ≤ I₂) :
+    1 - Real.sqrt (c0 * β * I₂) ≤ 1 - Real.sqrt (c0 * β * I₁) ∧
+      1 - Real.sqrt (c0 * β * 0) = 1 := by
+  refine ⟨?_, by simp⟩
+  have : c0 * β * I₁ ≤ c0 * β * I₂ := mul_le_mul_of_nonneg_left h (mul_nonneg c0_pos.le hβ)
+  linarith [Real.sqrt_le_sqrt this]
+
+end ConditionalCRO
+
+end ExtensionL1
+
+/-! ## 13. Bloc de vérification de l'extension (version 3.5)
+
+Même exigence qu'en section 11 : chaque ligne doit afficher
+`[propext, Classical.choice, Quot.sound]`. -/
+
+#print axioms ConditionalCRO.miN_symm
+#print axioms ConditionalCRO.miN_le_entN1
+#print axioms ConditionalCRO.entN2_le_log_card
+#print axioms ConditionalCRO.dpi_finite
+#print axioms ConditionalCRO.tv_pushforward_le
+#print axioms ConditionalCRO.CLOModel.bornes_mesures
+#print axioms ConditionalCRO.CLOModel.goulot_contexte
+#print axioms ConditionalCRO.CLOModel.capacite_le_gamma_add_one
+#print axioms ConditionalCRO.verdict_card_not_efficient
+#print axioms ConditionalCRO.CLOModel.conf_post
+#print axioms ConditionalCRO.CLOModel.rel_post
+#print axioms ConditionalCRO.CLOModel.opp_post
+#print axioms ConditionalCRO.CLOModel.composition_parallele
+#print axioms ConditionalCRO.frechet
+#print axioms ConditionalCRO.xor_not_subadditive
+#print axioms ConditionalCRO.copy_not_superadditive
+#print axioms ConditionalCRO.chain_rule
+#print axioms ConditionalCRO.condMI_nonneg
+#print axioms ConditionalCRO.miN_kernel_only_on_s
+#print axioms ConditionalCRO.CLOModel.fondement_extraction
+#print axioms ConditionalCRO.CLOModel.IVSM_nonneg
+#print axioms ConditionalCRO.miN_eq_entN2_of_det
+#print axioms ConditionalCRO.CLOModel.opp_eq_one_of_det_concrete
+#print axioms ConditionalCRO.conf_guarantee_antitone

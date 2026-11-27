@@ -4,17 +4,20 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.4). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.5). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
-  Renvois : manuscrit v35 (« Aux fondements de la cryptographie
-  institutionnelle »), numéro et page imprimée, d'après index_labels_v35.tsv.
+  Renvois : manuscrit v36 (« Aux fondements de la cryptographie
+  institutionnelle »), numéro et page imprimée, d'après index_labels_v36.tsv.
+  Les numéros et les pages cités dans les sections 1 à 5 sont identiques en v35.
   « Code B.1 » désigne le listing complet de l'annexe B (p. 239 à 266). Il
   reproduit `ConditionalCRO.lean` sans les quatre lignes d'auteurs de
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
-  Importation. Les définitions et les preuves de la version 3.4 sont dans un
-  seul fichier, que l'on ne modifie pas. Ce fichier importe donc le module
+  Importation. Les définitions et les preuves sont dans un seul fichier. La
+  version 3.5 prolonge la 3.4 par ajout des sections 12 et 13 en fin de
+  fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
+  restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
 -/
 
@@ -311,5 +314,166 @@ def FamilleTemoinAsymptotique : Prop :=
   ∃ K : ℝ, ∃ ε : ℕ → ℝ, Negligible ε ∧ ∀ lam : ℕ, 64 ≤ lam →
     (famModel lam).Conf * (famModel lam).Rel (fun _ _ => ⟨0, Nat.two_pow_pos lam⟩) *
       (famModel lam).Opp ≤ 1 / lam + K / (lam : ℝ) ^ 2 + ε lam
+
+/-! ## 6. Extension v3.5, lot L1 : information classique finie et cadre CLO
+
+Renvois au manuscrit v36 (numéro et page imprimée). Ces énoncés sont démontrés
+dans la section 12 de `ConditionalCRO.lean` (version 3.5), ajoutée après la
+version 3.4 imprimée en annexe B. Ils n'ont donc pas de numéro de ligne dans le
+code B.1. Les définitions nouvelles (`entN1`, `condMI`, `HS`, `IVM`, `IVSM`,
+`IVpost`, `post`, `proj₁`, `proj₂`, `constVerdict`, `detVerdict`) sont testées dans
+`Coherence.lean`, section 6. -/
+
+universe u₅ u₆
+
+/-- Lemmes 1.3 (p. 17) et A.2 (p. 221), DPI. Pour une chaîne de Markov X → Y → Z
+    où Z est tiré de Y par un noyau stochastique k, I(X;Z) ≤ I(X;Y). -/
+def DPIFinie : Prop :=
+  ∀ {α : Type u₁} {β : Type u₂} {γ : Type u₃} [Fintype α] [Fintype β] [Fintype γ]
+    (p : α → β → ℝ) (k : β → γ → ℝ),
+    (∀ a b, 0 ≤ p a b) → (∀ b g, 0 ≤ k b g) → (∀ b, ∑ g, k b g = 1) →
+      miN (fun a g => ∑ b, p a b * k b g) ≤ miN p
+
+/-- DPI pour la variation totale, utilisée dans la preuve du Théorème 2.3 (p. 49) :
+    un post-traitement ne crée pas de distinguabilité. -/
+def DPIVariationTotale : Prop :=
+  ∀ {σ : Type u₁} {τ : Type u₂} [Fintype σ] [Fintype τ] (P Q : σ → ℝ) (T : σ → τ → ℝ),
+    (∀ s t, 0 ≤ T s t) → (∀ s, ∑ t, T s t = 1) →
+      tv (fun t => ∑ s, P s * T s t) (fun t => ∑ s, Q s * T s t) ≤ tv P Q
+
+/-- Théorème 2.1 (p. 46), bornes élémentaires : Conf, Rel et, pour H(V|C) > 0,
+    Opp sont dans [0, 1]. -/
+def BornesElementaires : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [DecidableEq M] [Nonempty M] [Nonempty C] (D : C → S → M),
+    (0 ≤ X.Conf ∧ X.Conf ≤ 1) ∧ (0 ≤ X.Rel D ∧ X.Rel D ≤ 1) ∧
+      (0 < X.HV → 0 ≤ X.Opp ∧ X.Opp ≤ 1)
+
+/-- Théorème 2.2 (p. 48), goulot d'étranglement contextuel :
+    I(V;Σ|C) ≤ min{H(Σ|C), H(V|C)} ≤ log₂|V| ≤ αH(C), la dernière inégalité dès
+    que |V| ≤ 2^(αH(C)) (Définition 2.11, p. 55). -/
+def GoulotContextuel : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [Nonempty V] (α : ℝ),
+    X.IV ≤ min X.HS X.HV ∧ min X.HS X.HV ≤ Real.log (Fintype.card V) / Real.log 2 ∧
+      ((Fintype.card V : ℝ) ≤ (2 : ℝ) ^ (α * X.HC) →
+        Real.log (Fintype.card V) / Real.log 2 ≤ α * X.HC)
+
+/-- Remarque 2.11 (p. 56), Δ est une capacité de l'institution : pour tout
+    protocole, I(V;Σ|C) − I(M;Σ|C) ≤ γ + 1, d'où Δ* ≤ γ + 1. -/
+def CapaciteMajoree : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [Nonempty V] (prm : InstitutionalParams),
+    prm.H = X.HC → (Fintype.card V : ℝ) ≤ (2 : ℝ) ^ (prm.α * prm.H) →
+      X.IV - X.I ≤ gamma prm + 1
+
+/-- Remarque 2.12 (p. 56) : la borne |V| ≤ 2^(αH(C)) n'entraîne pas
+    H(V|C) ≥ αH(C) − 1. Contre-exemple, verdict constant, H(C) = 1 bit, α = 2. -/
+def CardinalSansEfficacite : Prop :=
+  ∀ (l : ℕ),
+    ((Fintype.card (Fin 1) : ℝ) ≤ (2 : ℝ) ^ (2 * (famModel l).constVerdict.HC)) ∧
+      (famModel l).constVerdict.HV < 2 * (famModel l).constVerdict.HC - 1
+
+/-- Théorème 2.3 (p. 49), composition séquentielle : Conf(P₁ ∘ P₂) ≥ Conf(P₁). -/
+def CompositionSequentielleConf : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {S' : Type u₄} {V : Type u₅}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype S'] [Fintype V]
+    (X : CLOModel lam M C S V) {V' : Type u₆} [Fintype V'] (T : C → S → S' → ℝ)
+    (hT : ∀ c s t, 0 ≤ T c s t) (hT1 : ∀ c s, ∑ t, T c s t = 1)
+    (ker' : C → S' → V' → ℝ) (hk : ∀ c t v, 0 ≤ ker' c t v)
+    (hk1 : ∀ c t, ∑ v, ker' c t v = 1) [Nonempty M] [Nonempty C],
+    X.Conf ≤ (X.post T hT hT1 ker' hk hk1).Conf
+
+/-- Théorème 2.3 (p. 49), composition séquentielle : tout décodeur de σ₂ est dominé
+    par un décodeur de σ₁, d'où Relrec(P₁ ∘ P₂) ≤ Relrec(P₁). -/
+def CompositionSequentielleRel : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {S' : Type u₄} {V : Type u₅}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype S'] [Fintype V]
+    (X : CLOModel lam M C S V) {V' : Type u₆} [Fintype V'] (T : C → S → S' → ℝ)
+    (hT : ∀ c s t, 0 ≤ T c s t) (hT1 : ∀ c s, ∑ t, T c s t = 1)
+    (ker' : C → S' → V' → ℝ) (hk : ∀ c t v, 0 ≤ ker' c t v)
+    (hk1 : ∀ c t, ∑ v, ker' c t v = 1) [DecidableEq M] [Nonempty S'] (D' : C → S' → M),
+    ∃ D : C → S → M, (X.post T hT hT1 ker' hk hk1).Rel D' ≤ X.Rel D
+
+/-- Remarque 2.5 (p. 49), opposabilité composée à verdict fixé :
+    I(V;Σ₂|C) ≤ I(V;Σ₁|C) et Opp(P₁ ∘ P₂) ≤ Opp(P₁). -/
+def OpposabiliteComposee : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {S' : Type u₄} {V : Type u₅}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype S'] [Fintype V]
+    (X : CLOModel lam M C S V) (T : C → S → S' → ℝ),
+    (∀ c s t, 0 ≤ T c s t) → (∀ c s, ∑ t, T c s t = 1) →
+      X.IVpost T ≤ X.IV ∧ (0 < X.HV → X.IVpost T / X.HV ≤ X.Opp)
+
+/-- Théorème 2.3 (p. 49), composition parallèle : Conf(P₁ ∥ P₂) ≤ min et tout
+    décodeur d'un composant se relève avec la même fiabilité, d'où Relrec ≥ max. -/
+def CompositionParallele : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S₁ : Type u₃} {S₂ : Type u₄} {V : Type u₅}
+    [Fintype M] [Fintype C] [Fintype S₁] [Fintype S₂] [Fintype V]
+    [DecidableEq S₁] [DecidableEq S₂] (X : CLOModel lam M C (S₁ × S₂) V)
+    (k₁ : C → S₁ → V → ℝ) (hk₁ : ∀ c t v, 0 ≤ k₁ c t v) (hk₁1 : ∀ c t, ∑ v, k₁ c t v = 1)
+    (k₂ : C → S₂ → V → ℝ) (hk₂ : ∀ c t v, 0 ≤ k₂ c t v) (hk₂1 : ∀ c t, ∑ v, k₂ c t v = 1)
+    [DecidableEq M] [Nonempty M] [Nonempty C] (D₁ : C → S₁ → M) (D₂ : C → S₂ → M),
+    X.Conf ≤ min (X.proj₁ k₁ hk₁ hk₁1).Conf (X.proj₂ k₂ hk₂ hk₂1).Conf ∧
+      (X.proj₁ k₁ hk₁ hk₁1).Rel D₁ = X.Rel (fun c s => D₁ c s.1) ∧
+      (X.proj₂ k₂ hk₂ hk₂1).Rel D₂ = X.Rel (fun c s => D₂ c s.2)
+
+/-- Remarque 2.5 (p. 49), inégalité de Fréchet : ab ≥ a + b − 1 pour a, b ≤ 1. -/
+def Frechet : Prop := ∀ {a b : ℝ}, a ≤ 1 → b ≤ 1 → a + b - 1 ≤ a * b
+
+/-- Remarque 2.5 (p. 49) : pas de sous-additivité. V = B₁ ⊕ B₂ donne
+    I(V;(Σ₁,Σ₂)) = log 2 alors que I(V;Σ₁) = 0. -/
+def XorNonSousAdditif : Prop :=
+  miN (fun (v : Fin 2) (s : Fin 2 × Fin 2) => if v = s.1 + s.2 then (1 / 4 : ℝ) else 0) =
+      Real.log 2 ∧
+    miN (fun (_ : Fin 2) (_ : Fin 2) => (1 / 4 : ℝ)) = 0
+
+/-- Remarque 2.5 (p. 49) : pas de sur-additivité. Σ₁ = Σ₂ = V donne
+    I(V;(Σ₁,Σ₂)) = log 2 < 2 log 2 = I(V;Σ₁) + I(V;Σ₂). -/
+def CopieNonSurAdditive : Prop :=
+  miN (fun (v : Fin 2) (s : Fin 2 × Fin 2) => if s.1 = v ∧ s.2 = v then (1 / 2 : ℝ) else 0) =
+      Real.log 2 ∧
+    miN (fun (v : Fin 2) (s : Fin 2) => if s = v then (1 / 2 : ℝ) else 0) = Real.log 2 ∧
+    Real.log 2 < 2 * Real.log 2
+
+/-- Règle de chaîne, utilisée dans les preuves de la Proposition 2.1 (p. 55) et du
+    Lemme 1.3 (p. 17) : I(A;B,G) = I(A;B) + I(A;G|B). -/
+def RegleDeChaine : Prop :=
+  ∀ {α : Type u₁} {β : Type u₂} {γ : Type u₃} [Fintype α] [Fintype β] [Fintype γ]
+    (u : α → β → γ → ℝ), (∀ a b g, 0 ≤ u a b g) →
+      miN (fun a (bg : β × γ) => u a bg.1 bg.2) = miN (fun a b => ∑ g, u a b g) + condMI u
+
+/-- Positivité de l'information mutuelle conditionnelle, I(A;G|B) ≥ 0 (preuve du
+    Lemme 1.3, p. 17). -/
+def InfoConditionnellePositive : Prop :=
+  ∀ {α : Type u₁} {β : Type u₂} {γ : Type u₃} [Fintype α] [Fintype β] [Fintype γ]
+    (u : α → β → γ → ℝ), (∀ a b g, 0 ≤ u a b g) → 0 ≤ condMI u
+
+/-- Proposition 2.1 (p. 55), fondement informationnel de l'Hypothèse 2.1 :
+    I(V;Σ|C) = I(V;M|C) + I(V;Σ|M,C) ≤ I(M;Σ|C) + I(V;Σ|M,C), et I(V;Σ|M,C) ≤ Δ
+    entraîne l'extraction bornée. -/
+def FondementExtraction : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V),
+    X.IV = X.IVM + X.IVSM ∧ X.IVM ≤ X.I ∧ X.IV ≤ X.I + X.IVSM ∧
+      ∀ Δ : ℝ, X.IVSM ≤ Δ → X.IV ≤ X.I + Δ
+
+/-- Remarques 2.4 (p. 48) et 3.9 (p. 108), sur lois finies : un verdict
+    déterministe donne I(V;Σ|C) = H(V|C), donc Opp = 1 dès que H(V|C) > 0. -/
+def VerdictDeterministeConcret : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [DecidableEq V]
+    (X : CLOModel lam M C S V) (f : C → S → V),
+    (X.detVerdict f).IV = (X.detVerdict f).HV ∧
+      (0 < (X.detVerdict f).HV → (X.detVerdict f).Opp = 1)
+
+/-- Remarques 2.3 (p. 47) et 2.15 (p. 58) : le minorant 1 − √(c₀βI) décroît avec
+    la fuite I et vaut 1 pour une fuite nulle. -/
+def GarantieConfDecroissante : Prop :=
+  ∀ {β I₁ I₂ : ℝ}, 0 ≤ β → I₁ ≤ I₂ →
+    1 - Real.sqrt (c0 * β * I₂) ≤ 1 - Real.sqrt (c0 * β * I₁) ∧
+      1 - Real.sqrt (c0 * β * 0) = 1
 
 end Enonces

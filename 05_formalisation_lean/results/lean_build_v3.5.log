@@ -1,0 +1,57 @@
+# Version 3.5, compilée le 27 novembre 2026 avec Lean 4.35.0 et Mathlib v4.35.0 (imports ciblés, ligne 46 seule différente).
+# Aucune erreur, aucun avertissement. Sortie complète :
+@ConditionalCRO.lemma4_confidentiality_guarantee : ∀ {lam : ℕ} (P : ConditionalCRO.ProtocolInstance lam),
+  P.KLmax ≤ P.params.β * P.I → 1 - √(ConditionalCRO.c0 * P.params.β * P.I) ≤ P.Conf
+ConditionalCRO.conditional_CRO_trilemma : ∀ (F : ConditionalCRO.ProtocolFamily) (κ : ℝ),
+  0 ≤ κ →
+    (∀ (lam : ℕ), 64 ≤ lam → ConditionalCRO.InstitutionalAssumptions (F.inst lam)) →
+      (∀ (lam : ℕ), 64 ≤ lam → (F.inst lam).I ≤ κ / ↑lam) →
+        ∃ K ε,
+          ConditionalCRO.Negligible ε ∧
+            ∀ (lam : ℕ),
+              64 ≤ lam →
+                (F.inst lam).Conf * (F.inst lam).Rel * (F.inst lam).Opp ≤ F.params.Δ / ↑lam + K / ↑lam ^ 2 + ε lam
+'ConditionalCRO.lemma4_confidentiality_guarantee' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_explicit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.conditional_CRO_trilemma' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.assumptions_consistent_and_bound_attained' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.regime_assumption_necessary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.zkSNARK_regime_at_256' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.opp_eq_one_of_deterministic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.deterministic_forces_capacity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_refined' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.refined_bound_is_fano_when_delta_ge_gamma' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.factor_lt_one_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.seuil_Hsharp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.pinsker_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.fano_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_explicit_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.trilemma_refined_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.lemma4_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.conditional_CRO_trilemma_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.concrete_assumptions_satisfiable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.concrete_asymptotic_applies' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.miN_symm' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.miN_le_entN1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.entN2_le_log_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.dpi_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.tv_pushforward_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.bornes_mesures' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.goulot_contexte' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.capacite_le_gamma_add_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.verdict_card_not_efficient' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.conf_post' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.rel_post' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.opp_post' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.composition_parallele' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.frechet' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.xor_not_subadditive' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.copy_not_superadditive' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.chain_rule' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.condMI_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.miN_kernel_only_on_s' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.fondement_extraction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.IVSM_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.miN_eq_entN2_of_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.CLOModel.opp_eq_one_of_det_concrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ConditionalCRO.conf_guarantee_antitone' depends on axioms: [propext, Classical.choice, Quot.sound]

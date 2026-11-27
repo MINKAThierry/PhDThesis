@@ -2,16 +2,16 @@
 
 [English version](VERIFICATION_en.md)
 
-Ce dossier permet de juger ce que la formalisation prouve sans lire les 1 575 lignes de `ConditionalCRO.lean`. Il suit le modèle du dépôt de la preuve Lean de l'hypothèse de Riemann (novembre 2026). Les énoncés y sont isolés des preuves, un point d'entrée mince les relie aux théorèmes et un script audite les axiomes. Les limites y sont dites franchement.
+Ce dossier permet de juger ce que la formalisation prouve sans lire les 2 352 lignes de `ConditionalCRO.lean`. Il suit le modèle du dépôt de la preuve Lean de l'hypothèse de Riemann (novembre 2026). Les énoncés y sont isolés des preuves, un point d'entrée mince les relie aux théorèmes et un script audite les axiomes. Les limites y sont dites franchement.
 
-Le dossier est **additif**. `ConditionalCRO.lean` (version 3.4) n'est pas modifié. Il reste identique au listing B.1 de l'annexe B de la thèse, aux quatre lignes d'auteurs de l'en-tête près. Les nouveaux fichiers l'importent.
+Le dossier est **additif**. La version 3.5 de `ConditionalCRO.lean` (27 novembre 2026) prolonge la 3.4 par ajout des sections 12 et 13 en fin de fichier. Ses lignes 5 à 1575 restent identiques au listing B.1 de l'annexe B de la thèse, aux quatre lignes d'auteurs de l'en-tête près. Seule la ligne 4, qui porte le numéro de version, a changé. Les numéros de ligne cités pour la version 3.4 restent donc valables. Les fichiers de vérification importent `ConditionalCRO`.
 
 ## Ce qu'il faut lire et dans quel ordre
 
 | Ordre | Fichier | Rôle |
 |---|---|---|
 | 1 | ce document | Carte, traçabilité et limites |
-| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | Les 29 énoncés de la thèse, sans aucune preuve, chacun avec son renvoi au manuscrit v35 |
+| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | Les 47 énoncés de la thèse, sans aucune preuve, chacun avec son renvoi au manuscrit v36 |
 | 3 | [`Verification/Principal.lean`](Verification/Principal.lean) | Une ligne par énoncé, de la forme `theorem principal_x : Enonces.X := nomExistant` |
 | 4 | [`Verification/Coherence.lean`](Verification/Coherence.lean) | Tests de non-vacuité des définitions propres |
 | 5 | [`results/verification.log`](results/verification.log), [`results/axiomes.txt`](results/axiomes.txt) | Sorties du script d'audit |
@@ -30,7 +30,7 @@ bash verifier.sh          # ou bash verifier.sh --cache pour enchaîner les deux
 
 Le script échoue dans six cas. Le premier est une preuve dans `Enonces.lean` (mot-clé `by`, déclaration autre que `def Nom : Prop :=`). Le deuxième est un `sorry`, `admit`, `native_decide` ou `axiom` dans les sources, commentaires exclus. Le troisième est une ligne de `Principal.lean` qui ne relie pas un énoncé à un théorème existant. Le quatrième est un échec de compilation. Le cinquième est un `#print axioms` qui affiche autre chose que `[propext, Classical.choice, Quot.sound]`. Le sixième est un rejet par un vérificateur indépendant du noyau.
 
-Cette dernière étape emploie deux outils fournis avec la chaîne Lean 4.35.0. `leanchecker` rejoue les déclarations dans le noyau de Lean. `nanoda_bin` est un second vérificateur, écrit en Rust, qui relit un export produit par `leanexport`. L'export porte sur les 29 théorèmes de `Principal.lean` et sur toutes leurs dépendances, Mathlib comprise. Seuls les trois axiomes standard y sont admis.
+Cette dernière étape emploie deux outils fournis avec la chaîne Lean 4.35.0. `leanchecker` rejoue les déclarations dans le noyau de Lean. `nanoda_bin` est un second vérificateur, écrit en Rust, qui relit un export produit par `leanexport`. L'export porte sur les théorèmes de `Principal.lean` (29 en version 3.4, 47 en version 3.5) et sur toutes leurs dépendances, Mathlib comprise. Seuls les trois axiomes standard y sont admis.
 
 Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) exécute ce script sur GitHub à chaque modification du dossier. Il complète le job `lean` de `ci.yml` sans le remplacer.
 
@@ -38,9 +38,11 @@ Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/
 
 | Contrôle | Où | Résultat |
 |---|---|---|
-| `lake build ConditionalCRO Verification` | local, 26 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 | réussi, aucun avertissement dans `Verification` |
+| Version 3.5 : `ConditionalCRO`, puis `Enonces`, `Principal` et `Coherence` | local, 27 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 à imports ciblés | réussi, aucune erreur ni aucun avertissement |
+| `#print axioms`, version 3.5 | local, 27 novembre 2026 | 44 dans le fichier, 47 sur `Principal.lean` et 40 sur `Coherence.lean`, tous limités à `[propext, Classical.choice, Quot.sound]` |
+| `lake build ConditionalCRO Verification`, version 3.4 | local, 26 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 | réussi, aucun avertissement dans `Verification` |
 | `bash verifier.sh`, étapes 1 à 6 | local | réussi, voir `results/verification.log` |
-| `#print axioms` sur les 29 théorèmes de `Principal.lean` | local | `[propext, Classical.choice, Quot.sound]` pour chacun |
+| `#print axioms` sur les 29 théorèmes de `Principal.lean`, version 3.4 | local | `[propext, Classical.choice, Quot.sound]` pour chacun |
 | `leanchecker` sur les quatre modules | local | réussi |
 | `leanchecker --fresh Verification.Principal` (rejeu complet depuis zéro) | local, hors script | réussi en 6 min 23 s |
 | `nanoda_bin` sur l'export de `Principal.lean` | local | 28 867 déclarations vérifiées, aucune erreur de typage |
@@ -52,41 +54,60 @@ Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/
 
 ## Tableau de traçabilité
 
-Les numéros et les pages sont ceux du manuscrit v35 (`index_labels_v35.tsv`). « Fichier » désigne la ligne de `ConditionalCRO.lean` ; la ligne du listing B.1 vaut quatre de moins. `E` et `P` désignent les lignes de `Enonces.lean` et de `Principal.lean`. Les 29 théorèmes affichent tous `[propext, Classical.choice, Quot.sound]`.
+Les numéros et les pages sont ceux du manuscrit v36 (`index_labels_v36.tsv`), identiques à ceux de la v35 pour les énoncés de la version 3.4. « Fichier » désigne la ligne de `ConditionalCRO.lean` ; la ligne du listing B.1 vaut quatre de moins. `E` et `P` désignent les lignes de `Enonces.lean` et de `Principal.lean`. Les 47 théorèmes affichent tous `[propext, Classical.choice, Quot.sound]`. Les lignes à partir de 1634 sont celles de la section 12 (version 3.5), absente du listing B.1.
 
 ### Énoncés démontrés
 
-| Énoncé du manuscrit | Label | N° et page v35 | Nom Lean | Fichier | E / P | Statut |
+| Énoncé du manuscrit | Label | N° et page v36 | Nom Lean | Fichier | E / P | Statut |
 |---|---|---|---|---|---|---|
-| Négligeabilité de ε₀ = 2^(−λ) | `lem:negligeabilite_eps0` | Lemme 3.1, p. 113 | `negligible_eps0` | 80 | 66 / 19 | démontré |
-| Garantie de confidentialité, Conf ≥ 1 − √(c₀βI) | `lem:confidentiality_guarantee` | Lemme 2.3, (2.46), p. 57 | `lemma4_confidentiality_guarantee` | 172 | 72 / 22 | démontré, Pinsker posé (a) |
-| Trilemme, forme explicite | `eq:trilemme_cro_explicite`, `eq:main_theorem_lean4_explicit` | (2.49) p. 58 ; (3.30) p. 114 | `trilemma_explicit` | 195 | 79 / 23 | démontré, Fano posé (a) |
-| Trilemme, forme publiée | `rem:corollaire_publie`, `thm:original_lean4` | Remarque 2.17, p. 61 ; Théorème 3.2, p. 109 | `trilemma_instance` | 244 | 88 / 24 | démontré, Fano posé (a) |
-| Trilemme, forme asymptotique | `thm:conditional_CRO_trilemma`, `eq:trilemme_cro_conditionnel` | Théorème 3.3, p. 113, (3.29) p. 114 ; (2.48) p. 58 | `conditional_CRO_trilemma` | 274 | 96 / 25 | démontré, Fano posé (a) |
-| Trilemme, forme raffinée | `eq:trilemme_cro_raffine` | (2.50), p. 58 | `trilemma_refined` | 415 | 106 / 26 | démontré, I(V;Σ\|C) ≤ H(V\|C) posé (a) |
-| Témoin de cohérence | `thm:witness_consistency` | Théorème 3.4, p. 114 | `assumptions_consistent_and_bound_attained` | 322 | 115 / 27 | démontré (b) |
-| Nécessité du régime | `thm:scope_necessity` | Théorème 3.5, p. 115 | `regime_assumption_necessary` | 356 | 125 / 28 | démontré |
-| Régime Helios | `thm:regime_helios` | Théorème 3.6, p. 120 | `Helios_regime_at_128` | 379 | 134 / 29 | démontré |
-| Régime zk-SNARKs | `thm:regime_snarks` | Théorème 3.7, p. 120 | `zkSNARK_regime_at_256` | 386 | 138 / 30 | démontré |
-| Régime audit traditionnel | `thm:regime_audit` | Théorème 3.8, p. 121 | `TraditionalAudit_regime_at_128` | 393 | 142 / 31 | démontré |
-| Verdict déterministe, Opp = 1 | `rem:verdict_deterministe` | Remarque 2.4, p. 48 | `opp_eq_one_of_deterministic` | 402 | 147 / 32 | démontré |
-| Verdict déterministe, γ − I ≤ Δ | `subsec:lean4_extensions` | 3.4.8, p. 115 | `deterministic_forces_capacity` | 408 | 152 / 33 | démontré |
-| Facteur institutionnel égal à 1 si Δ ≥ γ | `rem:activite_delta` | Remarque 2.18, p. 61 | `refined_bound_is_fano_when_delta_ge_gamma` | 447 | 158 / 34 | démontré |
-| Facteur < 1 si et seulement si Δ < γ − κ/λ | `rem:activite_delta` | Remarque 2.18, p. 61 ; 3.4.8, p. 116 | `factor_lt_one_iff` | 459 | 167 / 35 | démontré |
-| Seuil H♯ = (Δ + 1 + κ/λ)/α | `eq:seuil_activite` | (2.65), p. 61 ; 3.4.8, p. 116 | `seuil_Hsharp` | 470 | 174 / 36 | démontré |
-| Pinsker fini, TV² ≤ KL/2 (nats) | `subsec:lean4_concret` | 3.4.9, étape 2, p. 117 | `pinsker_finite` | 673 | 182 / 39 | démontré |
-| Positivité de l'information mutuelle | `subsec:lean4_concret` | 3.4.9, étape 3, p. 117 | `miN_nonneg` | 729 | 190 / 40 | démontré |
-| Information mutuelle majorée par l'entropie | `subsec:lean4_concret` | 3.4.9, étape 3, p. 117 | `miN_le_entN2` | 765 | 196 / 41 | démontré |
-| Fano fini, p·log N − log 2 ≤ I(M;Σ) | `subsec:lean4_concret`, `eq:fano_inequality` | 3.4.9, étape 4, p. 117 ; (1.9), p. 17 | `fano_finite` | 793 | 202 / 42 | démontré |
-| I(V;Σ\|C) ≤ H(V\|C) sur le modèle | `subsec:lean4_concret` | 3.4.9, p. 117 | `CLOModel.IV_le_HV` | 1027 | 213 / 45 | démontré |
-| Pinsker sur le modèle, TVmax² ≤ c₀·KLmax | `subsec:lean4_concret`, `rem:constante_c0` | 3.4.9, p. 117 ; Remarque 2.16, p. 58 | `CLOModel.pinsker_model` | 1077 | 220 / 46 | démontré sous supports communs |
-| Fano sur le modèle, Rel(D)·λ − 1 ≤ I(M;Σ\|C) | `ass:reliability_axiom` | Hypothèse 3.4, p. 109 (devenue théorème) | `CLOModel.fano_model` | 1128 | 229 / 47 | démontré |
-| Trilemme explicite sur lois finies | `eq:trilemme_cro_explicite`, `subsec:lean4_concret` | (2.49), p. 58 ; 3.4.9, p. 117 | `trilemma_explicit_concrete` | 1319 | 237 / 48 | démontré sous Hypothèses 2.1, 2.2, 2.4 (c) |
-| Trilemme raffiné sur lois finies | `eq:trilemme_cro_raffine`, `subsec:lean4_concret` | (2.50), p. 58 ; 3.4.9, p. 117 | `trilemma_refined_concrete` | 1336 | 250 / 49 | démontré sous Hypothèses 2.1, 2.2, 2.4 (c) |
-| Lemme 2.3 sur lois finies | `lem:confidentiality_guarantee`, `subsec:lean4_concret` | Lemme 2.3, p. 57 ; 3.4.9, p. 117 | `lemma4_concrete` | 1351 | 265 / 50 | démontré sous Hypothèse 2.3 et supports communs |
-| Trilemme asymptotique sur lois finies | `thm:conditional_CRO_trilemma`, `subsec:lean4_concret` | Théorème 3.3, p. 113 ; 3.4.9, p. 118 | `conditional_CRO_trilemma_concrete` | 1367 | 275 / 51 | démontré sous Hypothèses 2.1, 2.2, 2.4 (c) |
-| Famille témoin, toutes hypothèses satisfaites | `subsec:lean4_concret` | 3.4.9, p. 118 | `concrete_assumptions_satisfiable` | 1516 | 295 / 54 | démontré |
-| Le trilemme asymptotique s'applique à la famille témoin | `subsec:lean4_concret` | 3.4.9, p. 118 | `concrete_asymptotic_applies` | 1535 | 310 / 55 | démontré |
+| Négligeabilité de ε₀ = 2^(−λ) | `lem:negligeabilite_eps0` | Lemme 3.1, p. 113 | `negligible_eps0` | 80 | 69 / 19 | démontré |
+| Garantie de confidentialité, Conf ≥ 1 − √(c₀βI) | `lem:confidentiality_guarantee` | Lemme 2.3, (2.46), p. 57 | `lemma4_confidentiality_guarantee` | 172 | 75 / 22 | démontré, Pinsker posé (a) |
+| Trilemme, forme explicite | `eq:trilemme_cro_explicite`, `eq:main_theorem_lean4_explicit` | (2.49) p. 58 ; (3.30) p. 114 | `trilemma_explicit` | 195 | 82 / 23 | démontré, Fano posé (a) |
+| Trilemme, forme publiée | `rem:corollaire_publie`, `thm:original_lean4` | Remarque 2.17, p. 61 ; Théorème 3.2, p. 109 | `trilemma_instance` | 244 | 91 / 24 | démontré, Fano posé (a) |
+| Trilemme, forme asymptotique | `thm:conditional_CRO_trilemma`, `eq:trilemme_cro_conditionnel` | Théorème 3.3, p. 113, (3.29) p. 114 ; (2.48) p. 58 | `conditional_CRO_trilemma` | 274 | 99 / 25 | démontré, Fano posé (a) |
+| Trilemme, forme raffinée | `eq:trilemme_cro_raffine` | (2.50), p. 58 | `trilemma_refined` | 415 | 109 / 26 | démontré, I(V;Σ\|C) ≤ H(V\|C) posé (a) |
+| Témoin de cohérence | `thm:witness_consistency` | Théorème 3.4, p. 114 | `assumptions_consistent_and_bound_attained` | 322 | 118 / 27 | démontré (b) |
+| Nécessité du régime | `thm:scope_necessity` | Théorème 3.5, p. 115 | `regime_assumption_necessary` | 356 | 128 / 28 | démontré |
+| Régime Helios | `thm:regime_helios` | Théorème 3.6, p. 120 | `Helios_regime_at_128` | 379 | 137 / 29 | démontré |
+| Régime zk-SNARKs | `thm:regime_snarks` | Théorème 3.7, p. 120 | `zkSNARK_regime_at_256` | 386 | 141 / 30 | démontré |
+| Régime audit traditionnel | `thm:regime_audit` | Théorème 3.8, p. 121 | `TraditionalAudit_regime_at_128` | 393 | 145 / 31 | démontré |
+| Verdict déterministe, Opp = 1 | `rem:verdict_deterministe` | Remarque 2.4, p. 48 | `opp_eq_one_of_deterministic` | 402 | 150 / 32 | démontré |
+| Verdict déterministe, γ − I ≤ Δ | `subsec:lean4_extensions` | 3.4.8, p. 115 | `deterministic_forces_capacity` | 408 | 155 / 33 | démontré |
+| Facteur institutionnel égal à 1 si Δ ≥ γ | `rem:activite_delta` | Remarque 2.18, p. 61 | `refined_bound_is_fano_when_delta_ge_gamma` | 447 | 161 / 34 | démontré |
+| Facteur < 1 si et seulement si Δ < γ − κ/λ | `rem:activite_delta` | Remarque 2.18, p. 61 ; 3.4.8, p. 116 | `factor_lt_one_iff` | 459 | 170 / 35 | démontré |
+| Seuil H♯ = (Δ + 1 + κ/λ)/α | `eq:seuil_activite` | (2.65), p. 61 ; 3.4.8, p. 116 | `seuil_Hsharp` | 470 | 177 / 36 | démontré |
+| Pinsker fini, TV² ≤ KL/2 (nats) | `subsec:lean4_concret` | 3.4.9, étape 2, p. 117 | `pinsker_finite` | 673 | 185 / 39 | démontré |
+| Positivité de l'information mutuelle | `subsec:lean4_concret` | 3.4.9, étape 3, p. 117 | `miN_nonneg` | 729 | 193 / 40 | démontré |
+| Information mutuelle majorée par l'entropie | `subsec:lean4_concret` | 3.4.9, étape 3, p. 117 | `miN_le_entN2` | 765 | 199 / 41 | démontré |
+| Fano fini, p·log N − log 2 ≤ I(M;Σ) | `subsec:lean4_concret`, `eq:fano_inequality` | 3.4.9, étape 4, p. 117 ; (1.9), p. 17 | `fano_finite` | 793 | 205 / 42 | démontré |
+| I(V;Σ\|C) ≤ H(V\|C) sur le modèle | `subsec:lean4_concret` | 3.4.9, p. 117 | `CLOModel.IV_le_HV` | 1027 | 216 / 45 | démontré |
+| Pinsker sur le modèle, TVmax² ≤ c₀·KLmax | `subsec:lean4_concret`, `rem:constante_c0` | 3.4.9, p. 117 ; Remarque 2.16, p. 58 | `CLOModel.pinsker_model` | 1077 | 223 / 46 | démontré sous supports communs |
+| Fano sur le modèle, Rel(D)·λ − 1 ≤ I(M;Σ\|C) | `ass:reliability_axiom` | Hypothèse 3.4, p. 109 (devenue théorème) | `CLOModel.fano_model` | 1128 | 232 / 47 | démontré |
+| Trilemme explicite sur lois finies | `eq:trilemme_cro_explicite`, `subsec:lean4_concret` | (2.49), p. 58 ; 3.4.9, p. 117 | `trilemma_explicit_concrete` | 1319 | 240 / 48 | démontré sous Hypothèses 2.1, 2.2, 2.4 (c) |
+| Trilemme raffiné sur lois finies | `eq:trilemme_cro_raffine`, `subsec:lean4_concret` | (2.50), p. 58 ; 3.4.9, p. 117 | `trilemma_refined_concrete` | 1336 | 253 / 49 | démontré sous Hypothèses 2.1, 2.2, 2.4 (c) |
+| Lemme 2.3 sur lois finies | `lem:confidentiality_guarantee`, `subsec:lean4_concret` | Lemme 2.3, p. 57 ; 3.4.9, p. 117 | `lemma4_concrete` | 1351 | 268 / 50 | démontré sous Hypothèse 2.3 et supports communs |
+| Trilemme asymptotique sur lois finies | `thm:conditional_CRO_trilemma`, `subsec:lean4_concret` | Théorème 3.3, p. 113 ; 3.4.9, p. 118 | `conditional_CRO_trilemma_concrete` | 1367 | 278 / 51 | démontré sous Hypothèses 2.1, 2.2, 2.4 (c) |
+| Famille témoin, toutes hypothèses satisfaites | `subsec:lean4_concret` | 3.4.9, p. 118 | `concrete_assumptions_satisfiable` | 1516 | 298 / 54 | démontré |
+| Le trilemme asymptotique s'applique à la famille témoin | `subsec:lean4_concret` | 3.4.9, p. 118 | `concrete_asymptotic_applies` | 1535 | 313 / 55 | démontré |
+| DPI finie, I(X;Z) ≤ I(X;Y) | `lem:dpi`, `lem:ann_dpi` | Lemme 1.3 (p. 17) et Lemme A.2 (p. 221) | `dpi_finite` | 1634 | 331 / 58 | démontré |
+| DPI pour la variation totale | `prv:composition` | preuve du Théorème 2.3, p. 49 | `tv_pushforward_le` | 1691 | 339 / 59 | démontré |
+| Bornes élémentaires, Conf, Rel, Opp dans [0, 1] | `thm:bornes_mesures` | Théorème 2.1, (2.6), p. 46 | `bornes_mesures` | 1752 | 346 / 60 | démontré |
+| Goulot contextuel, I(V;Σ\|C) ≤ min{H(Σ\|C), H(V\|C)} ≤ log₂\|V\| ≤ αH(C) | `thm:goulot_contexte` | Théorème 2.2, (2.14), p. 48 | `goulot_contexte` | 1763 | 356 / 61 | démontré |
+| Capacité, I(V;Σ\|C) − I(M;Σ\|C) ≤ γ + 1, d'où Δ* ≤ γ + 1 | `rem:delta_capacite` | Remarque 2.11, p. 56 | `capacite_le_gamma_add_one` | 1779 | 366 / 62 | démontré |
+| La borne sur \|V\| n'entraîne pas H(V\|C) ≥ γ (contre-exemple) | `rem:statut_verdict_efficace` | Remarque 2.12, p. 56 | `verdict_card_not_efficient` | 1830 | 375 / 63 | démontré |
+| Composition séquentielle, Conf(P₁ ∘ P₂) ≥ Conf(P₁) | `thm:composition_sequentielle` | Théorème 2.3, (2.21), p. 49 | `conf_post` | 1906 | 381 / 64 | démontré |
+| Composition séquentielle, Relrec(P₁ ∘ P₂) ≤ Relrec(P₁) | `thm:composition_sequentielle` | Théorème 2.3, (2.22), p. 49 | `rel_post` | 1925 | 392 / 65 | démontré |
+| Opposabilité composée à verdict fixé | `rem:composition_opp` | Remarque 2.5, p. 49 | `opp_post` | 1968 | 403 / 66 | démontré |
+| Composition parallèle, Conf ≤ min et relèvement des décodeurs | `thm:composition_sequentielle` | Théorème 2.3, (2.23) et (2.24), p. 49 | `composition_parallele` | 2008 | 412 / 67 | démontré |
+| Inégalité de Fréchet, ab ≥ a + b − 1 | `rem:composition_opp` | Remarque 2.5, p. 49 | `frechet` | 2023 | 424 / 68 | démontré |
+| Pas de sous-additivité (V = B₁ ⊕ B₂) | `rem:composition_opp` | Remarque 2.5, p. 49 | `xor_not_subadditive` | 2034 | 428 / 69 | démontré |
+| Pas de sur-additivité (Σ₁ = Σ₂ = V) | `rem:composition_opp` | Remarque 2.5, p. 49 | `copy_not_superadditive` | 2045 | 435 / 70 | démontré |
+| Règle de chaîne, I(A;B,G) = I(A;B) + I(A;G\|B) | `prv:fondement_extraction` | preuves de la Proposition 2.1 et du Lemme 1.3 | `chain_rule` | 2071 | 443 / 71 | démontré |
+| Positivité de l'information mutuelle conditionnelle | `lem:dpi` | preuve du Lemme 1.3, p. 17 | `condMI_nonneg` | 2110 | 450 / 72 | démontré |
+| Fondement de l'extraction bornée | `prop:fondement_extraction` | Proposition 2.1, (2.40), p. 55 | `fondement_extraction` | 2200 | 457 / 73 | démontré |
+| Verdict déterministe sur lois finies, Opp = 1 | `rem:verdict_deterministe`, `rem:opp_lean4_admissible` | Remarque 2.4 (p. 48) et Remarque 3.9 (p. 108) | `opp_eq_one_of_det_concrete` | 2289 | 465 / 74 | démontré |
+| Le minorant 1 − √(c₀βI) décroît avec I et vaut 1 en I = 0 | `rem:interpretation_lemme`, `rem:interp_lemme4` | Remarque 2.3 (p. 47) et Remarque 2.15 (p. 58) | `conf_guarantee_antitone` | 2312 | 474 / 75 | démontré |
+| Tension confidentialité et information mutuelle | `lem:compromis_conf_mi` | Lemme 2.1, p. 46 | `lemma4_concrete` | 1351 | 268 / 50 | démontré sous Hypothèse 2.3 et supports communs ; même énoncé que le Lemme 2.3 |
 
 (a) Dans le modèle abstrait, Fano (I ≥ Rel·λ − 1) et Pinsker (TV² ≤ c₀·KL) sont des champs de `ProtocolInstance`. La couche concrète les démontre (lignes 1077 et 1128).
 (b) Point du modèle abstrait, non réalisable par une loi (Remarque 3.10, p. 114).
@@ -94,7 +115,7 @@ Les numéros et les pages sont ceux du manuscrit v35 (`index_labels_v35.tsv`). �
 
 ### Hypothèses nommées
 
-| Hypothèse du manuscrit | Label | N° et page v35 | Forme Lean | Fichier | Rôle dans les preuves |
+| Hypothèse du manuscrit | Label | N° et page v36 | Forme Lean | Fichier | Rôle dans les preuves |
 |---|---|---|---|---|---|
 | Extraction bornée, I(V;Σ\|C) ≤ I(M;Σ\|C) + Δ | `ass:extraction_bornee` | Hypothèse 2.1, p. 55 ; 3.1, p. 108 | champ `A1`, prémisse `A1` | 161, 1323 | utilisée par tous les trilemmes |
 | Verdict efficace, H(V\|C) ≥ γ = αH(C) − 1 ≥ 1 | `ass:verdicts_efficace` | Hypothèse 2.2, p. 56 ; 3.2, p. 108 | champs `A2`, `A2γ`, prémisses `A2`, `A2γ` | 163, 1323 | utilisée par tous les trilemmes |
@@ -109,12 +130,11 @@ Les numéros et les pages sont ceux du manuscrit v35 (`index_labels_v35.tsv`). �
 
 ### Hors du périmètre de la formalisation
 
-| Résultat du manuscrit | Label | N° et page v35 | Statut |
+| Résultat du manuscrit | Label | N° et page v36 | Statut |
 |---|---|---|---|
 | Conf ≥ 1 − √(c₀βκ/λ), dernière phrase du Théorème 2.4 | `thm:trilemme_cro_conditionnel` | Théorème 2.4, p. 58 | non énoncé tel quel en Lean ; il découle du Lemme 2.3 et de l'Hypothèse 2.4 par monotonie de la racine |
 | Borne aiguë sur la fiabilité | `prop:borne_aigue` | Proposition 2.2, p. 62 | démontré sur papier, non formalisé |
 | Témoin réalisable du facteur institutionnel | `rem:temoin_realisable` | Remarque 2.20, p. 63 | démontré sur papier, non formalisé |
-| Bornes élémentaires, goulot contextuel, composition | `thm:bornes_mesures`, `thm:goulot_contexte`, `thm:composition_sequentielle` | Théorèmes 2.1 à 2.3, p. 46 à 49 | non formalisés |
 | Trilemme quantique et lemmes quantiques | `thm:trilemme_pq` | Théorème 2.5, p. 77 | non formalisés |
 | Propriétés de SOTP | `thm:proprietes_sotp` | Théorème 3.1, p. 89 | hors de ce dossier ; mécanisation réduite dans `04_sotp/` |
 
@@ -131,6 +151,12 @@ Les numéros et les pages sont ceux du manuscrit v35 (`index_labels_v35.tsv`). �
 | `Opp` | Opp = 1 pour `famModel` (verdict qui recopie la preuve) | Opp = 0 pour `blindModel` (verdict qui ignore la preuve), avec H(V\|C) = 1 | 164 à 197 |
 | `InstitutionalAssumptions` | `witnessInstance` | `degenerateInstance`, où H(V\|C) = 0 | 224 à 243 |
 | Division par zéro dans Opp | les hypothèses imposent H(V\|C) ≥ 1 et Opp·H(V\|C) = I(V;Σ\|C) | en Lean 1/0 = 0 ; l'instance dégénérée aurait Opp = 0 avec I(V;Σ\|C) = 1 | 202 à 237 |
+| `entN1` (version 3.5) | log 2 pour un bit recopié | 0 pour une loi de Dirac | 252 à 262 |
+| `condMI` | log 2 quand G recopie A | 0 pour trois bits indépendants | 264 à 272 |
+| `HS` | H(Σ\|C) = 1 pour `famModel` | — | 274 à 285 |
+| `IVM`, `IVSM` | I(V;Σ\|M,C) = 1 pour `famModel`, où la preuve ne dit rien du message | I(V;M\|C) = 0 pour `famModel` | 287 à 312 |
+| `constVerdict`, `detVerdict` | Opp = 1 et H(V\|C) = 1 pour le verdict V = Σ | Opp = 0 et H(V\|C) = 0 pour un verdict constant | 314 à 328 |
+| `post`, `IVpost` | le post-traitement identité reproduit la loi et I(V;Σ\|C) | — | 330 à 351 |
 
 ## Carte de la preuve en langage simple
 
@@ -148,6 +174,8 @@ Les numéros et les pages sont ceux du manuscrit v35 (`index_labels_v35.tsv`). �
 
 **Modèle abstrait.** `trilemma_explicit` (195) refait l'étape 5 avec les champs d'une `ProtocolInstance`. `trilemma_instance` (244) utilise γ ≥ 1. `conditional_CRO_trilemma` (274) passe à l'asymptotique. `lemma4_confidentiality_guarantee` (172) enchaîne Pinsker et la régularité. Tout y est court parce que Fano et Pinsker y sont posés.
 
+**Extension 3.5 (section 12).** `log_sum_ineq` donne aussi la DPI finie `dpi_finite` (1634), la positivité `condMI_nonneg` (2110) et la majoration `entN2_le_log_card`. La règle de chaîne `chain_rule` (2071) est un calcul terme à terme. Avec `miN_kernel_only_on_s`, elle donne `fondement_extraction` (2200), c'est-à-dire la Proposition 2.1. La DPI pour la variation totale `tv_pushforward_le` (1691) donne les règles de composition `conf_post` (1906) et `composition_parallele` (2008). Ce sont des preuves de longueur moyenne, sans difficulté comparable à Fano et Pinsker.
+
 **Ce qui porte la difficulté.** Mathématiquement, la difficulté est dans Fano et Pinsker sur lois finies. Le trilemme lui-même est court une fois ces deux inégalités acquises. Son contenu tient aux hypothèses institutionnelles, qui font apparaître Δ, γ = αH(C) − 1 et κ.
 
 ## Limites dites franchement
@@ -155,10 +183,10 @@ Les numéros et les pages sont ceux du manuscrit v35 (`index_labels_v35.tsv`). �
 1. **Validité relative aux définitions.** La compilation prouve que les énoncés découlent des définitions. Elle ne prouve pas que ces définitions traduisent fidèlement le manuscrit. `Coherence.lean` écarte le risque d'une définition vide ou triviale. Il ne remplace pas une relecture par les pairs.
 2. **Couche concrète sur lois finies.** Les théorèmes concrets portent sur des lois finies, avec M uniforme sur 2^λ valeurs et indépendant de C. Le verdict y suit un noyau qui ne dépend que de (Σ, C). La forme asymptotique garde fixes les ensembles des contextes et des verdicts. Les lois continues et les lois quelconques ne sont pas couvertes.
 3. **Divergence hors supports communs.** Avec les conventions de Lean (log 0 = 0, x/0 = 0), `klN` sous-estime la vraie divergence quand les supports diffèrent. Elle n'est donc employée que sous `CommonSupport`.
-4. **Hypothèses institutionnelles posées.** Les Hypothèses 2.1, 2.2 et 2.4 sont des prémisses, non des théorèmes. C'est leur statut dans la thèse. Leur fondement informationnel (Proposition 2.1, p. 55) n'est pas formalisé.
+4. **Hypothèses institutionnelles posées.** Les Hypothèses 2.1, 2.2 et 2.4 sont des prémisses, non des théorèmes. C'est leur statut dans la thèse. Leur fondement informationnel (Proposition 2.1, p. 55) est formalisé depuis la version 3.5 (`fondement_extraction`). Il montre que I(V;Σ|M,C) ≤ Δ entraîne l'Hypothèse 2.1, sans la démontrer pour une institution réelle.
 5. **Prémisses muettes.** La condition `hcard` (|V| ≤ 2^(αH(C))) figure dans les théorèmes concrets sans servir aux preuves. Le décodeur `D` de `lemma4_concrete` ne sert qu'à construire l'instance. L'Hypothèse 2.3 est portée par `InstitutionalAssumptions` sans servir aux trilemmes. Ces prémisses ne rendent pas les énoncés faux. Elles les rendent un peu plus forts en apparence qu'en réalité.
 6. **Témoin de cohérence abstrait.** `assumptions_consistent_and_bound_attained` est un point du modèle relâché (Rel = 1/λ avec I = 0). Une vraie loi donnerait Rel = 2^(−λ) (`fam_Rel`, ligne 156 de `Coherence.lean`). La famille `famModel` a Δ = γ = 1, si bien que le facteur institutionnel n'y est pas actif.
-7. **Compilation locale à imports ciblés.** Voir la réserve plus haut. La version avec `import Mathlib` a été compilée par le workflow GitHub le 26 novembre 2026. Lean 4.35.0 y affiche un avertissement qui propose le mot-clé `module`, sans effet sur les preuves. Un essai sur live.lean-lang.org reste conseillé avant toute présentation.
+7. **Compilation locale à imports ciblés.** Voir la réserve plus haut. La version 3.4 avec `import Mathlib` a été compilée par le workflow GitHub le 26 novembre 2026. La version 3.5 l'est par le même workflow à son dépôt. Lean 4.35.0 y affiche un avertissement qui propose le mot-clé `module`, sans effet sur les preuves. Un essai sur live.lean-lang.org reste conseillé avant toute présentation.
 8. **Énoncés écrits par copie.** Les énoncés de `Enonces.lean` ont été écrits à partir des théorèmes existants. La compilation garantit leur égalité avec les preuves. Leur fidélité au texte du manuscrit reste à juger par le lecteur, à l'aide du tableau ci-dessus.
 
 ## Reproductibilité
@@ -168,4 +196,4 @@ Les numéros et les pages sont ceux du manuscrit v35 (`index_labels_v35.tsv`). �
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lake-manifest.json`](lake-manifest.json)) |
 | Bibliothèques Lake | `ConditionalCRO` (cible par défaut) et `Verification` (fichiers `Verification/*.lean`) |
-| SHA-256 de `ConditionalCRO.lean` | `33876520f8e925d2c9e71aa1f0be74bdc88dde89128e829fd9ecb25a41faf7d8` |
+| SHA-256 de `ConditionalCRO.lean` | `0cb46412411b63c7c3e06d1e3f480f72173333204882f38b4883f3f954f9235f` (version 3.5) |

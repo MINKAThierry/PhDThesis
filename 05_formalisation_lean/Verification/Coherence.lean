@@ -3,12 +3,14 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.4, non modifié), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.5), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
   Définitions testées : γ = αH(C) − 1, InstitutionalParams,
-  InstitutionalAssumptions, tv, klN, miN, CLOModel, Conf, Rel et Opp.
+  InstitutionalAssumptions, tv, klN, miN, CLOModel, Conf, Rel et Opp, puis
+  (section 6, version 3.5) entN1, condMI, HS, IVM, IVSM, IVpost, post,
+  constVerdict et detVerdict.
   La section 5 montre que les hypothèses imposent H(V|C) ≥ 1, ce qui exclut la
   division par zéro dans Opp (en Lean, x/0 = 0).
 -/
@@ -240,5 +242,113 @@ lemma degenere_exclu (lam : ℕ) : ¬ InstitutionalAssumptions (degenerateInstan
 lemma temoin_satisfait (lam : ℕ) (hlam : 1 ≤ lam) :
     InstitutionalAssumptions (witnessInstance lam hlam) :=
   (assumptions_consistent_and_bound_attained lam hlam).1
+
+/-! ## 6. Définitions de l'extension v3.5 (lot L1)
+
+Chaque définition nouvelle reçoit un cas qui donne une valeur non triviale et un
+cas extrême, calculés sur des lois explicites. -/
+
+/-- `entN1` : un bit recopié a une entropie de log 2 ; une loi de Dirac, 0. -/
+lemma entN1_copie : entN1 (fun (a b : Fin 2) => if a = b then (1 / 2 : ℝ) else 0) = Real.log 2 := by
+  simp only [entN1, Fin.sum_univ_two]
+  norm_num
+  simp only [one_div, Real.log_inv]
+  ring
+
+lemma entN1_dirac : entN1 (fun (a b : Fin 2) => if a = 0 ∧ b = 0 then (1 : ℝ) else 0) = 0 := by
+  simp only [entN1, Fin.sum_univ_two]
+  norm_num
+
+/-- `condMI` : nulle pour une loi uniforme sur trois bits indépendants, égale à log 2
+    quand G recopie A. -/
+lemma condMI_independants : condMI (fun (_ _ _ : Fin 2) => (1 / 8 : ℝ)) = 0 := by
+  simp only [condMI, Fin.sum_univ_two]
+  norm_num
+
+lemma condMI_copie : condMI (fun (a _ g : Fin 2) => if a = g then (1 / 4 : ℝ) else 0) = Real.log 2 := by
+  simp only [condMI, Fin.sum_univ_two]
+  norm_num
+  ring
+
+/-- `HS` : dans la famille témoin, la preuve est un bit uniforme sachant C, H(Σ|C) = 1. -/
+lemma fam_HS (l : ℕ) : (famModel l).HS = 1 := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  have h : ∀ c, entN1 ((famModel l).qSV c) = Real.log 2 := by
+    intro c
+    simp only [entN1, fam_qSV, Fin.sum_univ_two]
+    norm_num
+    simp only [one_div, Real.log_inv]
+    ring
+  simp only [HS, h, fam_pC, Fin.sum_univ_two]
+  field_simp
+  ring
+
+/-- `IVM` est positive (masse totale au plus 1). -/
+lemma IVM_nonneg {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+    (X : CLOModel lam M C S V) : 0 ≤ X.IVM := by
+  unfold IVM
+  refine div_nonneg (sum_nonneg fun c _ => mul_nonneg (X.pC_nonneg c) (miN_nonneg _
+    (fun v m => sum_nonneg fun s _ => mul_nonneg (X.qMS_nonneg c m s) (X.ker_nonneg c s v)) ?_))
+    (Real.log_pos (by norm_num)).le
+  have e : ∑ v, ∑ m, ∑ s, X.qMS c m s * X.ker c s v = ∑ m, ∑ s, X.qMS c m s := by
+    rw [Finset.sum_comm]
+    refine sum_congr rfl fun m _ => ?_
+    rw [Finset.sum_comm]
+    exact sum_congr rfl fun s _ => by rw [← mul_sum, X.ker_sum, mul_one]
+  rw [e]
+  exact X.qMS_sum_le c
+
+/-- `IVM` et `IVSM` : dans la famille témoin, la preuve ne dit rien du message
+    (I(V;M|C) = 0) et l'institution en tire un bit au-delà du message
+    (I(V;Σ|M,C) = 1). La Proposition 2.1 y est donc non triviale. -/
+lemma fam_IVM_IVSM (l : ℕ) : (famModel l).IVM = 0 ∧ (famModel l).IVSM = 1 := by
+  obtain ⟨heq, hle, -, -⟩ := (famModel l).fondement_extraction
+  have h0 : (famModel l).IVM = 0 :=
+    le_antisymm (by rw [fam_I] at hle; exact hle) (IVM_nonneg _)
+  refine ⟨h0, ?_⟩
+  rw [fam_IV, h0, zero_add] at heq
+  exact heq.symm
+
+/-- `constVerdict` : un verdict constant a H(V|C) = 0, donc Opp = 0 (convention
+    x/0 = 0), alors que `detVerdict` avec V = Σ donne H(V|C) = 1 et Opp = 1. -/
+lemma constVerdict_Opp (l : ℕ) : (famModel l).constVerdict.Opp = 0 := by
+  have h := CLOModel.HV_eq_zero_of_card_one (famModel l).constVerdict (Fintype.card_fin 1)
+  simp [Opp, h]
+
+lemma detVerdict_copie (l : ℕ) :
+    ((famModel l).detVerdict (fun _ s => s)).HV = 1 ∧
+      ((famModel l).detVerdict (fun _ s => s)).Opp = 1 := by
+  have e : (famModel l).detVerdict (fun _ s => s) = famModel l := by
+    unfold detVerdict famModel
+    congr
+    funext c s v
+    split_ifs with h1 h2 h2 <;> simp_all [eq_comm]
+  rw [e]
+  exact ⟨fam_HV l, by simp [Opp, fam_IV, fam_HV]⟩
+
+/-- `post` : le post-traitement identité reproduit la loi du protocole. -/
+lemma post_identite {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S]
+    [Fintype V] [DecidableEq S] (X : CLOModel lam M C S V) :
+    (X.post (fun _ s t => if s = t then 1 else 0) (fun _ _ _ => by split_ifs <;> norm_num)
+      (fun _ _ => by simp) X.ker X.ker_nonneg X.ker_sum).P = X.P := by
+  funext c m t
+  simp only [post, mul_ite, mul_one, mul_zero]
+  rw [Finset.sum_ite_eq']
+  simp
+
+/-- `IVpost` : le post-traitement identité conserve I(V;Σ|C). -/
+lemma IVpost_identite {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S]
+    [Fintype V] [DecidableEq S] (X : CLOModel lam M C S V) :
+    X.IVpost (fun _ s t => if s = t then 1 else 0) = X.IV := by
+  unfold IVpost IV
+  congr 1
+  refine sum_congr rfl fun c _ => ?_
+  congr 1
+  rw [miN_symm (X.qSV c)]
+  congr 1
+  funext v t
+  simp only [mul_ite, mul_one, mul_zero]
+  rw [Finset.sum_ite_eq']
+  simp
 
 end Coherence

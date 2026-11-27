@@ -4,14 +4,14 @@
 
 [English version](README_en.md)
 
-`ConditionalCRO.lean`, version 3.4, est un fichier unique qui certifie le Trilemme CRO conditionnel classique, du noyau algébrique aux lois de probabilité finies. Il ne contient aucun `sorry` et ne déclare aucun `axiom`. Un article qui présente le noyau algébrique est soumis au *Journal of Automated Reasoning* ; il n'est pas publié. La couche concrète (section 10 du fichier) est propre à la thèse.
+`ConditionalCRO.lean`, version 3.5, est un fichier unique qui certifie le Trilemme CRO conditionnel classique, du noyau algébrique aux lois de probabilité finies. Il ne contient aucun `sorry` et ne déclare aucun `axiom`. Le manuscrit qui présentait le noyau algébrique avait été soumis au *Journal of Automated Reasoning* ; son retrait a été demandé en novembre 2026. La couche concrète (section 10 du fichier) est propre à la thèse. La version 3.5 y ajoute, en section 12, les résultats d'information classique du chapitre 2 : DPI, Théorèmes 2.1 à 2.3, Proposition 2.1 et plusieurs remarques. Le plan qui doit étendre la formalisation à tout le manuscrit est décrit dans [`FEUILLE_DE_ROUTE_FORMALISATION_fr.md`](FEUILLE_DE_ROUTE_FORMALISATION_fr.md) ; l'état énoncé par énoncé est dans [`INVENTAIRE_LEAN_MANUSCRIT_fr.md`](INVENTAIRE_LEAN_MANUSCRIT_fr.md).
 
 | Élément | Valeur |
 |---|---|
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lakefile.toml`](lakefile.toml), [`lake-manifest.json`](lake-manifest.json)) |
 | Licence | MIT |
-| Sortie de référence | [`results/lean_build_v3.4.log`](results/lean_build_v3.4.log) ; versions antérieures : `lean_build.log` (v2.2), `lean_build_v3.0.log` à `lean_build_v3.3.log` |
+| Sortie de référence | [`results/lean_build_v3.5.log`](results/lean_build_v3.5.log) ; versions antérieures : `lean_build.log` (v2.2), `lean_build_v3.0.log` à `lean_build_v3.4.log` |
 
 ## Compiler
 
@@ -26,7 +26,7 @@ lake env lean ConditionalCRO.lean    # affiche les #check et les #print axioms
 
 ## Dossier de vérification
 
-Le dossier [`VERIFICATION_fr.md`](VERIFICATION_fr.md) permet de juger ce qui est prouvé sans lire tout le code. Il est additif et ne modifie pas `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) contient les 29 énoncés de la thèse sans preuve. [`Verification/Principal.lean`](Verification/Principal.lean) relie chacun au théorème existant en une ligne. [`Verification/Coherence.lean`](Verification/Coherence.lean) teste la non-vacuité des définitions propres. Le script [`verifier.sh`](verifier.sh) audite les sources, la compilation, les axiomes et le noyau. Ses sorties sont dans [`results/verification.log`](results/verification.log) et [`results/axiomes.txt`](results/axiomes.txt). Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) l'exécute sur GitHub.
+Le dossier [`VERIFICATION_fr.md`](VERIFICATION_fr.md) permet de juger ce qui est prouvé sans lire tout le code. Il est additif et ne modifie pas les preuves de `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) contient les 47 énoncés de la thèse sans preuve. [`Verification/Principal.lean`](Verification/Principal.lean) relie chacun au théorème existant en une ligne. [`Verification/Coherence.lean`](Verification/Coherence.lean) teste la non-vacuité des définitions propres. Le script [`verifier.sh`](verifier.sh) audite les sources, la compilation, les axiomes et le noyau. Ses sorties sont dans [`results/verification.log`](results/verification.log) et [`results/axiomes.txt`](results/axiomes.txt). Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) l'exécute sur GitHub.
 
 ## Ce qui est certifié
 
@@ -41,6 +41,8 @@ Le dossier [`VERIFICATION_fr.md`](VERIFICATION_fr.md) permet de juger ce qui est
 | 9 | `opp_eq_one_of_deterministic`, `deterministic_forces_capacity`, `trilemma_refined`, `refined_bound_is_fano_when_delta_ge_gamma` | Verdict déterministe, forme raffinée et seuil $H^\sharp$ (`rem:verdict_deterministe`, `rem:activite_delta`) |
 | 10 (v3) | `pinsker_finite`, `fano_finite`, `CLOModel`, `trilemma_explicit_concrete`, `trilemma_refined_concrete`, `lemma4_concrete`, `conditional_CRO_trilemma_concrete`, `famModel`, `concrete_assumptions_satisfiable`, `concrete_asymptotic_applies` | Couche concrète : Pinsker (forme serrée) et Fano démontrés pour des lois finies, trilemme sur de vraies lois avec $\gamma=\alpha H(C)-1$ tiré de la loi, famille de lois témoins pour tout $\lambda$ (`subsec:lean4_concret`) |
 | 11 | Bloc `#check` et `#print axioms` | Contrôle des axiomes |
+| 12 (v3.5) | `dpi_finite`, `tv_pushforward_le`, `bornes_mesures`, `goulot_contexte`, `capacite_le_gamma_add_one`, `conf_post`, `rel_post`, `opp_post`, `composition_parallele`, `chain_rule`, `fondement_extraction`, `opp_eq_one_of_det_concrete` | Information classique finie du chapitre 2 : DPI, Théorèmes 2.1 à 2.3, Proposition 2.1, Remarques 2.3 à 2.5, 2.11, 2.12, 2.15 et 3.9 |
+| 13 (v3.5) | Bloc `#print axioms` de l'extension | Contrôle des axiomes des 24 théorèmes ajoutés |
 
 ### Énoncé compilé du théorème principal
 
@@ -67,9 +69,9 @@ Une `ProtocolInstance` est un point du modèle abstrait. Le **témoin de cohére
 
 | Fichier | Contenu |
 |---|---|
-| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.4 (commentaires en français) ; l'en-tête porte les noms des auteurs, omis du listing de l'annexe B |
+| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.5 (commentaires en français) ; l'en-tête porte les noms des auteurs, omis du listing de l'annexe B |
 | [`lakefile.toml`](lakefile.toml), [`lean-toolchain`](lean-toolchain), [`lake-manifest.json`](lake-manifest.json) | Versions figées de Lean et de Mathlib |
 | [`results/`](results/) | Sorties de `lake env lean ConditionalCRO.lean` pour chaque version |
 | [`cas_limite/`](cas_limite/) | Script du cas limite du Théorème 1 de P2 dans sa formulation initiale |
 
-Le listing de l'annexe B de la thèse (`lst:lean4_complet`) est cette version 3.4. L'historique des versions est décrit dans [`../docs/historique_fr.md`](../docs/historique_fr.md). Le dossier `.lake/` produit par la compilation n'est pas versionné.
+Le listing de l'annexe B de la thèse (`lst:lean4_complet`) est la version 3.4, dont les lignes 5 à 1575 du fichier actuel sont la copie exacte. L'historique des versions est décrit dans [`../docs/historique_fr.md`](../docs/historique_fr.md). Le dossier `.lake/` produit par la compilation n'est pas versionné.

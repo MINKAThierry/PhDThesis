@@ -2,7 +2,7 @@
   Dossier de vérification. Point d'entrée mince
   =============================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème
-  existant de `ConditionalCRO.lean` (version 3.4, non modifié) prouve exactement
+  existant de `ConditionalCRO.lean` (version 3.5) prouve exactement
   l'énoncé écrit séparément. Si un énoncé et sa preuve divergent, ce fichier ne
   compile pas. C'est le seul fichier qu'un relecteur doit ouvrir, avec
   `Enonces.lean`. Le script `verifier.sh` exécute `#print axioms` sur chaque
@@ -53,5 +53,25 @@ theorem principal_trilemme_asymptotique_concret : Enonces.TrilemmeAsymptotiqueCo
 -- 5. Couche concrète, famille témoin
 theorem principal_famille_temoin_hypotheses : Enonces.FamilleTemoinHypotheses := concrete_assumptions_satisfiable
 theorem principal_famille_temoin_asymptotique : Enonces.FamilleTemoinAsymptotique := concrete_asymptotic_applies
+
+-- 6. Extension v3.5, lot L1 (information classique finie et cadre CLO)
+theorem principal_dpi_finie : Enonces.DPIFinie := dpi_finite
+theorem principal_dpi_variation_totale : Enonces.DPIVariationTotale := tv_pushforward_le
+theorem principal_bornes_elementaires : Enonces.BornesElementaires := CLOModel.bornes_mesures
+theorem principal_goulot_contextuel : Enonces.GoulotContextuel := CLOModel.goulot_contexte
+theorem principal_capacite_majoree : Enonces.CapaciteMajoree := CLOModel.capacite_le_gamma_add_one
+theorem principal_cardinal_sans_efficacite : Enonces.CardinalSansEfficacite := verdict_card_not_efficient
+theorem principal_composition_seq_conf : Enonces.CompositionSequentielleConf := CLOModel.conf_post
+theorem principal_composition_seq_rel : Enonces.CompositionSequentielleRel := CLOModel.rel_post
+theorem principal_opposabilite_composee : Enonces.OpposabiliteComposee := CLOModel.opp_post
+theorem principal_composition_parallele : Enonces.CompositionParallele := CLOModel.composition_parallele
+theorem principal_frechet : Enonces.Frechet := frechet
+theorem principal_xor_non_sous_additif : Enonces.XorNonSousAdditif := xor_not_subadditive
+theorem principal_copie_non_sur_additive : Enonces.CopieNonSurAdditive := copy_not_superadditive
+theorem principal_regle_de_chaine : Enonces.RegleDeChaine := chain_rule
+theorem principal_info_conditionnelle_positive : Enonces.InfoConditionnellePositive := condMI_nonneg
+theorem principal_fondement_extraction : Enonces.FondementExtraction := CLOModel.fondement_extraction
+theorem principal_verdict_deterministe_concret : Enonces.VerdictDeterministeConcret := CLOModel.opp_eq_one_of_det_concrete
+theorem principal_garantie_conf_decroissante : Enonces.GarantieConfDecroissante := conf_guarantee_antitone
 
 end Principal
