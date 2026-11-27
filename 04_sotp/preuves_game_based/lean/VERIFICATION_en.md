@@ -2,18 +2,18 @@
 
 *Version française : [VERIFICATION_fr.md](VERIFICATION_fr.md)*
 
-This dossier lets a reader judge what `GameBasedSOTP.lean` proves without reading all the code. It follows the structure of [`../../../05_formalisation_lean/VERIFICATION_en.md`](../../../05_formalisation_lean/VERIFICATION_en.md), itself taken from the repository of the Lean proof of the Riemann hypothesis. It is **additive**. Version 1.1 of 27 November 2026 reuses version 1.0 of 22 November unchanged. Version 1.2 of the same day appends Sections 5 and 6. Lines 5 to 275 remain those of version 1.0; only line 4, which carries the version number, has changed.
+This dossier lets a reader judge what `GameBasedSOTP.lean` proves without reading all the code. It follows the structure of [`../../../05_formalisation_lean/VERIFICATION_en.md`](../../../05_formalisation_lean/VERIFICATION_en.md), itself taken from the repository of the Lean proof of the Riemann hypothesis. It is **additive**. Version 1.1 of 27 November 2026 reuses version 1.0 of 22 November unchanged. Version 1.2 of the same day appends Sections 5 and 6, version 1.3 Sections 7 to 10. Lines 5 to 275 remain those of version 1.0; only line 4, which carries the version number, has changed.
 
 ## What to read and in which order
 
 | Order | File | Role |
 |---|---|---|
 | 1 | this document | Map, traceability and limits |
-| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 12 statements of Appendix A and Chapter 3, with no proof at all, each with its reference to manuscript v36 |
+| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 22 statements of Appendix A and Chapter 3, with no proof at all, each with its reference to manuscript v36 |
 | 3 | [`Verification/Principal.lean`](Verification/Principal.lean) | One line per statement, of the form `theorem principal_x : Enonces.X := existingName` |
 | 4 | [`Verification/Coherence.lean`](Verification/Coherence.lean) | Non-vacuity tests of the project's own definitions |
 | 5 | `results/verification.log`, `results/axiomes.txt` | Outputs of the audit script (produced by the workflow) |
-| 6 | [`GameBasedSOTP.lean`](GameBasedSOTP.lean) | The proofs, 541 lines |
+| 6 | [`GameBasedSOTP.lean`](GameBasedSOTP.lean) | The proofs, 770 lines |
 
 ## How to check
 
@@ -31,6 +31,7 @@ The script fails if `Enonces.lean` contains a proof, if `sorry`, `admit`, `nativ
 |---|---|---|
 | Version 1.1: `GameBasedSOTP`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 6 `#print axioms` in the file, 6 on `Principal.lean` and 5 on `Coherence.lean`, all standard |
 | Version 1.0 on live.lean-lang.org and locally | 22 November 2026 | passed, six standard `#print axioms` |
+| Version 1.3: `GameBasedSOTP`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 22 `#print axioms` in the file, 22 on `Principal.lean` and 10 on `Coherence.lean`, all standard |
 | Version 1.2 pasted into <https://live.lean-lang.org> (Mathlib project) | run by Thierry MINKA on 27 November 2026 | no error; all 12 `#print axioms` show `[propext, Classical.choice, Quot.sound]` |
 | Version 1.2 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean_sotp.yml`, run 46011771993 passed (commit f73fa3d): 12 statements and 7 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | Version 1.2: `GameBasedSOTP`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 12 `#print axioms` in the file, 12 on `Principal.lean` and 7 on `Coherence.lean`, all standard |
@@ -38,7 +39,7 @@ The script fails if `Enonces.lean` contains a proof, if `sorry`, `admit`, `nativ
 
 ## Traceability table
 
-Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`). "File" is the line in `GameBasedSOTP.lean`. `E` and `P` are the lines in `Enonces.lean` and `Principal.lean`. All twelve theorems show `[propext, Classical.choice, Quot.sound]`.
+Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`). "File" is the line in `GameBasedSOTP.lean`. `E` and `P` are the lines in `Enonces.lean` and `Principal.lean`. All twenty-two theorems show `[propext, Classical.choice, Quot.sound]`.
 
 | Statement of the manuscript | Label | No. and page v36 | Lean name | File | E / P | Status |
 |---|---|---|---|---|---|---|
@@ -54,12 +55,28 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`). "File" i
 | Statistical distance of the truncation mask, r(N − r)/(qN) | `rem:masque_troncature` | Remark 3.5, p. 96 | `trunc_dist` | 469 | 113 / 31 | proved |
 | Bounds N/(4q) and 2^(−λ−1) | `rem:masque_troncature` | Remark 3.5, p. 96 | `trunc_bound` | 508 | 120 / 32 | proved |
 | Case q ≥ 2^252, λ = 128: 2^(−126) and 2^(−125) | `rem:masque_troncature` | Remark 3.5, p. 96 | `trunc_ecdsa` | 522 | 127 / 33 | proved |
+| Union bound over the pairs of contexts | `thm:ann_sotp_base_opp` | Theorem A.3, proof, p. 227 | `union_bound` | 565 | 136 / 37 | proved |
+| Threshold k ≥ (12/δ²)·ln(N²/ε′) gives N²·e^(−kδ²/12) ≤ ε′ | `thm:ann_sotp_base_opp` | Theorem A.3, p. 227 | `jl_seuil` | 582 | 143 / 38 | proved |
+| JL sizing, failure at most ε′ | `thm:ann_sotp_base_opp`, `thm:saturation_sotp_base` | Theorem A.3 (p. 227), Proposition 3.2 (p. 98) | `jl_dimensionnement` | 600 | 150 / 39 | proved, Chernoff tail assumed (c) |
+| JL, existence of a distance-preserving projection | `lem:johnson_lindenstrauss`, `def:ann_jl` | Lemma 2.2 (p. 47), Definition A.4 (p. 221) | `jl_existence` | 619 | 161 / 40 | proved, Chernoff tail assumed (c) |
+| JL, threshold k > 24·ln N/ε² | `lem:johnson_lindenstrauss` | Lemma 2.2, proof, p. 47 | `jl_seuil_existence` | 631 | 168 / 41 | proved |
+| SOTP-Base, Adv^IND-CONF ≤ Adv^PRG + 1/q | `cor:ann_sotp_base_reductions`, `thm:saturation_sotp_base` | Corollary A.1 (p. 227), Proposition 3.2 (p. 98) | `base_ind_conf` | 656 | 173 / 42 | proved in the reduced setting (a) |
+| SOTP-Base, Win^BIND-REL ≤ Adv^DLOG | `cor:ann_sotp_base_reductions`, `thm:saturation_sotp_base` | Corollary A.1 (p. 227), Proposition 3.2 (p. 98) | `base_bind_rel` | 668 | 179 / 43 | proved in the reduced setting (a) |
+| SOTP-High, law of Σ independent of m | `thm:ann_sotp_high`, `thm:saturation_sotp_high` | Theorem A.4 (p. 227), Proposition 3.3 (1) (p. 100) | `high_conf` | 695 | 192 / 44 | proved, perfect zero knowledge assumed (d) |
+| SOTP-High, Relver ≥ 1 − ε_sound − ε_coll − ε_dlog | `thm:ann_sotp_high`, `thm:saturation_sotp_high`, `def:ann_groth16` | Theorem A.4 (p. 227), Proposition 3.3 (2) (p. 100), Definition A.3 (p. 220) | `high_relver` | 706 | 198 / 45 | proved, Groth16 assumptions assumed (d) |
+| Conjecture 3.1 requires the private-context model | `rem:statut_optimalite`, `conj:optimalite_universelle` | Remark 3.8 and Conjecture 3.1, p. 104 | `conjecture_exige_contexte_prive` | 748 | 208 / 46 | proved (e) |
 
 (a) Reduced setting of the section "Mechanisation in a reduced setting" (p. 230). Probabilities are uniform averages over finite sets. Adversaries are functions whose own randomness is absorbed in their description. The Iron layer is not modelled in the confidentiality game of version 1.0 and the Clay layer is not modelled at all.
 
 (b) Iron layer (Section 5). The adversary receives σ₁ = m_b + G(s) and the exponent s + xρ of σ₂ = g^s·h^ρ, with h = g^x. Lemmas `com_eq` and `zpowq_inj` justify this move to the exponent. For x ≠ 0, ρ ↦ s + xρ is a bijection of ZMod q (`avg_affine`), so σ₂ is uniform and independent of s. The case x = 0, of probability 1/q, gives the 1/q term.
 
 The IND-CONF, BIND-REL and EXT-OPP games on finite distributions and their bridges to Conf, Relver and Opp (Definitions 2.5 to 2.7 and A.5 to A.7, Remarks 2.6 to 2.8 and A.1 to A.3, Lemma A.1, Corollary A.2, Remark A.6) are proved in `ConditionalCRO.lean` version 3.8, Section 18, because they use the `CLOModel` model. See [`../../../05_formalisation_lean/VERIFICATION_en.md`](../../../05_formalisation_lean/VERIFICATION_en.md).
+
+(c) Chernoff tail of the χ² law (Section 7). The draw of Φ is a finite probability space. The bound μ(pair distorted) ≤ 2·exp(−kδ²/12) from the proof of Lemma 2.2 is a premise of the theorem, since Mathlib has no Gaussian law nor χ² Chernoff bound in this form. The union bound, the threshold and the existence are proved.
+
+(d) Groth16 (Section 9). Perfect zero knowledge is modelled by a simulated proof π that depends only on the public inputs. Knowledge soundness, collision resistance of Poseidon and binding under DLog are three failure events with probabilities bounded by ε_sound, ε_coll and ε_dlog, taken as premises.
+
+(e) Conjecture 3.1 (Section 10). The conjecture is stated by `ConjectureOptimalite` (line 740) over an abstract framework `CadreOptimalite`. It is neither proved nor taken as an axiom. The proved theorem shows that it fails in any framework where SOTP has zero opposability against a protocol of the same regime with positive opposability, which is the case of the current model (Remark 3.2 and the witness of Remark 2.20). It therefore requires the model with a private case context. Directions, not formalised: a Clay layer carrying min{Δ, γ} bits of private context, like the witness `witModel`, would give Opp(SOTP) = min{1, Δ/γ}, hence C_R = 1 for κ = 0 and C_R = 2 as soon as κ/λ ≤ Δ. One would still need to show that an actual construction (Pedersen, PRG, JL or Groth16) realises this layer without losing its confidentiality. This work belongs to the research programme that follows the thesis.
 
 ### Coherence tests of the project's own definitions
 
@@ -69,6 +86,7 @@ The IND-CONF, BIND-REL and EXT-OPP games on finite distributions and their bridg
 | `winIND`, `advIND`, `accB`, `advPRG` | advantage 1/2 for the adversary that reads the bit under G = 0, passed on to the reducer | advantage 0 for a constant adversary | 32 to 48 |
 | `com`, `accepts`, `winsBIND`, `extract` | a proof in ZMod 2 opened on 0 and on 1, the extractor returns x = 1 | two identical openings do not win | 50 to 66 |
 | `winIND2`, `advIND2`, `truncLaw`, `distStat` (version 1.2) | distance 1/6 for q = 3 and N = 2 | constant adversary, advantage 0; distance 0 for q = N | 67 to 82 |
+| `prob`, `CadreOptimalite`, `ConjectureOptimalite` (version 1.3) | probability 1/2 of a bit equal to 1; a framework where the conjecture holds with C = 1 | probability 0 of the empty event; a framework where it fails | 84 to 110 |
 
 ## Map of the proof in plain language
 
@@ -83,7 +101,7 @@ The IND-CONF, BIND-REL and EXT-OPP games on finite distributions and their bridg
 1. **Reduced setting.** The theorems are not about time-bounded probabilistic adversaries nor about families indexed by λ. The full probabilistic model (VCVio) is an option of lot L4 of the roadmap.
 2. **PRG and DLOG.** Their security is not proved. The theorems relate the advantage of A to that of the reducer B, which is the exact form of a reduction.
 3. **Iron and Clay layers.** Since version 1.2 the Iron layer appears in the confidentiality game (Section 5). The Clay layer is not modelled.
-4. **SOTP-Base and SOTP-High.** They are not mechanised here (lot L4).
+4. **SOTP-Base and SOTP-High.** Since version 1.3 their reductions and their sizing are mechanised, with the Chernoff tail and the Groth16 assumptions taken as premises (notes (c) and (d)). Conjecture 3.1 is only stated (note (e)).
 5. **Local build with targeted imports.** The local build replaces `import Mathlib` with ten Mathlib modules. The GitHub workflow builds with the full `import Mathlib`. Lean 4.35.0 prints a warning there that suggests the `module` keyword, with no effect on the proofs.
 6. **Truncation.** Section 6 computes the distance between G(s) and the uniform law. The step to Conf ≥ 1 − 2^(−λ) for the laws of σ given two messages follows from the triangle inequality; it is not formalised here.
 
@@ -94,4 +112,4 @@ The IND-CONF, BIND-REL and EXT-OPP games on finite distributions and their bridg
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lake-manifest.json`](lake-manifest.json)) |
 | Lake libraries | `GameBasedSOTP` (default target) and `Verification` |
-| SHA-256 of `GameBasedSOTP.lean` | `cf39e99aadaa4a16b1edb7b57a95bf826f9a3225395cd047b950397e97044a70` (version 1.2) |
+| SHA-256 of `GameBasedSOTP.lean` | `7a2eaf8925b1669ad391c4dc7e185399131654ab2fe5b6f927b8d95f98f2ff39` (version 1.3) |

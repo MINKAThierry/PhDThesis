@@ -1,32 +1,32 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis les deux premières parties du lot L4 (GameBasedSOTP.lean v1.2, ConditionalCRO.lean v3.10). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis le lot L4 (GameBasedSOTP.lean v1.3, ConditionalCRO.lean v3.10). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
 | démontré | 75 |
-| démontré, une inégalité posée dans le modèle abstrait | 10 |
-| mécanisé en situation réduite | 6 |
-| hypothèse formalisée | 18 |
-| non formalisé | 36 |
+| démontré, une inégalité posée dans le modèle abstrait | 15 |
+| mécanisé en situation réduite | 8 |
+| hypothèse formalisée | 20 |
+| non formalisé | 27 |
 | hors champ formel | 25 |
 | **Total** | **170** |
 
-Sur 145 énoncés relevant d'une formalisation, 109 sont aujourd'hui couverts, soit 75 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b et de 107 (74 %) après la première partie du lot L4. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 145 énoncés relevant d'une formalisation, 118 sont aujourd'hui couverts, soit 81 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b de 107 (74 %) après la première partie du lot L4 et de 109 (75 %) après la deuxième. La Conjecture 3.1 est classée « hypothèse formalisée » : elle est énoncée sans preuve ni axiome. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
 | Type | Démontré | Posé ou réduit | Non formalisé | Hors champ |
 |---|---|---|---|---|
-| Théorème | 13 | 3 | 2 | 0 |
-| Lemme | 9 | 3 | 5 | 0 |
-| Proposition | 2 | 1 | 3 | 0 |
-| Corollaire | 3 | 0 | 1 | 0 |
-| Conjecture | 0 | 0 | 1 | 0 |
+| Théorème | 15 | 3 | 0 | 0 |
+| Lemme | 10 | 3 | 4 | 0 |
+| Proposition | 3 | 2 | 1 | 0 |
+| Corollaire | 3 | 1 | 0 | 0 |
+| Conjecture | 0 | 1 | 0 | 0 |
 | Hypothèse | 0 | 12 | 0 | 0 |
-| Définition | 19 | 5 | 21 | 0 |
+| Définition | 20 | 6 | 19 | 0 |
 | Remarque | 39 | 0 | 3 | 25 |
 
 ## Détail par chapitre
@@ -58,7 +58,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Théorème 2.1 | 46 | Bornes élémentaires des métriques CLO | `thm:bornes_mesures` | démontré | CLOModel.bornes_mesures | L1 |
 | Lemme 2.1 | 46 | Tension confidentialité--information mutuelle | `lem:compromis_conf_mi` | démontré | lemma4_concrete | L1 |
 | Remarque 2.3 | 47 | Interprétation du lemme | `rem:interpretation_lemme` | démontré | conf_guarantee_antitone | L1 |
-| Lemme 2.2 | 47 | Lemme de Johnson-Lindenstrauss | `lem:johnson_lindenstrauss` | non formalisé |  | L4 |
+| Lemme 2.2 | 47 | Lemme de Johnson-Lindenstrauss | `lem:johnson_lindenstrauss` | démontré, une inégalité posée dans le modèle abstrait | jl_existence, jl_seuil_existence (queue de Chernoff posée) | L4 |
 | Théorème 2.2 | 48 | Goulot d'étranglement contextuel | `thm:goulot_contexte` | démontré | CLOModel.goulot_contexte | L1 |
 | Remarque 2.4 | 48 | Verdict déterministe | `rem:verdict_deterministe` | démontré | opp_eq_one_of_deterministic, CLOModel.opp_eq_one_of_det_concrete | L1 |
 | Théorème 2.3 | 49 | Règles de composition | `thm:composition_sequentielle` | démontré | conf_post, rel_post, composition_parallele | L1 |
@@ -157,11 +157,11 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Proposition 3.1 | 95 | Propriétés cryptographiques de SOTP-Low | `thm:saturation_sotp_low` | mécanisé en situation réduite | ind_conf_complet, win_bind_complet (GameBasedSOTP) | L4 |
 | Remarque 3.4 | 95 | Heuristique de conception de SOTP-Low (non prouvée) | `rem:facteur_limitant_low` | hors champ formel |  | L4 |
 | Remarque 3.5 | 96 | Masque par troncature | `rem:masque_troncature` | démontré | card_mod_eq, trunc_dist, trunc_bound, trunc_ecdsa (GameBasedSOTP) | L4 |
-| Proposition 3.2 | 98 | Propriétés cryptographiques de SOTP-Base | `thm:saturation_sotp_base` | non formalisé |  | L4 |
+| Proposition 3.2 | 98 | Propriétés cryptographiques de SOTP-Base | `thm:saturation_sotp_base` | mécanisé en situation réduite | base_ind_conf, base_bind_rel, jl_dimensionnement | L4 |
 | Remarque 3.6 | 98 | Heuristique de conception de SOTP-Base (non prouvée) | `rem:heuristique_sotp_base` | hors champ formel |  | L4 |
-| Proposition 3.3 | 100 | Propriétés cryptographiques de SOTP-High | `thm:saturation_sotp_high` | non formalisé |  | L4 |
+| Proposition 3.3 | 100 | Propriétés cryptographiques de SOTP-High | `thm:saturation_sotp_high` | démontré, une inégalité posée dans le modèle abstrait | high_conf, high_relver (hypothèses de Groth16 posées) | L4 |
 | Remarque 3.7 | 101 | Heuristique de conception de SOTP-High (non prouvée) | `rem:heuristique_sotp_high` | hors champ formel |  | L4 |
-| Conjecture 3.1 | 104 | Optimalité universelle SOTP | `conj:optimalite_universelle` | non formalisé |  | L4 |
+| Conjecture 3.1 | 104 | Optimalité universelle SOTP | `conj:optimalite_universelle` | hypothèse formalisée | ConjectureOptimalite (énoncé), conjecture_exige_contexte_prive | L4 |
 | Remarque 3.8 | 104 | Statut et argument heuristique | `rem:statut_optimalite` | hors champ formel |  | L4 |
 | Définition 3.1 | 107 | Confidentialité | `def:conf_lean4` | démontré | CLOModel.Conf, CLOModel.Rel, CLOModel.Opp | L1 |
 | Définition 3.2 | 108 | Fiabilité | `def:rel_lean4` | démontré | CLOModel.Conf, CLOModel.Rel, CLOModel.Opp | L1 |
@@ -211,8 +211,8 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 |---|---|---|---|---|---|---|
 | Définition A.1 | 219 | Sécurité PRG | `def:ann_prg` | mécanisé en situation réduite | com, pedersen_extract, advPRG (GameBasedSOTP) | L4 |
 | Définition A.2 | 220 | Engagement de Pedersen | `def:ann_pedersen` | mécanisé en situation réduite | com, pedersen_extract, advPRG (GameBasedSOTP) | L4 |
-| Définition A.3 | 220 | zk-SNARK Groth16 | `def:ann_groth16` | non formalisé |  | L4 |
-| Définition A.4 | 221 | Transformation JL | `def:ann_jl` | non formalisé |  | L4 |
+| Définition A.3 | 220 | zk-SNARK Groth16 | `def:ann_groth16` | hypothèse formalisée | prémisses ε_sound, ε_coll, ε_dlog de high_relver | L4 |
+| Définition A.4 | 221 | Transformation JL | `def:ann_jl` | démontré, une inégalité posée dans le modèle abstrait | jl_existence, jl_seuil_existence (queue de Chernoff posée) | L4 |
 | Lemme A.1 | 221 | Inégalité de Fano | `lem:ann_g_fano` | démontré | fano_finite, CLOModel.fano_model, fano_general | L1, L3 |
 | Lemme A.2 | 221 | Traitement de l'Information (DPI) | `lem:ann_dpi` | démontré | dpi_finite | L1 |
 | Définition A.5 | 222 | Jeu IND-CONF (section sec:sotp_construction) | `def:ann_ind_conf` | démontré | succIND, advDist, succIND_eq | L3 |
@@ -223,9 +223,9 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Remarque A.3 | 224 | Pont EXT-OPP ↔ Opp | `rem:ann_ext_opp_link` | démontré | CLOModel.IV_eq_HV_sub, CLOModel.ext_opp_bridge, ext_opp_bridge_K | L3 |
 | Théorème A.1 | 225 | Réduction de SOTP-Low au PRG (section sec:sotp_construction) | `thm:ann_sotp_low_conf` | mécanisé en situation réduite | ind_conf_eq_prg, ind_conf_perfect_otp (GameBasedSOTP) | L4 |
 | Théorème A.2 | 226 | Réduction de SOTP-Low au logarithme discret (section sec:sotp_construc | `thm:ann_sotp_low_rel` | mécanisé en situation réduite | bind_rel_gives_dlog, win_bind_le_dlog (GameBasedSOTP) | L4 |
-| Théorème A.3 | 227 | Dimensionnement JL de SOTP-Base (section sec:sotp_construction) | `thm:ann_sotp_base_opp` | non formalisé |  | L4 |
-| Corollaire A.1 | 227 | Réductions pour SOTP-Base | `cor:ann_sotp_base_reductions` | non formalisé |  | L4 |
-| Théorème A.4 | 227 | Sécurité de SOTP-High héritée de Groth16 (section sec:sotp_constructio | `thm:ann_sotp_high` | non formalisé |  | L4 |
+| Théorème A.3 | 227 | Dimensionnement JL de SOTP-Base (section sec:sotp_construction) | `thm:ann_sotp_base_opp` | démontré, une inégalité posée dans le modèle abstrait | union_bound, jl_seuil, jl_dimensionnement (queue de Chernoff posée) | L4 |
+| Corollaire A.1 | 227 | Réductions pour SOTP-Base | `cor:ann_sotp_base_reductions` | mécanisé en situation réduite | base_ind_conf, base_bind_rel | L4 |
+| Théorème A.4 | 227 | Sécurité de SOTP-High héritée de Groth16 (section sec:sotp_constructio | `thm:ann_sotp_high` | démontré, une inégalité posée dans le modèle abstrait | high_conf, high_relver (hypothèses de Groth16 posées) | L4 |
 | Théorème A.5 | 228 | Bornes game-based complètes de SOTP-Low (section sec:sotp_construction | `thm:ann_sotp_low_games` | mécanisé en situation réduite | ind_conf_complet, win_bind_complet (GameBasedSOTP) | L4 |
 | Remarque A.5 | 229 | Absence de borne game-based pour l'opposabilité de SOTP-Low | `rem:ann_sotp_low_opp_statut` | hors champ formel |  | — |
 | Corollaire A.2 | 229 | Produit CLO depuis les jeux (section sec:sotp_construction) | `cor:ann_cro_from_games` | démontré | product_from_games | L3 |

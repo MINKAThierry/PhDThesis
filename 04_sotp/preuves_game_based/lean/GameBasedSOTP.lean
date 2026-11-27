@@ -1,7 +1,7 @@
 /-
   Preuves game-based de SOTP-Low en situation réduite — Annexe de thèse
   =====================================================================
-  Version 1.2 (27 novembre 2026), qui reprend la 1.0 sans la modifier.
+  Version 1.3 (27 novembre 2026), qui reprend la 1.0 sans la modifier.
 
   OBJET
   Test de faisabilité de la mécanisation des preuves game-based de l'annexe A,
@@ -539,3 +539,232 @@ end GameBasedSOTP
 #print axioms GameBasedSOTP.trunc_dist
 #print axioms GameBasedSOTP.trunc_bound
 #print axioms GameBasedSOTP.trunc_ecdsa
+
+/-! ## Extension de la version 1.3 (27 novembre 2026, lot L4)
+
+Les sections 7 à 10 traitent SOTP-Base (dimensionnement de Johnson-Lindenstrauss et
+réductions), SOTP-High (sécurité héritée de Groth16) et l'énoncé de la Conjecture 3.1. -/
+
+namespace GameBasedSOTP
+
+/-! ## 7. SOTP-Base : dimensionnement de Johnson-Lindenstrauss (Lemme 2.2, Théorème A.3)
+
+Le tirage de la matrice Φ est modélisé par un espace de probabilité fini Ω de loi μ.
+Pour chaque paire de contextes p, l'événement `bad p ω` dit que Φ_ω déforme la distance
+de la paire de plus d'un facteur 1 ± δ. La queue de Chernoff du χ² (preuve du Lemme 2.2,
+d'après Dasgupta et Gupta) est posée comme hypothèse nommée : μ(bad p) ≤ 2·exp(−kδ²/12).
+Elle n'est pas démontrée ici, faute de loi gaussienne et de borne de Chernoff du χ² dans
+Mathlib sous cette forme. -/
+
+/-- Probabilité d'un événement dans un espace fini de loi μ. -/
+noncomputable def prob {Ω : Type*} [Fintype Ω] (μ : Ω → ℝ) (E : Ω → Prop) [DecidablePred E] :
+    ℝ :=
+  ∑ ω, if E ω then μ ω else 0
+
+/-- Borne de l'union sur un ensemble fini d'événements. -/
+theorem union_bound {Ω ι : Type*} [Fintype Ω] (μ : Ω → ℝ) (hμ : ∀ ω, 0 ≤ μ ω)
+    (P : Finset ι) (bad : ι → Ω → Prop) [∀ p, DecidablePred (bad p)]
+    [DecidablePred (fun ω => ∃ p ∈ P, bad p ω)] :
+    prob μ (fun ω => ∃ p ∈ P, bad p ω) ≤ ∑ p ∈ P, prob μ (bad p) := by
+  unfold prob
+  rw [Finset.sum_comm]
+  refine sum_le_sum fun ω _ => ?_
+  split_ifs with h
+  · obtain ⟨p, hp, hb⟩ := h
+    calc μ ω = if bad p ω then μ ω else 0 := by simp [hb]
+      _ ≤ ∑ p' ∈ P, if bad p' ω then μ ω else 0 :=
+          single_le_sum (f := fun p' => if bad p' ω then μ ω else 0)
+            (fun p' _ => by split_ifs <;> simp [hμ ω]) hp
+  · exact sum_nonneg fun p' _ => by split_ifs <;> simp [hμ ω]
+
+/-- **Théorème A.3, arithmétique du seuil.** Si k ≥ (12/δ²)·ln(N²/ε′), alors
+    N²·exp(−kδ²/12) ≤ ε′. -/
+theorem jl_seuil (N k δ ε : ℝ) (hN : 0 < N) (hδ : 0 < δ) (hε : 0 < ε)
+    (hk : 12 / δ ^ 2 * Real.log (N ^ 2 / ε) ≤ k) :
+    N ^ 2 * Real.exp (-(k * δ ^ 2 / 12)) ≤ ε := by
+  have hN2 : 0 < N ^ 2 := by positivity
+  have h1 : Real.log (N ^ 2 / ε) ≤ k * δ ^ 2 / 12 := by
+    have : 12 / δ ^ 2 * Real.log (N ^ 2 / ε) * (δ ^ 2 / 12) = Real.log (N ^ 2 / ε) := by
+      field_simp
+    nlinarith [sq_nonneg δ, mul_le_mul_of_nonneg_right hk (by positivity : (0 : ℝ) ≤ δ ^ 2 / 12)]
+  have h2 : N ^ 2 / ε ≤ Real.exp (k * δ ^ 2 / 12) := by
+    rw [← Real.exp_log (by positivity : (0 : ℝ) < N ^ 2 / ε)]
+    exact Real.exp_le_exp.mpr h1
+  rw [Real.exp_neg, ← div_eq_mul_inv, div_le_iff₀ (Real.exp_pos _)]
+  rw [div_le_iff₀ hε] at h2
+  linarith
+
+/-- **Théorème A.3.** Sous la queue de Chernoff posée pour chaque paire, et si le nombre
+    de paires est au plus N²/2, la probabilité qu'une paire au moins soit déformée est au
+    plus N²·exp(−kδ²/12), donc au plus ε′ pour k ≥ (12/δ²)·ln(N²/ε′). -/
+theorem jl_dimensionnement {Ω ι : Type*} [Fintype Ω] (μ : Ω → ℝ) (hμ : ∀ ω, 0 ≤ μ ω)
+    (P : Finset ι) (bad : ι → Ω → Prop) [∀ p, DecidablePred (bad p)]
+    [DecidablePred (fun ω => ∃ p ∈ P, bad p ω)] (N k δ ε : ℝ) (hN : 0 < N) (hδ : 0 < δ)
+    (hε : 0 < ε) (hP : (P.card : ℝ) ≤ N ^ 2 / 2)
+    (chernoff : ∀ p ∈ P, prob μ (bad p) ≤ 2 * Real.exp (-(k * δ ^ 2 / 12)))
+    (hk : 12 / δ ^ 2 * Real.log (N ^ 2 / ε) ≤ k) :
+    prob μ (fun ω => ∃ p ∈ P, bad p ω) ≤ ε := by
+  have h1 := union_bound μ hμ P bad
+  have h2 : ∑ p ∈ P, prob μ (bad p) ≤ P.card * (2 * Real.exp (-(k * δ ^ 2 / 12))) := by
+    have := sum_le_sum chernoff
+    simpa [sum_const, nsmul_eq_mul] using this
+  have h3 : (P.card : ℝ) * (2 * Real.exp (-(k * δ ^ 2 / 12))) ≤
+      N ^ 2 * Real.exp (-(k * δ ^ 2 / 12)) := by
+    have he := Real.exp_pos (-(k * δ ^ 2 / 12))
+    nlinarith
+  linarith [jl_seuil N k δ ε hN hδ hε hk]
+
+/-- **Lemme 2.2, existence.** Si la probabilité d'échec est strictement inférieure à 1,
+    il existe un tirage Φ_ω qui préserve toutes les distances. -/
+theorem jl_existence {Ω ι : Type*} [Fintype Ω] (μ : Ω → ℝ) (h1 : ∑ ω, μ ω = 1)
+    (P : Finset ι) (bad : ι → Ω → Prop) [∀ p, DecidablePred (bad p)]
+    [DecidablePred (fun ω => ∃ p ∈ P, bad p ω)]
+    (hlt : prob μ (fun ω => ∃ p ∈ P, bad p ω) < 1) : ∃ ω, ∀ p ∈ P, ¬ bad p ω := by
+  by_contra hc
+  push Not at hc
+  have : prob μ (fun ω => ∃ p ∈ P, bad p ω) = 1 := by
+    unfold prob; rw [← h1]
+    exact sum_congr rfl fun ω _ => by simp [hc ω]
+  linarith
+
+/-- **Lemme 2.2, seuil.** Pour k > 24·ln N/ε², N²·exp(−kε²/12) < 1. -/
+theorem jl_seuil_existence (N k ε : ℝ) (hN : 1 ≤ N) (hε : 0 < ε)
+    (hk : 24 * Real.log N / ε ^ 2 < k) : N ^ 2 * Real.exp (-(k * ε ^ 2 / 12)) < 1 := by
+  have hN0 : 0 < N := by linarith
+  have hlog : 2 * Real.log N < k * ε ^ 2 / 12 := by
+    have := (div_lt_iff₀ (by positivity : (0 : ℝ) < ε ^ 2)).1 hk
+    linarith
+  have hN2 : N ^ 2 = Real.exp (2 * Real.log N) := by
+    rw [← Real.log_rpow hN0, Real.exp_log (by positivity)]; norm_cast
+  rw [hN2, ← Real.exp_add]
+  calc Real.exp (2 * Real.log N + -(k * ε ^ 2 / 12)) < Real.exp 0 :=
+        Real.exp_lt_exp.mpr (by linarith)
+    _ = 1 := Real.exp_zero
+
+/-! ## 8. SOTP-Base : réductions (Corollaire A.1, Proposition 3.2)
+
+La couche Clay de SOTP-Base (projection JL du contexte) est une fonction publique z de c
+et du tirage public de Φ. Un adversaire contre SOTP-Base qui lit aussi z est, pour z fixé,
+un adversaire contre le jeu de SOTP-Low, dont le réducteur calcule z lui-même. -/
+
+section Base
+
+variable {q : ℕ} [Fact q.Prime] {M Z : Type*} [AddCommGroup M] [Fintype M]
+
+/-- **Corollaire A.1, confidentialité.** Pour toute valeur publique z de la couche Clay,
+    Adv^IND-CONF ≤ Adv^PRG + 1/q. -/
+theorem base_ind_conf (G : ZMod q → M) (m : Bool → M) (A : M → ZMod q → Z → Bool) (z : Z) :
+    advIND2 G m (fun y e => A y e z) ≤ advPRG2 G m (fun y e => A y e z) + 1 / q :=
+  ind_conf_complet G m (fun y e => A y e z)
+
+end Base
+
+section BaseDLog
+
+variable {q : ℕ} [Fact q.Prime] {Γ : Type*} [Group Γ] {M Z : Type*} [AddCommGroup M]
+
+/-- **Corollaire A.1, fiabilité.** Pour toute valeur publique z de la couche Clay,
+    Win^BIND-REL ≤ Adv^DLOG. -/
+theorem base_bind_rel (g : Γ) (hg : orderOf g = q) (PRG : ZMod q → M) (z : Z)
+    (A : Z → Γ → M × Γ × Opening (ZMod q) M q × Opening (ZMod q) M q)
+    [∀ x, Decidable (winsBIND g x PRG (A z (zpowq g x)).1 (A z (zpowq g x)).2.1
+      (A z (zpowq g x)).2.2.1 (A z (zpowq g x)).2.2.2)] :
+    avg (fun x : ZMod q => ind (winsBIND g x PRG (A z (zpowq g x)).1 (A z (zpowq g x)).2.1
+        (A z (zpowq g x)).2.2.1 (A z (zpowq g x)).2.2.2))
+      ≤ avg (fun x : ZMod q =>
+          ind (extract (A z (zpowq g x)).2.2.1 (A z (zpowq g x)).2.2.2 = x)) :=
+  win_bind_le_dlog g hg PRG (A z)
+
+end BaseDLog
+
+/-! ## 9. SOTP-High : sécurité héritée de Groth16 (Théorème A.4, Proposition 3.3)
+
+La divulgation nulle parfaite de Groth16 est modélisée par un simulateur : la preuve π
+est tirée selon une loi `Sim` qui ne dépend que des entrées publiques (h_c, c_m). La
+connaissance-solidité de Groth16, la résistance aux collisions de Poseidon et le
+caractère liant sous DLog sont des hypothèses nommées, sous forme de probabilités
+d'échec majorées. -/
+
+section High
+
+variable {q : ℕ} [Fact q.Prime]
+
+/-- **Théorème A.4, confidentialité, et Proposition 3.3 (1).** L'engagement c_m = g^m·h^ρ
+    a pour exposant m + xρ. Pour h ≠ 1 (x ≠ 0), toute statistique F de (c_m, π) dont π suit
+    le simulateur a la même espérance pour deux messages : la loi de Σ ne dépend pas de m. -/
+theorem high_conf (x : ZMod q) (hx : x ≠ 0) (F : ZMod q → ℝ) (m₀ m₁ : ZMod q) :
+    avg (fun ρ : ZMod q => F (m₀ + x * ρ)) = avg (fun ρ : ZMod q => F (m₁ + x * ρ)) := by
+  rw [avg_affine m₀ x hx F, avg_affine m₁ x hx F]
+
+end High
+
+/-- **Théorème A.4, fiabilité, et Proposition 3.3 (2).** Une victoire BIND-REL contre
+    SOTP-High est contenue dans l'union de trois échecs : extraction Groth16, collision
+    Poseidon, deux témoins extraits sur des messages distincts (DLOG). Sa probabilité est
+    au plus ε_sound + ε_coll + ε_dlog, et Relver ≥ 1 − ε_sound − ε_coll − ε_dlog pour une
+    complétude parfaite. -/
+theorem high_relver {Ω : Type*} [Fintype Ω] (μ : Ω → ℝ) (hμ : ∀ ω, 0 ≤ μ ω)
+    (W E₁ E₂ E₃ : Ω → Prop) [DecidablePred W] [DecidablePred E₁] [DecidablePred E₂]
+    [DecidablePred E₃] (hW : ∀ ω, W ω → E₁ ω ∨ E₂ ω ∨ E₃ ω) (εs εc εd : ℝ)
+    (h₁ : prob μ E₁ ≤ εs) (h₂ : prob μ E₂ ≤ εc) (h₃ : prob μ E₃ ≤ εd) :
+    prob μ W ≤ εs + εc + εd ∧ 1 - (εs + εc + εd) ≤ max 0 (1 - prob μ W) := by
+  have hle : prob μ W ≤ prob μ E₁ + prob μ E₂ + prob μ E₃ := by
+    unfold prob
+    rw [← sum_add_distrib, ← sum_add_distrib]
+    refine sum_le_sum fun ω _ => ?_
+    have h0 := hμ ω
+    have hw := hW ω
+    split_ifs <;> first | linarith | (exfalso; tauto)
+  refine ⟨by linarith, le_trans (by linarith) (le_max_right _ _)⟩
+
+/-! ## 10. Conjecture 3.1 (énoncé seulement)
+
+La conjecture est posée dans un modèle où la couche Clay transmet un contexte d'espèce que
+l'institution ne détient pas. Ce modèle n'est pas formalisé. L'énoncé ci-dessous en garde
+la structure logique au-dessus d'un cadre abstrait : des protocoles rangés par régime,
+une notion de fuite négligeable, une opposabilité et la variante SOTP de chaque régime.
+La constante C_R est choisie avant tout protocole, donc indépendamment de λ, Δ et γ. La
+conjecture n'est pas démontrée et n'est pas posée comme axiome. -/
+
+/-- Cadre abstrait de la Conjecture 3.1. -/
+structure CadreOptimalite where
+  Regime : Type
+  Proto : Type
+  regime : Proto → Regime
+  fuiteNegligeable : Proto → Prop
+  opp : Proto → ℝ
+  sotp : Regime → Proto
+
+/-- **Conjecture 3.1 (énoncé).** Pour chaque régime R, il existe C_R ≥ 1 tel que tout
+    protocole du régime à fuite négligeable vérifie Opp(P′) ≤ C_R·Opp(SOTP_R). -/
+def ConjectureOptimalite (F : CadreOptimalite) : Prop :=
+  ∀ R : F.Regime, ∃ C : ℝ, 1 ≤ C ∧
+    ∀ P : F.Proto, F.regime P = R → F.fuiteNegligeable P → F.opp P ≤ C * F.opp (F.sotp R)
+
+/-- **Remarque 3.8.** Dans un cadre où la variante SOTP d'un régime a une opposabilité
+    nulle (couche Clay fonction du contexte public, Remarque 3.2) alors qu'un protocole
+    du même régime à fuite négligeable a une opposabilité positive (témoin de la
+    Remarque 2.20), la conjecture est fausse : elle exige le modèle à contexte privé. -/
+theorem conjecture_exige_contexte_prive (F : CadreOptimalite) (R : F.Regime) (P : F.Proto)
+    (hR : F.regime P = R) (hf : F.fuiteNegligeable P) (hP : 0 < F.opp P)
+    (hS : F.opp (F.sotp R) = 0) : ¬ ConjectureOptimalite F := by
+  intro h
+  obtain ⟨C, _, hC⟩ := h R
+  have := hC P hR hf
+  rw [hS, mul_zero] at this
+  linarith
+
+end GameBasedSOTP
+
+/-! ## Bloc de vérification de la version 1.3 -/
+
+#print axioms GameBasedSOTP.union_bound
+#print axioms GameBasedSOTP.jl_seuil
+#print axioms GameBasedSOTP.jl_dimensionnement
+#print axioms GameBasedSOTP.jl_existence
+#print axioms GameBasedSOTP.jl_seuil_existence
+#print axioms GameBasedSOTP.base_ind_conf
+#print axioms GameBasedSOTP.base_bind_rel
+#print axioms GameBasedSOTP.high_conf
+#print axioms GameBasedSOTP.high_relver
+#print axioms GameBasedSOTP.conjecture_exige_contexte_prive

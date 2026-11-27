@@ -3,11 +3,12 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `GameBasedSOTP.lean` (version 1.2), un cas qui la satisfait et un cas qui ne la
+  `GameBasedSOTP.lean` (version 1.3), un cas qui la satisfait et un cas qui ne la
   satisfait pas, ou deux valeurs extrêmes. Il ne contient ni `sorry` ni `axiom`.
 
   Définitions testées : avg, ind, winIND et advIND, accB et advPRG, com, accepts,
-  winsBIND et extract, puis (version 1.2) winIND2, advIND2, truncLaw et distStat.
+  winsBIND et extract, puis (version 1.2) winIND2, advIND2, truncLaw et distStat, enfin
+  (version 1.3) prob, CadreOptimalite et ConjectureOptimalite.
 -/
 
 import Verification.Principal
@@ -79,5 +80,32 @@ lemma trunc_valeurs :
   rw [trunc_dist 2 1 0 (by norm_num) (by norm_num) (by norm_num),
     trunc_dist 2 1 1 (by norm_num) (by norm_num) (by norm_num)]
   norm_num
+
+/-! ## 5. Probabilités finies, JL et cadre de la Conjecture 3.1 (version 1.3) -/
+
+/-- `prob` : probabilité 1/2 d'un bit uniforme égal à 1, probabilité 0 de l'événement vide. -/
+lemma prob_valeurs :
+    prob (fun _ : Bool => (1 / 2 : ℝ)) (fun b => b = true) = 1 / 2 ∧
+      prob (fun _ : Bool => (1 / 2 : ℝ)) (fun _ => False) = 0 := by
+  constructor <;> simp [prob]
+
+/-- Cadre à un régime et un protocole dont l'opposabilité vaut celle de SOTP : la
+    conjecture y est vraie avec C = 1. -/
+noncomputable def cadreVrai : CadreOptimalite :=
+  { Regime := Unit, Proto := Unit, regime := fun _ => (), fuiteNegligeable := fun _ => True,
+    opp := fun _ => 1 / 2, sotp := fun _ => () }
+
+lemma cadreVrai_conjecture : ConjectureOptimalite cadreVrai :=
+  fun _ => ⟨1, le_rfl, fun _ _ _ => by simp [cadreVrai]⟩
+
+/-- Cadre où SOTP a une opposabilité nulle et un autre protocole une opposabilité 1/2 : la
+    conjecture y est fausse. -/
+noncomputable def cadreFaux : CadreOptimalite :=
+  { Regime := Unit, Proto := Bool, regime := fun _ => (), fuiteNegligeable := fun _ => True,
+    opp := fun b => if b then 1 / 2 else 0, sotp := fun _ => false }
+
+lemma cadreFaux_conjecture : ¬ ConjectureOptimalite cadreFaux :=
+  conjecture_exige_contexte_prive cadreFaux () true rfl trivial (by simp [cadreFaux])
+    (by simp [cadreFaux])
 
 end Coherence
