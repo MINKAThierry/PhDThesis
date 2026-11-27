@@ -4,7 +4,7 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.9). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.10). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
   Renvois : manuscrit v36 (« Aux fondements de la cryptographie
@@ -15,7 +15,7 @@
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
   Importation. Les définitions et les preuves sont dans un seul fichier. La
-  versions 3.5 à 3.9 prolongent la 3.4 par ajout des sections 12 à 21 en
+  versions 3.5 à 3.10 prolongent la 3.4 par ajout des sections 12 à 23 en
   fin de fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
   restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
@@ -838,5 +838,44 @@ def CasLimiteLemme6 : Prop :=
       traceNorm (diagState (ketBit m₀) - diagState (ketBit m₁))
         (diagState_sub_isHermitian _ _) = 1 / 2 ∧
     (1 / 2 : ℝ) < 1
+
+
+/-! ## 11. Extension v3.10, lot L4 : construction S-OTP
+
+Renvois au manuscrit v36. Énoncés démontrés dans la section 22 de
+`ConditionalCRO.lean` (version 3.10). -/
+
+/-- Théorème 3.1 (p. 89), confidentialité, première étape : avec un masque uniforme,
+    TV(P_{M*|M=m₀}, P_{M*|M=m₁}) = 0. -/
+def MasqueUniforme : Prop :=
+  ∀ {G : Type u₁} [AddCommGroup G] [Fintype G] [DecidableEq G] (m₀ m₁ : G),
+    tv (maskLaw m₀) (maskLaw m₁) = 0
+
+/-- Théorème 3.1 (p. 89), confidentialité : si la loi de Σ sachant (M, C) ne dépend pas
+    de M, alors Conf = 1. -/
+def ConfSOTP : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [Nonempty M] [Nonempty C], (∀ c m₀ m₁ s, X.qS c m₀ s = X.qS c m₁ s) → X.Conf = 1
+
+/-- Théorème 3.1 (p. 89), opposabilité : si l'interprète ne lit la preuve qu'à travers
+    la composante auxiliaire h, alors I(V;Σ|C) ≤ H(h|C) et Opp ≤ H(h|C)/H(V|C). -/
+def OppSOTP : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [Nonempty S] {τ : Type u₅} [Fintype τ] [DecidableEq τ] (h : C → S → τ)
+    (k : C → τ → V → ℝ), (∀ c t v, 0 ≤ k c t v) → (∀ c t, ∑ v, k c t v = 1) →
+    (∀ c s v, X.ker c s v = k c (h c s) v) → 0 < X.HV →
+      X.IV ≤ X.HT h ∧ X.Opp ≤ X.HT h / X.HV
+
+/-- Remarque 3.2 (p. 89) : si h est une fonction du contexte public, H(h|C) = 0 et
+    Opp = 0. -/
+def OppSOTPPublic : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [DecidableEq M] [Nonempty M] [Nonempty S] {τ : Type u₅} [Fintype τ] [DecidableEq τ]
+    (φ : C → τ) (k : C → τ → V → ℝ), (∀ c t v, 0 ≤ k c t v) → (∀ c t, ∑ v, k c t v = 1) →
+    (∀ c s v, X.ker c s v = k c (φ c) v) → 0 < X.HV →
+      X.HT (fun c _ => φ c) = 0 ∧ X.Opp = 0
 
 end Enonces

@@ -2,7 +2,7 @@
   Dossier de vérification. Point d'entrée mince
   =============================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème
-  existant de `ConditionalCRO.lean` (version 3.9) prouve exactement
+  existant de `ConditionalCRO.lean` (version 3.10) prouve exactement
   l'énoncé écrit séparément. Si un énoncé et sa preuve divergent, ce fichier ne
   compile pas. C'est le seul fichier qu'un relecteur doit ouvrir, avec
   `Enonces.lean`. Le script `verifier.sh` exécute `#print axioms` sur chaque
@@ -129,5 +129,12 @@ theorem principal_distance_trace_tv : Enonces.DistanceTraceTV := traceDist_eq_tv
 theorem principal_conf_quantique_diagonale : Enonces.ConfQuantiqueDiagonale := CLOModel.confQ_diag_eq
 theorem principal_von_neumann_shannon : Enonces.VonNeumannShannon := vonNeumann_diag
 theorem principal_cas_limite_lemme6 : Enonces.CasLimiteLemme6 := cas_limite_lemme6
+
+
+-- 11. Extension v3.10, lot L4 (construction S-OTP)
+theorem principal_masque_uniforme : Enonces.MasqueUniforme := sotp_mask_tv
+theorem principal_conf_sotp : Enonces.ConfSOTP := CLOModel.conf_eq_one_of_indep
+theorem principal_opp_sotp : Enonces.OppSOTP := CLOModel.sotp_opp_le
+theorem principal_opp_sotp_public : Enonces.OppSOTPPublic := CLOModel.sotp_opp_zero_of_public
 
 end Principal

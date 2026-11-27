@@ -3,7 +3,7 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.9), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.10), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
@@ -14,8 +14,9 @@
   QuantumProtocolInstance, QuantumAssumptions, QuantumProtocolFamily, deltaQ
   et etaQ, puis (section 8, version 3.7) bProd, QuantumSharpInstance et
   witModel, puis (section 9, version 3.8) advDist, succIND, relver,
-  winBindRel, binEntN et condEnt, enfin (section 10, version 3.9) shannon,
-  vonNeumann, traceDistDiag et ConfQdiag.
+  winBindRel, binEntN et condEnt, puis (section 10, version 3.9) shannon,
+  vonNeumann, traceDistDiag et ConfQdiag, enfin (section 11, version 3.10)
+  maskLaw, pushLaw et entN.
   La section 5 montre que les hypothèses imposent H(V|C) ≥ 1, ce qui exclut la
   division par zéro dans Opp (en Lean, x/0 = 0).
 -/
@@ -523,5 +524,23 @@ lemma traceDist_extremes :
 /-- `ConfQdiag` : Conf^q = 1 pour `famModel`, Conf^q = 0 pour `copyModel`. -/
 lemma confQ_extremes (l : ℕ) : (famModel l).ConfQdiag = 1 ∧ copyModel.ConfQdiag = 0 := by
   rw [confQ_diag_eq, confQ_diag_eq]; exact ⟨fam_Conf l, copy_Conf⟩
+
+/-! ## 11. Définitions de S-OTP (version 3.10, lot L4) -/
+
+/-- `maskLaw` : sur ZMod 2, la loi de m + K vaut 1/2 en tout point. -/
+lemma maskLaw_valeur : maskLaw (1 : ZMod 2) 0 = 1 / 2 := by
+  rw [maskLaw_uniform]; simp
+
+/-- `entN`, `pushLaw` : une composante constante a une entropie nulle ; la composante
+    identité d'un bit uniforme a une entropie ln 2. -/
+lemma entN_extremes :
+    entN (pushLaw (fun _ : Bool => (1 / 2 : ℝ)) (fun _ => ())) = 0 ∧
+      entN (pushLaw (fun _ : Bool => (1 / 2 : ℝ)) id) = Real.log 2 := by
+  constructor
+  · simp [entN, pushLaw]
+  · simp only [entN, pushLaw, id, Fintype.sum_bool]
+    norm_num
+    rw [show (1 : ℝ) / 2 = 2⁻¹ by norm_num, Real.log_inv]
+    ring
 
 end Coherence

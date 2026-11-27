@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.9 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
+  Version 3.10 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -4019,3 +4019,204 @@ end ExtensionL5b
 #print axioms ConditionalCRO.CLOModel.confQ_diag_eq
 #print axioms ConditionalCRO.vonNeumann_diag
 #print axioms ConditionalCRO.cas_limite_lemme6
+
+/-! ## 22. Construction S-OTP (version 3.10, lot L4)
+
+Ajout du 27 novembre 2026. Cette section démontre sur lois finies les parties
+informationnelles du Théorème 3.1. Le masque uniforme rend la loi de M* = m + K
+indépendante de m, d'où Conf = 1. Si l'interprète ne lit la preuve qu'à travers la
+composante auxiliaire h, alors I(V;Σ|C) ≤ H(h|C), d'où Opp ≤ H(h|C)/H(V|C). Si h est
+une fonction du contexte public, Opp = 0 (Remarque 3.2). La fiabilité de vérification
+relève du pont BIND-REL (section 18) et de la réduction au logarithme discret
+(`GameBasedSOTP.lean`). -/
+
+section ExtensionL4
+
+open Finset
+
+namespace ConditionalCRO
+
+/-! ### 22.1 Masque jetable et confidentialité de S-OTP (Théorème 3.1) -/
+
+/-- Loi de M* = m + K pour un masque K uniforme sur un groupe fini G. -/
+noncomputable def maskLaw {G : Type*} [AddCommGroup G] [Fintype G] [DecidableEq G] (m : G)
+    (s : G) : ℝ :=
+  (∑ k : G, if m + k = s then (1 : ℝ) else 0) / Fintype.card G
+
+/-- La loi de m + K est uniforme, quel que soit m. -/
+lemma maskLaw_uniform {G : Type*} [AddCommGroup G] [Fintype G] [DecidableEq G] (m s : G) :
+    maskLaw m s = 1 / Fintype.card G := by
+  unfold maskLaw
+  congr 1
+  rw [Finset.sum_eq_single (s - m)]
+  · simp
+  · intro k _ hk
+    have hne : m + k ≠ s := fun h => hk (by rw [← h]; abel)
+    simp [hne]
+  · intro h; exact absurd (mem_univ _) h
+
+/-- **Théorème 3.1, confidentialité, étape 1.** TV(P_{M*|M=m₀}, P_{M*|M=m₁}) = 0. -/
+theorem sotp_mask_tv {G : Type*} [AddCommGroup G] [Fintype G] [DecidableEq G] (m₀ m₁ : G) :
+    tv (maskLaw m₀) (maskLaw m₁) = 0 := by
+  unfold tv
+  simp only [maskLaw_uniform, sub_self, max_self, sum_const_zero]
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  (X : CLOModel lam M C S V)
+
+/-- **Théorème 3.1, confidentialité, étape 2.** Si la loi de Σ sachant (M, C) ne dépend
+    pas de M (masque uniforme et engagement parfaitement masquant), alors Conf = 1. -/
+theorem conf_eq_one_of_indep [Nonempty M] [Nonempty C]
+    (h : ∀ c m₀ m₁ s, X.qS c m₀ s = X.qS c m₁ s) : X.Conf = 1 := by
+  have h0 : ∀ x, X.TV x = 0 := by
+    intro x
+    unfold TV tv
+    refine sum_eq_zero fun s _ => ?_
+    rw [h x.1 x.2.1 x.2.2 s, sub_self, max_self]
+  have hT : X.TVmax = 0 :=
+    le_antisymm (Finset.sup'_le _ _ fun x _ => (h0 x).le)
+      ((h0 (Classical.arbitrary _)).symm.le.trans (Finset.le_sup' X.TV (mem_univ _)))
+  unfold Conf; rw [hT, sub_zero]
+
+end CLOModel
+
+/-! ### 22.2 Opposabilité de S-OTP (Théorème 3.1 et Remarque 3.2) -/
+
+/-- Loi de la composante auxiliaire T = h(Σ) lorsque Σ suit la loi r. -/
+noncomputable def pushLaw {σ τ : Type*} [Fintype σ] [DecidableEq τ] (r : σ → ℝ) (h : σ → τ)
+    (t : τ) : ℝ :=
+  ∑ s, if h s = t then r s else 0
+
+/-- Entropie (nats) d'une loi finie. -/
+noncomputable def entN {τ : Type*} [Fintype τ] (a : τ → ℝ) : ℝ := -∑ t, a t * Real.log (a t)
+
+/-- Si le verdict ne lit Σ qu'à travers T = h(Σ) (chaîne V − T − Σ), alors
+    I(Σ;V) ≤ H(T) (nats), par la DPI puis I ≤ H. -/
+theorem miN_le_ent_of_factor {σ τ ν : Type*} [Fintype σ] [Fintype τ] [Fintype ν] [Nonempty σ]
+    [DecidableEq τ] (r : σ → ℝ) (h : σ → τ) (k : τ → ν → ℝ) (hr : ∀ s, 0 ≤ r s)
+    (hk : ∀ t v, 0 ≤ k t v) (hk1 : ∀ t, ∑ v, k t v = 1) :
+    miN (fun s v => r s * k (h s) v) ≤ entN (pushLaw r h) := by
+  classical
+  set a := pushLaw r h with ha
+  have ha0 : ∀ t, 0 ≤ a t := fun t => sum_nonneg fun s _ => by split_ifs <;> simp [hr s]
+  have hra : ∀ s, r s ≤ a (h s) := fun s => by
+    have := single_le_sum (f := fun s' => if h s' = h s then r s' else 0)
+      (fun s' _ => by split_ifs <;> simp [hr s']) (mem_univ s)
+    simpa [ha, pushLaw] using this
+  have hcard : (0 : ℝ) < Fintype.card σ := by exact_mod_cast Fintype.card_pos
+  let p : ν → τ → ℝ := fun v t => a t * k t v
+  let k2 : τ → σ → ℝ := fun t s =>
+    if a t = 0 then 1 / Fintype.card σ else (if h s = t then r s else 0) / a t
+  have hk2 : ∀ t s, 0 ≤ k2 t s := fun t s => by
+    simp only [k2]; split_ifs
+    · positivity
+    · exact div_nonneg (hr s) (ha0 t)
+    · simp
+  have hk21 : ∀ t, ∑ s, k2 t s = 1 := fun t => by
+    simp only [k2]; split_ifs with h0
+    · rw [sum_const, card_univ, nsmul_eq_mul]; field_simp
+    · rw [← sum_div]; exact div_self h0
+  have hcomp : (fun v s => ∑ t, p v t * k2 t s) = fun v s => r s * k (h s) v := by
+    funext v s
+    rw [Finset.sum_eq_single (h s)]
+    · simp only [p, k2]
+      split_ifs with h0
+      · have : r s = 0 := le_antisymm (h0 ▸ hra s) (hr s)
+        rw [h0, this]; ring
+      · field_simp
+    · intro t _ ht
+      simp only [p, k2]
+      split_ifs with h0 h1
+      · rw [h0]; ring
+      · exact absurd h1.symm ht
+      · simp
+    · intro hn; exact absurd (mem_univ _) hn
+  have hp : ∀ v t, 0 ≤ p v t := fun v t => mul_nonneg (ha0 t) (hk t v)
+  calc miN (fun s v => r s * k (h s) v)
+      = miN (fun v s => r s * k (h s) v) := miN_symm _
+    _ = miN (fun v s => ∑ t, p v t * k2 t s) := by rw [hcomp]
+    _ ≤ miN p := dpi_finite p k2 hp hk2 hk21
+    _ = miN (fun t v => p v t) := miN_symm _
+    _ ≤ entN1 (fun t v => p v t) := miN_le_entN1 _ fun t v => hp v t
+    _ = entN a := by
+        unfold entN1 entN
+        congr 1
+        refine sum_congr rfl fun t _ => ?_
+        simp only [p, ← mul_sum, hk1, mul_one]
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  (X : CLOModel lam M C S V)
+
+/-- Loi de T = h(c, Σ) sachant C = c. -/
+noncomputable def lawT {τ : Type*} [DecidableEq τ] (h : C → S → τ) (c : C) : τ → ℝ :=
+  pushLaw (fun s => ∑ m, X.qMS c m s) (h c)
+
+/-- H(h|C) en bits. -/
+noncomputable def HT {τ : Type*} [Fintype τ] [DecidableEq τ] (h : C → S → τ) : ℝ :=
+  (∑ c, X.pC c * entN (X.lawT h c)) / Real.log 2
+
+/-- **Théorème 3.1, opposabilité.** Si l'interprète ne lit la preuve qu'à travers la
+    composante auxiliaire h (noyau ker(c, s, ·) = k(c, h(c, s), ·)), alors
+    I(V;Σ|C) ≤ H(h|C), donc Opp ≤ H(h|C)/H(V|C). -/
+theorem sotp_opp_le [Nonempty S] {τ : Type*} [Fintype τ] [DecidableEq τ] (h : C → S → τ)
+    (k : C → τ → V → ℝ) (hk : ∀ c t v, 0 ≤ k c t v) (hk1 : ∀ c t, ∑ v, k c t v = 1)
+    (hker : ∀ c s v, X.ker c s v = k c (h c s) v) (hHV : 0 < X.HV) :
+    X.IV ≤ X.HT h ∧ X.Opp ≤ X.HT h / X.HV := by
+  have hIV : X.IV ≤ X.HT h := by
+    unfold IV HT
+    apply div_le_div_of_nonneg_right _ (Real.log_pos (by norm_num)).le
+    refine sum_le_sum fun c _ => mul_le_mul_of_nonneg_left ?_ (X.pC_nonneg c)
+    have e : X.qSV c = fun s v => (∑ m, X.qMS c m s) * k c (h c s) v := by
+      funext s v; unfold qSV; rw [hker]
+    rw [e]
+    exact miN_le_ent_of_factor _ (h c) (k c)
+      (fun s => sum_nonneg fun m _ => X.qMS_nonneg c m s) (hk c) (hk1 c)
+  exact ⟨hIV, div_le_div_of_nonneg_right hIV hHV.le⟩
+
+/-- **Remarque 3.2.** Si h est une fonction du contexte public (h(c, s) = φ(c)), alors
+    H(h|C) = 0 et Opp = 0 : l'opposabilité de S-OTP suppose un contexte d'espèce privé. -/
+theorem sotp_opp_zero_of_public [DecidableEq M] [Nonempty M] [Nonempty S] {τ : Type*}
+    [Fintype τ] [DecidableEq τ] (φ : C → τ) (k : C → τ → V → ℝ) (hk : ∀ c t v, 0 ≤ k c t v)
+    (hk1 : ∀ c t, ∑ v, k c t v = 1) (hker : ∀ c s v, X.ker c s v = k c (φ c) v)
+    (hHV : 0 < X.HV) : X.HT (fun c _ => φ c) = 0 ∧ X.Opp = 0 := by
+  have hHT : X.HT (fun c _ => φ c) = 0 := by
+    unfold HT
+    rw [div_eq_zero_iff]; left
+    refine sum_eq_zero fun c _ => ?_
+    rcases (X.pC_nonneg c).lt_or_eq with hc | hc
+    · have hlaw : ∀ t, X.lawT (fun c _ => φ c) c t = if φ c = t then 1 else 0 := by
+        intro t
+        unfold lawT pushLaw
+        split_ifs with ht
+        · rw [Finset.sum_comm]; exact X.qMS_sum c hc
+        · simp
+      unfold entN
+      simp only [hlaw]
+      have : ∀ t : τ, (if φ c = t then (1 : ℝ) else 0) * Real.log (if φ c = t then 1 else 0) = 0 :=
+        fun t => by split_ifs <;> simp
+      simp only [this, sum_const_zero, neg_zero, mul_zero]
+    · rw [← hc, zero_mul]
+  refine ⟨hHT, ?_⟩
+  have h1 := (X.sotp_opp_le (fun c _ => φ c) k hk hk1 hker hHV).2
+  rw [hHT, zero_div] at h1
+  have h2 : 0 ≤ X.Opp := div_nonneg (X.IV_nonneg) hHV.le
+  linarith
+
+end CLOModel
+
+end ConditionalCRO
+
+end ExtensionL4
+
+/-! ## 23. Bloc de vérification de S-OTP (version 3.10) -/
+
+#print axioms ConditionalCRO.maskLaw_uniform
+#print axioms ConditionalCRO.sotp_mask_tv
+#print axioms ConditionalCRO.CLOModel.conf_eq_one_of_indep
+#print axioms ConditionalCRO.miN_le_ent_of_factor
+#print axioms ConditionalCRO.CLOModel.sotp_opp_le
+#print axioms ConditionalCRO.CLOModel.sotp_opp_zero_of_public

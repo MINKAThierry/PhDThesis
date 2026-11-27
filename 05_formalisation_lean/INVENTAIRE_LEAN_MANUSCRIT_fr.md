@@ -1,33 +1,33 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9) et la première partie du lot L4 (GameBasedSOTP.lean v1.2). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis les deux premières parties du lot L4 (GameBasedSOTP.lean v1.2, ConditionalCRO.lean v3.10). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
-| démontré | 73 |
+| démontré | 75 |
 | démontré, une inégalité posée dans le modèle abstrait | 10 |
 | mécanisé en situation réduite | 6 |
 | hypothèse formalisée | 18 |
-| non formalisé | 38 |
+| non formalisé | 36 |
 | hors champ formel | 25 |
 | **Total** | **170** |
 
-Sur 145 énoncés relevant d'une formalisation, 107 sont aujourd'hui couverts, soit 74 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 et de 104 (72 %) après le lot L5b. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 145 énoncés relevant d'une formalisation, 109 sont aujourd'hui couverts, soit 75 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b et de 107 (74 %) après la première partie du lot L4. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
 | Type | Démontré | Posé ou réduit | Non formalisé | Hors champ |
 |---|---|---|---|---|
-| Théorème | 12 | 3 | 3 | 0 |
+| Théorème | 13 | 3 | 2 | 0 |
 | Lemme | 9 | 3 | 5 | 0 |
 | Proposition | 2 | 1 | 3 | 0 |
 | Corollaire | 3 | 0 | 1 | 0 |
 | Conjecture | 0 | 0 | 1 | 0 |
 | Hypothèse | 0 | 12 | 0 | 0 |
 | Définition | 19 | 5 | 21 | 0 |
-| Remarque | 38 | 0 | 4 | 25 |
+| Remarque | 39 | 0 | 3 | 25 |
 
 ## Détail par chapitre
 
@@ -151,8 +151,8 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | N° | Page | Énoncé | Label | Statut | Nom Lean | Lot |
 |---|---|---|---|---|---|---|
 | Remarque 3.1 | 87 | Statut des résultats de ce chapitre | `rem:statut_sotp` | hors champ formel |  | — |
-| Théorème 3.1 | 89 | Propriétés de sécurité S-OTP | `thm:proprietes_sotp` | non formalisé |  | L4 |
-| Remarque 3.2 | 89 | Portée du Théorème thm:proprietes_sotp | `rem:portee_sotp` | non formalisé |  | L4 |
+| Théorème 3.1 | 89 | Propriétés de sécurité S-OTP | `thm:proprietes_sotp` | démontré | sotp_mask_tv, CLOModel.conf_eq_one_of_indep, CLOModel.sotp_opp_le (Relver par relver_ge et GameBasedSOTP) | L4 |
+| Remarque 3.2 | 89 | Portée du Théorème thm:proprietes_sotp | `rem:portee_sotp` | démontré | CLOModel.sotp_opp_zero_of_public | L4 |
 | Remarque 3.3 | 90 | Argument heuristique d'optimalité de S-OTP dans la classe OTP | `thm:optimalite_sotp` | hors champ formel |  | L4 |
 | Proposition 3.1 | 95 | Propriétés cryptographiques de SOTP-Low | `thm:saturation_sotp_low` | mécanisé en situation réduite | ind_conf_complet, win_bind_complet (GameBasedSOTP) | L4 |
 | Remarque 3.4 | 95 | Heuristique de conception de SOTP-Low (non prouvée) | `rem:facteur_limitant_low` | hors champ formel |  | L4 |

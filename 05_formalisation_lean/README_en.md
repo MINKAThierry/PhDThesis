@@ -4,14 +4,14 @@
 
 [Version française](README_fr.md)
 
-`ConditionalCRO.lean`, version 3.9, is a single file that certifies the classical Conditional CRO Trilemma, from the algebraic core to finite probability distributions. It contains no `sorry` and declares no `axiom`. The manuscript presenting the algebraic core had been submitted to the *Journal of Automated Reasoning*; its withdrawal was requested in November 2026. The concrete layer (Section 10 of the file) is specific to the thesis. Version 3.5 adds, in Section 12, the classical information-theoretic results of Chapter 2: DPI, Theorems 2.1 to 2.3, Proposition 2.1 and several remarks. Version 3.6 adds, in Section 14, the algebraic core of the quantum Conditional CRO Trilemma (Theorem 2.5, Corollary 2.2, Lemma 2.8 and Remarks 2.27 to 2.41), where quantum Fano, Holevo and quantum Pinsker are assumed as Fano and Pinsker are in the classical core. Version 3.7 adds, in Section 16, the sharp κ/λ² bound of Proposition 2.2 on finite laws, the realisable witness of Remark 2.20 and the remarks on orders of magnitude. Version 3.8 adds, in Section 18, the IND-CONF, BIND-REL and EXT-OPP games on finite laws, their bridges to Conf, Relver and Opp, the general Fano inequality (Lemma A.1), Corollary A.2 and Remark A.6. Version 3.9 adds, in Section 20, the classical diagonal encoding: trace distance equal to total variation, Conf^q = Conf, S(ρ) = H(X) and the limiting case of Remark 2.34. The plan for extending the formalisation to the whole manuscript is in [`FEUILLE_DE_ROUTE_FORMALISATION_fr.md`](FEUILLE_DE_ROUTE_FORMALISATION_fr.md); the statement-by-statement status is in [`INVENTAIRE_LEAN_MANUSCRIT_fr.md`](INVENTAIRE_LEAN_MANUSCRIT_fr.md) (in French).
+`ConditionalCRO.lean`, version 3.10, is a single file that certifies the classical Conditional CRO Trilemma, from the algebraic core to finite probability distributions. It contains no `sorry` and declares no `axiom`. The manuscript presenting the algebraic core had been submitted to the *Journal of Automated Reasoning*; its withdrawal was requested in November 2026. The concrete layer (Section 10 of the file) is specific to the thesis. Version 3.5 adds, in Section 12, the classical information-theoretic results of Chapter 2: DPI, Theorems 2.1 to 2.3, Proposition 2.1 and several remarks. Version 3.6 adds, in Section 14, the algebraic core of the quantum Conditional CRO Trilemma (Theorem 2.5, Corollary 2.2, Lemma 2.8 and Remarks 2.27 to 2.41), where quantum Fano, Holevo and quantum Pinsker are assumed as Fano and Pinsker are in the classical core. Version 3.7 adds, in Section 16, the sharp κ/λ² bound of Proposition 2.2 on finite laws, the realisable witness of Remark 2.20 and the remarks on orders of magnitude. Version 3.8 adds, in Section 18, the IND-CONF, BIND-REL and EXT-OPP games on finite laws, their bridges to Conf, Relver and Opp, the general Fano inequality (Lemma A.1), Corollary A.2 and Remark A.6. Version 3.9 adds, in Section 20, the classical diagonal encoding: trace distance equal to total variation, Conf^q = Conf, S(ρ) = H(X) and the limiting case of Remark 2.34. Version 3.10 adds, in Section 22, the information-theoretic parts of Theorem 3.1 (S-OTP) and Remark 3.2. The plan for extending the formalisation to the whole manuscript is in [`FEUILLE_DE_ROUTE_FORMALISATION_fr.md`](FEUILLE_DE_ROUTE_FORMALISATION_fr.md); the statement-by-statement status is in [`INVENTAIRE_LEAN_MANUSCRIT_fr.md`](INVENTAIRE_LEAN_MANUSCRIT_fr.md) (in French).
 
 | Item | Value |
 |---|---|
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lakefile.toml`](lakefile.toml), [`lake-manifest.json`](lake-manifest.json)) |
 | Licence | MIT |
-| Reference output | [`results/lean_build_v3.9.log`](results/lean_build_v3.9.log); earlier versions: `lean_build.log` (v2.2), `lean_build_v3.0.log` to `lean_build_v3.8.log` |
+| Reference output | [`results/lean_build_v3.10.log`](results/lean_build_v3.10.log); earlier versions: `lean_build.log` (v2.2), `lean_build_v3.0.log` to `lean_build_v3.9.log` |
 
 ## Build
 
@@ -26,7 +26,7 @@ lake env lean ConditionalCRO.lean    # prints the #check and #print axioms outpu
 
 ## Verification dossier
 
-The dossier [`VERIFICATION_en.md`](VERIFICATION_en.md) lets a reader judge what is proved without reading all the code. It is additive and does not modify the proofs of `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) holds the 93 statements of the thesis without proof. [`Verification/Principal.lean`](Verification/Principal.lean) links each one to the existing theorem in one line. [`Verification/Coherence.lean`](Verification/Coherence.lean) tests the non-vacuity of the project's own definitions. The script [`verifier.sh`](verifier.sh) audits the sources, the build, the axioms and the kernel. Its outputs are in [`results/verification.log`](results/verification.log) and [`results/axiomes.txt`](results/axiomes.txt). The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) runs it on GitHub.
+The dossier [`VERIFICATION_en.md`](VERIFICATION_en.md) lets a reader judge what is proved without reading all the code. It is additive and does not modify the proofs of `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) holds the 97 statements of the thesis without proof. [`Verification/Principal.lean`](Verification/Principal.lean) links each one to the existing theorem in one line. [`Verification/Coherence.lean`](Verification/Coherence.lean) tests the non-vacuity of the project's own definitions. The script [`verifier.sh`](verifier.sh) audits the sources, the build, the axioms and the kernel. Its outputs are in [`results/verification.log`](results/verification.log) and [`results/axiomes.txt`](results/axiomes.txt). The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) runs it on GitHub.
 
 ## What is certified
 
@@ -51,6 +51,8 @@ The dossier [`VERIFICATION_en.md`](VERIFICATION_en.md) lets a reader judge what 
 | 19 (v3.8) | `#print axioms` block of the games and bridges | Axiom check of the 15 added theorems |
 | 20 (v3.9) | `diagState`, `eigenvalues_diag`, `traceDist_eq_tv`, `confQ_diag_eq`, `vonNeumann_diag`, `cas_limite_lemme6` | Classical diagonal encoding: Remarks 2.9, 2.25, 2.26 and 2.34 |
 | 21 (v3.9) | `#print axioms` block of the diagonal encoding | Axiom check of the 6 added theorems |
+| 22 (v3.10) | `maskLaw`, `sotp_mask_tv`, `conf_eq_one_of_indep`, `miN_le_ent_of_factor`, `sotp_opp_le`, `sotp_opp_zero_of_public` | S-OTP construction: Theorem 3.1 and Remark 3.2 |
+| 23 (v3.10) | `#print axioms` block of S-OTP | Axiom check of the 6 added theorems |
 
 ### Compiled statement of the main theorem
 
@@ -77,7 +79,7 @@ A `ProtocolInstance` is a point of the abstract model. The **consistency witness
 
 | File | Content |
 |---|---|
-| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.9 (comments in French); the header carries the authors' names, omitted from the Appendix B listing |
+| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.10 (comments in French); the header carries the authors' names, omitted from the Appendix B listing |
 | [`lakefile.toml`](lakefile.toml), [`lean-toolchain`](lean-toolchain), [`lake-manifest.json`](lake-manifest.json) | Pinned versions of Lean and Mathlib |
 | [`results/`](results/) | Outputs of `lake env lean ConditionalCRO.lean` for each version |
 | [`cas_limite/`](cas_limite/) | Script for the limiting case of Theorem 1 of P2 in its initial formulation |
