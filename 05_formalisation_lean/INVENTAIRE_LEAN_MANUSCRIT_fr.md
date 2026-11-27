@@ -1,20 +1,20 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1 et L5a (ConditionalCRO.lean v3.6). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a et L2 (ConditionalCRO.lean v3.7). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
-| démontré | 47 |
+| démontré | 53 |
 | démontré, une inégalité posée dans le modèle abstrait | 10 |
 | mécanisé en situation réduite | 4 |
 | hypothèse formalisée | 18 |
-| non formalisé | 65 |
+| non formalisé | 59 |
 | hors champ formel | 26 |
 | **Total** | **170** |
 
-Sur 144 énoncés relevant d'une formalisation, 79 sont aujourd'hui couverts, soit 55 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1. Les 26 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 144 énoncés relevant d'une formalisation, 85 sont aujourd'hui couverts, soit 59 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1 et de 79 (55 %) après le lot L5a. Les 26 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
@@ -22,12 +22,12 @@ Sur 144 énoncés relevant d'une formalisation, 79 sont aujourd'hui couverts, so
 |---|---|---|---|---|
 | Théorème | 12 | 2 | 4 | 0 |
 | Lemme | 9 | 3 | 5 | 0 |
-| Proposition | 1 | 0 | 5 | 0 |
-| Corollaire | 1 | 0 | 3 | 0 |
+| Proposition | 2 | 0 | 4 | 0 |
+| Corollaire | 2 | 0 | 2 | 0 |
 | Conjecture | 0 | 0 | 1 | 0 |
 | Hypothèse | 0 | 12 | 0 | 0 |
 | Définition | 13 | 5 | 27 | 0 |
-| Remarque | 21 | 0 | 20 | 26 |
+| Remarque | 25 | 0 | 16 | 26 |
 
 ## Détail par chapitre
 
@@ -89,17 +89,17 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Lemme 2.3 | 57 | Garantie de confidentialité pour les protocoles réguliers | `lem:confidentiality_guarantee` | démontré, une inégalité posée dans le modèle abstrait | lemma4_confidentiality_guarantee, lemma4_concrete | L1 |
 | Remarque 2.15 | 58 | Interprétation du Lemme lem:confidentiality_guarantee | `rem:interp_lemme4` | démontré | conf_guarantee_antitone | L1 |
 | Remarque 2.16 | 58 | Constante c_0 | `rem:constante_c0` | démontré | c0, c0_gt_half, pinsker_model | L1 |
-| Théorème 2.4 | 58 | Trilemme CRO conditionnel classique | `thm:trilemme_cro_conditionnel` | démontré, une inégalité posée dans le modèle abstrait | trilemma_explicit, trilemma_refined, conditional_CRO_trilemma (+ versions _concrete) | L2 |
+| Théorème 2.4 | 58 | Trilemme CRO conditionnel classique | `thm:trilemme_cro_conditionnel` | démontré | trilemma_explicit, trilemma_refined, conditional_CRO_trilemma (+ _concrete), conf_regime_concrete | L2 |
 | Remarque 2.17 | 61 | La forme publiée comme corollaire | `rem:corollaire_publie` | démontré, une inégalité posée dans le modèle abstrait | trilemma_instance | — |
 | Remarque 2.18 | 61 | Quand la capacité institutionnelle est-elle contraignante ? | `rem:activite_delta` | démontré | refined_bound_is_fano_when_delta_ge_gamma, factor_lt_one_iff, seuil_Hsharp | — |
-| Proposition 2.2 | 62 | Borne aiguë sur la fiabilité de reconstruction | `prop:borne_aigue` | non formalisé |  | L2 |
-| Remarque 2.19 | 62 | Portée de la borne aiguë | `rem:borne_aigue_portee` | non formalisé |  | L2 |
-| Remarque 2.20 | 63 | Un témoin réalisable du facteur institutionnel | `rem:temoin_realisable` | non formalisé |  | L2 |
+| Proposition 2.2 | 62 | Borne aiguë sur la fiabilité de reconstruction | `prop:borne_aigue` | démontré | fano_sharp_model, rel_aigu, trilemma_aigu_concrete | L2 |
+| Remarque 2.19 | 62 | Portée de la borne aiguë | `rem:borne_aigue_portee` | non formalisé | borne_forte_statut (majoration en λ⁻² seulement) | L2 |
+| Remarque 2.20 | 63 | Un témoin réalisable du facteur institutionnel | `rem:temoin_realisable` | démontré | witModel, temoin_realisable | L2 |
 | Remarque 2.21 | 63 | Témoin combiné o`u le facteur institutionnel est actif | `rem:temoin_combine` | non formalisé |  | L2 |
 | Remarque 2.22 | 64 | Portée du Théorème thm:trilemme_cro_conditionnel | `rem:scope_trilemme_classique` | démontré | regime_assumption_necessary | L2 |
 | Remarque 2.23 | 64 | Statut de vérification | `rem:statut_verification_classique` | hors champ formel |  | — |
-| Corollaire 2.1 | 64 | Forme simplifiée | `cor:forme_simplifiee` | non formalisé |  | L2 |
-| Remarque 2.24 | 65 | Portée des études de cas | `rem:portee_cas_etude` | non formalisé |  | L2 |
+| Corollaire 2.1 | 64 | Forme simplifiée | `cor:forme_simplifiee` | démontré | forme_simplifiee | L2 |
+| Remarque 2.24 | 65 | Portée des études de cas | `rem:portee_cas_etude` | démontré | portee_cas_etude | L2 |
 | Définition 2.14 | 69 | Entropie de von Neumann | `def:entropie_conditionnelle_quantique` | non formalisé |  | L5c |
 | Définition 2.15 | 69 | Information mutuelle quantique | `def:information_mutuelle_quantique` | non formalisé |  | L5c |
 | Définition 2.16 | 69 | Information quantique accessible | `def:info_accessible` | non formalisé |  | L5c |
@@ -142,7 +142,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Remarque 2.37 | 79 | Portée du Théorème thm:trilemme_pq | `rem:scope_trilemme_pq` | démontré | regime_q_necessary | L5a |
 | Remarque 2.38 | 79 | Statut de vérification | `rem:statut_verification_pq` | hors champ formel |  | — |
 | Remarque 2.39 | 79 | Forme raffinée quantique | `rem:forme_raffinee_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_pq_refined, seuil_Hsharp_q | L5a |
-| Remarque 2.40 | 80 | Borne aiguë dans le cadre quantique | `rem:borne_aigue_pq` | non formalisé |  | L2 |
+| Remarque 2.40 | 80 | Borne aiguë dans le cadre quantique | `rem:borne_aigue_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_aigu_q | L2 |
 | Remarque 2.41 | 80 | La majoration publiée comme corollaire | `rem:corollaire_publie_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_pq_published | L5a |
 | Corollaire 2.2 | 80 | Forme simplifiée quantique | `cor:forme_simplifiee_pq` | démontré | forme_simplifiee_pq | L5a |
 
@@ -203,7 +203,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition 5.1 | 173 | Régime de basse capacité | `def:regime_low` | démontré | capacity_regime | — |
 | Définition 5.2 | 173 | Régime de capacité moyenne | `def:regime_mid` | démontré | capacity_regime | — |
 | Définition 5.3 | 173 | Régime de haute capacité | `def:regime_high` | démontré | capacity_regime | — |
-| Remarque 5.5 | 185 | Statut d'une borne forte en O(λ^-2) | `rem:borne_forte_statut` | non formalisé |  | L2 |
+| Remarque 5.5 | 185 | Statut d'une borne forte en O(λ^-2) | `rem:borne_forte_statut` | démontré | borne_forte_statut | L2 |
 
 ### Annexe A
 

@@ -3,7 +3,7 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.6), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.7), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
@@ -12,7 +12,8 @@
   (section 6, version 3.5) entN1, condMI, HS, IVM, IVSM, IVpost, post,
   constVerdict et detVerdict, puis (section 7, version 3.6) gammaQ,
   QuantumProtocolInstance, QuantumAssumptions, QuantumProtocolFamily, deltaQ
-  et etaQ.
+  et etaQ, enfin (section 8, version 3.7) bProd, QuantumSharpInstance et
+  witModel.
   La section 5 montre que les hypothèses imposent H(V|C) ≥ 1, ce qui exclut la
   division par zéro dans Opp (en Lean, x/0 = 0).
 -/
@@ -419,5 +420,35 @@ lemma deltaQ_mldsa : deltaQ 35 0 7 = 28 := by norm_num [deltaQ]
 lemma etaQ_identite (l : ℕ) :
     (famModel l).etaQ (fun _ s t => if s = t then (1 : ℝ) else 0) = 0 := by
   simp [CLOModel.etaQ, IVpost_identite]
+
+/-! ## 8. Définitions des bornes avancées (version 3.7, lot L2) -/
+
+/-- `bProd` : dans la famille témoin, M et Σ sont indépendants sachant C ; la loi
+    produit b coïncide donc avec la loi jointe. -/
+lemma fam_bProd (l : ℕ) (c : Fin 2) (m : Fin (2 ^ l)) (s : Fin 2) :
+    (famModel l).bProd c m s = (famModel l).P c m s := by
+  simp only [bProd, fam_P, fam_pC, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+  ring
+
+/-- `QuantumSharpInstance` : une instance de la famille quantique, de fiabilité nulle,
+    satisfait la minoration fine. -/
+noncomputable def sharpQ (lam : ℕ) : QuantumSharpInstance lam :=
+  { familleQ.inst lam with fano_sharp_q := by simp [familleQ] }
+
+lemma sharpQ_hypotheses (lam : ℕ) : QuantumAssumptions (sharpQ lam).toQuantumProtocolInstance :=
+  familleQ_hypotheses lam
+
+/-- `witModel` : Opp = 0 pour Δ = 0 et Opp = 1 pour Δ = γ ; Opp = 5/19 pour
+    (Δ, γ) = (5, 19). Conf = 1 dans tous les cas. -/
+lemma witModel_extremes (l : ℕ) :
+    (witModel l 0 1).Opp = 0 ∧ (witModel l 1 1).Opp = 1 ∧ (witModel l 5 19).Opp = 5 / 19 ∧
+      (witModel l 5 19).Conf = 1 := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have := (temoin_realisable l 0 1 (by norm_num) le_rfl).2.2.2.2.2.2.2; simpa using this
+  · have := (temoin_realisable l 1 1 le_rfl le_rfl).2.2.2.2.2.2.2; simpa using this
+  · have := (temoin_realisable l 5 19 (by norm_num) (by norm_num)).2.2.2.2.2.2.2; simpa using this
+  · exact (temoin_realisable l 5 19 (by norm_num) (by norm_num)).2.2.2.2.2.2.1
 
 end Coherence

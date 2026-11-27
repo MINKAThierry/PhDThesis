@@ -4,14 +4,14 @@
 
 [Version française](README_fr.md)
 
-`ConditionalCRO.lean`, version 3.6, is a single file that certifies the classical Conditional CRO Trilemma, from the algebraic core to finite probability distributions. It contains no `sorry` and declares no `axiom`. The manuscript presenting the algebraic core had been submitted to the *Journal of Automated Reasoning*; its withdrawal was requested in November 2026. The concrete layer (Section 10 of the file) is specific to the thesis. Version 3.5 adds, in Section 12, the classical information-theoretic results of Chapter 2: DPI, Theorems 2.1 to 2.3, Proposition 2.1 and several remarks. Version 3.6 adds, in Section 14, the algebraic core of the quantum Conditional CRO Trilemma (Theorem 2.5, Corollary 2.2, Lemma 2.8 and Remarks 2.27 to 2.41), where quantum Fano, Holevo and quantum Pinsker are assumed as Fano and Pinsker are in the classical core. The plan for extending the formalisation to the whole manuscript is in [`FEUILLE_DE_ROUTE_FORMALISATION_fr.md`](FEUILLE_DE_ROUTE_FORMALISATION_fr.md); the statement-by-statement status is in [`INVENTAIRE_LEAN_MANUSCRIT_fr.md`](INVENTAIRE_LEAN_MANUSCRIT_fr.md) (in French).
+`ConditionalCRO.lean`, version 3.7, is a single file that certifies the classical Conditional CRO Trilemma, from the algebraic core to finite probability distributions. It contains no `sorry` and declares no `axiom`. The manuscript presenting the algebraic core had been submitted to the *Journal of Automated Reasoning*; its withdrawal was requested in November 2026. The concrete layer (Section 10 of the file) is specific to the thesis. Version 3.5 adds, in Section 12, the classical information-theoretic results of Chapter 2: DPI, Theorems 2.1 to 2.3, Proposition 2.1 and several remarks. Version 3.6 adds, in Section 14, the algebraic core of the quantum Conditional CRO Trilemma (Theorem 2.5, Corollary 2.2, Lemma 2.8 and Remarks 2.27 to 2.41), where quantum Fano, Holevo and quantum Pinsker are assumed as Fano and Pinsker are in the classical core. Version 3.7 adds, in Section 16, the sharp κ/λ² bound of Proposition 2.2 on finite laws, the realisable witness of Remark 2.20 and the remarks on orders of magnitude. The plan for extending the formalisation to the whole manuscript is in [`FEUILLE_DE_ROUTE_FORMALISATION_fr.md`](FEUILLE_DE_ROUTE_FORMALISATION_fr.md); the statement-by-statement status is in [`INVENTAIRE_LEAN_MANUSCRIT_fr.md`](INVENTAIRE_LEAN_MANUSCRIT_fr.md) (in French).
 
 | Item | Value |
 |---|---|
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lakefile.toml`](lakefile.toml), [`lake-manifest.json`](lake-manifest.json)) |
 | Licence | MIT |
-| Reference output | [`results/lean_build_v3.6.log`](results/lean_build_v3.6.log); earlier versions: `lean_build.log` (v2.2), `lean_build_v3.0.log` to `lean_build_v3.5.log` |
+| Reference output | [`results/lean_build_v3.7.log`](results/lean_build_v3.7.log); earlier versions: `lean_build.log` (v2.2), `lean_build_v3.0.log` to `lean_build_v3.6.log` |
 
 ## Build
 
@@ -26,7 +26,7 @@ lake env lean ConditionalCRO.lean    # prints the #check and #print axioms outpu
 
 ## Verification dossier
 
-The dossier [`VERIFICATION_en.md`](VERIFICATION_en.md) lets a reader judge what is proved without reading all the code. It is additive and does not modify the proofs of `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) holds the 64 statements of the thesis without proof. [`Verification/Principal.lean`](Verification/Principal.lean) links each one to the existing theorem in one line. [`Verification/Coherence.lean`](Verification/Coherence.lean) tests the non-vacuity of the project's own definitions. The script [`verifier.sh`](verifier.sh) audits the sources, the build, the axioms and the kernel. Its outputs are in [`results/verification.log`](results/verification.log) and [`results/axiomes.txt`](results/axiomes.txt). The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) runs it on GitHub.
+The dossier [`VERIFICATION_en.md`](VERIFICATION_en.md) lets a reader judge what is proved without reading all the code. It is additive and does not modify the proofs of `ConditionalCRO.lean`. [`Verification/Enonces.lean`](Verification/Enonces.lean) holds the 74 statements of the thesis without proof. [`Verification/Principal.lean`](Verification/Principal.lean) links each one to the existing theorem in one line. [`Verification/Coherence.lean`](Verification/Coherence.lean) tests the non-vacuity of the project's own definitions. The script [`verifier.sh`](verifier.sh) audits the sources, the build, the axioms and the kernel. Its outputs are in [`results/verification.log`](results/verification.log) and [`results/axiomes.txt`](results/axiomes.txt). The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) runs it on GitHub.
 
 ## What is certified
 
@@ -45,6 +45,8 @@ The dossier [`VERIFICATION_en.md`](VERIFICATION_en.md) lets a reader judge what 
 | 13 (v3.5) | `#print axioms` block of the extension | Axiom check of the 24 added theorems |
 | 14 (v3.6) | `QuantumProtocolInstance`, `QuantumAssumptions`, `conf_guarantee`, `trilemma_pq_explicit`, `conditional_CRO_trilemma_pq`, `trilemma_pq_refined`, `seuil_Hsharp_q`, `etaQ_bounds`, `regime_q_necessary` | Algebraic quantum core: Theorem 2.5, Corollary 2.2, Lemma 2.8, Assumptions 2.5 to 2.8, Definitions 2.27 and 2.30, Remarks 2.27, 2.29, 2.31 to 2.33, 2.35 to 2.37, 2.39 and 2.41 |
 | 15 (v3.6) | `#print axioms` block of the quantum core | Axiom check of the 17 added theorems |
+| 16 (v3.7) | `fano_sharp_model`, `rel_aigu`, `trilemma_aigu_concrete`, `conf_regime_concrete`, `witModel`, `temoin_realisable`, `borne_forte_statut`, `trilemma_aigu_q` | Advanced bounds: Proposition 2.2, last sentence of Theorem 2.4, Corollary 2.1, Remarks 2.19 (upper bound), 2.20, 2.24, 2.40 and 5.5 |
+| 17 (v3.7) | `#print axioms` block of the advanced bounds | Axiom check of the 13 added theorems |
 
 ### Compiled statement of the main theorem
 
@@ -71,7 +73,7 @@ A `ProtocolInstance` is a point of the abstract model. The **consistency witness
 
 | File | Content |
 |---|---|
-| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.6 (comments in French); the header carries the authors' names, omitted from the Appendix B listing |
+| [`ConditionalCRO.lean`](ConditionalCRO.lean) | Formalisation v3.7 (comments in French); the header carries the authors' names, omitted from the Appendix B listing |
 | [`lakefile.toml`](lakefile.toml), [`lean-toolchain`](lean-toolchain), [`lake-manifest.json`](lake-manifest.json) | Pinned versions of Lean and Mathlib |
 | [`results/`](results/) | Outputs of `lake env lean ConditionalCRO.lean` for each version |
 | [`cas_limite/`](cas_limite/) | Script for the limiting case of Theorem 1 of P2 in its initial formulation |

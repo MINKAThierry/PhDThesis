@@ -4,7 +4,7 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.6). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.7). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
   Renvois : manuscrit v36 (« Aux fondements de la cryptographie
@@ -15,7 +15,7 @@
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
   Importation. Les définitions et les preuves sont dans un seul fichier. La
-  versions 3.5 et 3.6 prolongent la 3.4 par ajout des sections 12 à 15 en
+  versions 3.5 à 3.7 prolongent la 3.4 par ajout des sections 12 à 17 en
   fin de fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
   restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
@@ -600,5 +600,96 @@ def TemoinCoherenceQuantique : Prop :=
 /-- Remarque 2.36 (p. 77) : D_max ≥ 25 960 bits pour ML-DSA-65. -/
 def DmaxMLDSA : Prop :=
   ∀ (lam Hs : ℝ), lam ≤ 256 → Hs ≤ lam + 256 → (25960 : ℝ) ≤ 3309 * 8 - Hs
+
+/-! ## 8. Extension v3.7, lot L2 : bornes avancées
+
+Renvois au manuscrit v36. Énoncés démontrés dans la section 16 de
+`ConditionalCRO.lean` (version 3.7). -/
+
+/-- Proposition 2.2 (p. 62), étapes 1 à 3 de la preuve sur lois finies : avec
+    p = Rel(D), I(M;Σ|C)·ln 2 ≥ p·λ·ln 2 + p·ln p − p. -/
+def FanoAigu : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [DecidableEq M] [Nonempty M] (D : C → S → M),
+    X.Rel D * lam * Real.log 2 + X.Rel D * Real.log (X.Rel D) - X.Rel D ≤ X.I * Real.log 2
+
+/-- Proposition 2.2 (p. 62), borne aiguë (2.61) :
+    Rel(D) ≤ 2κ/(λ(λ−3)) + 2^(−λ/2) sous le régime, pour λ ≥ 4. -/
+def BorneAigue : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M]
+    (X : CLOModel lam M C S V) (D : C → S → M) (κ : ℝ),
+    0 ≤ κ → 4 ≤ lam → X.I ≤ κ / lam →
+      X.Rel D ≤ 2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2)
+
+/-- Proposition 2.2 (p. 62), produit (2.62) sous les Hypothèses 2.1, 2.2 et 2.4. -/
+def TrilemmeAigu : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M]
+    [Nonempty C] (X : CLOModel lam M C S V) (D : C → S → M) (Δ α κ : ℝ),
+    0 ≤ κ → 4 ≤ lam → X.IV ≤ X.I + Δ → α * X.HC - 1 ≤ X.HV → 1 ≤ α * X.HC - 1 →
+      X.I ≤ κ / lam →
+      X.Conf * X.Rel D * X.Opp ≤
+        (2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2)) *
+          min 1 ((κ / lam + Δ) / (α * X.HC - 1))
+
+/-- Théorème 2.4 (p. 58), dernière phrase, sur lois finies :
+    Conf ≥ 1 − √(c₀βκ/λ) sous l'Hypothèse 2.3 et le régime. -/
+def ConfRegimeConcret : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M]
+    [Nonempty C] (X : CLOModel lam M C S V) (β κ : ℝ), 1 ≤ β →
+    ∀ (_ : C → S → M), X.CommonSupport → X.KLmax ≤ β * X.I → X.I ≤ κ / lam →
+      1 - Real.sqrt (c0 * β * (κ / lam)) ≤ X.Conf
+
+/-- Théorème 2.4 (p. 58), dernière phrase, modèle abstrait. -/
+def ConfRegime : Prop :=
+  ∀ {lam : ℕ} (P : ProtocolInstance lam) (κ : ℝ),
+    P.KLmax ≤ P.params.β * P.I → P.I ≤ κ / lam →
+      1 - Real.sqrt (c0 * P.params.β * (κ / lam)) ≤ P.Conf
+
+/-- Corollaire 2.1 (p. 64), forme simplifiée, et valeur 1 + 7/640 pour κ = 1, Δ = 5,
+    λ = 128. -/
+def FormeSimplifiee : Prop :=
+  ∀ (Δ K : ℝ), 0 < Δ →
+    Tendsto (fun lam : ℕ => (Δ / lam + K / (lam : ℝ) ^ 2) / (Δ / lam)) atTop (nhds 1) ∧
+      ((5 : ℝ) / 128 + 7 / 128 ^ 2) / (5 / 128) = 1 + 7 / 640 ∧
+      (1.010 : ℝ) < 1 + 7 / 640 ∧ (1 : ℝ) + 7 / 640 < 1.011
+
+/-- Remarque 2.24 (p. 65), portée des études de cas. -/
+def PorteeCasEtude : Prop :=
+  ((1 : ℝ) + 1 / 128) / 128 = 129 / 128 ^ 2 ∧ (129 : ℝ) / 128 ^ 2 < 0.008 ∧
+    ∀ lam κ : ℝ, 0 < lam → (κ / lam < lam ↔ κ < lam ^ 2)
+
+/-- Remarque 5.5 (p. 185) et Remarque 2.19 (p. 62), ordre des bornes : λ⁻¹ pour la
+    forme explicite, λ⁻² pour la borne aiguë. -/
+def BorneForteStatut : Prop :=
+  ∀ (Δ γ κ : ℝ), 0 ≤ κ →
+    (∀ lam : ℝ, 0 < lam → lam * (Δ / (γ * lam)) = Δ / γ) ∧
+      ∀ n : ℕ, 16 ≤ n →
+        2 * κ / ((n : ℝ) * (n - 3)) + (2 : ℝ) ^ (-(n : ℝ) / 2) ≤ (4 * κ + 1) / (n : ℝ) ^ 2
+
+/-- Remarque 2.40 (p. 80), borne aiguë dans le cadre quantique. -/
+def TrilemmeAiguQuantique : Prop :=
+  ∀ {lam : ℕ} (P : QuantumSharpInstance lam), QuantumAssumptions P.toQuantumProtocolInstance →
+    ∀ (κ : ℝ), 0 ≤ κ → 4 ≤ lam → P.χmax ≤ κ / lam → P.IV ≤ P.HV →
+      P.Rel ≤ 2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2) ∧
+        P.Conf * P.Rel * P.Opp ≤ (2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2)) *
+          min 1 ((κ / lam + P.params.Δq) / gammaQ P.params)
+
+/-- Remarque 2.20 (p. 63), témoin réalisable du facteur institutionnel : pour tous
+    entiers Δ ≤ γ avec γ ≥ 1, une loi finie satisfait les Hypothèses 2.1 à 2.4
+    (α = 1, β = 1, κ = 0) avec Conf = 1 et Opp = Δ/γ. -/
+def TemoinRealisable : Prop :=
+  ∀ (l d g : ℕ), d ≤ g → 1 ≤ g →
+    (Fintype.card (Fin (2 ^ d) × Fin (2 ^ (g - d))) : ℝ) ≤ (2 : ℝ) ^ (1 * (witModel l d g).HC) ∧
+      (witModel l d g).IV = (witModel l d g).I + d ∧
+      1 * (witModel l d g).HC - 1 ≤ (witModel l d g).HV ∧
+      1 ≤ 1 * (witModel l d g).HC - 1 ∧
+      (witModel l d g).KLmax ≤ 1 * (witModel l d g).I ∧
+      (witModel l d g).I ≤ 0 / l ∧
+      (witModel l d g).Conf = 1 ∧
+      (witModel l d g).Opp = d / g
 
 end Enonces

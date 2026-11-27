@@ -8,7 +8,8 @@ Version du 27 novembre 2026, établie sur le manuscrit v36 et la formalisation e
 |---|---|---|---|
 | L1 information classique finie | **terminé le 27 novembre 2026** (24 théorèmes ajoutés, 18 énoncés dans `Enonces.lean`) | `ConditionalCRO.lean` v3.5 | 57 sur 144 (40 %) |
 | L5a noyau quantique | **terminé le 27 novembre 2026** (17 théorèmes ajoutés, 17 énoncés dans `Enonces.lean`) | `ConditionalCRO.lean` v3.6 | 79 sur 144 (55 %) |
-| L2 bornes avancées | prochain lot | v3.7 prévue | — |
+| L2 bornes avancées | **terminé le 27 novembre 2026** (13 théorèmes ajoutés, 10 énoncés dans `Enonces.lean`) | `ConditionalCRO.lean` v3.7 | 85 sur 144 (59 %) |
+| L3 jeux et ponts | prochain lot | v3.8 prévue | — |
 
 ## Point de départ
 
@@ -40,6 +41,7 @@ Le manuscrit compte 170 énoncés numérotés. Parmi eux, 144 relèvent d'une fo
 - **Énoncés.** Proposition 2.2 (borne aiguë, terme dominant en κ/λ²), Corollaire 2.1, Remarques 2.19 à 2.22 et 2.24, Remarque 5.5. Dernière phrase du Théorème 2.4, Conf ≥ 1 − √(c₀βκ/λ), aujourd'hui seulement déduite sur papier.
 - **Méthode.** La borne aiguë demande h(p) ≤ p·log₂(e/p) et Fano sous sa forme en d(p ‖ 2^−λ). Les témoins réalisables sont des lois explicites sur des ensembles finis, construites comme `famModel`. Les valeurs numériques de la Remarque 2.24 se vérifient avec `norm_num`.
 - **Effort estimé.** 3 sessions. Le point délicat est la minoration de la divergence binaire.
+- **État.** Terminé en v3.7. La Proposition 2.2 est démontrée sur lois finies par l'inégalité log-somme appliquée en une fois à tout (C, M, Σ), ce qui évite l'inégalité de Jensen. La dernière phrase du Théorème 2.4, le Corollaire 2.1, le témoin réalisable (Remarque 2.20), les Remarques 2.24, 5.5 et 2.40 sont démontrés. Restent sur papier l'optimalité de l'ordre λ⁻² (protocole à révélation ρ de la Remarque 2.19) et le témoin combiné de la Remarque 2.21, dont les entropies ne sont pas uniformes.
 
 ### L3 · Jeux et ponts vers les métriques (chapitre 2, section 2.3.4 et annexe A)
 

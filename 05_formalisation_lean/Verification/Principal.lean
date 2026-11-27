@@ -2,7 +2,7 @@
   Dossier de vérification. Point d'entrée mince
   =============================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème
-  existant de `ConditionalCRO.lean` (version 3.6) prouve exactement
+  existant de `ConditionalCRO.lean` (version 3.7) prouve exactement
   l'énoncé écrit séparément. Si un énoncé et sa preuve divergent, ce fichier ne
   compile pas. C'est le seul fichier qu'un relecteur doit ouvrir, avec
   `Enonces.lean`. Le script `verifier.sh` exécute `#print axioms` sur chaque
@@ -92,5 +92,17 @@ theorem principal_capacite_quantique_hors_dpi : Enonces.CapaciteQuantiqueHorsDPI
 theorem principal_temoin_portee_quantique : Enonces.TemoinPorteeQuantique := regime_q_necessary
 theorem principal_temoin_coherence_quantique : Enonces.TemoinCoherenceQuantique := assumptions_q_consistent
 theorem principal_dmax_mldsa : Enonces.DmaxMLDSA := dilithium_Dmax
+
+-- 8. Extension v3.7, lot L2 (bornes avancées)
+theorem principal_fano_aigu : Enonces.FanoAigu := CLOModel.fano_sharp_model
+theorem principal_borne_aigue : Enonces.BorneAigue := CLOModel.rel_aigu
+theorem principal_trilemme_aigu : Enonces.TrilemmeAigu := CLOModel.trilemma_aigu_concrete
+theorem principal_conf_regime_concret : Enonces.ConfRegimeConcret := CLOModel.conf_regime_concrete
+theorem principal_conf_regime : Enonces.ConfRegime := conf_regime
+theorem principal_forme_simplifiee : Enonces.FormeSimplifiee := forme_simplifiee
+theorem principal_portee_cas_etude : Enonces.PorteeCasEtude := portee_cas_etude
+theorem principal_borne_forte_statut : Enonces.BorneForteStatut := borne_forte_statut
+theorem principal_trilemme_aigu_quantique : Enonces.TrilemmeAiguQuantique := trilemma_aigu_q
+theorem principal_temoin_realisable : Enonces.TemoinRealisable := temoin_realisable
 
 end Principal

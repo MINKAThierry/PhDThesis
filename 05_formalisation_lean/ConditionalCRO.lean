@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.6 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
+  Version 3.7 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -2788,3 +2788,616 @@ end ExtensionL5a
 #print axioms ConditionalCRO.regime_q_necessary
 #print axioms ConditionalCRO.assumptions_q_consistent
 #print axioms ConditionalCRO.dilithium_Dmax
+
+/-! ## 16. Bornes avancées (version 3.7, lot L2)
+
+Ajout du 27 novembre 2026. Cette section démontre sur lois finies la Proposition 2.2
+(borne aiguë en κ/λ², par la divergence binaire au lieu de h(p) ≤ 1), la dernière
+phrase du Théorème 2.4, le Corollaire 2.1, les Remarques 2.20 (témoin réalisable),
+2.24, 5.5 et, dans le modèle abstrait quantique, la Remarque 2.40. -/
+
+section ExtensionL2
+
+open Finset
+
+namespace ConditionalCRO
+
+/-! ### 16.1 Inégalité log-somme sur une partition en deux blocs -/
+
+/-- Pour deux lois a, b (masse totale 1, a ≪ b) et un événement E de masses p et q,
+    Σ a·log(a/b) ≥ p·log(p/q) + (1 − p)·log((1 − p)/(1 − q)) : c'est la réduction à
+    deux issues de l'étape 1 de la preuve de la Proposition 2.2. -/
+theorem log_sum_two_blocks {ι : Type*} [Fintype ι] (a b : ι → ℝ) (E : ι → Prop)
+    [DecidablePred E] (ha : ∀ i, 0 ≤ a i) (hb : ∀ i, 0 ≤ b i) (hab : ∀ i, 0 < a i → 0 < b i)
+    (ha1 : ∑ i, a i = 1) (hb1 : ∑ i, b i = 1) :
+    (∑ i ∈ univ.filter E, a i) * Real.log ((∑ i ∈ univ.filter E, a i) / ∑ i ∈ univ.filter E, b i) +
+      (1 - ∑ i ∈ univ.filter E, a i) *
+        Real.log ((1 - ∑ i ∈ univ.filter E, a i) / (1 - ∑ i ∈ univ.filter E, b i))
+      ≤ ∑ i, a i * Real.log (a i / b i) := by
+  classical
+  have l1 := log_sum_ineq (univ.filter E) a b (fun i _ => ha i) (fun i _ => hb i) (fun i _ => hab i)
+  have l2 := log_sum_ineq (univ.filter (fun i => ¬ E i)) a b (fun i _ => ha i) (fun i _ => hb i)
+    (fun i _ => hab i)
+  have sa := sum_filter_add_sum_filter_not univ E a
+  have sb := sum_filter_add_sum_filter_not univ E b
+  have st := sum_filter_add_sum_filter_not univ E (fun i => a i * Real.log (a i / b i))
+  rw [ha1] at sa; rw [hb1] at sb
+  rw [show ∑ i ∈ univ.filter (fun i => ¬ E i), a i = 1 - ∑ i ∈ univ.filter E, a i by linarith,
+    show ∑ i ∈ univ.filter (fun i => ¬ E i), b i = 1 - ∑ i ∈ univ.filter E, b i by linarith] at l2
+  linarith
+
+/-! ### 16.2 Fano aigu sur lois finies -/
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  (X : CLOModel lam M C S V)
+
+/-- Masse de référence b(c, m, s) = P(c, m)·P(c, s)/P(c), loi produit de M et Σ
+    sachant C. -/
+noncomputable def bProd (c : C) (m : M) (s : S) : ℝ :=
+  (∑ s', X.P c m s') * (∑ m', X.P c m' s) / X.pC c
+
+lemma bProd_nonneg (c : C) (m : M) (s : S) : 0 ≤ X.bProd c m s :=
+  div_nonneg (mul_nonneg (sum_nonneg fun _ _ => X.P_nonneg _ _ _)
+    (sum_nonneg fun _ _ => X.P_nonneg _ _ _)) (X.pC_nonneg c)
+
+/-- I(M;Σ|C) en nats, écrite comme une divergence entre la loi jointe et b. -/
+lemma I_nats : X.I * Real.log 2 =
+    ∑ c, ∑ m, ∑ s, X.P c m s * Real.log (X.P c m s / X.bProd c m s) := by
+  unfold I
+  rw [div_mul_cancel₀ _ log_two_pos'.ne']
+  refine sum_congr rfl fun c _ => ?_
+  rcases (X.pC_nonneg c).lt_or_eq with h | h
+  · unfold miN
+    rw [mul_sum]
+    refine sum_congr rfl fun m _ => ?_
+    rw [mul_sum]
+    refine sum_congr rfl fun s _ => ?_
+    have e1 : ∑ b', X.qMS c m b' = (∑ s', X.P c m s') / X.pC c := by unfold qMS; rw [sum_div]
+    have e2 : ∑ a', X.qMS c a' s = (∑ m', X.P c m' s) / X.pC c := by unfold qMS; rw [sum_div]
+    rw [e1, e2]
+    unfold qMS bProd
+    have hne : X.pC c ≠ 0 := h.ne'
+    rw [show (∑ s', X.P c m s') / X.pC c * ((∑ m', X.P c m' s) / X.pC c) =
+        (∑ s', X.P c m s') * (∑ m', X.P c m' s) / X.pC c / X.pC c by field_simp,
+      div_div_div_cancel_right₀ hne]
+    field_simp
+  · rw [← h, zero_mul]
+    symm
+    refine sum_eq_zero fun m _ => sum_eq_zero fun s _ => ?_
+    rw [X.P_eq_zero_of_pC c h.symm m s, zero_mul]
+
+/-- **Fano aigu sur lois finies** (étapes 1 à 3 de la preuve de la Proposition 2.2).
+    Avec p = Rel(D) : I(M;Σ|C)·ln 2 ≥ p·λ·ln 2 + p·ln p − p. -/
+theorem fano_sharp_model [DecidableEq M] [Nonempty M] (D : C → S → M) :
+    X.Rel D * lam * Real.log 2 + X.Rel D * Real.log (X.Rel D) - X.Rel D ≤
+      X.I * Real.log 2 := by
+  classical
+  set N : ℝ := (Fintype.card M : ℝ) with hN
+  have hcard : N = 2 ^ lam := by rw [hN]; exact_mod_cast X.card_M
+  have hN0 : 0 < N := by rw [hcard]; positivity
+  have hN1 : 1 ≤ N := by rw [hcard]; exact one_le_pow₀ (by norm_num)
+  have hrow : ∀ c m, ∑ s', X.P c m s' = X.pC c / N := fun c m => X.unif c m
+  -- passage à ι = C × (M × S)
+  let a : C × (M × S) → ℝ := fun x => X.P x.1 x.2.1 x.2.2
+  let b : C × (M × S) → ℝ := fun x => X.bProd x.1 x.2.1 x.2.2
+  let E : C × (M × S) → Prop := fun x => D x.1 x.2.2 = x.2.1
+  have hsum3 : ∀ f : C → M → S → ℝ, ∑ x : C × (M × S), f x.1 x.2.1 x.2.2 = ∑ c, ∑ m, ∑ s, f c m s :=
+    fun f => by rw [Fintype.sum_prod_type]; simp only [Fintype.sum_prod_type]
+  have ha1 : ∑ x, a x = 1 := by rw [hsum3 (fun c m s => X.P c m s)]; exact X.P_sum
+  have hb1 : ∑ x, b x = 1 := by
+    rw [hsum3 (fun c m s => X.bProd c m s), ← X.sum_pC]
+    refine sum_congr rfl fun c _ => ?_
+    unfold bProd
+    simp only [← sum_div]
+    rw [← sum_mul_sum]
+    rcases (X.pC_nonneg c).lt_or_eq with h | h
+    · have e1 : ∑ m, ∑ s', X.P c m s' = X.pC c := rfl
+      have e2 : ∑ s, ∑ m', X.P c m' s = X.pC c := by unfold pC; rw [Finset.sum_comm]
+      rw [e1, e2]; field_simp
+    · rw [← h]; simp
+  have hab : ∀ x, 0 < a x → 0 < b x := by
+    intro x hx
+    simp only [b, bProd]
+    have h1 : X.P x.1 x.2.1 x.2.2 ≤ ∑ s', X.P x.1 x.2.1 s' :=
+      single_le_sum (f := fun s' => X.P x.1 x.2.1 s') (fun _ _ => X.P_nonneg _ _ _) (mem_univ _)
+    have h2 : X.P x.1 x.2.1 x.2.2 ≤ ∑ m', X.P x.1 m' x.2.2 :=
+      single_le_sum (f := fun m' => X.P x.1 m' x.2.2) (fun _ _ => X.P_nonneg _ _ _) (mem_univ _)
+    exact div_pos (mul_pos (lt_of_lt_of_le hx h1) (lt_of_lt_of_le hx h2))
+      (lt_of_lt_of_le hx (X.P_le_pC _ _ _))
+  have key := log_sum_two_blocks a b E (fun x => X.P_nonneg _ _ _) (fun x => X.bProd_nonneg _ _ _)
+    hab ha1 hb1
+  -- masses de l'événement de succès
+  have hp : ∑ x ∈ univ.filter E, a x = X.Rel D := by
+    rw [sum_filter, hsum3 (fun c m s => if D c s = m then X.P c m s else 0)]
+    rfl
+  have hq : ∑ x ∈ univ.filter E, b x = 1 / N := by
+    rw [sum_filter, hsum3 (fun c m s => if D c s = m then X.bProd c m s else 0)]
+    have : ∀ c, ∑ m, ∑ s, (if D c s = m then X.bProd c m s else 0) = X.pC c / N := by
+      intro c
+      rw [Finset.sum_comm]
+      simp only [sum_ite_eq, mem_univ, ite_true]
+      unfold bProd
+      simp only [hrow]
+      rcases (X.pC_nonneg c).lt_or_eq with h | h
+      · rw [← sum_div, ← mul_sum]
+        have e2 : ∑ s, ∑ m', X.P c m' s = X.pC c := by unfold pC; rw [Finset.sum_comm]
+        rw [e2]; field_simp
+      · simp [← h]
+    simp only [this]
+    rw [← sum_div, X.sum_pC]
+  have hI : ∑ x, a x * Real.log (a x / b x) = X.I * Real.log 2 := by
+    rw [X.I_nats]; exact hsum3 (fun c m s => X.P c m s * Real.log (X.P c m s / X.bProd c m s))
+  rw [hp, hq, hI] at key
+  set p := X.Rel D with hpdef
+  have hp0 : 0 ≤ p := (X.Rel_mem D).1
+  have hp1 : p ≤ 1 := (X.Rel_mem D).2
+  -- p·log(p/(1/N)) = p·log N + p·log p
+  have e1 : p * Real.log (p / (1 / N)) = p * (lam * Real.log 2) + p * Real.log p := by
+    rcases hp0.lt_or_eq with h | h
+    · rw [div_div_eq_mul_div, div_one, Real.log_mul h.ne' hN0.ne', hcard, Real.log_pow]; ring
+    · rw [← h]; simp
+  -- (1 − p)·log((1 − p)/(1 − 1/N)) ≥ (1 − p)·log(1 − p) ≥ −p
+  have e2 : -p ≤ (1 - p) * Real.log ((1 - p) / (1 - 1 / N)) := by
+    rcases (sub_nonneg.2 hp1).lt_or_eq with h | h
+    · have hl : -p ≤ (1 - p) * Real.log (1 - p) := by
+        have := Real.one_sub_inv_le_log_of_pos h
+        have e : (1 - p) * (1 - (1 - p)⁻¹) = -p := by field_simp; ring
+        nlinarith [mul_le_mul_of_nonneg_left this h.le]
+      refine hl.trans (mul_le_mul_of_nonneg_left ?_ h.le)
+      rcases (sub_nonneg.2 (div_le_one_of_le₀ hN1 hN0.le : 1 / N ≤ 1)).lt_or_eq with h' | h'
+      · apply Real.log_le_log h
+        rw [le_div_iff₀ h']
+        nlinarith [div_pos one_pos hN0]
+      · rw [← h', div_zero, Real.log_zero]
+        exact Real.log_nonpos h.le (by linarith)
+    · rw [← h]; simp; linarith
+  linarith
+
+end CLOModel
+
+/-! ### 16.3 Borne aiguë (Proposition 2.2) -/
+
+/-- Étape 5 de la preuve de la Proposition 2.2, sur des réels. Si
+    p·λ·ln 2 + p·ln p − p ≤ (κ/λ)·ln 2 avec λ ≥ 4, alors p ≤ 2κ/(λ(λ−3)) + 2^(−λ/2). -/
+theorem rel_aigu_of_info {p lam κ : ℝ} (hp : 0 ≤ p) (hlam : 4 ≤ lam) (hκ : 0 ≤ κ)
+    (h : p * lam * Real.log 2 + p * Real.log p - p ≤ κ / lam * Real.log 2) :
+    p ≤ 2 * κ / (lam * (lam - 3)) + (2 : ℝ) ^ (-lam / 2) := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have hl23 : 2 / 3 < Real.log 2 := by have := Real.log_two_gt_d9; linarith
+  have hlam0 : 0 < lam := by linarith
+  have hden : 0 < lam * (lam - 3) := by nlinarith
+  have hA : 0 ≤ 2 * κ / (lam * (lam - 3)) := div_nonneg (by linarith) hden.le
+  have hT : 0 < (2 : ℝ) ^ (-lam / 2) := Real.rpow_pos_of_pos (by norm_num) _
+  by_cases hc : p ≤ (2 : ℝ) ^ (-lam / 2)
+  · linarith
+  push Not at hc
+  have hp0 : 0 < p := hT.trans hc
+  have hlog : -lam / 2 * Real.log 2 < Real.log p := by
+    rw [← Real.log_rpow (by norm_num)]; exact Real.log_lt_log hT hc
+  -- p·((λ−3)/2)·ln 2 ≤ (κ/λ)·ln 2
+  have h1 : p * ((lam - 3) / 2 * Real.log 2) ≤ κ / lam * Real.log 2 := by
+    have : p * (-lam / 2 * Real.log 2) ≤ p * Real.log p := mul_le_mul_of_nonneg_left hlog.le hp
+    nlinarith
+  have h2' : p * ((lam - 3) / 2) * Real.log 2 ≤ κ / lam * Real.log 2 := by nlinarith
+  have h2 : p * ((lam - 3) / 2) ≤ κ / lam := le_of_mul_le_mul_right h2' hl2
+  have h3 : p ≤ 2 * κ / (lam * (lam - 3)) := by
+    rw [le_div_iff₀ hden]
+    have := (le_div_iff₀ hlam0).1 h2
+    nlinarith
+  linarith
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  [DecidableEq M] [Nonempty M] [Nonempty C] (X : CLOModel lam M C S V)
+
+omit [Nonempty C] in
+/-- **Proposition 2.2 (2.61), borne aiguë sur la fiabilité de reconstruction.** Sous le
+    régime I(M;Σ|C) ≤ κ/λ, pour λ ≥ 4 et tout décodeur D,
+    Rel(D) ≤ 2κ/(λ(λ−3)) + 2^(−λ/2). -/
+theorem rel_aigu (D : C → S → M) (κ : ℝ) (hκ : 0 ≤ κ) (hlam : 4 ≤ lam)
+    (A4 : X.I ≤ κ / lam) :
+    X.Rel D ≤ 2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2) := by
+  have h := X.fano_sharp_model D
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  refine rel_aigu_of_info (X.Rel_mem D).1 (by exact_mod_cast hlam) hκ ?_
+  have := mul_le_mul_of_nonneg_right A4 hl2.le
+  linarith
+
+/-- **Proposition 2.2 (2.62), produit.** Sous les Hypothèses 2.1, 2.2 et 2.4,
+    Conf·Rel·Opp ≤ (2κ/(λ(λ−3)) + 2^(−λ/2))·min{1, (κ/λ + Δ)/γ}. -/
+theorem trilemma_aigu_concrete (D : C → S → M) (Δ α κ : ℝ) (hκ : 0 ≤ κ) (hlam : 4 ≤ lam)
+    (A1 : X.IV ≤ X.I + Δ) (A2 : α * X.HC - 1 ≤ X.HV) (A2γ : 1 ≤ α * X.HC - 1)
+    (A4 : X.I ≤ κ / lam) :
+    X.Conf * X.Rel D * X.Opp ≤
+      (2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2)) *
+        min 1 ((κ / lam + Δ) / (α * X.HC - 1)) := by
+  have hR := X.rel_aigu D κ hκ hlam A4
+  have hγ0 : 0 < α * X.HC - 1 := by linarith
+  have hHV : 0 < X.HV := by linarith
+  have hC1 : X.Conf ≤ 1 := by unfold Conf; linarith [X.TVmax_nonneg]
+  have hC0 : 0 ≤ X.Conf := by unfold Conf; linarith [X.TVmax_le_one]
+  have hR0 := (X.Rel_mem D).1
+  have hO0 : 0 ≤ X.Opp := div_nonneg X.IV_nonneg hHV.le
+  have hO1 : X.Opp ≤ 1 := by unfold Opp; rw [div_le_one hHV]; exact X.IV_le_HV
+  have hO2 : X.Opp ≤ (κ / lam + Δ) / (α * X.HC - 1) := by
+    unfold Opp
+    rw [div_le_div_iff₀ hHV hγ0]
+    have hI0 := X.I_nonneg
+    have hpos : 0 ≤ κ / lam + Δ := by linarith [X.IV_nonneg]
+    have e1 : X.IV * (α * X.HC - 1) ≤ (κ / lam + Δ) * (α * X.HC - 1) :=
+      mul_le_mul_of_nonneg_right (by linarith) hγ0.le
+    have e2 : (κ / lam + Δ) * (α * X.HC - 1) ≤ (κ / lam + Δ) * X.HV :=
+      mul_le_mul_of_nonneg_left A2 hpos
+    linarith
+  calc X.Conf * X.Rel D * X.Opp ≤ 1 * (2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2)) *
+        min 1 ((κ / lam + Δ) / (α * X.HC - 1)) :=
+        mul_le_mul (mul_le_mul hC1 hR hR0 zero_le_one) (le_min hO1 hO2) hO0
+          (by rw [one_mul]; exact le_trans hR0 hR)
+    _ = _ := by ring
+
+/-- **Théorème 2.4, dernière phrase.** Sous l'Hypothèse 2.3 (et les supports
+    communs) et le régime, Conf ≥ 1 − √(c₀βκ/λ). -/
+theorem conf_regime_concrete (β κ : ℝ) (hβ : 1 ≤ β) (D : C → S → M) (hs : X.CommonSupport)
+    (A3 : X.KLmax ≤ β * X.I) (A4 : X.I ≤ κ / lam) :
+    1 - Real.sqrt (c0 * β * (κ / lam)) ≤ X.Conf :=
+  le_trans (conf_guarantee_antitone (by linarith) A4).1 (lemma4_concrete X β hβ D hs A3)
+
+end CLOModel
+
+/-- **Théorème 2.4, dernière phrase, modèle abstrait.** -/
+theorem conf_regime {lam : ℕ} (P : ProtocolInstance lam) (κ : ℝ)
+    (A3 : P.KLmax ≤ P.params.β * P.I) (A4 : P.I ≤ κ / lam) :
+    1 - Real.sqrt (c0 * P.params.β * (κ / lam)) ≤ P.Conf :=
+  le_trans (conf_guarantee_antitone (by linarith [P.params.hβ_ge_one]) A4).1
+    (lemma4_confidentiality_guarantee P A3)
+
+end ConditionalCRO
+
+namespace ConditionalCRO
+
+/-! ### 16.4 Corollaire 2.1, Remarques 2.24 et 5.5 -/
+
+/-- **Corollaire 2.1 (forme simplifiée).** Pour Δ > 0, le rapport du majorant
+    Δ/λ + K/λ² à Δ/λ tend vers 1. Pour κ = 1, Δ = 5 et λ = 128, K = κ(Δ+1) + κ² = 7 et
+    ce rapport vaut 1 + 7/640, entre 1,010 et 1,011. -/
+theorem forme_simplifiee (Δ K : ℝ) (hΔ : 0 < Δ) :
+    Tendsto (fun lam : ℕ => (Δ / lam + K / (lam : ℝ) ^ 2) / (Δ / lam)) atTop (nhds 1) ∧
+      ((5 : ℝ) / 128 + 7 / 128 ^ 2) / (5 / 128) = 1 + 7 / 640 ∧
+      (1.010 : ℝ) < 1 + 7 / 640 ∧ (1 : ℝ) + 7 / 640 < 1.011 := by
+  refine ⟨forme_simplifiee_pq Δ K hΔ, by norm_num, by norm_num, by norm_num⟩
+
+/-- **Remarque 2.24 (portée des études de cas).** Pour κ = 1 et λ = 128,
+    (1 + κ/λ)/λ = 129/128² < 0,008. Une preuve qui contient le message (signature
+    ECDSA, I(M;Σ|C) = λ) sort du régime dès que λ² > κ. -/
+theorem portee_cas_etude :
+    ((1 : ℝ) + 1 / 128) / 128 = 129 / 128 ^ 2 ∧ (129 : ℝ) / 128 ^ 2 < 0.008 ∧
+      ∀ lam κ : ℝ, 0 < lam → (κ / lam < lam ↔ κ < lam ^ 2) := by
+  refine ⟨by norm_num, by norm_num, fun lam κ hl => ?_⟩
+  rw [div_lt_iff₀ hl]
+  constructor <;> intro h <;> nlinarith
+
+/-- Lemme entier : n⁴ ≤ 2ⁿ pour n ≥ 16. -/
+lemma pow_four_le_two_pow (n : ℕ) (hn : 16 ≤ n) : (n : ℝ) ^ 4 ≤ 2 ^ n := by
+  induction n, hn using Nat.le_induction with
+  | base => norm_num
+  | succ k hk ih =>
+    have hk' : (16 : ℝ) ≤ k := by exact_mod_cast hk
+    have h0 : (0 : ℝ) ≤ k := by linarith
+    have step : ((k : ℝ) + 1) ^ 4 ≤ 2 * (k : ℝ) ^ 4 := by
+      have e : 2 * (k : ℝ) ^ 4 - ((k : ℝ) + 1) ^ 4 =
+          (k : ℝ) ^ 3 * ((k : ℝ) - 16) + 12 * (k : ℝ) ^ 3 - 6 * (k : ℝ) ^ 2 - 4 * k - 1 := by ring
+      have h3 : 0 ≤ (k : ℝ) ^ 3 * ((k : ℝ) - 16) := mul_nonneg (by positivity) (by linarith)
+      have h4 : 6 * (k : ℝ) ^ 2 + 4 * k + 1 ≤ 12 * (k : ℝ) ^ 3 := by nlinarith
+      linarith
+    calc ((↑(k + 1) : ℝ)) ^ 4 = ((k : ℝ) + 1) ^ 4 := by push_cast; ring
+      _ ≤ 2 * (k : ℝ) ^ 4 := step
+      _ ≤ 2 * 2 ^ k := by linarith
+      _ = 2 ^ (k + 1) := by ring
+
+/-- **Remarque 5.5 (statut d'une borne forte).** Le terme dominant Δ/(γλ) de la forme
+    explicite est d'ordre exactement λ⁻¹ (λ·Δ/(γλ) = Δ/γ). La borne aiguë de la
+    Proposition 2.2 est d'ordre λ⁻² : pour λ ≥ 16, 2κ/(λ(λ−3)) + 2^(−λ/2) ≤ (4κ + 1)/λ². -/
+theorem borne_forte_statut (Δ γ κ : ℝ) (hκ : 0 ≤ κ) :
+    (∀ lam : ℝ, 0 < lam → lam * (Δ / (γ * lam)) = Δ / γ) ∧
+      ∀ n : ℕ, 16 ≤ n →
+        2 * κ / ((n : ℝ) * (n - 3)) + (2 : ℝ) ^ (-(n : ℝ) / 2) ≤ (4 * κ + 1) / (n : ℝ) ^ 2 := by
+  refine ⟨fun lam hl => by field_simp, fun n hn => ?_⟩
+  have hn' : (16 : ℝ) ≤ n := by exact_mod_cast hn
+  have hn0 : (0 : ℝ) < n := by linarith
+  -- premier terme : λ(λ − 3) ≥ λ²/2 pour λ ≥ 6
+  have h1 : 2 * κ / ((n : ℝ) * (n - 3)) ≤ 4 * κ / (n : ℝ) ^ 2 := by
+    rw [div_le_div_iff₀ (by nlinarith) (by positivity)]
+    nlinarith [mul_nonneg hκ (by nlinarith : (0 : ℝ) ≤ (n : ℝ) ^ 2 - 6 * n)]
+  -- second terme : (n²·2^(−n/2))² = n⁴·2^(−n) ≤ 1
+  have hT : 0 < (2 : ℝ) ^ (-(n : ℝ) / 2) := Real.rpow_pos_of_pos (by norm_num) _
+  have hsq : ((2 : ℝ) ^ (-(n : ℝ) / 2)) ^ 2 * (2 : ℝ) ^ n = 1 := by
+    rw [← Real.rpow_natCast ((2 : ℝ) ^ (-(n : ℝ) / 2)) 2, ← Real.rpow_mul (by norm_num),
+      ← Real.rpow_natCast (2 : ℝ) n, ← Real.rpow_add (by norm_num)]
+    norm_num
+  have h4 := pow_four_le_two_pow n hn
+  have h2 : (2 : ℝ) ^ (-(n : ℝ) / 2) ≤ 1 / (n : ℝ) ^ 2 := by
+    rw [le_div_iff₀ (by positivity)]
+    have hx : ((2 : ℝ) ^ (-(n : ℝ) / 2) * (n : ℝ) ^ 2) ^ 2 ≤ 1 := by
+      have : ((2 : ℝ) ^ (-(n : ℝ) / 2) * (n : ℝ) ^ 2) ^ 2 =
+          ((2 : ℝ) ^ (-(n : ℝ) / 2)) ^ 2 * (n : ℝ) ^ 4 := by ring
+      rw [this]
+      calc ((2 : ℝ) ^ (-(n : ℝ) / 2)) ^ 2 * (n : ℝ) ^ 4
+          ≤ ((2 : ℝ) ^ (-(n : ℝ) / 2)) ^ 2 * (2 : ℝ) ^ n :=
+            mul_le_mul_of_nonneg_left h4 (by positivity)
+        _ = 1 := hsq
+    nlinarith [sq_nonneg ((2 : ℝ) ^ (-(n : ℝ) / 2) * (n : ℝ) ^ 2 - 1),
+      mul_pos hT (by positivity : (0 : ℝ) < (n : ℝ) ^ 2)]
+  calc 2 * κ / ((n : ℝ) * (n - 3)) + (2 : ℝ) ^ (-(n : ℝ) / 2)
+      ≤ 4 * κ / (n : ℝ) ^ 2 + 1 / (n : ℝ) ^ 2 := add_le_add h1 h2
+    _ = (4 * κ + 1) / (n : ℝ) ^ 2 := by ring
+
+/-! ### 16.5 Borne aiguë dans le cadre quantique (Remarque 2.40) -/
+
+/-- Instance quantique munie de la minoration fine de l'information accessible :
+    l'issue d'une mesure est classique et les étapes 1 à 3 de la Proposition 2.2 lui
+    s'appliquent (preuve de la Remarque 2.40). -/
+structure QuantumSharpInstance (lam : ℕ) extends QuantumProtocolInstance lam where
+  fano_sharp_q : Rel * lam * Real.log 2 + Rel * Real.log Rel - Rel ≤ Iacc * Real.log 2
+
+/-- **Remarque 2.40.** Sous le régime χmax ≤ κ/λ et λ ≥ 4,
+    Rel^q ≤ 2κ/(λ(λ−3)) + 2^(−λ/2), et le produit est majoré par cette quantité
+    multipliée par min{1, (κ/λ + Δ_q)/γ_q}. -/
+theorem trilemma_aigu_q {lam : ℕ} (P : QuantumSharpInstance lam)
+    (hA : QuantumAssumptions P.toQuantumProtocolInstance) (κ : ℝ) (hκ : 0 ≤ κ)
+    (hlam : 4 ≤ lam) (A8 : P.χmax ≤ κ / lam) (hIVHV : P.IV ≤ P.HV) :
+    P.Rel ≤ 2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2) ∧
+      P.Conf * P.Rel * P.Opp ≤ (2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2)) *
+        min 1 ((κ / lam + P.params.Δq) / gammaQ P.params) := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have hx : P.Iacc ≤ κ / lam := P.holevo.trans (P.moyenne_le_max.trans A8)
+  have hR : P.Rel ≤ 2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2) := by
+    refine rel_aigu_of_info P.hRel.1 (by exact_mod_cast hlam) hκ ?_
+    have := mul_le_mul_of_nonneg_right hx hl2.le
+    linarith [P.fano_sharp_q]
+  refine ⟨hR, ?_⟩
+  have hγ0 : 0 < gammaQ P.params := by linarith [hA.A6γ]
+  have hHV : 0 < P.HV := by linarith [hA.A6, hA.A6γ]
+  have hC1 : P.Conf ≤ 1 := by rw [P.hConf]; linarith [P.hTD.1]
+  have hR0 := P.hRel.1
+  have hO0 : 0 ≤ P.Opp := by rw [P.hOpp]; exact div_nonneg P.hIV hHV.le
+  have hO1 : P.Opp ≤ 1 := by rw [P.hOpp, div_le_one hHV]; exact hIVHV
+  have hI := P.moyenne_le_max.trans A8
+  have hO2 : P.Opp ≤ (κ / lam + P.params.Δq) / gammaQ P.params := by
+    rw [P.hOpp, div_le_div_iff₀ hHV hγ0]
+    have hpos : 0 ≤ κ / lam + P.params.Δq := by linarith [P.hIV, hA.A5, P.hI]
+    have e1 : P.IV * gammaQ P.params ≤ (κ / lam + P.params.Δq) * gammaQ P.params :=
+      mul_le_mul_of_nonneg_right (by linarith [hA.A5]) hγ0.le
+    have e2 := mul_le_mul_of_nonneg_left hA.A6 hpos
+    linarith
+  calc P.Conf * P.Rel * P.Opp ≤ 1 * (2 * κ / ((lam : ℝ) * (lam - 3)) + (2 : ℝ) ^ (-(lam : ℝ) / 2)) *
+        min 1 ((κ / lam + P.params.Δq) / gammaQ P.params) :=
+        mul_le_mul (mul_le_mul hC1 hR hR0 zero_le_one) (le_min hO1 hO2) hO0
+          (by rw [one_mul]; exact le_trans hR0 hR)
+    _ = _ := by ring
+
+end ConditionalCRO
+
+namespace ConditionalCRO
+
+/-! ### 16.6 Témoin réalisable du facteur institutionnel (Remarque 2.20)
+
+M uniforme sur {0,1}^λ, C uniforme sur γ + 1 bits, Σ = B uniforme sur Δ bits et
+indépendant de (M, C), V = (B, K) avec K uniforme sur γ − Δ bits. La composante
+g^M h^R de la preuve du manuscrit, uniforme et indépendante de M, ne change aucune des
+grandeurs CLO ; elle est omise. -/
+
+/-- Somme d'une indicatrice sur la première composante d'un couple. -/
+lemma sum_pair_ite {A B : Type*} [Fintype A] [Fintype B] [DecidableEq A] (s : A) (f : ℝ) :
+    ∑ v : A × B, (if v.1 = s then f else 0) = (Fintype.card B : ℝ) * f := by
+  rw [Fintype.sum_prod_type]
+  have h : ∀ b : A, (∑ k : B, if (b, k).1 = s then f else 0) =
+      if b = s then (Fintype.card B : ℝ) * f else 0 := by
+    intro b
+    by_cases hb : b = s <;> simp [hb]
+  simp only [h]
+  rw [Finset.sum_ite_eq']
+  simp
+
+/-- La loi témoin, pour des entiers l = λ, d = Δ et g = γ. -/
+noncomputable def witModel (l d g : ℕ) :
+    CLOModel l (Fin (2 ^ l)) (Fin (2 ^ (g + 1))) (Fin (2 ^ d)) (Fin (2 ^ d) × Fin (2 ^ (g - d))) where
+  P := fun _ _ _ => 1 / ((2 : ℝ) ^ (g + 1) * 2 ^ l * 2 ^ d)
+  P_nonneg := fun _ _ _ => by positivity
+  P_sum := by
+    simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+    push_cast
+    field_simp
+  card_M := by simp
+  unif := fun _ _ => by
+    simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+    push_cast
+    field_simp
+  ker := fun _ s v => if v.1 = s then 1 / (2 : ℝ) ^ (g - d) else 0
+  ker_nonneg := fun _ _ _ => by split_ifs <;> positivity
+  ker_sum := fun _ s => by
+    rw [sum_pair_ite, Fintype.card_fin]
+    push_cast
+    field_simp
+
+namespace CLOModel
+
+variable (l d g : ℕ)
+
+lemma wit_pC (c : Fin (2 ^ (g + 1))) : (witModel l d g).pC c = 1 / (2 : ℝ) ^ (g + 1) := by
+  simp only [pC, witModel, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+
+lemma wit_qMS (c : Fin (2 ^ (g + 1))) (m : Fin (2 ^ l)) (s : Fin (2 ^ d)) :
+    (witModel l d g).qMS c m s = 1 / ((2 : ℝ) ^ l * 2 ^ d) := by
+  rw [qMS, wit_pC]
+  simp only [witModel]
+  field_simp
+
+lemma wit_colS (c : Fin (2 ^ (g + 1))) (s : Fin (2 ^ d)) :
+    ∑ m, (witModel l d g).qMS c m s = 1 / (2 : ℝ) ^ d := by
+  simp only [wit_qMS, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+
+lemma wit_rowM (c : Fin (2 ^ (g + 1))) (m : Fin (2 ^ l)) :
+    ∑ s, (witModel l d g).qMS c m s = 1 / (2 : ℝ) ^ l := by
+  simp only [wit_qMS, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+
+lemma wit_qSV (c : Fin (2 ^ (g + 1))) (s : Fin (2 ^ d)) (v : Fin (2 ^ d) × Fin (2 ^ (g - d))) :
+    (witModel l d g).qSV c s v = if v.1 = s then 1 / ((2 : ℝ) ^ d * 2 ^ (g - d)) else 0 := by
+  rw [qSV, wit_colS]
+  change 1 / (2 : ℝ) ^ d * (if v.1 = s then 1 / (2 : ℝ) ^ (g - d) else 0) = _
+  split_ifs
+  · field_simp
+  · simp
+
+lemma wit_I : (witModel l d g).I = 0 := by
+  have h : ∀ c, miN ((witModel l d g).qMS c) = 0 := by
+    intro c
+    unfold miN
+    refine sum_eq_zero fun m _ => sum_eq_zero fun s _ => ?_
+    rw [wit_rowM, wit_colS, wit_qMS]
+    rw [show 1 / ((2 : ℝ) ^ l * 2 ^ d) / (1 / 2 ^ l * (1 / 2 ^ d)) = 1 by field_simp]
+    simp
+  simp [I, h]
+
+lemma wit_HC : (witModel l d g).HC = g + 1 := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  simp only [HC, wit_pC, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  rw [one_div, Real.log_inv, Real.log_pow]
+  push_cast
+  field_simp
+
+/-- Les lois de Σ ne dépendent pas du message : TV = 0, d'où Conf = 1. -/
+lemma wit_qS (c : Fin (2 ^ (g + 1))) (m : Fin (2 ^ l)) (s : Fin (2 ^ d)) :
+    (witModel l d g).qS c m s = 1 / (2 : ℝ) ^ d := by
+  simp only [qS, witModel, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+
+lemma wit_Conf : (witModel l d g).Conf = 1 := by
+  have hTV : ∀ x, (witModel l d g).TV x = 0 := by
+    intro x
+    simp [TV, tv, wit_qS]
+  have h0 : (witModel l d g).TVmax = 0 :=
+    le_antisymm (Finset.sup'_le _ _ fun x _ => (hTV x).le) (TVmax_nonneg _)
+  simp [Conf, h0]
+
+lemma wit_KLmax : (witModel l d g).KLmax = 0 := by
+  have hKL : ∀ x, (witModel l d g).KL x = 0 := by
+    intro x
+    simp only [KL, klN, wit_qS]
+    rw [div_self (by positivity), Real.log_one]
+    simp
+  apply le_antisymm (Finset.sup'_le _ _ fun x _ => (hKL x).le)
+  obtain ⟨x, hx⟩ := (univ_nonempty (α := Fin (2 ^ (g + 1)) × Fin (2 ^ l) × Fin (2 ^ l)))
+  exact (hKL x).ge.trans (Finset.le_sup' _ hx)
+
+/-- Masse des verdicts : chaque v a probabilité 1/(2^Δ·2^(γ−Δ)) sachant C. -/
+lemma wit_colV (c : Fin (2 ^ (g + 1))) (v : Fin (2 ^ d) × Fin (2 ^ (g - d))) :
+    ∑ s, (witModel l d g).qSV c s v = 1 / ((2 : ℝ) ^ d * 2 ^ (g - d)) := by
+  simp only [wit_qSV]
+  rw [Finset.sum_ite_eq]
+  simp
+
+lemma wit_rowS (c : Fin (2 ^ (g + 1))) (s : Fin (2 ^ d)) :
+    ∑ v, (witModel l d g).qSV c s v = 1 / (2 : ℝ) ^ d := by
+  simp only [wit_qSV]
+  rw [sum_pair_ite, Fintype.card_fin]
+  push_cast
+  field_simp
+
+lemma wit_IV : (witModel l d g).IV = d := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  have h : ∀ c, miN ((witModel l d g).qSV c) = d * Real.log 2 := by
+    intro c
+    unfold miN
+    have term : ∀ s v, (witModel l d g).qSV c s v *
+        Real.log ((witModel l d g).qSV c s v /
+          ((∑ v', (witModel l d g).qSV c s v') * ∑ s', (witModel l d g).qSV c s' v)) =
+        (witModel l d g).qSV c s v * (d * Real.log 2) := by
+      intro s v
+      rw [wit_rowS, wit_colV]
+      by_cases hv : v.1 = s
+      · simp only [wit_qSV, hv, ↓reduceIte]
+        congr 1
+        rw [show 1 / ((2 : ℝ) ^ d * 2 ^ (g - d)) / (1 / 2 ^ d * (1 / (2 ^ d * 2 ^ (g - d)))) =
+            2 ^ d by field_simp, Real.log_pow]
+      · simp [wit_qSV, hv]
+    simp only [term, ← sum_mul]
+    rw [Finset.sum_comm]
+    have : ∑ v, ∑ s, (witModel l d g).qSV c s v = 1 := by
+      rw [Finset.sum_comm]
+      simp only [wit_rowS, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+      push_cast
+      field_simp
+    rw [this, one_mul]
+  simp only [IV, h, wit_pC, ← sum_mul, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+
+lemma wit_HV (hdg : d ≤ g) : (witModel l d g).HV = g := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  have e : (2 : ℝ) ^ d * 2 ^ (g - d) = 2 ^ g := by rw [← pow_add, Nat.add_sub_cancel' hdg]
+  have h : ∀ c, entN2 ((witModel l d g).qSV c) = g * Real.log 2 := by
+    intro c
+    unfold entN2
+    simp only [wit_colV, e, sum_const, card_univ, Fintype.card_prod, Fintype.card_fin, nsmul_eq_mul]
+    push_cast
+    rw [e, one_div, Real.log_inv, Real.log_pow]
+    field_simp
+  simp only [HV, h, wit_pC, ← sum_mul, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+
+end CLOModel
+
+/-- **Remarque 2.20 (témoin réalisable du facteur institutionnel).** Pour tous entiers
+    Δ ≤ γ avec γ ≥ 1 et tout λ, la loi `witModel λ Δ γ` satisfait les Hypothèses 2.1 à
+    2.4 avec α = 1, β = 1 et κ = 0 ; elle vérifie Conf = 1 et Opp = Δ/γ, et
+    l'extraction bornée y est une égalité. -/
+theorem temoin_realisable (l d g : ℕ) (hdg : d ≤ g) (hg : 1 ≤ g) :
+    (Fintype.card (Fin (2 ^ d) × Fin (2 ^ (g - d))) : ℝ) ≤ (2 : ℝ) ^ (1 * (witModel l d g).HC) ∧
+      (witModel l d g).IV = (witModel l d g).I + d ∧
+      1 * (witModel l d g).HC - 1 ≤ (witModel l d g).HV ∧
+      1 ≤ 1 * (witModel l d g).HC - 1 ∧
+      (witModel l d g).KLmax ≤ 1 * (witModel l d g).I ∧
+      (witModel l d g).I ≤ 0 / l ∧
+      (witModel l d g).Conf = 1 ∧
+      (witModel l d g).Opp = d / g := by
+  rw [CLOModel.wit_HC, CLOModel.wit_I, CLOModel.wit_IV, CLOModel.wit_HV l d g hdg,
+    CLOModel.wit_KLmax, CLOModel.wit_Conf]
+  have hg' : (1 : ℝ) ≤ g := by exact_mod_cast hg
+  refine ⟨?_, by ring, by linarith, by linarith, by norm_num, by simp, rfl, ?_⟩
+  · simp only [Fintype.card_prod, Fintype.card_fin, one_mul]
+    push_cast
+    rw [← pow_add, Nat.add_sub_cancel' hdg, show ((g : ℝ) + 1) = ((g + 1 : ℕ) : ℝ) by push_cast; ring,
+      Real.rpow_natCast]
+    exact pow_le_pow_right₀ (by norm_num) (by omega)
+  · simp [CLOModel.Opp, CLOModel.wit_IV, CLOModel.wit_HV l d g hdg]
+
+end ConditionalCRO
+
+end ExtensionL2
+
+/-! ## 17. Bloc de vérification des bornes avancées (version 3.7) -/
+
+#print axioms ConditionalCRO.log_sum_two_blocks
+#print axioms ConditionalCRO.CLOModel.fano_sharp_model
+#print axioms ConditionalCRO.rel_aigu_of_info
+#print axioms ConditionalCRO.CLOModel.rel_aigu
+#print axioms ConditionalCRO.CLOModel.trilemma_aigu_concrete
+#print axioms ConditionalCRO.CLOModel.conf_regime_concrete
+#print axioms ConditionalCRO.conf_regime
+#print axioms ConditionalCRO.forme_simplifiee
+#print axioms ConditionalCRO.portee_cas_etude
+#print axioms ConditionalCRO.pow_four_le_two_pow
+#print axioms ConditionalCRO.borne_forte_statut
+#print axioms ConditionalCRO.trilemma_aigu_q
+#print axioms ConditionalCRO.temoin_realisable
