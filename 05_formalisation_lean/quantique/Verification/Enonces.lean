@@ -62,6 +62,12 @@ def CMIQuantiquePositive : Prop :=
   ∀ {d₁ : Type u₁} {d₂ : Type u₂} {d₃ : Type u₃} [Fintype d₁] [DecidableEq d₁] [Fintype d₂]
     [DecidableEq d₂] [Fintype d₃] [DecidableEq d₃] (ρ : MState (d₁ × d₂ × d₃)), 0 ≤ qcmi ρ
 
+/-- Chapitre 1, section 1.3.2.3 (p. 19) et Lemme 2.7 (p. 71), étape : I(A;BC) ≥ I(A;B). -/
+def InfoMutuelleOubli : Prop :=
+  ∀ {d₁ : Type u₁} {d₂ : Type u₂} {d₃ : Type u₃} [Fintype d₁] [DecidableEq d₁] [Fintype d₂]
+    [DecidableEq d₂] [Fintype d₃] [DecidableEq d₃] (ρ : MState (d₁ × d₂ × d₃)),
+    qMutualInfo ρ.assoc'.traceRight ≤ qMutualInfo ρ
+
 /-- Équation (1.14) (p. 18) : DPI quantique de l'entropie relative. -/
 def DPIQuantique : Prop :=
   ∀ {d₁ : Type u₁} {d₂ : Type u₂} [Fintype d₁] [DecidableEq d₁] [Fintype d₂] [DecidableEq d₂]

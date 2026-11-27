@@ -123,6 +123,14 @@ theorem information_mutuelle_nonneg (ρ : MState (d₁ × d₂)) : 0 ≤ qMutual
 theorem cmi_quantique_nonneg (ρ : MState (d₁ × d₂ × d₃)) : 0 ≤ qcmi ρ :=
   qcmi_nonneg ρ
 
+/-- Monotonie de l'information mutuelle par oubli d'un sous-système :
+    I(A;BC) ≥ I(A;B). C'est la forme de la DPI quantique, issue de la sous-additivité
+    forte, sur laquelle repose la borne de Holevo (Lemme 2.7) quand la mesure est réalisée
+    par une isométrie suivie d'un oubli. -/
+theorem info_mutuelle_oubli (ρ : MState (d₁ × d₂ × d₃)) :
+    qMutualInfo ρ.assoc'.traceRight ≤ qMutualInfo ρ :=
+  qMutualInfo_strong_subadditivity ρ
+
 /-! ## 3. DPI quantique (équation (1.14)) -/
 
 /-- **Équation (1.14).** Pour tout canal Φ (application complètement positive qui préserve
@@ -177,6 +185,7 @@ end QuantiqueCRO
 #print axioms QuantiqueCRO.sous_additivite
 #print axioms QuantiqueCRO.information_mutuelle_nonneg
 #print axioms QuantiqueCRO.cmi_quantique_nonneg
+#print axioms QuantiqueCRO.info_mutuelle_oubli
 #print axioms QuantiqueCRO.dpi_quantique
 #print axioms QuantiqueCRO.depolarisant_extremes
 #print axioms QuantiqueCRO.conf_depolarisation_totale
