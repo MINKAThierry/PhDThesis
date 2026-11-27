@@ -12,7 +12,8 @@ Version du 27 novembre 2026, établie sur le manuscrit v36 et la formalisation e
 | L3 jeux et ponts | **terminé le 27 novembre 2026** (15 théorèmes ajoutés, 15 énoncés dans `Enonces.lean`) ; les ponts utilisent `CLOModel` et sont donc dans `ConditionalCRO.lean` ; `GameBasedSOTP.lean` reçoit la structure du dépôt de Riemann | `ConditionalCRO.lean` v3.8, `GameBasedSOTP.lean` v1.1 | 100 sur 145 (69 %) (a) |
 | L5b encodage diagonal | **terminé le 27 novembre 2026** (6 théorèmes ajoutés, 4 énoncés dans `Enonces.lean`) ; spectre des états diagonaux par le polynôme caractéristique de Mathlib | `ConditionalCRO.lean` v3.9 | 104 sur 145 (72 %) |
 | L4 constructions SOTP | **terminé le 27 novembre 2026** en trois parties : SOTP-Low complet (Théorème A.5, Remarque 3.5) ; S-OTP (Théorème 3.1, Remarque 3.2) ; SOTP-Base (Lemme 2.2, Théorème A.3, Corollaire A.1, Proposition 3.2) et SOTP-High (Théorème A.4, Proposition 3.3), avec la queue de Chernoff et les hypothèses de Groth16 posées ; Conjecture 3.1 énoncée sans preuve, avec le théorème qui montre qu'elle exige le modèle à contexte privé | `GameBasedSOTP.lean` v1.3, `ConditionalCRO.lean` v3.10 | 118 sur 145 (81 %) |
-| L6 chapitres 4 et 5 | prochain lot | v3.11 prévue | — |
+| L6 chapitres 4 et 5 | **terminé le 27 novembre 2026** (10 théorèmes, 10 énoncés) : Proposition 4.1 pour deux traits, Remarque 4.2, Définitions 4.1 et 4.2, certification numérique des tableaux 2.2, 4.2, 4.12, 4.13 et 4.18 | `ConditionalCRO.lean` v3.11 | 122 sur 145 (84 %) |
+| L5c information quantique | prochain lot, dépôt seulement (Physlib) | — | — |
 
 (a) La Remarque 2.2 (`rem:rel_ver`), classée hors champ dans l'inventaire initial, contient l'affirmation « Conf = 1 entraîne Relrec = 2^(−λ) ». Elle est démontrée par `rel_of_conf_one` et compte désormais parmi les énoncés formalisables, qui passent de 144 à 145.
 

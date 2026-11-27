@@ -4,7 +4,7 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.10). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.11). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
   Renvois : manuscrit v36 (« Aux fondements de la cryptographie
@@ -15,7 +15,7 @@
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
   Importation. Les définitions et les preuves sont dans un seul fichier. La
-  versions 3.5 à 3.10 prolongent la 3.4 par ajout des sections 12 à 23 en
+  versions 3.5 à 3.11 prolongent la 3.4 par ajout des sections 12 à 25 en
   fin de fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
   restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
@@ -877,5 +877,70 @@ def OppSOTPPublic : Prop :=
     (φ : C → τ) (k : C → τ → V → ℝ), (∀ c t v, 0 ≤ k c t v) → (∀ c t, ∑ v, k c t v = 1) →
     (∀ c s v, X.ker c s v = k c (φ c) v) → 0 < X.HV →
       X.HT (fun c _ => φ c) = 0 ∧ X.Opp = 0
+
+
+/-! ## 12. Extension v3.11, lot L6 : protocoles de mesure et tableaux
+
+Renvois au manuscrit v36. Énoncés démontrés dans la section 24 de
+`ConditionalCRO.lean` (version 3.11). Les énoncés de la Proposition 4.1 portent sur une
+valeur fixée de (M, C) et passent à la moyenne. -/
+
+/-- Proposition 4.1 (p. 129), seconde inégalité pour deux traits indépendants :
+    I(V;T₁) + I(V;T₂) ≤ I(V;T₁,T₂). -/
+def TraitsSuperadditif : Prop :=
+  ∀ {ν : Type u₁} {τ₁ : Type u₂} {τ₂ : Type u₃} [Fintype ν] [Fintype τ₁] [Fintype τ₂]
+    (u : ν → τ₁ → τ₂ → ℝ), (∀ v t₁ t₂, 0 ≤ u v t₁ t₂) →
+    (∀ t₁ t₂, ∑ v, u v t₁ t₂ = (∑ v, ∑ t₂', u v t₁ t₂') * (∑ v, ∑ t₁', u v t₁' t₂)) →
+    miN (fun v t₁ => ∑ t₂, u v t₁ t₂) + miN (fun v t₂ => ∑ t₁, u v t₁ t₂) ≤
+      miN (fun v (t : τ₁ × τ₂) => u v t.1 t.2)
+
+/-- Proposition 4.1 (p. 129), première inégalité : I(g(V);T) ≤ I(V;T). -/
+def TraitStatistique : Prop :=
+  ∀ {ν : Type u₁} {ν' : Type u₂} {τ : Type u₃} [Fintype ν] [Fintype ν'] [Fintype τ]
+    [DecidableEq ν'] (w : ν → τ → ℝ), (∀ v t, 0 ≤ w v t) → ∀ g : ν → ν',
+    miN (fun v' t => ∑ v, if g v = v' then w v t else 0) ≤ miN w
+
+/-- Proposition 4.1 (p. 129), dernière inégalité : I(V;T(Σ)) ≤ I(V;Σ). -/
+def TraitFonctionPreuve : Prop :=
+  ∀ {ν : Type u₁} {σ : Type u₂} {τ : Type u₃} [Fintype ν] [Fintype σ] [Fintype τ]
+    [DecidableEq τ] (w : ν → σ → ℝ), (∀ v s, 0 ≤ w v s) → ∀ T : σ → τ,
+    miN (fun v t => ∑ s, if T s = t then w v s else 0) ≤ miN w
+
+/-- Proposition 4.1 (p. 129), borne de k bits : un trait binaire porte au plus 1 bit. -/
+def TraitBinaire : Prop :=
+  ∀ {ν : Type u₁} [Fintype ν] (w : ν → Bool → ℝ), (∀ v t, 0 ≤ w v t) →
+    ∑ v, ∑ t, w v t = 1 → miN w / Real.log 2 ≤ 1
+
+/-- Remarque 4.2 (p. 129) : I(V;Σ|M,C) ≥ I(V;Σ|C) − I(M;Σ|C), égalité si I(M;Σ|C) = 0. -/
+def EstimateurMasquant : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V),
+    X.IV - X.I ≤ X.IVSM ∧ (X.I = 0 → X.IVSM = X.IV)
+
+/-- Définition 4.1 (p. 127), formulation initiale de l'estimateur : la différence
+    I(V;Σ|C) − I(M;Σ|C) est au plus αH(C) − (Rel·λ − 1), minore Δ, et devient négative
+    dès que αH(C) < Rel·λ − 1. -/
+def EstimateurInitial : Prop :=
+  ∀ (IV I αH Rel lam Δ : ℝ), IV ≤ αH → Rel * lam - 1 ≤ I → IV ≤ I + Δ →
+    IV - I ≤ αH - (Rel * lam - 1) ∧ IV - I ≤ Δ ∧ (αH < Rel * lam - 1 → IV - I < 0)
+
+/-- Définition 4.1 (p. 127), exemple : αH(C) = 20, Rel = 1, λ = 128 donnent −107. -/
+def EstimateurInitialExemple : Prop :=
+  (20 : ℝ) - (1 * 128 - 1) = -107 ∧ (20 : ℝ) < 1 * 128 - 1
+
+/-- Tableaux 2.2 (p. 67) et 4.18 (p. 151) : Δ := λ·produit avec λ = 128. -/
+def CalibrationDelta : Prop :=
+  |128 * (0.437 : ℝ) - 56| < 1 / 2 ∧ |128 * (0.572 : ℝ) - 73| < 1 / 2 ∧
+    |128 * (0.273 : ℝ) - 35| < 1 / 2 ∧ |(30 : ℝ) / 128 - 0.234| < 1 / 1000
+
+/-- Tableaux 4.13 (p. 149) et 4.12 (p. 148) : totaux de la décomposition de Δ. -/
+def DecompositionDelta : Prop :=
+  (15 + 10 + 10 + 0 : ℝ) = 35 ∧ (15 + 20 + 15 + 6 : ℝ) = 56 ∧ (25 + 20 + 15 + 13 : ℝ) = 73 ∧
+    (25 + 20 + 15 + 15 + 10 + 15 : ℝ) = 100
+
+/-- Tableau 4.2 (p. 126) : γ̂ = 19, 1 et 1,97, et H♯ = 47,5 bits pour Helios. -/
+def ParametresReference : Prop :=
+  (1 : ℝ) * 20 - 1 = 19 ∧ (0.25 : ℝ) * 8 - 1 = 1 ∧ (0.27 : ℝ) * 11 - 1 = 1.97 ∧
+    ((56 : ℝ) + 1) / 1.2 = 47.5
 
 end Enonces

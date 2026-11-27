@@ -2,7 +2,7 @@
   Dossier de vérification. Point d'entrée mince
   =============================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème
-  existant de `ConditionalCRO.lean` (version 3.10) prouve exactement
+  existant de `ConditionalCRO.lean` (version 3.11) prouve exactement
   l'énoncé écrit séparément. Si un énoncé et sa preuve divergent, ce fichier ne
   compile pas. C'est le seul fichier qu'un relecteur doit ouvrir, avec
   `Enonces.lean`. Le script `verifier.sh` exécute `#print axioms` sur chaque
@@ -136,5 +136,18 @@ theorem principal_masque_uniforme : Enonces.MasqueUniforme := sotp_mask_tv
 theorem principal_conf_sotp : Enonces.ConfSOTP := CLOModel.conf_eq_one_of_indep
 theorem principal_opp_sotp : Enonces.OppSOTP := CLOModel.sotp_opp_le
 theorem principal_opp_sotp_public : Enonces.OppSOTPPublic := CLOModel.sotp_opp_zero_of_public
+
+
+-- 12. Extension v3.11, lot L6 (protocoles de mesure et tableaux)
+theorem principal_traits_superadditif : Enonces.TraitsSuperadditif := traits_superadditif
+theorem principal_trait_statistique : Enonces.TraitStatistique := trait_stat_le
+theorem principal_trait_fonction_preuve : Enonces.TraitFonctionPreuve := trait_fonction_preuve
+theorem principal_trait_binaire : Enonces.TraitBinaire := trait_binaire_le
+theorem principal_estimateur_masquant : Enonces.EstimateurMasquant := CLOModel.estimateur_masquant
+theorem principal_estimateur_initial : Enonces.EstimateurInitial := estimateur_initial
+theorem principal_estimateur_initial_exemple : Enonces.EstimateurInitialExemple := estimateur_initial_exemple
+theorem principal_calibration_delta : Enonces.CalibrationDelta := calibration_delta
+theorem principal_decomposition_delta : Enonces.DecompositionDelta := decomposition_delta
+theorem principal_parametres_reference : Enonces.ParametresReference := parametres_reference
 
 end Principal

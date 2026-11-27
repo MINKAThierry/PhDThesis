@@ -4,14 +4,14 @@
 
 Ce dossier permet de juger ce que la formalisation prouve sans lire les 3 403 lignes de `ConditionalCRO.lean`. Il suit le modèle du dépôt de la preuve Lean de l'hypothèse de Riemann (novembre 2026). Les énoncés y sont isolés des preuves, un point d'entrée mince les relie aux théorèmes et un script audite les axiomes. Les limites y sont dites franchement.
 
-Le dossier est **additif**. Les versions 3.5 à 3.10 de `ConditionalCRO.lean` (27 novembre 2026) prolongent la 3.4 par ajout des sections 12 à 23 en fin de fichier. Ses lignes 5 à 1575 restent identiques au listing B.1 de l'annexe B de la thèse, aux quatre lignes d'auteurs de l'en-tête près. Seule la ligne 4, qui porte le numéro de version, a changé. Les numéros de ligne cités pour la version 3.4 restent donc valables. Les fichiers de vérification importent `ConditionalCRO`.
+Le dossier est **additif**. Les versions 3.5 à 3.11 de `ConditionalCRO.lean` (27 novembre 2026) prolongent la 3.4 par ajout des sections 12 à 25 en fin de fichier. Ses lignes 5 à 1575 restent identiques au listing B.1 de l'annexe B de la thèse, aux quatre lignes d'auteurs de l'en-tête près. Seule la ligne 4, qui porte le numéro de version, a changé. Les numéros de ligne cités pour la version 3.4 restent donc valables. Les fichiers de vérification importent `ConditionalCRO`.
 
 ## Ce qu'il faut lire et dans quel ordre
 
 | Ordre | Fichier | Rôle |
 |---|---|---|
 | 1 | ce document | Carte, traçabilité et limites |
-| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | Les 97 énoncés de la thèse, sans aucune preuve, chacun avec son renvoi au manuscrit v36 |
+| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | Les 107 énoncés de la thèse, sans aucune preuve, chacun avec son renvoi au manuscrit v36 |
 | 3 | [`Verification/Principal.lean`](Verification/Principal.lean) | Une ligne par énoncé, de la forme `theorem principal_x : Enonces.X := nomExistant` |
 | 4 | [`Verification/Coherence.lean`](Verification/Coherence.lean) | Tests de non-vacuité des définitions propres |
 | 5 | [`results/verification.log`](results/verification.log), [`results/axiomes.txt`](results/axiomes.txt) | Sorties du script d'audit |
@@ -30,7 +30,7 @@ bash verifier.sh          # ou bash verifier.sh --cache pour enchaîner les deux
 
 Le script échoue dans six cas. Le premier est une preuve dans `Enonces.lean` (mot-clé `by`, déclaration autre que `def Nom : Prop :=`). Le deuxième est un `sorry`, `admit`, `native_decide` ou `axiom` dans les sources, commentaires exclus. Le troisième est une ligne de `Principal.lean` qui ne relie pas un énoncé à un théorème existant. Le quatrième est un échec de compilation. Le cinquième est un `#print axioms` qui affiche autre chose que `[propext, Classical.choice, Quot.sound]`. Le sixième est un rejet par un vérificateur indépendant du noyau.
 
-Cette dernière étape emploie deux outils fournis avec la chaîne Lean 4.35.0. `leanchecker` rejoue les déclarations dans le noyau de Lean. `nanoda_bin` est un second vérificateur, écrit en Rust, qui relit un export produit par `leanexport`. L'export porte sur les théorèmes de `Principal.lean` (29 en version 3.4, 47 en version 3.5, 64 en version 3.6, 74 en version 3.7, 89 en version 3.8, 93 en version 3.9, 97 en version 3.10) et sur toutes leurs dépendances, Mathlib comprise. Seuls les trois axiomes standard y sont admis.
+Cette dernière étape emploie deux outils fournis avec la chaîne Lean 4.35.0. `leanchecker` rejoue les déclarations dans le noyau de Lean. `nanoda_bin` est un second vérificateur, écrit en Rust, qui relit un export produit par `leanexport`. L'export porte sur les théorèmes de `Principal.lean` (29 en version 3.4, 47 en version 3.5, 64 en version 3.6, 74 en version 3.7, 89 en version 3.8, 93 en version 3.9, 97 en version 3.10, 107 en version 3.11) et sur toutes leurs dépendances, Mathlib comprise. Seuls les trois axiomes standard y sont admis.
 
 Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) exécute ce script sur GitHub à chaque modification du dossier. Il complète le job `lean` de `ci.yml` sans le remplacer.
 
@@ -38,6 +38,7 @@ Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/
 
 | Contrôle | Où | Résultat |
 |---|---|---|
+| Version 3.11 : `ConditionalCRO`, puis `Enonces`, `Principal` et `Coherence` | local, 27 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 à imports ciblés | réussi, aucune erreur ni aucun avertissement ; 111 `#print axioms` dans le fichier, 107 sur `Principal.lean` et 61 sur `Coherence.lean`, tous standard |
 | Version 3.10 avec `import Mathlib` complet, `verifier.sh` étapes 1 à 6 | faite par GitHub le 27 novembre 2026 | workflow `verification_lean.yml`, exécution 46013544278 réussie (commit 38ef312) : 97 énoncés et 61 lemmes de cohérence limités aux trois axiomes standard, `leanchecker` sur les quatre modules, `nanoda_bin` sur `Principal.lean` |
 | Version 3.10 : `ConditionalCRO`, puis `Enonces`, `Principal` et `Coherence` | local, 27 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 à imports ciblés | réussi, aucune erreur ni aucun avertissement ; 101 `#print axioms` dans le fichier, 97 sur `Principal.lean` et 61 sur `Coherence.lean`, tous standard |
 | Version 3.9 collée dans <https://live.lean-lang.org> (projet Mathlib) | faite par Thierry MINKA le 27 novembre 2026 | aucune erreur ; les 95 `#print axioms` affichent `[propext, Classical.choice, Quot.sound]` |
@@ -66,7 +67,7 @@ Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/
 
 ## Tableau de traçabilité
 
-Les numéros et les pages sont ceux du manuscrit v36 (`index_labels_v36.tsv`), identiques à ceux de la v35 pour les énoncés de la version 3.4. « Fichier » désigne la ligne de `ConditionalCRO.lean` ; la ligne du listing B.1 vaut quatre de moins. `E` et `P` désignent les lignes de `Enonces.lean` et de `Principal.lean`. Les 97 théorèmes affichent tous `[propext, Classical.choice, Quot.sound]`. Les lignes à partir de 1634 sont celles des sections 12 (version 3.5), 14 (version 3.6), 16 (version 3.7), 18 (version 3.8), 20 (version 3.9) et 22 (version 3.10), absentes du listing B.1.
+Les numéros et les pages sont ceux du manuscrit v36 (`index_labels_v36.tsv`), identiques à ceux de la v35 pour les énoncés de la version 3.4. « Fichier » désigne la ligne de `ConditionalCRO.lean` ; la ligne du listing B.1 vaut quatre de moins. `E` et `P` désignent les lignes de `Enonces.lean` et de `Principal.lean`. Les 107 théorèmes affichent tous `[propext, Classical.choice, Quot.sound]`. Les lignes à partir de 1634 sont celles des sections 12 (version 3.5), 14 (version 3.6), 16 (version 3.7), 18 (version 3.8), 20 (version 3.9), 22 (version 3.10) et 24 (version 3.11), absentes du listing B.1.
 
 ### Énoncés démontrés
 
@@ -170,6 +171,16 @@ Les numéros et les pages sont ceux du manuscrit v36 (`index_labels_v36.tsv`), i
 | S-OTP, Conf = 1 quand la loi de Σ ne dépend pas de M | `thm:proprietes_sotp`, `prv:sotp_conf` | Théorème 3.1, p. 89 | `CLOModel.conf_eq_one_of_indep` | 4071 | 856 / 136 | démontré (h) |
 | S-OTP, I(V;Σ\|C) ≤ H(h\|C) et Opp ≤ H(h\|C)/H(V\|C) | `thm:proprietes_sotp`, `prv:sotp_opp` | Théorème 3.1, p. 89 et 90 | `CLOModel.sotp_opp_le` | 4165 | 863 / 137 | démontré (h) |
 | h fonction du contexte public, H(h\|C) = 0 et Opp = 0 | `rem:portee_sotp` | Remarque 3.2, p. 89 | `CLOModel.sotp_opp_zero_of_public` | 4182 | 873 / 138 | démontré |
+| Minorant par traits, I(V;T₁) + I(V;T₂) ≤ I(V;T₁,T₂) pour des traits indépendants | `prop:minorant_traits`, `eq:minorant_traits` | Proposition 4.1, p. 129 | `traits_superadditif` | 4287 | 890 / 142 | démontré pour deux traits (i) |
+| Minorant par traits, I(g(V);T) ≤ I(V;T) | `prop:minorant_traits` | Proposition 4.1, p. 129 | `trait_stat_le` | 4321 | 898 / 143 | démontré (i) |
+| Minorant par traits, I(V;T(Σ)) ≤ I(V;Σ) | `prop:minorant_traits` | Proposition 4.1, p. 129 | `trait_fonction_preuve` | 4335 | 904 / 144 | démontré (i) |
+| Un trait binaire porte au plus 1 bit | `prop:minorant_traits` | Proposition 4.1, p. 129 | `trait_binaire_le` | 4347 | 910 / 145 | démontré |
+| Estimateur pour une preuve masquante | `rem:estimateur_masquant` | Remarque 4.2, p. 129 | `CLOModel.estimateur_masquant` | 4363 | 915 / 146 | démontré |
+| Formulation initiale de l'estimateur, minorant éventuellement négatif | `def:capacite_extraction_op` | Définition 4.1, p. 127 | `estimateur_initial` | 4388 | 923 / 147 | démontré |
+| Exemple αH(C) = 20, λ = 128 : −107 | `def:capacite_extraction_op` | Définition 4.1, p. 127 | `estimateur_initial_exemple` | 4394 | 928 / 148 | démontré |
+| Calibration Δ := λ·produit (56, 73, 35 bits) | `tab:validation_cro_classique`, `tab:comparaison_produits_cro` | Tableaux 2.2 (p. 67) et 4.18 (p. 151) | `calibration_delta` | 4406 | 932 / 149 | vérifié numériquement |
+| Totaux de la décomposition de Δ, somme naïve de 100 bits | `tab:decomposition_delta`, `tab:composantes_delta` | Tableaux 4.13 (p. 149) et 4.12 (p. 148) | `decomposition_delta` | 4414 | 937 / 150 | vérifié numériquement |
+| γ̂ = 19, 1 et 1,97 ; H♯ = 47,5 bits pour Helios | `tab:parametres_reference` | Tableau 4.2, p. 126 | `parametres_reference` | 4422 | 942 / 151 | vérifié numériquement |
 
 (a) Dans le modèle abstrait, Fano (I ≥ Rel·λ − 1) et Pinsker (TV² ≤ c₀·KL) sont des champs de `ProtocolInstance`. La couche concrète les démontre (lignes 1077 et 1128).
 (b) Point du modèle abstrait, non réalisable par une loi (Remarque 3.10, p. 114).
@@ -177,6 +188,7 @@ Les numéros et les pages sont ceux du manuscrit v36 (`index_labels_v36.tsv`), i
 (f) Jeux sur lois finies (section 18). Les adversaires et l'interprète sont des fonctions sur des ensembles finis, leur aléa propre étant moyenné. La borne de temps t(λ), le défaut de complétude ν et le terme négligeable restent des paramètres réels. Le pont EXT-OPP avec ressources reçoit la règle de chaîne H(V\|Σ,C) = H(V\|Σ,C,K) + I(V;K\|Σ,C) en prémisse. Sans ressources, il est démontré sur `CLOModel`.
 (g) Encodage classique diagonal (section 20). L'état ρ = Σ_s p(s)\|s⟩⟨s\| est une matrice complexe diagonale. Son spectre est tiré du polynôme caractéristique (`Matrix.IsHermitian.roots_charpoly_eq_eigenvalues` de Mathlib), sans hypothèse posée. La norme de trace est la somme des valeurs absolues du spectre. Pour la Remarque 2.34, le théorème porte sur la mesure dans la base calculatoire, qui donne I_acc ≥ 1 bit ; il ne formalise pas le supremum sur toutes les mesures.
 (h) Construction S-OTP (section 22). Le masque uniforme et l'engagement parfaitement masquant se traduisent par une loi de Σ sachant (M, C) indépendante de M. L'hypothèse « l'interprète ne lit la preuve qu'à travers h » est la factorisation du noyau de verdict, ker(c, s, ·) = k(c, h(c, s), ·), c'est-à-dire la chaîne V − (h, C) − Σ du manuscrit. La preuve combine la DPI finie et I ≤ H. La fiabilité de vérification relève du pont BIND-REL (section 18) et de la réduction au logarithme discret de `GameBasedSOTP.lean`.
+(i) Minorant par traits (section 24). Les énoncés portent sur une valeur fixée de (M, C) et passent à la moyenne. La seconde inégalité est démontrée pour deux traits, par deux règles de chaîne et la nullité de I(T₁;T₂). Le cas de k traits suit par récurrence sur k ; cette récurrence n'est pas formalisée.
 (c) Les hypothèses institutionnelles sont des prémisses explicites du théorème. Elles portent le contenu propre à la cryptographie institutionnelle (Δ, γ = αH(C) − 1, κ).
 
 ### Hypothèses nommées
@@ -267,7 +279,7 @@ Les numéros et les pages sont ceux du manuscrit v36 (`index_labels_v36.tsv`), i
 4. **Hypothèses institutionnelles posées.** Les Hypothèses 2.1, 2.2 et 2.4 sont des prémisses, non des théorèmes. C'est leur statut dans la thèse. Leur fondement informationnel (Proposition 2.1, p. 55) est formalisé depuis la version 3.5 (`fondement_extraction`). Il montre que I(V;Σ|M,C) ≤ Δ entraîne l'Hypothèse 2.1, sans la démontrer pour une institution réelle.
 5. **Prémisses muettes.** La condition `hcard` (|V| ≤ 2^(αH(C))) figure dans les théorèmes concrets sans servir aux preuves. Le décodeur `D` de `lemma4_concrete` ne sert qu'à construire l'instance. L'Hypothèse 2.3 est portée par `InstitutionalAssumptions` sans servir aux trilemmes. Ces prémisses ne rendent pas les énoncés faux. Elles les rendent un peu plus forts en apparence qu'en réalité.
 6. **Témoin de cohérence abstrait.** `assumptions_consistent_and_bound_attained` est un point du modèle relâché (Rel = 1/λ avec I = 0). Une vraie loi donnerait Rel = 2^(−λ) (`fam_Rel`, ligne 156 de `Coherence.lean`). La famille `famModel` a Δ = γ = 1, si bien que le facteur institutionnel n'y est pas actif.
-7. **Compilation locale à imports ciblés.** Voir la réserve plus haut. La version 3.4 avec `import Mathlib` a été compilée par le workflow GitHub le 26 novembre 2026. La version 3.5 l'a été le 27 novembre 2026 (exécution 45995428572) la version 3.6 aussi (exécution 45998003187) la version 3.7 de même (exécution 46001043885) la version 3.8 aussi (exécution 46004107163) et la version 3.9 de même (exécution 46009728045). La version 3.9 a aussi été vérifiée sur live.lean-lang.org le 27 novembre 2026. La version 3.10 a été compilée par GitHub (exécution 46013544278). Lean 4.35.0 y affiche un avertissement qui propose le mot-clé `module`, sans effet sur les preuves. Un essai sur live.lean-lang.org reste conseillé avant toute présentation.
+7. **Compilation locale à imports ciblés.** Voir la réserve plus haut. La version 3.4 avec `import Mathlib` a été compilée par le workflow GitHub le 26 novembre 2026. La version 3.5 l'a été le 27 novembre 2026 (exécution 45995428572) la version 3.6 aussi (exécution 45998003187) la version 3.7 de même (exécution 46001043885) la version 3.8 aussi (exécution 46004107163) et la version 3.9 de même (exécution 46009728045). La version 3.9 a aussi été vérifiée sur live.lean-lang.org le 27 novembre 2026. La version 3.10 a été compilée par GitHub (exécution 46013544278). La version 3.11 attend son exécution. Lean 4.35.0 y affiche un avertissement qui propose le mot-clé `module`, sans effet sur les preuves. Un essai sur live.lean-lang.org reste conseillé avant toute présentation.
 8. **Énoncés écrits par copie.** Les énoncés de `Enonces.lean` ont été écrits à partir des théorèmes existants. La compilation garantit leur égalité avec les preuves. Leur fidélité au texte du manuscrit reste à juger par le lecteur, à l'aide du tableau ci-dessus.
 
 ## Reproductibilité
@@ -277,4 +289,4 @@ Les numéros et les pages sont ceux du manuscrit v36 (`index_labels_v36.tsv`), i
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lake-manifest.json`](lake-manifest.json)) |
 | Bibliothèques Lake | `ConditionalCRO` (cible par défaut) et `Verification` (fichiers `Verification/*.lean`) |
-| SHA-256 de `ConditionalCRO.lean` | `14940d989430d8b827de5487a406afa7ff601e1bc86a9a55f03b7030a1eeca85` (version 3.10) |
+| SHA-256 de `ConditionalCRO.lean` | `56c99f94f1e8d3dc14903f4064bc7ed4dcf494bfbb2a06f887443e679a78e226` (version 3.11) |

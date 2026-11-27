@@ -3,7 +3,7 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.10), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.11), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
@@ -16,7 +16,7 @@
   witModel, puis (section 9, version 3.8) advDist, succIND, relver,
   winBindRel, binEntN et condEnt, puis (section 10, version 3.9) shannon,
   vonNeumann, traceDistDiag et ConfQdiag, enfin (section 11, version 3.10)
-  maskLaw, pushLaw et entN.
+  maskLaw, pushLaw et entN. La version 3.11 n'ajoute aucune définition propre.
   La section 5 montre que les hypothèses imposent H(V|C) ≥ 1, ce qui exclut la
   division par zéro dans Opp (en Lean, x/0 = 0).
 -/

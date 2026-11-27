@@ -1,20 +1,20 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis le lot L4 (GameBasedSOTP.lean v1.3, ConditionalCRO.lean v3.10). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis les lots L4 et L6 (GameBasedSOTP.lean v1.3, ConditionalCRO.lean v3.11). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
-| démontré | 75 |
+| démontré | 78 |
 | démontré, une inégalité posée dans le modèle abstrait | 15 |
-| mécanisé en situation réduite | 8 |
+| mécanisé en situation réduite | 9 |
 | hypothèse formalisée | 20 |
-| non formalisé | 27 |
+| non formalisé | 23 |
 | hors champ formel | 25 |
 | **Total** | **170** |
 
-Sur 145 énoncés relevant d'une formalisation, 118 sont aujourd'hui couverts, soit 81 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b de 107 (74 %) après la première partie du lot L4 et de 109 (75 %) après la deuxième. La Conjecture 3.1 est classée « hypothèse formalisée » : elle est énoncée sans preuve ni axiome. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 145 énoncés relevant d'une formalisation, 122 sont aujourd'hui couverts, soit 84 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b de 107 (74 %) après la première partie du lot L4 de 109 (75 %) après la deuxième et de 118 (81 %) à la fin du lot L4. La Conjecture 3.1 est classée « hypothèse formalisée » : elle est énoncée sans preuve ni axiome. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
@@ -22,12 +22,12 @@ Sur 145 énoncés relevant d'une formalisation, 118 sont aujourd'hui couverts, s
 |---|---|---|---|---|
 | Théorème | 15 | 3 | 0 | 0 |
 | Lemme | 10 | 3 | 4 | 0 |
-| Proposition | 3 | 2 | 1 | 0 |
+| Proposition | 3 | 3 | 0 | 0 |
 | Corollaire | 3 | 1 | 0 | 0 |
 | Conjecture | 0 | 1 | 0 | 0 |
 | Hypothèse | 0 | 12 | 0 | 0 |
-| Définition | 20 | 6 | 19 | 0 |
-| Remarque | 39 | 0 | 3 | 25 |
+| Définition | 22 | 6 | 17 | 0 |
+| Remarque | 40 | 0 | 2 | 25 |
 
 ## Détail par chapitre
 
@@ -186,10 +186,10 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 
 | N° | Page | Énoncé | Label | Statut | Nom Lean | Lot |
 |---|---|---|---|---|---|---|
-| Définition 4.1 | 127 | Capacité d'extraction institutionnelle Δ | `def:capacite_extraction_op` | non formalisé |  | L6 |
-| Remarque 4.2 | 129 | Estimateur et capacité pour une preuve masquante | `rem:estimateur_masquant` | non formalisé |  | L6 |
-| Proposition 4.1 | 129 | Minorant par traits | `prop:minorant_traits` | non formalisé |  | L6 |
-| Définition 4.2 | 133 | Capacité d'extraction quantique Δ_q | `def:capacite_extraction_quantique_op` | non formalisé |  | L6 |
+| Définition 4.1 | 127 | Capacité d'extraction institutionnelle Δ | `def:capacite_extraction_op` | démontré | estimateur_initial, estimateur_initial_exemple | L6 |
+| Remarque 4.2 | 129 | Estimateur et capacité pour une preuve masquante | `rem:estimateur_masquant` | démontré | CLOModel.estimateur_masquant | L6 |
+| Proposition 4.1 | 129 | Minorant par traits | `prop:minorant_traits` | mécanisé en situation réduite | traits_superadditif (deux traits), trait_stat_le, trait_fonction_preuve, trait_binaire_le | L6 |
+| Définition 4.2 | 133 | Capacité d'extraction quantique Δ_q | `def:capacite_extraction_quantique_op` | démontré | deltaQ, deltaQ_le | L6 |
 | Remarque 4.3 | 152 | Intervalles de la formulation initiale | `rem:ic_anterieurs` | hors champ formel |  | — |
 
 ### Chapitre 5

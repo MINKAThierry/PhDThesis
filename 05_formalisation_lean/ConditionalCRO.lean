@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.10 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
+  Version 3.11 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -4220,3 +4220,223 @@ end ExtensionL4
 #print axioms ConditionalCRO.miN_le_ent_of_factor
 #print axioms ConditionalCRO.CLOModel.sotp_opp_le
 #print axioms ConditionalCRO.CLOModel.sotp_opp_zero_of_public
+
+/-! ## 24. Protocoles de mesure et tableaux (version 3.11, lot L6)
+
+Ajout du 27 novembre 2026. Cette section démontre la Proposition 4.1 (minorant par
+traits, pour deux traits), la Remarque 4.2 et le constat de la Définition 4.1 sur la
+formulation initiale de l'estimateur. Elle certifie aussi les valeurs calculées de
+plusieurs tableaux des chapitres 2 et 4. -/
+
+section ExtensionL6
+
+open Finset
+
+namespace ConditionalCRO
+
+/-! ### 24.1 Outils : réindexation et symétrie -/
+
+/-- L'information mutuelle est invariante par réindexation de la seconde variable. -/
+lemma miN_equiv {α β β' : Type*} [Fintype α] [Fintype β] [Fintype β'] (w : α → β → ℝ)
+    (e : β' ≃ β) : miN (fun a b' => w a (e b')) = miN w := by
+  unfold miN
+  refine sum_congr rfl fun a _ => ?_
+  have hm : ∑ b', w a (e b') = ∑ b, w a b := Fintype.sum_equiv e _ _ (fun _ => rfl)
+  rw [hm]
+  exact Fintype.sum_equiv e _
+    (fun b => w a b * Real.log (w a b / ((∑ b, w a b) * ∑ a', w a' b))) (fun _ => rfl)
+
+/-- L'information mutuelle ne dépend pas de l'ordre des composantes de la seconde variable. -/
+lemma miN_prod_swap {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]
+    (u : α → β → γ → ℝ) :
+    miN (fun a (bg : β × γ) => u a bg.1 bg.2) = miN (fun a (gb : γ × β) => u a gb.2 gb.1) :=
+  (miN_equiv (fun a (bg : β × γ) => u a bg.1 bg.2) (Equiv.prodComm γ β)).symm
+
+/-- I(A;G|B) = I(G;A|B). -/
+lemma condMI_swap {α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ] (u : α → β → γ → ℝ) :
+    condMI (fun g b a => u a b g) = condMI u := by
+  unfold condMI
+  have h1 : ∀ b, (∑ g', ∑ a', u a' b g') = ∑ a', ∑ g', u a' b g' := fun b => Finset.sum_comm
+  have h2 : ∀ a b g, (∑ a', u a' b g) * (∑ g', u a b g') = (∑ g', u a b g') * (∑ a', u a' b g) :=
+    fun _ _ _ => mul_comm _ _
+  simp only [h1, h2]
+  let f : α → β → γ → ℝ := fun a b g => u a b g * Real.log (u a b g * (∑ a', ∑ g', u a' b g') /
+    ((∑ g', u a b g') * (∑ a', u a' b g)))
+  show ∑ g, ∑ b, ∑ a, f a b g = ∑ a, ∑ b, ∑ g, f a b g
+  calc ∑ g, ∑ b, ∑ a, f a b g = ∑ b, ∑ g, ∑ a, f a b g := Finset.sum_comm
+    _ = ∑ b, ∑ a, ∑ g, f a b g := sum_congr rfl fun _ _ => Finset.sum_comm
+    _ = ∑ a, ∑ b, ∑ g, f a b g := Finset.sum_comm
+
+/-- L'information mutuelle d'une loi produit de ses marges est nulle. -/
+lemma miN_indep {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ)
+    (hind : ∀ a b, w a b = (∑ b', w a b') * (∑ a', w a' b)) : miN w = 0 := by
+  unfold miN
+  refine sum_eq_zero fun a _ => sum_eq_zero fun b _ => ?_
+  rcases eq_or_ne (w a b) 0 with h | h
+  · rw [h, zero_mul]
+  · rw [← hind a b, div_self h, Real.log_one, mul_zero]
+
+/-! ### 24.2 Minorant par traits (Proposition 4.1)
+
+Les énoncés portent sur une valeur fixée de (M, C), notation omise comme dans la preuve
+du manuscrit. Ils passent à la moyenne sur (M, C). La loi jointe du verdict V et de deux
+traits (T₁, T₂) est u(v, t₁, t₂). -/
+
+/-- **Proposition 4.1, seconde inégalité (deux traits).** Si T₁ et T₂ sont indépendants,
+    I(V;T₁) + I(V;T₂) ≤ I(V;T₁,T₂). -/
+theorem traits_superadditif {ν τ₁ τ₂ : Type*} [Fintype ν] [Fintype τ₁] [Fintype τ₂]
+    (u : ν → τ₁ → τ₂ → ℝ) (hu : ∀ v t₁ t₂, 0 ≤ u v t₁ t₂)
+    (hind : ∀ t₁ t₂, ∑ v, u v t₁ t₂ =
+      (∑ v, ∑ t₂', u v t₁ t₂') * (∑ v, ∑ t₁', u v t₁' t₂)) :
+    miN (fun v t₁ => ∑ t₂, u v t₁ t₂) + miN (fun v t₂ => ∑ t₁, u v t₁ t₂) ≤
+      miN (fun v (t : τ₁ × τ₂) => u v t.1 t.2) := by
+  -- (a) I(V;T₁,T₂) = I(V;T₁) + I(V;T₂|T₁)
+  have ha := chain_rule u hu
+  -- (b) I(T₂;V,T₁) = I(T₂;V) + I(T₂;T₁|V)
+  have hb := chain_rule (fun t₂ v t₁ => u v t₁ t₂) (fun t₂ v t₁ => hu v t₁ t₂)
+  -- (c) I(T₂;T₁,V) = I(T₂;T₁) + I(T₂;V|T₁)
+  have hc := chain_rule (fun t₂ t₁ v => u v t₁ t₂) (fun t₂ t₁ v => hu v t₁ t₂)
+  -- (d) réindexation de (V, T₁) en (T₁, V)
+  have hd := miN_prod_swap (fun t₂ v t₁ => u v t₁ t₂)
+  -- (e) I(T₂;V|T₁) = I(V;T₂|T₁)
+  have he : condMI (fun t₂ t₁ v => u v t₁ t₂) = condMI u := condMI_swap u
+  -- (f) I(T₂;V) = I(V;T₂)
+  have hf : miN (fun t₂ v => ∑ t₁, u v t₁ t₂) = miN (fun v t₂ => ∑ t₁, u v t₁ t₂) :=
+    miN_symm _
+  -- (g) I(T₂;T₁) = 0 par indépendance
+  have hg : miN (fun t₂ t₁ => ∑ v, u v t₁ t₂) = 0 := by
+    apply miN_indep
+    intro t₂ t₁
+    rw [hind t₁ t₂, mul_comm]
+    congr 1
+    · exact Finset.sum_comm
+    · exact Finset.sum_comm
+  -- (h) I(T₂;T₁|V) ≥ 0
+  have hh := condMI_nonneg (fun t₂ v t₁ => u v t₁ t₂) (fun t₂ v t₁ => hu v t₁ t₂)
+  beta_reduce at ha hb hc hd hf
+  linarith
+
+/-- **Proposition 4.1, première inégalité.** Pour toute statistique g du verdict,
+    I(g(V);T) ≤ I(V;T). -/
+theorem trait_stat_le {ν ν' τ : Type*} [Fintype ν] [Fintype ν'] [Fintype τ] [DecidableEq ν']
+    (w : ν → τ → ℝ) (hw : ∀ v t, 0 ≤ w v t) (g : ν → ν') :
+    miN (fun v' t => ∑ v, if g v = v' then w v t else 0) ≤ miN w := by
+  rw [miN_symm, miN_symm w]
+  have := dpi_finite (fun t v => w v t) (fun v v' => if g v = v' then (1 : ℝ) else 0)
+    (fun t v => hw v t) (fun v v' => by split_ifs <;> norm_num)
+    (fun v => by simp)
+  convert this using 2
+  funext t v'
+  refine sum_congr rfl fun v _ => ?_
+  split_ifs <;> simp
+
+/-- **Proposition 4.1, dernière inégalité.** T = T(Σ) étant une fonction de la preuve,
+    I(V;T) ≤ I(V;Σ). -/
+theorem trait_fonction_preuve {ν σ τ : Type*} [Fintype ν] [Fintype σ] [Fintype τ]
+    [DecidableEq τ] (w : ν → σ → ℝ) (hw : ∀ v s, 0 ≤ w v s) (T : σ → τ) :
+    miN (fun v t => ∑ s, if T s = t then w v s else 0) ≤ miN w := by
+  have := dpi_finite w (fun s t => if T s = t then (1 : ℝ) else 0) hw
+    (fun s t => by split_ifs <;> norm_num) (fun s => by simp)
+  convert this using 2
+  funext v t
+  refine sum_congr rfl fun s _ => ?_
+  split_ifs <;> simp
+
+/-- **Proposition 4.1, borne de k bits.** Un trait binaire porte au plus 1 bit :
+    I(V;T_j) ≤ H(T_j) ≤ log 2. -/
+theorem trait_binaire_le {ν : Type*} [Fintype ν] (w : ν → Bool → ℝ) (hw : ∀ v t, 0 ≤ w v t)
+    (h1 : ∑ v, ∑ t, w v t = 1) : miN w / Real.log 2 ≤ 1 := by
+  have hl : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  rw [div_le_one hl]
+  have h := (miN_le_entN2 w hw).trans (entN2_le_log_card w hw h1)
+  simpa using h
+
+/-! ### 24.3 Estimateur de Δ (Définition 4.1, Remarque 4.2) -/
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  (X : CLOModel lam M C S V)
+
+/-- **Remarque 4.2.** I(V;Σ|M,C) ≥ I(V;Σ|C) − I(M;Σ|C), avec égalité pour une preuve
+    parfaitement masquante (I(M;Σ|C) = 0). -/
+theorem estimateur_masquant :
+    X.IV - X.I ≤ X.IVSM ∧ (X.I = 0 → X.IVSM = X.IV) := by
+  obtain ⟨heq, hM, -, -⟩ := X.fondement_extraction
+  refine ⟨by linarith, fun h0 => ?_⟩
+  have hM0 : 0 ≤ X.IVM := by
+    unfold IVM
+    exact div_nonneg (sum_nonneg fun c _ => mul_nonneg (X.pC_nonneg c)
+      (miN_nonneg _ (fun v m => sum_nonneg fun s _ => mul_nonneg (X.qMS_nonneg c m s)
+        (X.ker_nonneg c s v)) (by
+          rw [Finset.sum_comm]
+          calc ∑ m, ∑ v, ∑ s, X.qMS c m s * X.ker c s v
+              = ∑ m, ∑ s, X.qMS c m s := by
+                refine sum_congr rfl fun m _ => ?_
+                rw [Finset.sum_comm]
+                exact sum_congr rfl fun s _ => by rw [← mul_sum, X.ker_sum, mul_one]
+            _ ≤ 1 := X.qMS_sum_le c))) log_two_pos'.le
+  linarith
+
+end CLOModel
+
+/-- **Définition 4.1, formulation initiale de l'estimateur.** Pour un protocole fiable,
+    I(M;Σ|C) ≥ Rel·λ − 1 (Fano) et I(V;Σ|C) ≤ αH(C), si bien que la différence
+    I(V;Σ|C) − I(M;Σ|C) est au plus αH(C) − (Rel·λ − 1), négative dès que
+    αH(C) < Rel·λ − 1 (par exemple 20 < 127 pour Rel = 1 et λ = 128). Elle reste un
+    minorant de Δ sous l'Hypothèse 2.1. -/
+theorem estimateur_initial (IV I αH Rel lam Δ : ℝ) (hV : IV ≤ αH) (hF : Rel * lam - 1 ≤ I)
+    (hA1 : IV ≤ I + Δ) : IV - I ≤ αH - (Rel * lam - 1) ∧ IV - I ≤ Δ ∧
+      (αH < Rel * lam - 1 → IV - I < 0) := by
+  refine ⟨by linarith, by linarith, fun h => by linarith⟩
+
+/-- Valeur numérique du manuscrit : αH(C) = 20, Rel = 1, λ = 128. -/
+theorem estimateur_initial_exemple : (20 : ℝ) - (1 * 128 - 1) = -107 ∧ (20 : ℝ) < 1 * 128 - 1 := by
+  norm_num
+
+
+/-! ### 24.4 Certification numérique des tableaux (chapitres 2 et 4)
+
+Les protocoles empiriques restent hors champ formel. Seules les valeurs calculées des
+tableaux sont vérifiées. -/
+
+/-- Tableaux 2.2 (p. 67) et 4.18 (p. 151) :
+    Δ := λ·produit avec λ = 128 donne 56, 73 et 35 bits à moins d'un demi-bit, et
+    30/128 ≈ 0,234 (RSA). -/
+theorem calibration_delta :
+    |128 * (0.437 : ℝ) - 56| < 1 / 2 ∧ |128 * (0.572 : ℝ) - 73| < 1 / 2 ∧
+      |128 * (0.273 : ℝ) - 35| < 1 / 2 ∧ |(30 : ℝ) / 128 - 0.234| < 1 / 1000 := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> rw [abs_lt] <;> constructor <;> norm_num
+
+/-- Tableaux 4.13 (p. 149) et 4.12 (p. 148) : les totaux
+    15 + 10 + 10 + 0 = 35, 15 + 20 + 15 + 6 = 56, 25 + 20 + 15 + 13 = 73, et la somme naïve
+    des bornes supérieures vaut 100 bits. -/
+theorem decomposition_delta :
+    (15 + 10 + 10 + 0 : ℝ) = 35 ∧ (15 + 20 + 15 + 6 : ℝ) = 56 ∧ (25 + 20 + 15 + 13 : ℝ) = 73 ∧
+      (25 + 20 + 15 + 15 + 10 + 15 : ℝ) = 100 := by
+  norm_num
+
+/-- Tableau 4.2 (p. 126) : γ̂ = α̂·H(C) − 1 à l'échelle de l'espèce
+    vaut 19 (ECDSA), 1 (Helios) et 1,97 (zk-SNARKs), et le seuil H♯ = (Δ + 1)/α de Helios
+    (κ = 0, α = 1,2) vaut 47,5 bits, soit environ 48. -/
+theorem parametres_reference :
+    (1 : ℝ) * 20 - 1 = 19 ∧ (0.25 : ℝ) * 8 - 1 = 1 ∧ (0.27 : ℝ) * 11 - 1 = 1.97 ∧
+      ((56 : ℝ) + 1) / 1.2 = 47.5 := by
+  norm_num
+
+end ConditionalCRO
+
+end ExtensionL6
+
+/-! ## 25. Bloc de vérification des protocoles de mesure (version 3.11) -/
+
+#print axioms ConditionalCRO.traits_superadditif
+#print axioms ConditionalCRO.trait_stat_le
+#print axioms ConditionalCRO.trait_fonction_preuve
+#print axioms ConditionalCRO.trait_binaire_le
+#print axioms ConditionalCRO.CLOModel.estimateur_masquant
+#print axioms ConditionalCRO.estimateur_initial
+#print axioms ConditionalCRO.estimateur_initial_exemple
+#print axioms ConditionalCRO.calibration_delta
+#print axioms ConditionalCRO.decomposition_delta
+#print axioms ConditionalCRO.parametres_reference
