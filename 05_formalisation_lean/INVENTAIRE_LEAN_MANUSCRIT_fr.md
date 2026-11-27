@@ -1,20 +1,20 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a et L2 (ConditionalCRO.lean v3.7). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2 et L3 (ConditionalCRO.lean v3.8). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
 | Statut | Nombre |
 |---|---|
-| démontré | 53 |
+| démontré | 68 |
 | démontré, une inégalité posée dans le modèle abstrait | 10 |
 | mécanisé en situation réduite | 4 |
 | hypothèse formalisée | 18 |
-| non formalisé | 59 |
-| hors champ formel | 26 |
+| non formalisé | 45 |
+| hors champ formel | 25 |
 | **Total** | **170** |
 
-Sur 144 énoncés relevant d'une formalisation, 85 sont aujourd'hui couverts, soit 59 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1 et de 79 (55 %) après le lot L5a. Les 26 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 145 énoncés relevant d'une formalisation, 100 sont aujourd'hui couverts, soit 69 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a et de 85 (59 %) après le lot L2. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
@@ -23,11 +23,11 @@ Sur 144 énoncés relevant d'une formalisation, 85 sont aujourd'hui couverts, so
 | Théorème | 12 | 2 | 4 | 0 |
 | Lemme | 9 | 3 | 5 | 0 |
 | Proposition | 2 | 0 | 4 | 0 |
-| Corollaire | 2 | 0 | 2 | 0 |
+| Corollaire | 3 | 0 | 1 | 0 |
 | Conjecture | 0 | 0 | 1 | 0 |
 | Hypothèse | 0 | 12 | 0 | 0 |
-| Définition | 13 | 5 | 27 | 0 |
-| Remarque | 25 | 0 | 16 | 26 |
+| Définition | 19 | 5 | 21 | 0 |
+| Remarque | 33 | 0 | 9 | 25 |
 
 ## Détail par chapitre
 
@@ -38,7 +38,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | N° | Page | Énoncé | Label | Statut | Nom Lean | Lot |
 |---|---|---|---|---|---|---|
 | Lemme 1.1 | 17 | Inégalité de Pinsker | `lem:pinsker` | démontré | pinsker_finite, CLOModel.pinsker_model | L1 |
-| Lemme 1.2 | 17 | Lemme de Fano | `lem:fano` | démontré | fano_finite, CLOModel.fano_model | L1 |
+| Lemme 1.2 | 17 | Lemme de Fano | `lem:fano` | démontré | fano_finite, CLOModel.fano_model, fano_general | L1, L3 |
 | Lemme 1.3 | 17 | Data Processing Inequality (DPI) | `lem:dpi` | démontré | dpi_finite | L1 |
 | Lemme 1.4 | 19 | Inégalité de Pinsker quantique | `lem:pinsker_quantique_etat_art` | non formalisé |  | L5c |
 | Lemme 1.5 | 19 | Gentle measurement | `lem:mesure_douce_etat_art` | non formalisé |  | L5c |
@@ -53,7 +53,7 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Remarque 2.1 | 42 | Double couche de vérification | `rem:double_couche` | hors champ formel |  | — |
 | Définition 2.2 | 44 | Confidentialité | `def:confidentialite_clo` | démontré | CLOModel.Conf, CLOModel.Rel, CLOModel.Opp | L1 |
 | Définition 2.3 | 45 | Fiabilité de reconstruction | `def:fiabilite_clo` | démontré | CLOModel.Conf, CLOModel.Rel, CLOModel.Opp | L1 |
-| Remarque 2.2 | 45 | Fiabilité de vérification | `rem:rel_ver` | hors champ formel |  | — |
+| Remarque 2.2 | 45 | Fiabilité de vérification | `rem:rel_ver` | démontré | relver, rel_of_conf_one | L3 |
 | Définition 2.4 | 45 | Opposabilité | `def:opposabilite_clo` | démontré | CLOModel.Conf, CLOModel.Rel, CLOModel.Opp | L1 |
 | Théorème 2.1 | 46 | Bornes élémentaires des métriques CLO | `thm:bornes_mesures` | démontré | CLOModel.bornes_mesures | L1 |
 | Lemme 2.1 | 46 | Tension confidentialité--information mutuelle | `lem:compromis_conf_mi` | démontré | lemma4_concrete | L1 |
@@ -63,12 +63,12 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Remarque 2.4 | 48 | Verdict déterministe | `rem:verdict_deterministe` | démontré | opp_eq_one_of_deterministic, CLOModel.opp_eq_one_of_det_concrete | L1 |
 | Théorème 2.3 | 49 | Règles de composition | `thm:composition_sequentielle` | démontré | conf_post, rel_post, composition_parallele | L1 |
 | Remarque 2.5 | 49 | Opposabilité composée | `rem:composition_opp` | démontré | opp_post, frechet, xor_not_subadditive, copy_not_superadditive | L1 |
-| Définition 2.5 | 50 | Jeu IND-CONF | `def:jeu_ind_conf` | non formalisé |  | L3 |
-| Remarque 2.6 | 50 | Pont IND-CONF ↔ Conf | `rem:jeu_ind_conf_link` | non formalisé |  | L3 |
-| Définition 2.6 | 51 | Jeu BIND-REL | `def:jeu_bind_rel` | non formalisé |  | L3 |
-| Remarque 2.7 | 51 | Pont BIND-REL ↔ Relver | `rem:jeu_bind_rel_link` | non formalisé |  | L3 |
-| Définition 2.7 | 51 | Jeu EXT-OPP | `def:jeu_ext_opp` | non formalisé |  | L3 |
-| Remarque 2.8 | 52 | Pont EXT-OPP ↔ Opp | `rem:jeu_ext_opp_link` | non formalisé |  | L3 |
+| Définition 2.5 | 50 | Jeu IND-CONF | `def:jeu_ind_conf` | démontré | succIND, advDist, succIND_eq | L3 |
+| Remarque 2.6 | 50 | Pont IND-CONF ↔ Conf | `rem:jeu_ind_conf_link` | démontré | advDist_le_tv, neyman_pearson, ind_conf_le_conf, tv_disjoint | L3 |
+| Définition 2.6 | 51 | Jeu BIND-REL | `def:jeu_bind_rel` | démontré | winBindRel, winBindRel_bounds | L3 |
+| Remarque 2.7 | 51 | Pont BIND-REL ↔ Relver | `rem:jeu_bind_rel_link` | démontré | relver, relver_ge, relver_of_liant, rel_of_conf_one | L3 |
+| Définition 2.7 | 51 | Jeu EXT-OPP | `def:jeu_ext_opp` | démontré | extErr, HVSC | L3 |
+| Remarque 2.8 | 52 | Pont EXT-OPP ↔ Opp | `rem:jeu_ext_opp_link` | démontré | CLOModel.IV_eq_HV_sub, CLOModel.ext_opp_bridge, ext_opp_bridge_K | L3 |
 | Définition 2.8 | 52 | Confidentialité quantique | `def:conf_quantique_clo` | non formalisé |  | L5c |
 | Remarque 2.9 | 53 | Compatibilité avec la confidentialité classique | `rem:compatibilite_conf` | non formalisé |  | L5b |
 | Définition 2.9 | 53 | Perte d'interprétabilité quantique | `def:perte_interp_quantique` | non formalisé |  | L5c |
@@ -213,14 +213,14 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition A.2 | 220 | Engagement de Pedersen | `def:ann_pedersen` | mécanisé en situation réduite | com, pedersen_extract, advPRG (GameBasedSOTP) | L4 |
 | Définition A.3 | 220 | zk-SNARK Groth16 | `def:ann_groth16` | non formalisé |  | L4 |
 | Définition A.4 | 221 | Transformation JL | `def:ann_jl` | non formalisé |  | L4 |
-| Lemme A.1 | 221 | Inégalité de Fano | `lem:ann_g_fano` | démontré | fano_finite, CLOModel.fano_model | L1 |
+| Lemme A.1 | 221 | Inégalité de Fano | `lem:ann_g_fano` | démontré | fano_finite, CLOModel.fano_model, fano_general | L1, L3 |
 | Lemme A.2 | 221 | Traitement de l'Information (DPI) | `lem:ann_dpi` | démontré | dpi_finite | L1 |
-| Définition A.5 | 222 | Jeu IND-CONF (section sec:sotp_construction) | `def:ann_ind_conf` | non formalisé |  | L3 |
-| Remarque A.1 | 222 | Pont IND-CONF ↔ Conf | `rem:ann_ind_conf_link` | non formalisé |  | L3 |
-| Définition A.6 | 223 | Jeu BIND-REL (section sec:sotp_construction) | `def:ann_bind_rel` | non formalisé |  | L3 |
-| Remarque A.2 | 223 | Pont BIND-REL ↔ Relver | `rem:ann_bind_rel_link` | non formalisé |  | L3 |
-| Définition A.7 | 224 | Jeu EXT-OPP (section sec:sotp_construction) | `def:ann_ext_opp` | non formalisé |  | L3 |
-| Remarque A.3 | 224 | Pont EXT-OPP ↔ Opp | `rem:ann_ext_opp_link` | non formalisé |  | L3 |
+| Définition A.5 | 222 | Jeu IND-CONF (section sec:sotp_construction) | `def:ann_ind_conf` | démontré | succIND, advDist, succIND_eq | L3 |
+| Remarque A.1 | 222 | Pont IND-CONF ↔ Conf | `rem:ann_ind_conf_link` | démontré | advDist_le_tv, neyman_pearson, ind_conf_le_conf, tv_disjoint | L3 |
+| Définition A.6 | 223 | Jeu BIND-REL (section sec:sotp_construction) | `def:ann_bind_rel` | démontré | winBindRel, winBindRel_bounds | L3 |
+| Remarque A.2 | 223 | Pont BIND-REL ↔ Relver | `rem:ann_bind_rel_link` | démontré | relver, relver_ge, relver_of_liant, rel_of_conf_one | L3 |
+| Définition A.7 | 224 | Jeu EXT-OPP (section sec:sotp_construction) | `def:ann_ext_opp` | démontré | extErr, HVSC | L3 |
+| Remarque A.3 | 224 | Pont EXT-OPP ↔ Opp | `rem:ann_ext_opp_link` | démontré | CLOModel.IV_eq_HV_sub, CLOModel.ext_opp_bridge, ext_opp_bridge_K | L3 |
 | Théorème A.1 | 225 | Réduction de SOTP-Low au PRG (section sec:sotp_construction) | `thm:ann_sotp_low_conf` | mécanisé en situation réduite | ind_conf_eq_prg, ind_conf_perfect_otp (GameBasedSOTP) | L4 |
 | Théorème A.2 | 226 | Réduction de SOTP-Low au logarithme discret (section sec:sotp_construc | `thm:ann_sotp_low_rel` | mécanisé en situation réduite | bind_rel_gives_dlog, win_bind_le_dlog (GameBasedSOTP) | L4 |
 | Théorème A.3 | 227 | Dimensionnement JL de SOTP-Base (section sec:sotp_construction) | `thm:ann_sotp_base_opp` | non formalisé |  | L4 |
@@ -228,8 +228,8 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Théorème A.4 | 227 | Sécurité de SOTP-High héritée de Groth16 (section sec:sotp_constructio | `thm:ann_sotp_high` | non formalisé |  | L4 |
 | Théorème A.5 | 228 | Bornes game-based complètes de SOTP-Low (section sec:sotp_construction | `thm:ann_sotp_low_games` | non formalisé |  | L4 |
 | Remarque A.5 | 229 | Absence de borne game-based pour l'opposabilité de SOTP-Low | `rem:ann_sotp_low_opp_statut` | hors champ formel |  | — |
-| Corollaire A.2 | 229 | Produit CLO depuis les jeux (section sec:sotp_construction) | `cor:ann_cro_from_games` | non formalisé |  | L3 |
-| Remarque A.6 | 230 | Pourquoi ce corollaire ne contredit pas le Trilemme | `rem:ann_pas_de_contradiction` | non formalisé |  | L3 |
+| Corollaire A.2 | 229 | Produit CLO depuis les jeux (section sec:sotp_construction) | `cor:ann_cro_from_games` | démontré | product_from_games | L3 |
+| Remarque A.6 | 230 | Pourquoi ce corollaire ne contredit pas le Trilemme | `rem:ann_pas_de_contradiction` | démontré | echelles_distinctes | L3 |
 
 ### Sans numéro
 

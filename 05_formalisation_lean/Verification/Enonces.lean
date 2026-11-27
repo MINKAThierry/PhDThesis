@@ -4,7 +4,7 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.7). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.8). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
   Renvois : manuscrit v36 (« Aux fondements de la cryptographie
@@ -15,7 +15,7 @@
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
   Importation. Les définitions et les preuves sont dans un seul fichier. La
-  versions 3.5 à 3.7 prolongent la 3.4 par ajout des sections 12 à 17 en
+  versions 3.5 à 3.8 prolongent la 3.4 par ajout des sections 12 à 19 en
   fin de fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
   restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
@@ -691,5 +691,118 @@ def TemoinRealisable : Prop :=
       (witModel l d g).I ≤ 0 / l ∧
       (witModel l d g).Conf = 1 ∧
       (witModel l d g).Opp = d / g
+
+
+/-! ## 9. Extension v3.8, lot L3 : jeux et ponts vers les métriques
+
+Renvois au manuscrit v36. Énoncés démontrés dans la section 18 de
+`ConditionalCRO.lean` (version 3.8). Les adversaires sont des fonctions sur des
+ensembles finis, leur aléa propre étant moyenné. -/
+
+/-- Définitions 2.5 (p. 50) et A.5 (p. 222), jeu IND-CONF : la probabilité de succès
+    vaut ½ + avantage, avec avantage ½·Σ (P₀ − P₁)·a. -/
+def JeuINDConf : Prop :=
+  ∀ {α : Type u₁} [Fintype α] (P₀ P₁ a : α → ℝ), ∑ x, P₁ x = 1 →
+    succIND P₀ P₁ a = 1 / 2 + advDist P₀ P₁ a
+
+/-- Remarque 2.6 (p. 50), preuve : tout test, même non borné en calcul, a un avantage
+    au plus égal à la moitié de la variation totale. -/
+def AvantageTest : Prop :=
+  ∀ {α : Type u₁} [Fintype α] (P₀ P₁ a : α → ℝ), (∀ x, 0 ≤ a x ∧ a x ≤ 1) →
+    advDist P₀ P₁ a ≤ tv P₀ P₁ / 2
+
+/-- Remarque 2.6 (p. 50), égalité pour le test de Neyman-Pearson. -/
+def NeymanPearson : Prop :=
+  ∀ {α : Type u₁} [Fintype α] (P₀ P₁ : α → ℝ),
+    advDist P₀ P₁ (fun x => if P₁ x < P₀ x then (1 : ℝ) else 0) = tv P₀ P₁ / 2
+
+/-- Remarques 2.6 (p. 50) et A.1 (p. 222), pont IND-CONF ↔ Conf :
+    Adv^IND-CONF ≤ (1 − Conf)/2 pour tout distingueur. -/
+def PontINDConf : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [Nonempty M] [Nonempty C]
+    (X : CLOModel lam M C S V) (c : C) (m₀ m₁ : M) (a : S → ℝ),
+    (∀ s, 0 ≤ a s ∧ a s ≤ 1) → advDist (X.qS c m₀) (X.qS c m₁) a ≤ (1 - X.Conf) / 2
+
+/-- Remarque 2.6 (p. 50), la réciproque fait défaut : des lois de supports disjoints
+    ont une variation totale égale à 1. -/
+def ReciproqueINDConf : Prop :=
+  ∀ {α : Type u₁} [Fintype α] (P Q : α → ℝ), (∀ x, 0 ≤ P x) → (∀ x, 0 ≤ Q x) →
+    ∑ x, P x = 1 → (∀ x, P x = 0 ∨ Q x = 0) → tv P Q = 1
+
+/-- Définitions 2.6 (p. 51) et A.6 (p. 223), jeu BIND-REL : le gain est une probabilité. -/
+def JeuBINDRel : Prop :=
+  ∀ {Ω : Type u₁} {M : Type u₂} [Fintype Ω] [DecidableEq M] (μ : Ω → ℝ),
+    (∀ ω, 0 ≤ μ ω) → ∑ ω, μ ω = 1 → ∀ (acc : Ω → Bool) (o₀ o₁ : Ω → Option M),
+      0 ≤ winBindRel μ acc o₀ o₁ ∧ winBindRel μ acc o₀ o₁ ≤ 1
+
+/-- Remarques 2.7 (p. 51) et A.2 (p. 223), pont BIND-REL ↔ Relver :
+    Relver ≥ 1 − ε_bind − ν, où ν est le défaut de complétude. -/
+def PontBINDRel : Prop :=
+  ∀ (compl winBind ν εb : ℝ), 1 - ν ≤ compl → winBind ≤ εb → 1 - εb - ν ≤ relver compl winBind
+
+/-- Remarque 2.7 (p. 51), preuve : une ouverture parfaitement liante annule le gain
+    BIND-REL et Relver se réduit à la complétude. -/
+def OuvertureLiante : Prop :=
+  ∀ {Ω : Type u₁} {M : Type u₂} [Fintype Ω] [DecidableEq M] (μ : Ω → ℝ) (acc : Ω → Bool)
+    (o₀ o₁ : Ω → Option M) (compl : ℝ), 0 ≤ compl →
+    (∀ ω, acc ω = true → o₀ ω ≠ none → o₁ ω ≠ none → o₀ ω = o₁ ω) →
+      winBindRel μ acc o₀ o₁ = 0 ∧ relver compl (winBindRel μ acc o₀ o₁) = compl
+
+/-- Remarques 2.2 (p. 45), 2.7 (p. 51) et A.2 (p. 223) : Conf = 1 entraîne
+    Relrec = 2^(−λ) pour tout décodeur. -/
+def RelrecConfUn : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C]
+    (X : CLOModel lam M C S V), X.Conf = 1 → ∀ D : C → S → M, X.Rel D = 1 / (2 : ℝ) ^ lam
+
+/-- Lemme A.1 (p. 221), inégalité de Fano (nats) :
+    H(A|B) ≤ h(ε) + ε·log(|A| − 1) pour tout estimateur g, avec ε = Pr[g(B) ≠ A]. -/
+def FanoGeneral : Prop :=
+  ∀ {α : Type u₁} {β : Type u₂} [Fintype α] [Fintype β] [DecidableEq α] (w : α → β → ℝ),
+    (∀ a b, 0 ≤ w a b) → ∑ a, ∑ b, w a b = 1 → ∀ g : β → α,
+      condEnt w ≤ binEntN (1 - ∑ b, w (g b) b) +
+        (1 - ∑ b, w (g b) b) * Real.log ((Fintype.card α : ℝ) - 1)
+
+/-- Remarque 2.8 (p. 52), étape de la preuve : I(V;Σ|C) = H(V|C) − H(V|Σ,C). -/
+def InfoVerdictResidu : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V),
+    X.IV = X.HV - X.HVSC
+
+/-- Définitions 2.7 (p. 51) et A.7 (p. 224), Remarques 2.8 (p. 52) et A.3 (p. 224),
+    pont EXT-OPP ↔ Opp : Opp ≥ 1 − (h(ε) + ε·log(|V| − 1))/(H(V|C)·ln 2) pour tout
+    interprète qui lit (C, Σ), d'erreur ε. -/
+def PontEXTOpp : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] (X : CLOModel lam M C S V)
+    [DecidableEq V] (f : C → S → V), 0 < X.HV →
+      1 - (binEntN (X.extErr f) + X.extErr f * Real.log ((Fintype.card V : ℝ) - 1)) /
+        (X.HV * Real.log 2) ≤ X.Opp
+
+/-- Remarques 2.8 (p. 52) et A.3 (p. 224), forme générale avec les ressources K :
+    Opp ≥ 1 − (F + I(V;K|Σ,C))/H(V|C). -/
+def PontEXTOppRessources : Prop :=
+  ∀ (Opp HV HVSC HVSCK IVK F : ℝ), 0 < HV → Opp = 1 - HVSC / HV → HVSC = HVSCK + IVK →
+    HVSCK ≤ F → 1 - (F + IVK) / HV ≤ Opp
+
+/-- Corollaire A.2 (p. 229), produit CLO depuis les jeux, et minoration
+    (1 − a)(1 − b)(1 − c) ≥ 1 − a − b − c. -/
+def ProduitJeux : Prop :=
+  ∀ (Cc Rv Op εi εb L : ℝ), εi ≤ 1 / 2 → εb ≤ 1 → 0 ≤ L →
+    1 - 2 * εi ≤ Cc → 1 - εb ≤ Rv → L ≤ Op →
+    (1 - 2 * εi) * (1 - εb) * L ≤ Cc * Rv * Op ∧
+      ∀ a b c : ℝ, 0 ≤ a → a ≤ 1 → 0 ≤ b → b ≤ 1 → 0 ≤ c → c ≤ 1 →
+        1 - a - b - c ≤ (1 - a) * (1 - b) * (1 - c)
+
+/-- Remarque A.6 (p. 230), deux échelles distinctes : pour Conf = 1, Conf·Rel·Opp = Opp/2^λ
+    pour tout décodeur, alors que Conf·Relver·Opp = Opp pour une complétude 1 et une
+    ouverture liante. -/
+def EchellesDistinctes : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C]
+    (X : CLOModel lam M C S V), X.Conf = 1 →
+      (∀ D : C → S → M, X.Conf * X.Rel D * X.Opp = X.Opp / (2 : ℝ) ^ lam) ∧
+        X.Conf * relver 1 0 * X.Opp = X.Opp
 
 end Enonces

@@ -4,14 +4,14 @@
 
 This dossier lets a reader judge what the formalisation proves without reading the 3,403 lines of `ConditionalCRO.lean`. It follows the model of the repository of the Lean proof of the Riemann hypothesis (November 2026). Statements are isolated from proofs, a thin entry point links them to the theorems and a script audits the axioms. The limits are stated plainly.
 
-The dossier is **additive**. Versions 3.5 to 3.7 of `ConditionalCRO.lean` (27 November 2026) extend version 3.4 by appending sections 12 to 17 at the end of the file. Its lines 5 to 1575 remain identical to listing B.1 in Appendix B of the thesis, up to the four author lines of the header. Only line 4, which carries the version number, has changed. Line numbers cited for version 3.4 therefore remain valid. The verification files import `ConditionalCRO`.
+The dossier is **additive**. Versions 3.5 to 3.8 of `ConditionalCRO.lean` (27 November 2026) extend version 3.4 by appending sections 12 to 19 at the end of the file. Its lines 5 to 1575 remain identical to listing B.1 in Appendix B of the thesis, up to the four author lines of the header. Only line 4, which carries the version number, has changed. Line numbers cited for version 3.4 therefore remain valid. The verification files import `ConditionalCRO`.
 
 ## What to read and in which order
 
 | Order | File | Role |
 |---|---|---|
 | 1 | this document | Map, traceability and limits |
-| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 74 statements of the thesis, with no proof at all, each with its reference to manuscript v36 |
+| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 89 statements of the thesis, with no proof at all, each with its reference to manuscript v36 |
 | 3 | [`Verification/Principal.lean`](Verification/Principal.lean) | One line per statement, of the form `theorem principal_x : Enonces.X := existingName` |
 | 4 | [`Verification/Coherence.lean`](Verification/Coherence.lean) | Non-vacuity tests of the project's own definitions |
 | 5 | [`results/verification.log`](results/verification.log), [`results/axiomes.txt`](results/axiomes.txt) | Outputs of the audit script |
@@ -30,7 +30,7 @@ bash verifier.sh          # or bash verifier.sh --cache to chain both
 
 The script fails in six cases. The first is a proof in `Enonces.lean` (keyword `by`, or a declaration other than `def Name : Prop :=`). The second is a `sorry`, `admit`, `native_decide` or `axiom` in the sources, comments excluded. The third is a line of `Principal.lean` that does not link a statement to an existing theorem. The fourth is a build failure. The fifth is a `#print axioms` that shows anything other than `[propext, Classical.choice, Quot.sound]`. The sixth is a rejection by an independent kernel checker.
 
-This last step uses two tools shipped with the Lean 4.35.0 toolchain. `leanchecker` replays the declarations in Lean's kernel. `nanoda_bin` is a second checker, written in Rust, that reads an export produced by `leanexport`. The export covers the theorems of `Principal.lean` (29 in version 3.4, 47 in version 3.5, 64 in version 3.6, 74 in version 3.7) and all their dependencies, Mathlib included. Only the three standard axioms are admitted.
+This last step uses two tools shipped with the Lean 4.35.0 toolchain. `leanchecker` replays the declarations in Lean's kernel. `nanoda_bin` is a second checker, written in Rust, that reads an export produced by `leanexport`. The export covers the theorems of `Principal.lean` (29 in version 3.4, 47 in version 3.5, 64 in version 3.6, 74 in version 3.7, 89 in version 3.8) and all their dependencies, Mathlib included. Only the three standard axioms are admitted.
 
 The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/verification_lean.yml) runs this script on GitHub whenever the folder changes. It complements the `lean` job of `ci.yml` without replacing it.
 
@@ -38,6 +38,7 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 
 | Check | Where | Result |
 |---|---|---|
+| Version 3.8: `ConditionalCRO`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 89 `#print axioms` in the file, 89 on `Principal.lean` and 56 on `Coherence.lean`, all standard |
 | Version 3.7 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 46001043885 passed (commit ebfc833): 74 statements and 51 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | Version 3.7: `ConditionalCRO`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 74 `#print axioms` in the file, 74 on `Principal.lean` and 51 on `Coherence.lean`, all standard |
 | Version 3.6 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 45998003187 passed (commit 8993e9d): 64 statements and 48 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
@@ -59,7 +60,7 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 
 ## Traceability table
 
-Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identical to v35 for the statements of version 3.4. "File" is the line in `ConditionalCRO.lean`; the line in listing B.1 is four less. `E` and `P` are the lines in `Enonces.lean` and `Principal.lean`. All 74 theorems show `[propext, Classical.choice, Quot.sound]`. Lines from 1634 onwards belong to sections 12 (version 3.5), 14 (version 3.6) and 16 (version 3.7), which are not in listing B.1.
+Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identical to v35 for the statements of version 3.4. "File" is the line in `ConditionalCRO.lean`; the line in listing B.1 is four less. `E` and `P` are the lines in `Enonces.lean` and `Principal.lean`. All 89 theorems show `[propext, Classical.choice, Quot.sound]`. Lines from 1634 onwards belong to sections 12 (version 3.5), 14 (version 3.6), 16 (version 3.7) and 18 (version 3.8), which are not in listing B.1.
 
 ### Proved statements
 
@@ -140,10 +141,26 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | Order λ⁻¹ of the explicit form, order λ⁻² of the sharp bound | `rem:borne_forte_statut`, `rem:borne_aigue_portee` | Remarks 5.5, p. 185, and 2.19, p. 62 | `borne_forte_statut` | 3103 | 667 / 104 | proved |
 | Quantum sharp bound | `rem:borne_aigue_pq` | Remark 2.40, p. 80 | `trilemma_aigu_q` | 3148 | 674 / 105 | proved, sharp bound assumed for the measurement outcome (e) |
 | Realisable witness, Conf = 1 and Opp = Δ/γ | `rem:temoin_realisable` | Remark 2.20, p. 63 | `temoin_realisable` | 3365 | 684 / 106 | proved |
+| IND-CONF game, success = ½ + advantage | `def:jeu_ind_conf`, `def:ann_ind_conf` | Definition 2.5 (p. 50) and Definition A.5 (p. 222) | `succIND_eq` | 3437 | 704 / 110 | proved (f) |
+| Advantage of a test at most TV/2 | `rem:jeu_ind_conf_link` | Remark 2.6, proof, p. 50 | `advDist_le_tv` | 3447 | 710 / 111 | proved |
+| Equality for the Neyman-Pearson test | `rem:jeu_ind_conf_link` | Remark 2.6, proof, p. 50 | `neyman_pearson` | 3458 | 715 / 112 | proved |
+| IND-CONF ↔ Conf bridge, Adv ≤ (1 − Conf)/2 | `rem:jeu_ind_conf_link`, `rem:ann_ind_conf_link` | Remark 2.6 (p. 50) and Remark A.1 (p. 222) | `ind_conf_le_conf` | 3471 | 721 / 113 | proved (f) |
+| Converse fails, disjoint supports give TV = 1 | `rem:jeu_ind_conf_link` | Remark 2.6, proof, p. 50 | `tv_disjoint` | 3484 | 729 / 114 | proved |
+| BIND-REL game, gain in [0, 1] | `def:jeu_bind_rel`, `def:ann_bind_rel` | Definition 2.6 (p. 51) and Definition A.6 (p. 223) | `winBindRel_bounds` | 3512 | 734 / 115 | proved (f) |
+| BIND-REL ↔ Relver bridge, Relver ≥ 1 − ε_bind − ν | `rem:jeu_bind_rel_link`, `rem:ann_bind_rel_link`, `eq:rel_ver` | Remark 2.7 (p. 51), Remark A.2 (p. 223), (2.4) p. 45 | `relver_ge` | 3501 | 741 / 116 | proved, ν and t(λ) as parameters (f) |
+| Binding opening, zero gain and Relver = completeness | `rem:jeu_bind_rel_link` | Remark 2.7, proof, p. 51 | `relver_of_liant` | 3522 | 746 / 117 | proved |
+| Conf = 1 implies Relrec = 2^(−λ) | `rem:rel_ver`, `rem:jeu_bind_rel_link`, `rem:ann_bind_rel_link` | Remark 2.2 (p. 45), Remark 2.7 (p. 51), Remark A.2 (p. 223) | `rel_of_conf_one` | 3538 | 754 / 118 | proved |
+| Fano's inequality, H(A\|B) ≤ h(ε) + ε log(\|A\| − 1) | `lem:ann_g_fano` | Lemma A.1, p. 221 | `fano_general` | 3595 | 761 / 119 | proved (nats) |
+| I(V;Σ\|C) = H(V\|C) − H(V\|Σ,C) | `rem:jeu_ext_opp_link` | Remark 2.8, proof, p. 52 | `CLOModel.IV_eq_HV_sub` | 3729 | 768 / 120 | proved |
+| EXT-OPP game and EXT-OPP ↔ Opp bridge | `def:jeu_ext_opp`, `def:ann_ext_opp`, `rem:jeu_ext_opp_link`, `rem:ann_ext_opp_link` | Definitions 2.7 (p. 51) and A.7 (p. 224), Remarks 2.8 (p. 52) and A.3 (p. 224) | `CLOModel.ext_opp_bridge` | 3756 | 776 / 121 | proved for an interpreter that reads (C, Σ) (f) |
+| EXT-OPP bridge with resources K | `rem:jeu_ext_opp_link`, `rem:ann_ext_opp_link` | Remarks 2.8 (p. 52) and A.3 (p. 224) | `ext_opp_bridge_K` | 3776 | 785 / 122 | proved, chain rule as a premise (f) |
+| CLO product from the games | `cor:ann_cro_from_games`, `eq:ann_cro_product_games` | Corollary A.2, p. 229 | `product_from_games` | 3789 | 791 / 123 | proved |
+| Two distinct scales | `rem:ann_pas_de_contradiction` | Remark A.6, p. 230 | `echelles_distinctes` | 3806 | 801 / 124 | proved |
 
 (a) In the abstract model, Fano (I ≥ Rel·λ − 1) and Pinsker (TV² ≤ c₀·KL) are fields of `ProtocolInstance`. The concrete layer proves them (lines 1077 and 1128).
 (b) A point of the abstract model, not realisable by a distribution (Remark 3.10, p. 114).
 (e) Quantum core (section 14). Like Fano and Pinsker in the classical abstract model, quantum Fano (Lemma 2.6), the Holevo bound (Lemma 2.7) and quantum Pinsker (Lemma 2.4) are fields of `QuantumProtocolInstance`. They are not proved in this dossier (batch L5c of the roadmap).
+(f) Games on finite distributions (section 18). Adversaries and the interpreter are functions on finite sets, their own randomness being averaged out. The time bound t(λ), the completeness defect ν and the negligible term remain real parameters. The EXT-OPP bridge with resources takes the chain rule H(V\|Σ,C) = H(V\|Σ,C,K) + I(V;K\|Σ,C) as a premise. Without resources it is proved on `CLOModel`.
 (c) The institutional assumptions are explicit premises of the theorem. They carry the content specific to institutional cryptography (Δ, γ = αH(C) − 1, κ).
 
 ### Named assumptions
@@ -192,6 +209,7 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | `QuantumProtocolFamily` | family with fixed parameters, assumptions satisfied for every λ and asymptotic theorem applied | — | 394 to 415 |
 | `bProd`, `QuantumSharpInstance`, `witModel` (version 3.7) | b = P for `famModel`; quantum instance with zero reliability; Opp = 5/19 and Conf = 1 for (Δ, γ) = (5, 19) | Opp = 0 for Δ = 0 | 428 to 455 |
 | `deltaQ`, `etaQ` | Δ_q = 35 − 7 = 28 bits (ML-DSA-65); η_q = 0 for the identity channel | — | 416 to 424 |
+| `advDist`, `succIND`, `relver`, `winBindRel`, `binEntN`, `condEnt` (version 3.8) | Neyman-Pearson test, advantage 1/2 and success 1; Relver = 1; adversary opening on two messages, gain 1; h(1/2) = ln 2; H(A\|B) = ln 2 for an independent bit | constant test, advantage 0; Relver truncated to 0; opening on the same message, gain 0; h(0) = 0; H(A\|B) = 0 when A = B | 455 to 501 |
 
 ## Map of the proof in plain language
 
@@ -215,6 +233,8 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 
 **Extension 3.7 (section 16).** Proposition 2.2 keeps the binary divergence instead of bounding h(p) by 1. `I_nats` writes I(M;Σ|C) as a divergence between the joint law of (C, M, Σ) and the product law `bProd`. `log_sum_two_blocks` reduces this divergence to the two outcomes "decoding succeeds" and "decoding fails" over the whole space at once, which avoids Jensen's inequality. `fano_sharp_model` derives I·ln 2 ≥ pλ ln 2 + p ln p − p, then `rel_aigu_of_info` cuts at 2^(−λ/2). The witness `witModel` computes exactly H(C) = γ + 1, H(V|C) = γ, I(V;Σ|C) = Δ and I(M;Σ|C) = 0.
 
+**Extension 3.8 (section 18).** The IND-CONF bridge is the termwise bound (P₀ − P₁)·a ≤ max(P₀ − P₁, 0), with equality for the Neyman-Pearson test. The BIND-REL bridge is algebra on definition (2.4) of Relver. Remark 2.2 follows because Conf = 1 cancels every total variation, so the law of Σ does not depend on M. Lemma A.1 reuses the log-sum over the two blocks "correct estimate" and "wrong estimate", like `fano_finite`. `IV_eq_HV_sub` splits mutual information into entropy minus residual entropy, which gives Opp = 1 − H(V\|Σ,C)/H(V\|C) and reduces the EXT-OPP bridge to Lemma A.1. Proofs of medium length, the longest being Fano (about 110 lines).
+
 **Where the difficulty lies.** Mathematically, the difficulty lies in Fano and Pinsker on finite distributions. The trilemma itself is short once these two inequalities are available. Its content comes from the institutional assumptions, which bring in Δ, γ = αH(C) − 1 and κ.
 
 ## Limits stated plainly
@@ -225,7 +245,7 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 4. **Institutional assumptions are posited.** Assumptions 2.1, 2.2 and 2.4 are premises, not theorems. This is their status in the thesis. Their information-theoretic grounding (Proposition 2.1, p. 55) is formalised since version 3.5 (`fondement_extraction`). It shows that I(V;Σ|M,C) ≤ Δ implies Assumption 2.1, without proving it for an actual institution.
 5. **Silent premises.** The condition `hcard` (|V| ≤ 2^(αH(C))) appears in the concrete theorems without being used by the proofs. The decoder `D` of `lemma4_concrete` only serves to build the instance. Assumption 2.3 is carried by `InstitutionalAssumptions` without being used by the trilemmas. These premises do not make the statements false. They make them look slightly stronger than they are.
 6. **Abstract consistency witness.** `assumptions_consistent_and_bound_attained` is a point of the relaxed model (Rel = 1/λ with I = 0). An actual distribution would give Rel = 2^(−λ) (`fam_Rel`, line 156 of `Coherence.lean`). The family `famModel` has Δ = γ = 1, so the institutional factor is not active there.
-7. **Local build with targeted imports.** See the caveat above. Version 3.4 with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Version 3.5 was built by it on 27 November 2026 (run 45995428572) version 3.6 too (run 45998003187) and version 3.7 as well (run 46001043885). Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
+7. **Local build with targeted imports.** See the caveat above. Version 3.4 with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Version 3.5 was built by it on 27 November 2026 (run 45995428572) version 3.6 too (run 45998003187) and version 3.7 as well (run 46001043885). Version 3.8 awaits its run. Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
 8. **Statements written by copying.** The statements of `Enonces.lean` were written from the existing theorems. The build guarantees that they match the proofs. Their faithfulness to the manuscript text remains for the reader to judge, with the table above.
 
 ## Reproducibility
@@ -235,4 +255,4 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lake-manifest.json`](lake-manifest.json)) |
 | Lake libraries | `ConditionalCRO` (default target) and `Verification` (files `Verification/*.lean`) |
-| SHA-256 of `ConditionalCRO.lean` | `64299c5bb5ab77df2ac5f507a2dd19a99c9253ef57222db28bdf261fde4775a0` (version 3.7) |
+| SHA-256 of `ConditionalCRO.lean` | `20905c2e4f6108a75b2aa331df3ed08e3a558bb98dd4d8d896c47693c822a841` (version 3.8) |

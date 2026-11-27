@@ -9,7 +9,10 @@ Version du 27 novembre 2026, établie sur le manuscrit v36 et la formalisation e
 | L1 information classique finie | **terminé le 27 novembre 2026** (24 théorèmes ajoutés, 18 énoncés dans `Enonces.lean`) | `ConditionalCRO.lean` v3.5 | 57 sur 144 (40 %) |
 | L5a noyau quantique | **terminé le 27 novembre 2026** (17 théorèmes ajoutés, 17 énoncés dans `Enonces.lean`) | `ConditionalCRO.lean` v3.6 | 79 sur 144 (55 %) |
 | L2 bornes avancées | **terminé le 27 novembre 2026** (13 théorèmes ajoutés, 10 énoncés dans `Enonces.lean`) | `ConditionalCRO.lean` v3.7 | 85 sur 144 (59 %) |
-| L3 jeux et ponts | prochain lot | v3.8 prévue | — |
+| L3 jeux et ponts | **terminé le 27 novembre 2026** (15 théorèmes ajoutés, 15 énoncés dans `Enonces.lean`) ; les ponts utilisent `CLOModel` et sont donc dans `ConditionalCRO.lean` ; `GameBasedSOTP.lean` reçoit la structure du dépôt de Riemann | `ConditionalCRO.lean` v3.8, `GameBasedSOTP.lean` v1.1 | 100 sur 145 (69 %) (a) |
+| L5b encodage diagonal | prochain lot | v3.9 prévue | — |
+
+(a) La Remarque 2.2 (`rem:rel_ver`), classée hors champ dans l'inventaire initial, contient l'affirmation « Conf = 1 entraîne Relrec = 2^(−λ) ». Elle est démontrée par `rel_of_conf_one` et compte désormais parmi les énoncés formalisables, qui passent de 144 à 145.
 
 ## Point de départ
 

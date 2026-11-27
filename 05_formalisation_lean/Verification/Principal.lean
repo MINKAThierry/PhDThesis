@@ -2,7 +2,7 @@
   Dossier de vérification. Point d'entrée mince
   =============================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème
-  existant de `ConditionalCRO.lean` (version 3.7) prouve exactement
+  existant de `ConditionalCRO.lean` (version 3.8) prouve exactement
   l'énoncé écrit séparément. Si un énoncé et sa preuve divergent, ce fichier ne
   compile pas. C'est le seul fichier qu'un relecteur doit ouvrir, avec
   `Enonces.lean`. Le script `verifier.sh` exécute `#print axioms` sur chaque
@@ -104,5 +104,23 @@ theorem principal_portee_cas_etude : Enonces.PorteeCasEtude := portee_cas_etude
 theorem principal_borne_forte_statut : Enonces.BorneForteStatut := borne_forte_statut
 theorem principal_trilemme_aigu_quantique : Enonces.TrilemmeAiguQuantique := trilemma_aigu_q
 theorem principal_temoin_realisable : Enonces.TemoinRealisable := temoin_realisable
+
+
+-- 9. Extension v3.8, lot L3 (jeux et ponts vers les métriques)
+theorem principal_jeu_ind_conf : Enonces.JeuINDConf := succIND_eq
+theorem principal_avantage_test : Enonces.AvantageTest := advDist_le_tv
+theorem principal_neyman_pearson : Enonces.NeymanPearson := neyman_pearson
+theorem principal_pont_ind_conf : Enonces.PontINDConf := ind_conf_le_conf
+theorem principal_reciproque_ind_conf : Enonces.ReciproqueINDConf := tv_disjoint
+theorem principal_jeu_bind_rel : Enonces.JeuBINDRel := winBindRel_bounds
+theorem principal_pont_bind_rel : Enonces.PontBINDRel := relver_ge
+theorem principal_ouverture_liante : Enonces.OuvertureLiante := relver_of_liant
+theorem principal_relrec_conf_un : Enonces.RelrecConfUn := rel_of_conf_one
+theorem principal_fano_general : Enonces.FanoGeneral := fano_general
+theorem principal_info_verdict_residu : Enonces.InfoVerdictResidu := CLOModel.IV_eq_HV_sub
+theorem principal_pont_ext_opp : Enonces.PontEXTOpp := CLOModel.ext_opp_bridge
+theorem principal_pont_ext_opp_ressources : Enonces.PontEXTOppRessources := ext_opp_bridge_K
+theorem principal_produit_jeux : Enonces.ProduitJeux := product_from_games
+theorem principal_echelles_distinctes : Enonces.EchellesDistinctes := echelles_distinctes
 
 end Principal

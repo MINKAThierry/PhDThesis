@@ -3,7 +3,7 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.7), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.8), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
@@ -12,8 +12,9 @@
   (section 6, version 3.5) entN1, condMI, HS, IVM, IVSM, IVpost, post,
   constVerdict et detVerdict, puis (section 7, version 3.6) gammaQ,
   QuantumProtocolInstance, QuantumAssumptions, QuantumProtocolFamily, deltaQ
-  et etaQ, enfin (section 8, version 3.7) bProd, QuantumSharpInstance et
-  witModel.
+  et etaQ, puis (section 8, version 3.7) bProd, QuantumSharpInstance et
+  witModel, enfin (section 9, version 3.8) advDist, succIND, relver,
+  winBindRel, binEntN et condEnt.
   La section 5 montre que les hypothèses imposent H(V|C) ≥ 1, ce qui exclut la
   division par zéro dans Opp (en Lean, x/0 = 0).
 -/
@@ -450,5 +451,52 @@ lemma witModel_extremes (l : ℕ) :
   · have := (temoin_realisable l 1 1 le_rfl le_rfl).2.2.2.2.2.2.2; simpa using this
   · have := (temoin_realisable l 5 19 (by norm_num) (by norm_num)).2.2.2.2.2.2.2; simpa using this
   · exact (temoin_realisable l 5 19 (by norm_num) (by norm_num)).2.2.2.2.2.2.1
+
+/-! ## 9. Définitions des jeux et ponts (version 3.8, lot L3) -/
+
+/-- `advDist`, `succIND` : pour deux lois de Dirac distinctes sur Bool, le test de
+    Neyman-Pearson gagne toujours (avantage 1/2, succès 1) et un test constant ne gagne
+    qu'une fois sur deux (avantage 0). -/
+lemma ind_extremes :
+    advDist (fun b : Bool => if b then (1 : ℝ) else 0) (fun b => if b then 0 else 1)
+        (fun b => if b then 1 else 0) = 1 / 2 ∧
+      succIND (fun b : Bool => if b then (1 : ℝ) else 0) (fun b => if b then 0 else 1)
+        (fun b => if b then 1 else 0) = 1 ∧
+      advDist (fun b : Bool => if b then (1 : ℝ) else 0) (fun b => if b then 0 else 1)
+        (fun _ => 1) = 0 := by
+  refine ⟨?_, ?_, ?_⟩ <;> norm_num [advDist, succIND]
+
+/-- `relver` : valeurs extrêmes 1 et 0, et troncature à 0. -/
+lemma relver_extremes : relver 1 0 = 1 ∧ relver 0 1 = 0 ∧ relver (1 / 2) 1 = 0 := by
+  refine ⟨?_, ?_, ?_⟩ <;> norm_num [relver]
+
+/-- `winBindRel` : un adversaire qui ouvre toujours une preuve acceptée sur deux messages
+    distincts gagne avec probabilité 1 ; s'il ouvre sur le même message, il perd. -/
+lemma bind_extremes :
+    winBindRel (fun _ : Unit => (1 : ℝ)) (fun _ => true) (fun _ => some false)
+        (fun _ => some true) = 1 ∧
+      winBindRel (fun _ : Unit => (1 : ℝ)) (fun _ => true) (fun _ => some false)
+        (fun _ => some false) = 0 := by
+  constructor <;> simp [winBindRel]
+
+/-- `binEntN` : h(0) = 0 et h(1/2) = ln 2. -/
+lemma binEntN_valeurs : binEntN 0 = 0 ∧ binEntN (1 / 2) = Real.log 2 := by
+  constructor
+  · simp [binEntN]
+  · simp only [binEntN]
+    rw [show (1 : ℝ) - 1 / 2 = 1 / 2 by norm_num, one_div, Real.log_inv]
+    ring
+
+/-- `condEnt` : nulle quand A est fonction de B, égale à ln 2 quand A est un bit uniforme
+    indépendant de B. -/
+lemma condEnt_extremes :
+    condEnt (fun a b : Bool => if a = b then (1 / 2 : ℝ) else 0) = 0 ∧
+      condEnt (fun _ _ : Bool => (1 / 4 : ℝ)) = Real.log 2 := by
+  constructor
+  · simp [condEnt]
+  · simp only [condEnt, Fintype.sum_bool]
+    norm_num
+    rw [show (1 : ℝ) / 2 = 2⁻¹ by norm_num, Real.log_inv]
+    ring
 
 end Coherence

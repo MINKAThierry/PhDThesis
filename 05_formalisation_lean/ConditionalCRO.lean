@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.7 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
+  Version 3.8 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -3401,3 +3401,435 @@ end ExtensionL2
 #print axioms ConditionalCRO.borne_forte_statut
 #print axioms ConditionalCRO.trilemma_aigu_q
 #print axioms ConditionalCRO.temoin_realisable
+
+/-! ## 18. Jeux et ponts vers les métriques CLO (version 3.8, lot L3)
+
+Ajout du 27 novembre 2026. Cette section formalise sur lois finies les jeux IND-CONF,
+BIND-REL et EXT-OPP (Définitions 2.5 à 2.7 et A.5 à A.7) et leurs ponts vers Conf, Relver
+et Opp (Remarques 2.2, 2.6 à 2.8 et A.1 à A.3). Elle démontre l'inégalité de Fano générale
+(Lemme A.1), le Corollaire A.2 et la Remarque A.6. Les adversaires sont des fonctions sur
+des ensembles finis, leur aléa propre étant moyenné. La borne de temps t(λ) et le terme
+négligeable restent des paramètres réels. -/
+
+section ExtensionL3
+
+open Finset
+
+namespace ConditionalCRO
+
+/-! ### 18.1 Jeu IND-CONF et pont vers Conf (Définitions 2.5 et A.5, Remarques 2.6 et A.1)
+
+Le distingueur, non borné en calcul, fixe (m₀, m₁, c), reçoit σ tiré selon P_{Σ|m_b,c}
+pour un bit b uniforme et répond 0 avec probabilité a(σ) ∈ [0, 1] (son aléa propre est
+moyenné). Sa probabilité de succès vaut ½(1 + Σ_σ (P₀ − P₁)(σ)·a(σ)) ; son avantage
+est l'écart à ½. -/
+
+/-- Avantage IND-CONF d'un distingueur a contre les lois P₀ et P₁. -/
+noncomputable def advDist {α : Type*} [Fintype α] (P₀ P₁ a : α → ℝ) : ℝ :=
+  (1 / 2) * ∑ x, (P₀ x - P₁ x) * a x
+
+/-- Probabilité de succès au jeu IND-CONF : b = 0 avec probabilité 1/2 (réponse 0 attendue)
+    et b = 1 avec probabilité 1/2 (réponse 1 attendue). -/
+noncomputable def succIND {α : Type*} [Fintype α] (P₀ P₁ a : α → ℝ) : ℝ :=
+  (1 / 2) * ∑ x, P₀ x * a x + (1 / 2) * ∑ x, P₁ x * (1 - a x)
+
+/-- Succès = ½(1 + P₀(A) − P₁(A)) = ½ + avantage (preuve de la Remarque 2.6). -/
+theorem succIND_eq {α : Type*} [Fintype α] (P₀ P₁ a : α → ℝ) (h1 : ∑ x, P₁ x = 1) :
+    succIND P₀ P₁ a = 1 / 2 + advDist P₀ P₁ a := by
+  unfold succIND advDist
+  have e : ∑ x, P₁ x * (1 - a x) = ∑ x, P₁ x - ∑ x, P₁ x * a x := by
+    rw [← sum_sub_distrib]; exact sum_congr rfl fun x _ => by ring
+  rw [e, h1, show ∑ x, (P₀ x - P₁ x) * a x = ∑ x, P₀ x * a x - ∑ x, P₁ x * a x by
+    rw [← sum_sub_distrib]; exact sum_congr rfl fun x _ => by ring]
+  ring
+
+/-- L'avantage est au plus la moitié de la variation totale. -/
+theorem advDist_le_tv {α : Type*} [Fintype α] (P₀ P₁ a : α → ℝ)
+    (ha : ∀ x, 0 ≤ a x ∧ a x ≤ 1) : advDist P₀ P₁ a ≤ tv P₀ P₁ / 2 := by
+  unfold advDist tv
+  have h : ∑ x, (P₀ x - P₁ x) * a x ≤ ∑ x, max (P₀ x - P₁ x) 0 := by
+    refine sum_le_sum fun x _ => ?_
+    rcases le_or_gt 0 (P₀ x - P₁ x) with h | h
+    · rw [max_eq_left h]; nlinarith [ha x]
+    · rw [max_eq_right h.le]; nlinarith [ha x]
+  linarith
+
+/-- Le test de Neyman-Pearson, a = 1 sur {P₀ > P₁}, atteint la borne. -/
+theorem neyman_pearson {α : Type*} [Fintype α] (P₀ P₁ : α → ℝ) :
+    advDist P₀ P₁ (fun x => if P₁ x < P₀ x then (1 : ℝ) else 0) = tv P₀ P₁ / 2 := by
+  unfold advDist tv
+  have e : ∑ x, (P₀ x - P₁ x) * (if P₁ x < P₀ x then (1 : ℝ) else 0) =
+      ∑ x, max (P₀ x - P₁ x) 0 := by
+    refine sum_congr rfl fun x _ => ?_
+    split_ifs with h
+    · rw [mul_one, max_eq_left (by linarith)]
+    · rw [mul_zero, max_eq_right (by linarith [not_lt.mp h])]
+  rw [e]; ring
+
+/-- **Remarques 2.6 et A.1 (pont IND-CONF ↔ Conf) sur lois finies.** Pour tout
+    distingueur, même non borné en calcul, Adv^IND-CONF ≤ (1 − Conf)/2. -/
+theorem ind_conf_le_conf {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S]
+    [Fintype V] [Nonempty M] [Nonempty C] (X : CLOModel lam M C S V) (c : C) (m₀ m₁ : M)
+    (a : S → ℝ) (ha : ∀ s, 0 ≤ a s ∧ a s ≤ 1) :
+    advDist (X.qS c m₀) (X.qS c m₁) a ≤ (1 - X.Conf) / 2 := by
+  have h1 := advDist_le_tv (X.qS c m₀) (X.qS c m₁) a ha
+  have h2 : X.TV (c, m₀, m₁) ≤ X.TVmax := Finset.le_sup' X.TV (mem_univ _)
+  unfold CLOModel.Conf
+  unfold CLOModel.TV at h2
+  linarith
+
+/-- Réciproque en défaut (preuve de la Remarque 2.6) : deux lois de supports disjoints
+    ont une variation totale égale à 1, donc Conf = 0, alors qu'un adversaire borné en
+    calcul peut n'avoir qu'un avantage négligeable. -/
+theorem tv_disjoint {α : Type*} [Fintype α] (P Q : α → ℝ) (hP : ∀ x, 0 ≤ P x)
+    (hQ : ∀ x, 0 ≤ Q x) (hP1 : ∑ x, P x = 1) (hdis : ∀ x, P x = 0 ∨ Q x = 0) :
+    tv P Q = 1 := by
+  unfold tv
+  rw [← hP1]
+  refine sum_congr rfl fun x _ => ?_
+  rcases hdis x with h | h
+  · rw [h]; simp [hQ x]
+  · rw [h, sub_zero, max_eq_left (hP x)]
+
+/-! ### 18.2 Fiabilité de vérification et jeu BIND-REL (Remarques 2.2, 2.7 et A.2) -/
+
+/-- Relver = max{0, complétude − meilleur gain BIND-REL} (équation (2.5)). -/
+noncomputable def relver (compl winBind : ℝ) : ℝ := max 0 (compl - winBind)
+
+/-- **Remarques 2.7 et A.2 (pont BIND-REL ↔ Relver).** Si la complétude vaut au moins
+    1 − ν et le gain BIND-REL au plus ε_bind, alors Relver ≥ 1 − ε_bind − ν. -/
+theorem relver_ge (compl winBind ν εb : ℝ) (hc : 1 - ν ≤ compl) (hw : winBind ≤ εb) :
+    1 - εb - ν ≤ relver compl winBind :=
+  le_trans (by linarith) (le_max_right _ _)
+
+/-- Jeu BIND-REL sur un ensemble fini Ω de sorties de l'adversaire (c, σ, o₀, o₁), de loi μ
+    (aléa de l'adversaire et de Setup). `acc ω` dit si Verify(pp, σ, c) = 1 et `o₀ ω`,
+    `o₁ ω` sont les messages Open(pp, σ, oᵢ), `none` codant ⊥ (Définitions 2.6 et A.6). -/
+noncomputable def winBindRel {Ω M : Type*} [Fintype Ω] [DecidableEq M] (μ : Ω → ℝ)
+    (acc : Ω → Bool) (o₀ o₁ : Ω → Option M) : ℝ :=
+  ∑ ω, if acc ω = true ∧ o₀ ω ≠ none ∧ o₁ ω ≠ none ∧ o₀ ω ≠ o₁ ω then μ ω else 0
+
+theorem winBindRel_bounds {Ω M : Type*} [Fintype Ω] [DecidableEq M] (μ : Ω → ℝ)
+    (hμ : ∀ ω, 0 ≤ μ ω) (h1 : ∑ ω, μ ω = 1) (acc : Ω → Bool) (o₀ o₁ : Ω → Option M) :
+    0 ≤ winBindRel μ acc o₀ o₁ ∧ winBindRel μ acc o₀ o₁ ≤ 1 := by
+  unfold winBindRel
+  refine ⟨sum_nonneg fun ω _ => ?_, h1 ▸ sum_le_sum fun ω _ => ?_⟩
+  · split_ifs <;> simp [hμ ω]
+  · split_ifs <;> simp [hμ ω]
+
+/-- Ouverture parfaitement liante : une preuve acceptée ne s'ouvre jamais sur deux messages
+    distincts, le gain BIND-REL est nul et Relver se réduit à la complétude. -/
+theorem relver_of_liant {Ω M : Type*} [Fintype Ω] [DecidableEq M] (μ : Ω → ℝ)
+    (acc : Ω → Bool) (o₀ o₁ : Ω → Option M) (compl : ℝ) (hc : 0 ≤ compl)
+    (hl : ∀ ω, acc ω = true → o₀ ω ≠ none → o₁ ω ≠ none → o₀ ω = o₁ ω) :
+    winBindRel μ acc o₀ o₁ = 0 ∧ relver compl (winBindRel μ acc o₀ o₁) = compl := by
+  have h0 : winBindRel μ acc o₀ o₁ = 0 := by
+    unfold winBindRel
+    refine sum_eq_zero fun ω _ => ?_
+    split_ifs with h
+    · exact absurd (hl ω h.1 h.2.1 h.2.2.1) h.2.2.2
+    · rfl
+  refine ⟨h0, ?_⟩
+  rw [h0, relver, sub_zero, max_eq_right hc]
+
+/-- **Remarque 2.2 sur lois finies.** Conf = 1 entraîne que la loi de Σ ne dépend pas
+    de M sachant C, donc tout décodeur a une fiabilité de reconstruction 2^(−λ), alors
+    que Relver peut être proche de 1. -/
+theorem rel_of_conf_one {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S]
+    [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C] (X : CLOModel lam M C S V)
+    (hC : X.Conf = 1) (D : C → S → M) : X.Rel D = 1 / (2 : ℝ) ^ lam := by
+  classical
+  have hN : (Fintype.card M : ℝ) = 2 ^ lam := by exact_mod_cast X.card_M
+  have hT : X.TVmax = 0 := by unfold CLOModel.Conf at hC; linarith
+  have hTV0 : ∀ c m₀ m₁, tv (X.qS c m₀) (X.qS c m₁) = 0 := by
+    intro c m₀ m₁
+    have h : X.TV (c, m₀, m₁) ≤ X.TVmax := Finset.le_sup' X.TV (mem_univ (c, m₀, m₁))
+    exact le_antisymm (hT ▸ h) (X.TV_nonneg (c, m₀, m₁))
+  have hrow : ∀ c m, ∑ s, X.P c m s = X.pC c / (Fintype.card M : ℝ) := fun c m => X.unif c m
+  have heq : ∀ c m₀ m₁ s, X.P c m₀ s ≤ X.P c m₁ s := by
+    intro c m₀ m₁ s
+    have h := hTV0 c m₀ m₁
+    unfold tv at h
+    have hz := (sum_eq_zero_iff_of_nonneg (fun s _ => le_max_right _ _)).1 h s (mem_univ s)
+    have hle : X.qS c m₀ s ≤ X.qS c m₁ s := by
+      by_contra hc; push Not at hc; rw [max_eq_left (by linarith)] at hz; linarith
+    unfold CLOModel.qS at hle
+    rw [hrow, hrow] at hle
+    rcases (X.pC_nonneg c).lt_or_eq with hp | hp
+    · have hpos : 0 < X.pC c / (Fintype.card M : ℝ) := div_pos hp (by rw [hN]; positivity)
+      exact (div_le_div_iff_of_pos_right hpos).1 hle
+    · rw [X.P_eq_zero_of_pC c hp.symm m₀ s, X.P_eq_zero_of_pC c hp.symm m₁ s]
+  have hconst : ∀ c m₀ m₁ s, X.P c m₀ s = X.P c m₁ s := fun c m₀ m₁ s =>
+    le_antisymm (heq c m₀ m₁ s) (heq c m₁ m₀ s)
+  obtain ⟨m₀⟩ := (inferInstance : Nonempty M)
+  have hterm : ∀ c, ∑ s, X.P c (D c s) s = X.pC c / (Fintype.card M : ℝ) := fun c => by
+    rw [sum_congr rfl fun s _ => hconst c (D c s) m₀ s]; exact hrow c m₀
+  rw [CLOModel.Rel_eq, sum_congr rfl fun c _ => hterm c, ← sum_div, X.sum_pC, hN]
+
+/-! ### 18.3 Inégalité de Fano générale (Lemme A.1) -/
+
+/-- Entropie conditionnelle H(A|B) (nats) d'une loi jointe w(a, b). -/
+noncomputable def condEnt {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ) : ℝ :=
+  -∑ a, ∑ b, w a b * Real.log (w a b / ∑ a', w a' b)
+
+/-- Entropie binaire (nats). -/
+noncomputable def binEntN (p : ℝ) : ℝ := -(p * Real.log p) - (1 - p) * Real.log (1 - p)
+
+/-- Forme concave de l'inégalité log-somme : Σ a·log(b/a) ≤ A·log(B/A). -/
+lemma log_sum_concave {ι : Type*} (s : Finset ι) (a b : ι → ℝ) (ha : ∀ i ∈ s, 0 ≤ a i)
+    (hb : ∀ i ∈ s, 0 ≤ b i) (hab : ∀ i ∈ s, 0 < a i → 0 < b i) :
+    ∑ i ∈ s, a i * Real.log (b i / a i) ≤
+      (∑ i ∈ s, a i) * Real.log ((∑ i ∈ s, b i) / ∑ i ∈ s, a i) := by
+  have l := log_sum_ineq s a b ha hb hab
+  have e1 : ∀ i, a i * Real.log (b i / a i) = -(a i * Real.log (a i / b i)) := fun i => by
+    rw [← inv_div, Real.log_inv]; ring
+  have e2 : (∑ i ∈ s, a i) * Real.log ((∑ i ∈ s, b i) / ∑ i ∈ s, a i) =
+      -((∑ i ∈ s, a i) * Real.log ((∑ i ∈ s, a i) / ∑ i ∈ s, b i)) := by
+    rw [← inv_div, Real.log_inv]; ring
+  rw [e2, sum_congr rfl fun i _ => e1 i, sum_neg_distrib]
+  linarith
+
+/-- **Lemme A.1 (inégalité de Fano).** Pour une loi jointe w de (A, B) et un estimateur
+    g de A à partir de B, d'erreur ε = Pr[g(B) ≠ A] :
+    H(A|B) ≤ h(ε) + ε·log(|A| − 1) (nats). -/
+theorem fano_general {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    (w : α → β → ℝ) (hw : ∀ a b, 0 ≤ w a b) (h1 : ∑ a, ∑ b, w a b = 1) (g : β → α) :
+    condEnt w ≤ binEntN (1 - ∑ b, w (g b) b) +
+      (1 - ∑ b, w (g b) b) * Real.log ((Fintype.card α : ℝ) - 1) := by
+  classical
+  obtain ⟨p, hp⟩ : ∃ p, p = ∑ b, w (g b) b := ⟨_, rfl⟩
+  rw [← hp]
+  let A : α × β → ℝ := fun x => w x.1 x.2
+  let B : α × β → ℝ := fun x => ∑ a', w a' x.2
+  have hA0 : ∀ x ∈ (univ : Finset (α × β)), 0 ≤ A x := fun x _ => hw _ _
+  have hB0 : ∀ x ∈ (univ : Finset (α × β)), 0 ≤ B x := fun x _ => sum_nonneg fun _ _ => hw _ _
+  have hAB : ∀ x ∈ (univ : Finset (α × β)), 0 < A x → 0 < B x := fun x _ hx =>
+    lt_of_lt_of_le hx (single_le_sum (f := fun a' => w a' x.2) (fun _ _ => hw _ _) (mem_univ x.1))
+  set E := (univ : Finset (α × β)).filter (fun x => x.1 = g x.2) with hE
+  set Ec := (univ : Finset (α × β)).filter (fun x => ¬ x.1 = g x.2) with hEc
+  have hq1 : ∑ b, ∑ a', w a' b = 1 := by rw [Finset.sum_comm]; exact h1
+  have hAE : ∑ x ∈ E, A x = p := by
+    rw [hp, hE, sum_filter, Fintype.sum_prod_type, Finset.sum_comm]
+    refine sum_congr rfl fun b _ => ?_
+    simp [A]
+  have hBE : ∑ x ∈ E, B x = 1 := by
+    rw [hE, sum_filter, Fintype.sum_prod_type, Finset.sum_comm, ← hq1]
+    refine sum_congr rfl fun b _ => ?_
+    simp [B]
+  have hAtot : ∑ x, A x = 1 := by rw [Fintype.sum_prod_type]; exact h1
+  have hBtot : ∑ x, B x = Fintype.card α := by
+    rw [Fintype.sum_prod_type]
+    simp only [B]
+    rw [sum_congr rfl fun a _ => hq1]
+    simp
+  have hAEc : ∑ x ∈ Ec, A x = 1 - p := by
+    have h := sum_filter_add_sum_filter_not (univ : Finset (α × β)) (fun x => x.1 = g x.2) A
+    rw [← hE, ← hEc, hAE, hAtot] at h; linarith
+  have hBEc : ∑ x ∈ Ec, B x = (Fintype.card α : ℝ) - 1 := by
+    have h := sum_filter_add_sum_filter_not (univ : Finset (α × β)) (fun x => x.1 = g x.2) B
+    rw [← hE, ← hEc, hBE, hBtot] at h; linarith
+  have l1 := log_sum_concave E A B (fun x _ => hA0 x (mem_univ x)) (fun x _ => hB0 x (mem_univ x))
+    (fun x _ => hAB x (mem_univ x))
+  have l2 := log_sum_concave Ec A B (fun x _ => hA0 x (mem_univ x)) (fun x _ => hB0 x (mem_univ x))
+    (fun x _ => hAB x (mem_univ x))
+  rw [hAE, hBE] at l1
+  rw [hAEc, hBEc] at l2
+  have hsplit : condEnt w =
+      ∑ x ∈ E, A x * Real.log (B x / A x) + ∑ x ∈ Ec, A x * Real.log (B x / A x) := by
+    rw [hE, hEc, sum_filter_add_sum_filter_not]
+    unfold condEnt
+    rw [Fintype.sum_prod_type, ← sum_neg_distrib]
+    refine sum_congr rfl fun a _ => ?_
+    rw [← sum_neg_distrib]
+    refine sum_congr rfl fun b _ => ?_
+    simp only [A, B]
+    rw [← inv_div, Real.log_inv]; ring
+  have hp1 : p ≤ 1 := by
+    rw [← hAE, ← hAtot]
+    exact sum_le_sum_of_subset_of_nonneg (filter_subset _ _) (fun x _ _ => hw _ _)
+  have e1 : p * Real.log (1 / p) = -(p * Real.log p) := by rw [one_div, Real.log_inv]; ring
+  have e2 : (1 - p) * Real.log (((Fintype.card α : ℝ) - 1) / (1 - p)) ≤
+      (1 - p) * Real.log ((Fintype.card α : ℝ) - 1) - (1 - p) * Real.log (1 - p) := by
+    rcases (sub_nonneg.2 hp1).lt_or_eq with h | h
+    · rcases le_or_gt ((Fintype.card α : ℝ) - 1) 0 with hk | hk
+      · -- |α| ≤ 1 : la masse hors de E est nulle, ce qui contredit 1 − p > 0
+        have hle : ∑ x ∈ Ec, B x ≤ 0 := by rw [hBEc]; exact hk
+        have hBz : ∀ x ∈ Ec, B x = 0 := fun x hx =>
+          le_antisymm ((single_le_sum (fun y _ => hB0 y (mem_univ y)) hx).trans hle)
+            (hB0 x (mem_univ x))
+        have hAz : ∀ x ∈ Ec, A x = 0 := fun x hx => by
+          by_contra hne
+          have := hAB x (mem_univ x) (lt_of_le_of_ne (hA0 x (mem_univ x)) (Ne.symm hne))
+          rw [hBz x hx] at this; exact lt_irrefl 0 this
+        have : ∑ x ∈ Ec, A x = 0 := sum_eq_zero hAz
+        linarith
+      · rw [Real.log_div hk.ne' h.ne']; apply le_of_eq; ring
+    · rw [← h]; simp
+  have hx : (1 : ℝ) - (1 - p) = p := by ring
+  unfold binEntN
+  rw [hx, hsplit]
+  rw [e1] at l1
+  linarith
+
+/-! ### 18.4 Jeu EXT-OPP et pont vers Opp (Définitions 2.7 et A.7, Remarques 2.8 et A.3) -/
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  (X : CLOModel lam M C S V)
+
+/-- Loi jointe de V et de (C, Σ). -/
+noncomputable def wVCS (v : V) (cs : C × S) : ℝ := X.pC cs.1 * X.qSV cs.1 cs.2 v
+
+/-- H(V|Σ,C) en bits. -/
+noncomputable def HVSC : ℝ := condEnt X.wVCS / Real.log 2
+
+/-- Erreur d'un interprète f qui rend un verdict à partir de (C, Σ) : c'est la probabilité
+    de perdre le jeu EXT-OPP contre le verdict de référence V. -/
+noncomputable def extErr (f : C → S → V) : ℝ := 1 - ∑ cs : C × S, X.wVCS (f cs.1 cs.2) cs
+
+lemma wVCS_nonneg (v : V) (cs : C × S) : 0 ≤ X.wVCS v cs :=
+  mul_nonneg (X.pC_nonneg _) (X.qSV_nonneg _ _ _)
+
+lemma wVCS_sum : ∑ v, ∑ cs, X.wVCS v cs = 1 := by
+  rw [Finset.sum_comm, Fintype.sum_prod_type, ← X.sum_pC]
+  refine sum_congr rfl fun c _ => ?_
+  unfold wVCS
+  simp only [← mul_sum]
+  rcases (X.pC_nonneg c).lt_or_eq with h | h
+  · rw [X.qSV_sum c h, mul_one]
+  · rw [← h, zero_mul]
+
+omit [Fintype S] [Fintype V] in
+/-- Information mutuelle = entropie de la seconde marginale + Σ w·log(w/marge₁). -/
+lemma _root_.ConditionalCRO.miN_split {α β : Type*} [Fintype α] [Fintype β] (w : α → β → ℝ)
+    (hw : ∀ a b, 0 ≤ w a b) :
+    miN w = entN2 w + ∑ a, ∑ b, w a b * Real.log (w a b / ∑ b', w a b') := by
+  have hE : entN2 w = -∑ a, ∑ b, w a b * Real.log (∑ a', w a' b) := by
+    unfold entN2
+    congr 1
+    conv_rhs => rw [Finset.sum_comm]
+    exact sum_congr rfl fun b _ => sum_mul _ _ _
+  unfold miN
+  rw [hE, neg_add_eq_sub, ← sum_sub_distrib]
+  refine sum_congr rfl fun a _ => ?_
+  rw [← sum_sub_distrib]
+  refine sum_congr rfl fun b _ => ?_
+  rcases (hw a b).lt_or_eq with h | h
+  · have hr : 0 < ∑ b', w a b' :=
+      lt_of_lt_of_le h (single_le_sum (f := fun b' => w a b') (fun _ _ => hw _ _) (mem_univ b))
+    have hp : 0 < ∑ a', w a' b :=
+      lt_of_lt_of_le h (single_le_sum (f := fun a' => w a' b) (fun _ _ => hw _ _) (mem_univ a))
+    rw [Real.log_div h.ne' (mul_pos hr hp).ne', Real.log_div h.ne' hr.ne',
+      Real.log_mul hr.ne' hp.ne']
+    ring
+  · rw [← h]; simp
+
+/-- I(V;Σ|C) = H(V|C) − H(V|Σ,C), d'où Opp = 1 − H(V|Σ,C)/H(V|C). -/
+theorem IV_eq_HV_sub : X.IV = X.HV - X.HVSC := by
+  have key : ∀ c, X.pC c * miN (X.qSV c) - X.pC c * entN2 (X.qSV c) =
+      ∑ s, ∑ v, X.wVCS v (c, s) * Real.log (X.wVCS v (c, s) / ∑ v', X.wVCS v' (c, s)) := by
+    intro c
+    rw [miN_split _ (X.qSV_nonneg c), mul_add, add_sub_cancel_left]
+    rcases (X.pC_nonneg c).lt_or_eq with hc | hc
+    · rw [mul_sum]
+      refine sum_congr rfl fun s _ => ?_
+      rw [mul_sum]
+      refine sum_congr rfl fun v _ => ?_
+      unfold wVCS
+      simp only
+      rw [← mul_sum, mul_div_mul_left _ _ hc.ne']
+      ring
+    · unfold wVCS; simp only; rw [← hc]; simp
+  unfold IV HV HVSC condEnt
+  rw [div_sub_div_same, sub_neg_eq_add]
+  congr 1
+  rw [Finset.sum_comm (s := univ) (t := univ) (f := fun v (cs : C × S) =>
+    X.wVCS v cs * Real.log (X.wVCS v cs / ∑ v', X.wVCS v' cs)), Fintype.sum_prod_type,
+    ← sum_add_distrib]
+  refine sum_congr rfl fun c _ => ?_
+  linarith [key c]
+
+/-- **Remarques 2.8 et A.3 (pont EXT-OPP ↔ Opp) sur lois finies.** Pour tout interprète f
+    qui lit (C, Σ), d'erreur ε au jeu EXT-OPP et pour H(V|C) > 0,
+    Opp ≥ 1 − (h(ε) + ε·log(|V| − 1))/(H(V|C)·ln 2). -/
+theorem ext_opp_bridge [DecidableEq V] (f : C → S → V) (hHV : 0 < X.HV) :
+    1 - (binEntN (X.extErr f) + X.extErr f * Real.log ((Fintype.card V : ℝ) - 1)) /
+      (X.HV * Real.log 2) ≤ X.Opp := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have hF := fano_general X.wVCS X.wVCS_nonneg X.wVCS_sum (fun cs => f cs.1 cs.2)
+  have hOpp : X.Opp = 1 - X.HVSC / X.HV := by
+    unfold Opp; rw [X.IV_eq_HV_sub, sub_div, div_self hHV.ne']
+  rw [hOpp]
+  have : X.HVSC / X.HV ≤ (binEntN (X.extErr f) + X.extErr f * Real.log ((Fintype.card V : ℝ) - 1)) /
+      (X.HV * Real.log 2) := by
+    unfold HVSC
+    rw [div_div, mul_comm (Real.log 2) X.HV]
+    exact div_le_div_of_nonneg_right hF (mul_pos hHV hl2).le
+  linarith
+
+end CLOModel
+
+/-- **Remarques 2.8 et A.3, forme générale.** Si l'interprète lit aussi ses ressources K :
+    de H(V|Σ,C) = H(V|Σ,C,K) + I(V;K|Σ,C) et de Fano H(V|Σ,C,K) ≤ F, il vient
+    Opp ≥ 1 − (F + I(V;K|Σ,C))/H(V|C). -/
+theorem ext_opp_bridge_K (Opp HV HVSC HVSCK IVK F : ℝ) (hHV : 0 < HV)
+    (hOpp : Opp = 1 - HVSC / HV) (hchain : HVSC = HVSCK + IVK) (hF : HVSCK ≤ F) :
+    1 - (F + IVK) / HV ≤ Opp := by
+  rw [hOpp, hchain]
+  have : (HVSCK + IVK) / HV ≤ (F + IVK) / HV := div_le_div_of_nonneg_right (by linarith) hHV.le
+  linarith
+
+/-! ### 18.5 Produit CLO depuis les jeux (Corollaire A.2, Remarque A.6) -/
+
+/-- **Corollaire A.2.** Avec Conf_calc ≥ 1 − 2ε_ind, Relver ≥ 1 − ε_bind et
+    Opp ≥ L ≥ 0 (pont EXT-OPP), Conf_calc·Relver·Opp ≥ (1 − 2ε_ind)(1 − ε_bind)L, et
+    (1 − a)(1 − b)(1 − c) ≥ 1 − a − b − c pour a, b, c ∈ [0, 1]. Le facteur (1 − ε_bind)
+    suppose une complétude égale à 1 (Remarque A.2). -/
+theorem product_from_games (Cc Rv Op εi εb L : ℝ) (hεi : εi ≤ 1 / 2) (hεb : εb ≤ 1) (hL : 0 ≤ L)
+    (hC : 1 - 2 * εi ≤ Cc) (hR : 1 - εb ≤ Rv) (hO : L ≤ Op) :
+    (1 - 2 * εi) * (1 - εb) * L ≤ Cc * Rv * Op ∧
+      ∀ a b c : ℝ, 0 ≤ a → a ≤ 1 → 0 ≤ b → b ≤ 1 → 0 ≤ c → c ≤ 1 →
+        1 - a - b - c ≤ (1 - a) * (1 - b) * (1 - c) := by
+  refine ⟨?_, fun a b c ha0 ha1 hb0 hb1 hc0 hc1 => ?_⟩
+  · have h1 : 0 ≤ 1 - 2 * εi := by linarith
+    have h2 : 0 ≤ 1 - εb := by linarith
+    exact mul_le_mul (mul_le_mul hC hR h2 (h1.trans hC)) hO hL
+      (mul_nonneg (h1.trans hC) (h2.trans hR))
+  · nlinarith [mul_nonneg ha0 hb0, mul_nonneg (mul_nonneg ha0 hb0) hc0,
+      mul_nonneg (sub_nonneg.2 ha1) (sub_nonneg.2 hb1), mul_nonneg ha0 hc0, mul_nonneg hb0 hc0]
+
+/-- **Remarque A.6 (deux échelles distinctes).** Pour un protocole parfaitement masquant
+    (Conf = 1), le produit du Trilemme Conf·Rel·Opp vaut Opp/2^λ pour tout décodeur, alors
+    que le produit des jeux Conf·Relver·Opp vaut Opp dès que la complétude vaut 1 et que
+    l'ouverture est parfaitement liante. -/
+theorem echelles_distinctes {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S]
+    [Fintype V] [DecidableEq M] [Nonempty M] [Nonempty C] (X : CLOModel lam M C S V)
+    (hC : X.Conf = 1) :
+    (∀ D : C → S → M, X.Conf * X.Rel D * X.Opp = X.Opp / (2 : ℝ) ^ lam) ∧
+      X.Conf * relver 1 0 * X.Opp = X.Opp := by
+  refine ⟨fun D => ?_, ?_⟩
+  · rw [hC, rel_of_conf_one X hC D]; ring
+  · rw [hC, relver, sub_zero, max_eq_right zero_le_one]; ring
+
+end ConditionalCRO
+
+end ExtensionL3
+
+/-! ## 19. Bloc de vérification des jeux et ponts (version 3.8) -/
+
+#print axioms ConditionalCRO.succIND_eq
+#print axioms ConditionalCRO.advDist_le_tv
+#print axioms ConditionalCRO.neyman_pearson
+#print axioms ConditionalCRO.ind_conf_le_conf
+#print axioms ConditionalCRO.tv_disjoint
+#print axioms ConditionalCRO.relver_ge
+#print axioms ConditionalCRO.winBindRel_bounds
+#print axioms ConditionalCRO.relver_of_liant
+#print axioms ConditionalCRO.rel_of_conf_one
+#print axioms ConditionalCRO.fano_general
+#print axioms ConditionalCRO.CLOModel.IV_eq_HV_sub
+#print axioms ConditionalCRO.CLOModel.ext_opp_bridge
+#print axioms ConditionalCRO.ext_opp_bridge_K
+#print axioms ConditionalCRO.product_from_games
+#print axioms ConditionalCRO.echelles_distinctes
