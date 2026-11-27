@@ -45,8 +45,8 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 | `leanchecker --fresh Verification.Principal` (full replay from scratch) | local, outside the script | passed in 6 min 23 s |
 | `nanoda_bin` on the export of `Principal.lean` | local | 28,867 declarations checked, no type error |
 | Mutation tests (modified statement, weakened Pinsker, proof in `Enonces.lean`, `sorry`, `axiom`) | local | the script fails in all five cases |
-| Build with the full `import Mathlib` | not done here | to be done by the GitHub workflow or on live.lean-lang.org |
-| Workflow `verification_lean.yml` | not run | will be tested on the first push to GitHub |
+| Build with the full `import Mathlib` | done by GitHub on 26 November 2026 | workflow `verification_lean.yml`, run 45889126160 succeeded, the 20 `#print axioms` list only propext, Classical.choice and Quot.sound |
+| Workflow `verification_lean.yml` | run and passed | runs on every change to the Lean folder, logs in the Actions tab |
 
 **Caveat on the local build.** The Mathlib cache hosts were unreachable. The local build therefore used a copy of `ConditionalCRO.lean` in which only line 46 differs. There `import Mathlib` is replaced by seven targeted imports from Mathlib v4.35.0, already used to check version 3.4. The rest of the file is byte-for-byte identical. The repository version, with `import Mathlib`, was not rebuilt here.
 
@@ -158,7 +158,7 @@ Numbers and pages are those of manuscript v35 (`index_labels_v35.tsv`). "File" i
 4. **Institutional assumptions are posited.** Assumptions 2.1, 2.2 and 2.4 are premises, not theorems. This is their status in the thesis. Their information-theoretic grounding (Proposition 2.1, p. 55) is not formalised.
 5. **Silent premises.** The condition `hcard` (|V| ≤ 2^(αH(C))) appears in the concrete theorems without being used by the proofs. The decoder `D` of `lemma4_concrete` only serves to build the instance. Assumption 2.3 is carried by `InstitutionalAssumptions` without being used by the trilemmas. These premises do not make the statements false. They make them look slightly stronger than they are.
 6. **Abstract consistency witness.** `assumptions_consistent_and_bound_attained` is a point of the relaxed model (Rel = 1/λ with I = 0). An actual distribution would give Rel = 2^(−λ) (`fam_Rel`, line 156 of `Coherence.lean`). The family `famModel` has Δ = γ = 1, so the institutional factor is not active there.
-7. **Local build with targeted imports.** See the caveat above. The version with `import Mathlib` remains to be built by the workflow or on live.lean-lang.org.
+7. **Local build with targeted imports.** See the caveat above. The version with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
 8. **Statements written by copying.** The statements of `Enonces.lean` were written from the existing theorems. The build guarantees that they match the proofs. Their faithfulness to the manuscript text remains for the reader to judge, with the table above.
 
 ## Reproducibility

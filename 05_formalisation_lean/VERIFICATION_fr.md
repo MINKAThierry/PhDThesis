@@ -45,8 +45,8 @@ Le workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows/
 | `leanchecker --fresh Verification.Principal` (rejeu complet depuis zéro) | local, hors script | réussi en 6 min 23 s |
 | `nanoda_bin` sur l'export de `Principal.lean` | local | 28 867 déclarations vérifiées, aucune erreur de typage |
 | Tests de mutation (énoncé modifié, Pinsker affaibli, preuve dans `Enonces.lean`, `sorry`, `axiom`) | local | le script échoue dans les cinq cas |
-| Compilation avec `import Mathlib` complet | non faite ici | à faire par le workflow GitHub ou sur live.lean-lang.org |
-| Workflow `verification_lean.yml` | non exécuté | sera testé au premier envoi sur GitHub |
+| Compilation avec `import Mathlib` complet | faite par GitHub le 26 novembre 2026 | workflow `verification_lean.yml`, exécution 45889126160 réussie, 20 `#print axioms` limités à propext, Classical.choice et Quot.sound |
+| Workflow `verification_lean.yml` | exécuté et réussi | contrôle à chaque modification du dossier Lean, journaux dans l'onglet Actions |
 
 **Réserve sur la compilation locale.** Les hôtes du cache Mathlib étaient inaccessibles. La compilation locale a donc porté sur une copie de `ConditionalCRO.lean` dont seule la ligne 46 diffère. `import Mathlib` y est remplacé par sept imports ciblés de Mathlib v4.35.0, déjà utilisés pour vérifier la version 3.4. Le reste du fichier est identique octet pour octet. La version du dépôt, avec `import Mathlib`, n'a pas été recompilée ici.
 
@@ -158,7 +158,7 @@ Les numéros et les pages sont ceux du manuscrit v35 (`index_labels_v35.tsv`). �
 4. **Hypothèses institutionnelles posées.** Les Hypothèses 2.1, 2.2 et 2.4 sont des prémisses, non des théorèmes. C'est leur statut dans la thèse. Leur fondement informationnel (Proposition 2.1, p. 55) n'est pas formalisé.
 5. **Prémisses muettes.** La condition `hcard` (|V| ≤ 2^(αH(C))) figure dans les théorèmes concrets sans servir aux preuves. Le décodeur `D` de `lemma4_concrete` ne sert qu'à construire l'instance. L'Hypothèse 2.3 est portée par `InstitutionalAssumptions` sans servir aux trilemmes. Ces prémisses ne rendent pas les énoncés faux. Elles les rendent un peu plus forts en apparence qu'en réalité.
 6. **Témoin de cohérence abstrait.** `assumptions_consistent_and_bound_attained` est un point du modèle relâché (Rel = 1/λ avec I = 0). Une vraie loi donnerait Rel = 2^(−λ) (`fam_Rel`, ligne 156 de `Coherence.lean`). La famille `famModel` a Δ = γ = 1, si bien que le facteur institutionnel n'y est pas actif.
-7. **Compilation locale à imports ciblés.** Voir la réserve plus haut. La version avec `import Mathlib` reste à compiler par le workflow ou sur live.lean-lang.org.
+7. **Compilation locale à imports ciblés.** Voir la réserve plus haut. La version avec `import Mathlib` a été compilée par le workflow GitHub le 26 novembre 2026. Lean 4.35.0 y affiche un avertissement qui propose le mot-clé `module`, sans effet sur les preuves. Un essai sur live.lean-lang.org reste conseillé avant toute présentation.
 8. **Énoncés écrits par copie.** Les énoncés de `Enonces.lean` ont été écrits à partir des théorèmes existants. La compilation garantit leur égalité avec les preuves. Leur fidélité au texte du manuscrit reste à juger par le lecteur, à l'aide du tableau ci-dessus.
 
 ## Reproductibilité
