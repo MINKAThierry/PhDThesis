@@ -1,5 +1,5 @@
 /-
-  Couche quantique de la cryptographie institutionnelle, version 1.1 (27 novembre 2026)
+  Couche quantique de la cryptographie institutionnelle, version 1.2 (27 novembre 2026)
   =====================================================================================
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -15,7 +15,8 @@
   et démontre, à partir des théorèmes de Physlib, la DPI quantique de l'entropie
   relative, la positivité de l'information mutuelle conditionnelle (sous-additivité
   forte), la sous-additivité et les bornes de l'entropie de von Neumann. La version 1.1
-  ajoute le canal dépolarisant (Définition 2.18).
+  ajoute le canal dépolarisant (Définition 2.18), la version 1.2 les canaux d'amortissement,
+  de déphasage et d'effacement par opérateurs de Kraus (Définitions 2.19 à 2.21).
 
   DÉPÔT SEULEMENT
   Physlib n'est pas chargée par live.lean-lang.org et fixe Lean et Mathlib en v4.36.0.

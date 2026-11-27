@@ -2,7 +2,7 @@
   Dossier de vérification de la couche quantique. Fichier des énoncés seuls
   ========================================================================
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé démontré dans
-  `QuantiqueCRO.lean` (version 1.1) y est écrit sous la forme `def X : Prop := ...`,
+  `QuantiqueCRO.lean` (version 1.2) y est écrit sous la forme `def X : Prop := ...`,
   avec son renvoi au manuscrit v36. `Principal.lean` relie chaque énoncé au théorème.
   Il importe le module `QuantiqueCRO`, qui importe Physlib (QuantumInfo).
 -/
@@ -85,5 +85,21 @@ def ConfDepolarisationTotale : Prop :=
   ∀ {d : Type u₁} {C : Type u₂} {M : Type u₃} [Fintype d] [Nonempty d] [Fintype C] [Fintype M]
     [Nonempty C] [Nonempty M] (ρ : C → M → MState d),
     QuantiqueCRO.confQ (fun c m => QuantiqueCRO.depolarisant (d := d) 1 (ρ c m)) = 1
+
+
+/-- Définition 2.19 (p. 72) : normalisation des opérateurs d'amortissement. -/
+def KrausAmortissement : Prop :=
+  ∀ (g : ℝ), 0 ≤ g → g ≤ 1 →
+    ∑ k, (QuantiqueCRO.krausAD g k).conjTranspose * QuantiqueCRO.krausAD g k = 1
+
+/-- Définition 2.20 (p. 72) : normalisation des opérateurs de déphasage. -/
+def KrausDephasage : Prop :=
+  ∀ (p : ℝ), 0 ≤ p → p ≤ 1 →
+    ∑ k, (QuantiqueCRO.krausPh p k).conjTranspose * QuantiqueCRO.krausPh p k = 1
+
+/-- Définition 2.21 (p. 72) : normalisation des opérateurs d'effacement. -/
+def KrausEffacement : Prop :=
+  ∀ {d : Type u₁} [Fintype d] [DecidableEq d] (e : ℝ), 0 ≤ e → e ≤ 1 →
+    ∑ k, (QuantiqueCRO.krausEr (d := d) e k).conjTranspose * QuantiqueCRO.krausEr e k = 1
 
 end Enonces

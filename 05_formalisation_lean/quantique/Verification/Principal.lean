@@ -2,7 +2,7 @@
   Dossier de vérification de la couche quantique. Point d'entrée mince
   ====================================================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème de
-  `QuantiqueCRO.lean` (version 1.1) prouve exactement l'énoncé écrit séparément.
+  `QuantiqueCRO.lean` (version 1.2) prouve exactement l'énoncé écrit séparément.
 -/
 
 import Verification.Enonces
@@ -25,5 +25,9 @@ theorem principal_dpi_quantique : Enonces.DPIQuantique := dpi_quantique
 
 theorem principal_depolarisant_extremes : Enonces.DepolarisantExtremes := depolarisant_extremes
 theorem principal_conf_depolarisation_totale : Enonces.ConfDepolarisationTotale := conf_depolarisation_totale
+
+theorem principal_kraus_amortissement : Enonces.KrausAmortissement := krausAD_normalise
+theorem principal_kraus_dephasage : Enonces.KrausDephasage := krausPh_normalise
+theorem principal_kraus_effacement : Enonces.KrausEffacement := krausEr_normalise
 
 end Principal
