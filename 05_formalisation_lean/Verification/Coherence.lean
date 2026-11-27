@@ -3,7 +3,7 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.11), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.12), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
@@ -542,5 +542,47 @@ lemma entN_extremes :
     norm_num
     rw [show (1 : ℝ) / 2 = 2⁻¹ by norm_num, Real.log_inv]
     ring
+
+/-! ## 12. Définitions du lot L7 (version 3.12) -/
+
+/-- `kRho` : pour ρ = 1, toute la masse est sur m ; pour ρ = 0, la loi est uniforme. -/
+lemma kRho_extremes :
+    kRho 1 1 0 0 = 1 ∧ kRho 1 1 1 0 = 0 ∧ kRho 1 0 0 1 = 1 / 2 := by
+  refine ⟨?_, ?_, ?_⟩ <;> simp [kRho]
+
+/-- `rhoOf` : la fiabilité 1 demande ρ = 1, la fiabilité 1/2^λ demande ρ = 0. -/
+lemma rhoOf_extremes : CLOModel.rhoOf 1 1 = 1 ∧ CLOModel.rhoOf 1 (1 / 2) = 0 := by
+  constructor <;> norm_num [CLOModel.rhoOf]
+
+/-- `rhoModel`, `decRho` : fiabilité 1 si ρ = 1, fiabilité 1/2 si ρ = 0 et λ = 1. -/
+lemma rhoModel_extremes :
+    (rhoModel 1 0 1 1 zero_le_one le_rfl).Rel (CLOModel.decRho 1 0 1) = 1 ∧
+      (rhoModel 1 0 1 0 le_rfl zero_le_one).Rel (CLOModel.decRho 1 0 1) = 1 / 2 := by
+  rw [CLOModel.rho_Rel, CLOModel.rho_Rel]
+  constructor <;> norm_num
+
+/-- `margTrait` : la loi uniforme sur (V, T) avec un trait binaire donne une marginale
+    uniforme ; un trait toujours égal à faux ne charge jamais la valeur vrai. -/
+lemma margTrait_valeurs :
+    margTrait (fun (_ : Bool) (_ : Fin 1 → Bool) => (1 / 4 : ℝ)) 0 true true = 1 / 4 ∧
+      margTrait (fun (_ : Bool) (t : Fin 1 → Bool) => if t 0 = false then (1 / 2 : ℝ) else 0)
+        0 true true = 0 := by
+  constructor
+  · simp only [margTrait]
+    rw [Finset.sum_eq_single (fun _ => true)]
+    · simp
+    · intro b _ hb
+      have : b 0 ≠ true := fun h => hb (funext fun i => by rw [Fin.fin_one_eq_zero i, h])
+      simp [this]
+    · simp
+  · simp only [margTrait]
+    refine Finset.sum_eq_zero fun t _ => ?_
+    split_ifs with h₁ h₂ <;> simp_all
+
+/-- `borneAigue`, `produitTemoin` : pour κ = 0, la borne se réduit à 2^(−λ/2)·min{1, Δ/γ}
+    et le produit du témoin s'annule. -/
+lemma borneAigue_zero :
+    borneAigue 4 0 0 1 = 0 ∧ produitTemoin 4 0 1 1 = 0 := by
+  constructor <;> simp [borneAigue, produitTemoin]
 
 end Coherence

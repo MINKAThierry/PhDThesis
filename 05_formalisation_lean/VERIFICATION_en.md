@@ -2,16 +2,16 @@
 
 [Version française](VERIFICATION_fr.md)
 
-This dossier lets a reader judge what the formalisation proves without reading the 3,403 lines of `ConditionalCRO.lean`. It follows the model of the repository of the Lean proof of the Riemann hypothesis (November 2026). Statements are isolated from proofs, a thin entry point links them to the theorems and a script audits the axioms. The limits are stated plainly.
+This dossier lets a reader judge what the formalisation proves without reading the 5,227 lines of `ConditionalCRO.lean`. It follows the model of the repository of the Lean proof of the Riemann hypothesis (November 2026). Statements are isolated from proofs, a thin entry point links them to the theorems and a script audits the axioms. The limits are stated plainly.
 
-The dossier is **additive**. Versions 3.5 to 3.11 of `ConditionalCRO.lean` (27 November 2026) extend version 3.4 by appending sections 12 to 25 at the end of the file. Its lines 5 to 1575 remain identical to listing B.1 in Appendix B of the thesis, up to the four author lines of the header. Only line 4, which carries the version number, has changed. Line numbers cited for version 3.4 therefore remain valid. The verification files import `ConditionalCRO`.
+The dossier is **additive**. Versions 3.5 to 3.12 of `ConditionalCRO.lean` (27 November 2026) extend version 3.4 by appending sections 12 to 27 at the end of the file. Its lines 5 to 1575 remain identical to listing B.1 in Appendix B of the thesis, up to the four author lines of the header. Only line 4, which carries the version number, has changed. Line numbers cited for version 3.4 therefore remain valid. The verification files import `ConditionalCRO`.
 
 ## What to read and in which order
 
 | Order | File | Role |
 |---|---|---|
 | 1 | this document | Map, traceability and limits |
-| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 107 statements of the thesis, with no proof at all, each with its reference to manuscript v36 |
+| 2 | [`Verification/Enonces.lean`](Verification/Enonces.lean) | The 113 statements of the thesis, with no proof at all, each with its reference to manuscript v36 |
 | 3 | [`Verification/Principal.lean`](Verification/Principal.lean) | One line per statement, of the form `theorem principal_x : Enonces.X := existingName` |
 | 4 | [`Verification/Coherence.lean`](Verification/Coherence.lean) | Non-vacuity tests of the project's own definitions |
 | 5 | [`results/verification.log`](results/verification.log), [`results/axiomes.txt`](results/axiomes.txt) | Outputs of the audit script |
@@ -38,6 +38,7 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 
 | Check | Where | Result |
 |---|---|---|
+| Version 3.12: `ConditionalCRO`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 118 `#print axioms` in the file, 113 on `Principal.lean` and 66 on `Coherence.lean`, all standard |
 | Version 3.11 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 46020036841 passed (commit fc9490b): 107 statements and 61 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 | Version 3.11: `ConditionalCRO`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 111 `#print axioms` in the file, 107 on `Principal.lean` and 61 on `Coherence.lean`, all standard |
 | Version 3.10 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean.yml`, run 46013544278 passed (commit 38ef312): 97 statements and 61 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
@@ -68,7 +69,7 @@ The workflow [`../.github/workflows/verification_lean.yml`](../.github/workflows
 
 ## Traceability table
 
-Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identical to v35 for the statements of version 3.4. "File" is the line in `ConditionalCRO.lean`; the line in listing B.1 is four less. `E` and `P` are the lines in `Enonces.lean` and `Principal.lean`. All 107 theorems show `[propext, Classical.choice, Quot.sound]`. Lines from 1634 onwards belong to sections 12 (version 3.5), 14 (version 3.6), 16 (version 3.7), 18 (version 3.8), 20 (version 3.9), 22 (version 3.10) and 24 (version 3.11), which are not in listing B.1.
+Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identical to v35 for the statements of version 3.4. "File" is the line in `ConditionalCRO.lean`; the line in listing B.1 is four less. `E` and `P` are the lines in `Enonces.lean` and `Principal.lean`. All 113 theorems show `[propext, Classical.choice, Quot.sound]`. Lines from 1634 onwards belong to sections 12 (version 3.5), 14 (version 3.6), 16 (version 3.7), 18 (version 3.8), 20 (version 3.9), 22 (version 3.10), 24 (version 3.11) and 26 (version 3.12), which are not in listing B.1.
 
 ### Proved statements
 
@@ -172,7 +173,7 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | S-OTP, Conf = 1 when the law of Σ does not depend on M | `thm:proprietes_sotp`, `prv:sotp_conf` | Theorem 3.1, p. 89 | `CLOModel.conf_eq_one_of_indep` | 4071 | 856 / 136 | proved (h) |
 | S-OTP, I(V;Σ\|C) ≤ H(h\|C) and Opp ≤ H(h\|C)/H(V\|C) | `thm:proprietes_sotp`, `prv:sotp_opp` | Theorem 3.1, pp. 89 and 90 | `CLOModel.sotp_opp_le` | 4165 | 863 / 137 | proved (h) |
 | h a function of the public context, H(h\|C) = 0 and Opp = 0 | `rem:portee_sotp` | Remark 3.2, p. 89 | `CLOModel.sotp_opp_zero_of_public` | 4182 | 873 / 138 | proved |
-| Feature lower bound, I(V;T₁) + I(V;T₂) ≤ I(V;T₁,T₂) for independent features | `prop:minorant_traits`, `eq:minorant_traits` | Proposition 4.1, p. 129 | `traits_superadditif` | 4287 | 890 / 142 | proved for two features (i) |
+| Feature lower bound, I(V;T₁) + I(V;T₂) ≤ I(V;T₁,T₂) for independent features | `prop:minorant_traits`, `eq:minorant_traits` | Proposition 4.1, p. 129 | `traits_superadditif` | 4287 | 890 / 142 | proved for two features, general case through `traits_superadditif_k` (i) |
 | Feature lower bound, I(g(V);T) ≤ I(V;T) | `prop:minorant_traits` | Proposition 4.1, p. 129 | `trait_stat_le` | 4321 | 898 / 143 | proved (i) |
 | Feature lower bound, I(V;T(Σ)) ≤ I(V;Σ) | `prop:minorant_traits` | Proposition 4.1, p. 129 | `trait_fonction_preuve` | 4335 | 904 / 144 | proved (i) |
 | A binary feature carries at most 1 bit | `prop:minorant_traits` | Proposition 4.1, p. 129 | `trait_binaire_le` | 4347 | 910 / 145 | proved |
@@ -182,6 +183,12 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | Calibration Δ := λ·product (56, 73, 35 bits) | `tab:validation_cro_classique`, `tab:comparaison_produits_cro` | Tables 2.2 (p. 67) and 4.18 (p. 151) | `calibration_delta` | 4406 | 932 / 149 | checked numerically |
 | Totals of the decomposition of Δ, naive sum of 100 bits | `tab:decomposition_delta`, `tab:composantes_delta` | Tables 4.13 (p. 149) and 4.12 (p. 148) | `decomposition_delta` | 4414 | 937 / 150 | checked numerically |
 | γ̂ = 19, 1 and 1.97; H♯ = 47.5 bits for Helios | `tab:parametres_reference` | Table 4.2, p. 126 | `parametres_reference` | 4422 | 942 / 151 | checked numerically |
+| Exact order λ⁻² of the sharp bound: witness with optimal reliability κ/λ², Conf = 1 − ρ, Opp = Δ/γ, Assumptions 2.1, 2.2 and 2.4 | `rem:borne_aigue_portee`, `rem:temoin_combine` | Remarks 2.19 (p. 62) and 2.21 (p. 63) | `borne_aigue_atteinte` | 4800 | 955 / 154 | proved (j) |
+| Sharp bound attained up to a factor between 2.02 and 2.11 (Δ = γ = 1), between 2.02 and 2.13 ((Δ, γ) = (5, 19) or (10, 40)) | `rem:borne_aigue_portee`, `rem:temoin_combine` | Remarks 2.19 and 2.21 | `rapports_borne_aigue` | 5204 | 975 / 155 | checked numerically (j) |
+| Assumption 2.3 for the witness with β = 1.03, common supports | `rem:borne_aigue_portee` | Remark 2.19, p. 62 | `regularite_temoin` | 5065 | 986 / 156 | proved (j) |
+| Feature lower bound, ∑_j I(V;T_j) ≤ I(V;T) for k mutually independent features | `prop:minorant_traits`, `eq:minorant_traits` | Proposition 4.1, p. 129 | `traits_superadditif_k` | 5090 | 995 / 157 | proved (i) |
+| The three inequalities of Proposition 4.1 for k features | `prop:minorant_traits`, `eq:minorant_traits` | Proposition 4.1, p. 129 | `minorant_traits` | 5153 | 1004 / 158 | proved (i) |
+| The lower bound does not exceed k bits | `prop:minorant_traits` | Proposition 4.1, p. 129 | `minorant_k_bits` | 5172 | 1019 / 159 | proved |
 
 (a) In the abstract model, Fano (I ≥ Rel·λ − 1) and Pinsker (TV² ≤ c₀·KL) are fields of `ProtocolInstance`. The concrete layer proves them (lines 1077 and 1128).
 (b) A point of the abstract model, not realisable by a distribution (Remark 3.10, p. 114).
@@ -189,7 +196,8 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 (f) Games on finite distributions (section 18). Adversaries and the interpreter are functions on finite sets, their own randomness being averaged out. The time bound t(λ), the completeness defect ν and the negligible term remain real parameters. The EXT-OPP bridge with resources takes the chain rule H(V\|Σ,C) = H(V\|Σ,C,K) + I(V;K\|Σ,C) as a premise. Without resources it is proved on `CLOModel`.
 (g) Classical diagonal encoding (Section 20). The state ρ = Σ_s p(s)\|s⟩⟨s\| is a diagonal complex matrix. Its spectrum is derived from the characteristic polynomial (Mathlib's `Matrix.IsHermitian.roots_charpoly_eq_eigenvalues`), with no assumption. The trace norm is the sum of the absolute values of the spectrum. For Remark 2.34, the theorem concerns the measurement in the computational basis, which gives I_acc ≥ 1 bit; it does not formalise the supremum over all measurements.
 (h) S-OTP construction (Section 22). The uniform mask and the perfectly hiding commitment translate into a law of Σ given (M, C) that does not depend on M. The assumption "the interpreter reads the proof only through h" is the factorisation of the verdict kernel, ker(c, s, ·) = k(c, h(c, s), ·), that is the chain V − (h, C) − Σ of the manuscript. The proof combines the finite DPI and I ≤ H. Verification reliability comes from the BIND-REL bridge (Section 18) and the discrete-log reduction of `GameBasedSOTP.lean`.
-(i) Feature lower bound (Section 24). The statements concern a fixed value of (M, C) and carry over to the average. The second inequality is proved for two features, by two chain rules and the vanishing of I(T₁;T₂). The case of k features follows by induction on k; this induction is not formalised.
+(i) Feature lower bound (Sections 24 and 26). The statements concern a fixed value of (M, C) and carry over to the average. Version 3.11 proves the second inequality for two features, by two chain rules and the vanishing of I(T₁;T₂). Version 3.12 derives the case of k features by induction on k: T = (T₀, T_rest) through `Fin.consEquiv`, then the two-feature case and the induction hypothesis. The features take their values in a common finite type, which does not restrict generality.
+(j) Attainment of the sharp bound (Section 26). The protocol `rhoModel` publishes Σ = (Σ_ρ, B): Σ_ρ reveals M with probability ρ, B is uniform on Δ bits and the verdict is V = (B, K). For Δ = γ = 1 it is the protocol of Remark 2.19; for 1 ≤ Δ < γ, the combined witness of Remark 2.21. The decoder that reads Σ_ρ is proved optimal. The numerical ratios are exact computations on rationals. The constant β = 1.03 rests on log 2 > 0.6931471803 (Mathlib) and on −log(1 − ρ) ≤ ρ/(1 − ρ).
 (c) The institutional assumptions are explicit premises of the theorem. They carry the content specific to institutional cryptography (Δ, γ = αH(C) − 1, κ).
 
 ### Named assumptions
@@ -238,6 +246,7 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | `QuantumProtocolFamily` | family with fixed parameters, assumptions satisfied for every λ and asymptotic theorem applied | — | 394 to 415 |
 | `bProd`, `QuantumSharpInstance`, `witModel` (version 3.7) | b = P for `famModel`; quantum instance with zero reliability; Opp = 5/19 and Conf = 1 for (Δ, γ) = (5, 19) | Opp = 0 for Δ = 0 | 428 to 455 |
 | `deltaQ`, `etaQ` | Δ_q = 35 − 7 = 28 bits (ML-DSA-65); η_q = 0 for the identity channel | — | 416 to 424 |
+| `kRho`, `rhoOf`, `rhoModel`, `decRho`, `margTrait`, `borneAigue`, `produitTemoin` (version 3.12) | whole mass on m for ρ = 1; reliability 1 for ρ = 1; uniform marginal 1/4 | uniform law 1/2 for ρ = 0; reliability 1/2 for ρ = 0 and λ = 1; an always-false feature puts no mass on true; bound and product zero for κ = 0 | 547 to 587 |
 | `maskLaw`, `pushLaw`, `entN` (version 3.10) | law of m + K equal to 1/2 on ZMod 2; entropy ln 2 of the identity component of a uniform bit | zero entropy of a constant component | 528 to 545 |
 | `shannon`, `vonNeumann`, `traceDistDiag`, `ConfQdiag` (version 3.9) | S(ρ) = 1 bit for a uniform bit; distance 1 between \|0⟩⟨0\| and \|1⟩⟨1\|; Conf^q = 1 for `famModel` | S(ρ) = 0 for a pure state; distance 0 from a state to itself; Conf^q = 0 for `copyModel` | 503 to 526 |
 | `advDist`, `succIND`, `relver`, `winBindRel`, `binEntN`, `condEnt` (version 3.8) | Neyman-Pearson test, advantage 1/2 and success 1; Relver = 1; adversary opening on two messages, gain 1; h(1/2) = ln 2; H(A\|B) = ln 2 for an independent bit | constant test, advantage 0; Relver truncated to 0; opening on the same message, gain 0; h(0) = 0; H(A\|B) = 0 when A = B | 455 to 501 |
@@ -280,7 +289,7 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 4. **Institutional assumptions are posited.** Assumptions 2.1, 2.2 and 2.4 are premises, not theorems. This is their status in the thesis. Their information-theoretic grounding (Proposition 2.1, p. 55) is formalised since version 3.5 (`fondement_extraction`). It shows that I(V;Σ|M,C) ≤ Δ implies Assumption 2.1, without proving it for an actual institution.
 5. **Silent premises.** The condition `hcard` (|V| ≤ 2^(αH(C))) appears in the concrete theorems without being used by the proofs. The decoder `D` of `lemma4_concrete` only serves to build the instance. Assumption 2.3 is carried by `InstitutionalAssumptions` without being used by the trilemmas. These premises do not make the statements false. They make them look slightly stronger than they are.
 6. **Abstract consistency witness.** `assumptions_consistent_and_bound_attained` is a point of the relaxed model (Rel = 1/λ with I = 0). An actual distribution would give Rel = 2^(−λ) (`fam_Rel`, line 156 of `Coherence.lean`). The family `famModel` has Δ = γ = 1, so the institutional factor is not active there.
-7. **Local build with targeted imports.** See the caveat above. Version 3.4 with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Version 3.5 was built by it on 27 November 2026 (run 45995428572) version 3.6 too (run 45998003187) version 3.7 as well (run 46001043885) version 3.8 too (run 46004107163) and version 3.9 as well (run 46009728045). Version 3.9 was also checked on live.lean-lang.org on 27 November 2026. Version 3.10 was built by GitHub (run 46013544278). So was version 3.11 (run 46020036841). Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
+7. **Local build with targeted imports.** See the caveat above. Version 3.4 with `import Mathlib` was built by the GitHub workflow on 26 November 2026. Version 3.5 was built by it on 27 November 2026 (run 45995428572) version 3.6 too (run 45998003187) version 3.7 as well (run 46001043885) version 3.8 too (run 46004107163) and version 3.9 as well (run 46009728045). Version 3.9 was also checked on live.lean-lang.org on 27 November 2026. Version 3.10 was built by GitHub (run 46013544278). So was version 3.11 (run 46020036841). Version 3.12 was first built locally. Lean 4.35.0 prints a warning that suggests the `module` keyword, with no effect on the proofs. A run on live.lean-lang.org is still advised before any presentation.
 8. **Statements written by copying.** The statements of `Enonces.lean` were written from the existing theorems. The build guarantees that they match the proofs. Their faithfulness to the manuscript text remains for the reader to judge, with the table above.
 
 ## Reproducibility
@@ -290,4 +299,4 @@ Numbers and pages are those of manuscript v36 (`index_labels_v36.tsv`), identica
 | Lean | v4.35.0 ([`lean-toolchain`](lean-toolchain)) |
 | Mathlib | v4.35.0, commit `56a005855ea17e0b0958f73ec801ae140b0a1679` ([`lake-manifest.json`](lake-manifest.json)) |
 | Lake libraries | `ConditionalCRO` (default target) and `Verification` (files `Verification/*.lean`) |
-| SHA-256 of `ConditionalCRO.lean` | `56c99f94f1e8d3dc14903f4064bc7ed4dcf494bfbb2a06f887443e679a78e226` (version 3.11) |
+| SHA-256 of `ConditionalCRO.lean` | `a2c2fa6103e5c600366a16865e52deab2e56d82c7909c94c73e5d200ef745729` (version 3.12) |

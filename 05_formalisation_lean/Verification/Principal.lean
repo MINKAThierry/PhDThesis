@@ -2,7 +2,7 @@
   Dossier de vérification. Point d'entrée mince
   =============================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème
-  existant de `ConditionalCRO.lean` (version 3.11) prouve exactement
+  existant de `ConditionalCRO.lean` (version 3.12) prouve exactement
   l'énoncé écrit séparément. Si un énoncé et sa preuve divergent, ce fichier ne
   compile pas. C'est le seul fichier qu'un relecteur doit ouvrir, avec
   `Enonces.lean`. Le script `verifier.sh` exécute `#print axioms` sur chaque
@@ -149,5 +149,13 @@ theorem principal_estimateur_initial_exemple : Enonces.EstimateurInitialExemple 
 theorem principal_calibration_delta : Enonces.CalibrationDelta := calibration_delta
 theorem principal_decomposition_delta : Enonces.DecompositionDelta := decomposition_delta
 theorem principal_parametres_reference : Enonces.ParametresReference := parametres_reference
+
+-- 13. Extension v3.12, lot L7 (atteinte de la borne aiguë, k traits)
+theorem principal_borne_aigue_atteinte : Enonces.BorneAigueAtteinte := borne_aigue_atteinte
+theorem principal_rapports_borne_aigue : Enonces.RapportsBorneAigue := rapports_borne_aigue
+theorem principal_regularite_temoin : Enonces.RegulariteTemoin := regularite_temoin
+theorem principal_traits_superadditif_k : Enonces.TraitsSuperadditifK := traits_superadditif_k
+theorem principal_minorant_traits : Enonces.MinorantTraits := minorant_traits
+theorem principal_minorant_k_bits : Enonces.MinorantKBits := minorant_k_bits
 
 end Principal

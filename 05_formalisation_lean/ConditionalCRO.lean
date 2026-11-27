@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.11 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
+  Version 3.12 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -4440,3 +4440,788 @@ end ExtensionL6
 #print axioms ConditionalCRO.calibration_delta
 #print axioms ConditionalCRO.decomposition_delta
 #print axioms ConditionalCRO.parametres_reference
+
+/-! ## 26. Atteinte de la borne aiguë et minorant par traits (version 3.12, lot L7)
+
+Ajout du 27 novembre 2026. Cette section démontre sur lois finies les Remarques 2.19
+(l'ordre λ^(−2) de la borne aiguë est exact) et 2.21 (témoin combiné où le facteur
+institutionnel Δ/γ est actif), avec leurs valeurs numériques et l'Hypothèse 2.3 pour
+β = 1,03. Elle démontre aussi la Proposition 4.1 pour k traits, la version 3.11 ne la
+démontrant que pour deux traits. -/
+
+section ExtensionL7
+
+open Finset
+
+namespace ConditionalCRO
+
+/-! ### 26.1 Protocole qui révèle M avec probabilité ρ (Remarques 2.19 et 2.21)
+
+M uniforme sur {0,1}^λ, C uniforme sur γ + 1 bits. La preuve est Σ = (Σ_ρ, B) : avec
+probabilité ρ, Σ_ρ = M, sinon Σ_ρ est une chaîne uniforme indépendante ; B est uniforme
+sur Δ bits et indépendant du reste. Le verdict est V = (B, K) avec K uniforme sur γ − Δ
+bits. Pour Δ = 0 et γ = 1, B est trivial et l'on retrouve le protocole de la
+Remarque 2.19 ; pour 1 ≤ Δ < γ, c'est le témoin combiné de la Remarque 2.21. -/
+
+/-- Loi de Σ_ρ sachant M = m : masse ρ + (1 − ρ)/2^λ en m, (1 − ρ)/2^λ ailleurs. -/
+noncomputable def kRho (l : ℕ) (ρ : ℝ) (σ m : Fin (2 ^ l)) : ℝ :=
+  (if σ = m then ρ else 0) + (1 - ρ) / (2 : ℝ) ^ l
+
+lemma kRho_nonneg (l : ℕ) (ρ : ℝ) (h0 : 0 ≤ ρ) (h1 : ρ ≤ 1) (σ m : Fin (2 ^ l)) :
+    0 ≤ kRho l ρ σ m := by
+  unfold kRho
+  have : 0 ≤ (1 - ρ) / (2 : ℝ) ^ l := div_nonneg (by linarith) (by positivity)
+  split_ifs <;> linarith
+
+lemma kRho_sum_m (l : ℕ) (ρ : ℝ) (σ : Fin (2 ^ l)) : ∑ m, kRho l ρ σ m = 1 := by
+  simp only [kRho, sum_add_distrib, Finset.sum_ite_eq, mem_univ, ite_true, sum_const, card_univ,
+    Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+  ring
+
+lemma kRho_sum_σ (l : ℕ) (ρ : ℝ) (m : Fin (2 ^ l)) : ∑ σ, kRho l ρ σ m = 1 := by
+  simp only [kRho, sum_add_distrib, Finset.sum_ite_eq', mem_univ, ite_true, sum_const, card_univ,
+    Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+  ring
+
+lemma kRho_row (l d : ℕ) (ρ : ℝ) (m : Fin (2 ^ l)) :
+    ∑ s : Fin (2 ^ l) × Fin (2 ^ d), kRho l ρ s.1 m = (2 : ℝ) ^ d := by
+  rw [Fintype.sum_prod_type]
+  simp only [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  rw [← mul_sum, kRho_sum_σ]
+  push_cast; ring
+
+/-- Masse uniforme de (C, M, B). -/
+noncomputable def uRho (l d g : ℕ) : ℝ := 1 / ((2 : ℝ) ^ (g + 1) * 2 ^ l * 2 ^ d)
+
+/-- La loi du protocole, pour des entiers l = λ, d = Δ, g = γ et un réel ρ ∈ [0, 1]. -/
+noncomputable def rhoModel (l d g : ℕ) (ρ : ℝ) (h0 : 0 ≤ ρ) (h1 : ρ ≤ 1) :
+    CLOModel l (Fin (2 ^ l)) (Fin (2 ^ (g + 1))) (Fin (2 ^ l) × Fin (2 ^ d))
+      (Fin (2 ^ d) × Fin (2 ^ (g - d))) where
+  P := fun _ m s => uRho l d g * kRho l ρ s.1 m
+  P_nonneg := fun _ m s => mul_nonneg (by unfold uRho; positivity) (kRho_nonneg l ρ h0 h1 _ _)
+  P_sum := by
+    simp only [← mul_sum, kRho_row, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul, uRho]
+    push_cast
+    field_simp
+  card_M := by simp
+  unif := fun _ m => by
+    simp only [← mul_sum, kRho_row, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+    push_cast
+    field_simp
+  ker := fun _ s v => if v.1 = s.2 then 1 / (2 : ℝ) ^ (g - d) else 0
+  ker_nonneg := fun _ _ _ => by split_ifs <;> positivity
+  ker_sum := fun _ s => by
+    rw [sum_pair_ite, Fintype.card_fin]
+    push_cast
+    field_simp
+
+namespace CLOModel
+
+variable (l d g : ℕ) (ρ : ℝ) (h0 : 0 ≤ ρ) (h1 : ρ ≤ 1)
+
+/-- Décodeur du maximum a posteriori : il lit Σ_ρ. -/
+def decRho : Fin (2 ^ (g + 1)) → Fin (2 ^ l) × Fin (2 ^ d) → Fin (2 ^ l) := fun _ s => s.1
+
+lemma rho_Rel : (rhoModel l d g ρ h0 h1).Rel (decRho l d g) = ρ + (1 - ρ) / (2 : ℝ) ^ l := by
+  rw [Rel_eq]
+  simp only [rhoModel, decRho, kRho, ite_true, sum_const, card_univ, Fintype.card_prod,
+    Fintype.card_fin, nsmul_eq_mul, uRho]
+  push_cast
+  field_simp
+
+/-- Le décodeur `decRho` est optimal : aucun décodeur ne fait mieux. -/
+lemma rho_Rel_le (D : Fin (2 ^ (g + 1)) → Fin (2 ^ l) × Fin (2 ^ d) → Fin (2 ^ l)) :
+    (rhoModel l d g ρ h0 h1).Rel D ≤ (rhoModel l d g ρ h0 h1).Rel (decRho l d g) := by
+  rw [Rel_eq, Rel_eq]
+  refine sum_le_sum fun c _ => sum_le_sum fun s _ => ?_
+  simp only [rhoModel, decRho]
+  refine mul_le_mul_of_nonneg_left ?_ (by unfold uRho; positivity)
+  unfold kRho
+  split_ifs <;> simp_all
+
+/-- Somme d'une indicatrice sur la seconde composante d'un couple. -/
+lemma sum_pair_ite2 {A B : Type*} [Fintype A] [Fintype B] [DecidableEq B] (b : B) (f : ℝ) :
+    ∑ s : A × B, (if b = s.2 then f else 0) = (Fintype.card A : ℝ) * f := by
+  rw [Fintype.sum_prod_type]
+  simp only [Finset.sum_ite_eq, mem_univ, ite_true, sum_const, card_univ, nsmul_eq_mul]
+
+lemma rho_pC (c : Fin (2 ^ (g + 1))) : (rhoModel l d g ρ h0 h1).pC c = 1 / (2 : ℝ) ^ (g + 1) := by
+  simp only [pC, rhoModel, ← mul_sum, kRho_row, sum_const, card_univ, Fintype.card_fin,
+    nsmul_eq_mul, uRho]
+  push_cast
+  field_simp
+
+lemma rho_HC : (rhoModel l d g ρ h0 h1).HC = g + 1 := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  simp only [HC, rho_pC, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  rw [one_div, Real.log_inv, Real.log_pow]
+  push_cast
+  field_simp
+
+lemma rho_qS (c : Fin (2 ^ (g + 1))) (m : Fin (2 ^ l)) (s : Fin (2 ^ l) × Fin (2 ^ d)) :
+    (rhoModel l d g ρ h0 h1).qS c m s = kRho l ρ s.1 m / (2 : ℝ) ^ d := by
+  simp only [qS, rhoModel, ← mul_sum, kRho_row]
+  have : uRho l d g ≠ 0 := by unfold uRho; positivity
+  field_simp
+
+/-- Variation totale entre les lois de Σ pour deux messages : ρ s'ils diffèrent. -/
+lemma rho_TV (c : Fin (2 ^ (g + 1))) (m₀ m₁ : Fin (2 ^ l)) :
+    (rhoModel l d g ρ h0 h1).TV (c, m₀, m₁) = if m₀ = m₁ then 0 else ρ := by
+  simp only [TV, tv, rho_qS]
+  by_cases hm : m₀ = m₁
+  · subst hm; simp
+  · have key : ∀ s : Fin (2 ^ l) × Fin (2 ^ d),
+        max (kRho l ρ s.1 m₀ / (2 : ℝ) ^ d - kRho l ρ s.1 m₁ / 2 ^ d) 0 =
+          if s.1 = m₀ then ρ / 2 ^ d else 0 := by
+      intro s
+      have hd : (0 : ℝ) < 2 ^ d := by positivity
+      by_cases h₀ : s.1 = m₀
+      · have h₁ : s.1 ≠ m₁ := fun h => hm (h₀ ▸ h)
+        simp only [kRho, h₀, ite_true, hm, ite_false]
+        rw [max_eq_left (by rw [← sub_div]; apply div_nonneg _ hd.le; linarith)]
+        field_simp; ring
+      · have e : kRho l ρ s.1 m₀ = (1 - ρ) / 2 ^ l := by simp [kRho, h₀]
+        rw [e]
+        simp only [h₀, ↓reduceIte]
+        apply max_eq_right
+        rw [← sub_div]
+        apply div_nonpos_of_nonpos_of_nonneg _ hd.le
+        unfold kRho
+        split_ifs <;> linarith
+    simp only [key, hm, ite_false]
+    rw [sum_pair_ite, Fintype.card_fin]
+    push_cast
+    field_simp
+
+lemma rho_Conf (hl : 1 ≤ l) : (rhoModel l d g ρ h0 h1).Conf = 1 - ρ := by
+  have h2 : 1 < 2 ^ l := Nat.one_lt_two_pow (by omega)
+  have hmax : (rhoModel l d g ρ h0 h1).TVmax = ρ := by
+    apply le_antisymm
+    · refine Finset.sup'_le _ _ fun x _ => ?_
+      obtain ⟨c, m₀, m₁⟩ := x
+      rw [rho_TV]; split_ifs <;> linarith
+    · have hx : ((0 : Fin (2 ^ (g + 1))), (⟨0, by omega⟩ : Fin (2 ^ l)), (⟨1, h2⟩ : Fin (2 ^ l))) ∈
+          (univ : Finset _) := mem_univ _
+      refine le_trans ?_ (Finset.le_sup' _ hx)
+      rw [rho_TV]
+      simp [Fin.ext_iff]
+  simp [Conf, hmax]
+
+/-- Regime : I(M;Σ|C) ≤ (ρ + (1 − ρ)/2^λ)·λ bits, soit Rel·λ. -/
+lemma rho_I_le : (rhoModel l d g ρ h0 h1).I ≤ (ρ + (1 - ρ) / (2 : ℝ) ^ l) * l := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  set N : ℝ := (2 : ℝ) ^ l with hN
+  set D : ℝ := (2 : ℝ) ^ d with hD
+  have hNp : 0 < N := by positivity
+  have hDp : 0 < D := by positivity
+  set a := ρ + (1 - ρ) / N with ha
+  have hβ0 : 0 ≤ (1 - ρ) / N := div_nonneg (by linarith) hNp.le
+  have ha0 : 0 ≤ a := by linarith
+  have ha1 : a ≤ 1 := by
+    have : (1 - ρ) / N ≤ 1 - ρ := div_le_self (by linarith) (by
+      have : (1 : ℝ) ≤ 2 ^ l := one_le_pow₀ (by norm_num); linarith)
+    linarith
+  have hq : ∀ c m (s : Fin (2 ^ l) × Fin (2 ^ d)),
+      (rhoModel l d g ρ h0 h1).qMS c m s = kRho l ρ s.1 m / (N * D) := by
+    intro c m s
+    rw [qMS, rho_pC]
+    simp only [rhoModel, uRho]
+    rw [hN, hD]
+    field_simp
+  have hrow : ∀ c m, ∑ s, (rhoModel l d g ρ h0 h1).qMS c m s = 1 / N := by
+    intro c m
+    simp only [hq, ← sum_div, kRho_row]
+    rw [hN, hD]
+    field_simp
+  have hcol : ∀ c (s : Fin (2 ^ l) × Fin (2 ^ d)),
+      ∑ m, (rhoModel l d g ρ h0 h1).qMS c m s = 1 / (N * D) := by
+    intro c s
+    simp only [hq, ← sum_div, kRho_sum_m]
+  -- terme à terme : k·log(N·k) ≤ [σ = m]·a·log N
+  have hterm : ∀ (m : Fin (2 ^ l)) (s : Fin (2 ^ l) × Fin (2 ^ d)),
+      kRho l ρ s.1 m * Real.log (N * kRho l ρ s.1 m) ≤
+        if s.1 = m then a * Real.log N else 0 := by
+    intro m s
+    by_cases hs : s.1 = m
+    · simp only [hs, ite_true]
+      have hk : kRho l ρ m m = a := by simp [kRho, ha, hN]
+      rw [hk]
+      rcases ha0.lt_or_eq with hpos | hz
+      · rw [Real.log_mul hNp.ne' hpos.ne', mul_add]
+        have : a * Real.log a ≤ 0 :=
+          mul_nonpos_of_nonneg_of_nonpos ha0 (Real.log_nonpos ha0 ha1)
+        linarith
+      · rw [← hz]; simp
+    · simp only [hs, ite_false]
+      have hk : kRho l ρ s.1 m = (1 - ρ) / N := by simp [kRho, hs, hN]
+      rw [hk, show N * ((1 - ρ) / N) = 1 - ρ by field_simp]
+      exact mul_nonpos_of_nonneg_of_nonpos hβ0 (Real.log_nonpos (by linarith) (by linarith))
+  have hmi : ∀ c, miN ((rhoModel l d g ρ h0 h1).qMS c) ≤ a * Real.log N := by
+    intro c
+    unfold miN
+    have e : ∀ m (s : Fin (2 ^ l) × Fin (2 ^ d)),
+        (rhoModel l d g ρ h0 h1).qMS c m s * Real.log ((rhoModel l d g ρ h0 h1).qMS c m s /
+          ((∑ s', (rhoModel l d g ρ h0 h1).qMS c m s') *
+            ∑ m', (rhoModel l d g ρ h0 h1).qMS c m' s)) =
+        (kRho l ρ s.1 m * Real.log (N * kRho l ρ s.1 m)) / (N * D) := by
+      intro m s
+      rw [hrow, hcol, hq]
+      rw [show kRho l ρ s.1 m / (N * D) / (1 / N * (1 / (N * D))) = N * kRho l ρ s.1 m by
+        field_simp]
+      ring
+    simp only [e, ← sum_div]
+    rw [div_le_iff₀ (by positivity)]
+    calc ∑ m, ∑ s : Fin (2 ^ l) × Fin (2 ^ d), kRho l ρ s.1 m * Real.log (N * kRho l ρ s.1 m)
+        ≤ ∑ m : Fin (2 ^ l), ∑ s : Fin (2 ^ l) × Fin (2 ^ d),
+            (if s.1 = m then a * Real.log N else 0) :=
+          sum_le_sum fun m _ => sum_le_sum fun s _ => hterm m s
+      _ = a * Real.log N * (N * D) := by
+          simp only [sum_pair_ite, Fintype.card_fin, sum_const, card_univ, nsmul_eq_mul]
+          rw [hN, hD]; push_cast; ring
+  have hsum : ∑ c, (rhoModel l d g ρ h0 h1).pC c * miN ((rhoModel l d g ρ h0 h1).qMS c) ≤
+      a * Real.log N := by
+    calc _ ≤ ∑ c, (rhoModel l d g ρ h0 h1).pC c * (a * Real.log N) :=
+          sum_le_sum fun c _ => mul_le_mul_of_nonneg_left (hmi c) ((rhoModel l d g ρ h0 h1).pC_nonneg c)
+      _ = a * Real.log N := by rw [← sum_mul, sum_pC, one_mul]
+  unfold I
+  rw [div_le_iff₀ hl2]
+  calc _ ≤ a * Real.log N := hsum
+    _ = a * l * Real.log 2 := by rw [hN, Real.log_pow]; ring
+
+lemma rho_colS (c : Fin (2 ^ (g + 1))) (s : Fin (2 ^ l) × Fin (2 ^ d)) :
+    ∑ m, (rhoModel l d g ρ h0 h1).qMS c m s = 1 / ((2 : ℝ) ^ l * 2 ^ d) := by
+  simp only [qMS]
+  simp only [rho_pC]
+  simp only [rhoModel, uRho]
+  rw [← sum_div, ← mul_sum, kRho_sum_m]
+  field_simp
+
+lemma rho_qSV (c : Fin (2 ^ (g + 1))) (s : Fin (2 ^ l) × Fin (2 ^ d))
+    (v : Fin (2 ^ d) × Fin (2 ^ (g - d))) :
+    (rhoModel l d g ρ h0 h1).qSV c s v =
+      if v.1 = s.2 then 1 / ((2 : ℝ) ^ l * 2 ^ d * 2 ^ (g - d)) else 0 := by
+  rw [qSV, rho_colS]
+  change 1 / ((2 : ℝ) ^ l * 2 ^ d) * (if v.1 = s.2 then 1 / (2 : ℝ) ^ (g - d) else 0) = _
+  split_ifs
+  · field_simp
+  · simp
+
+lemma rho_colV (c : Fin (2 ^ (g + 1))) (v : Fin (2 ^ d) × Fin (2 ^ (g - d))) :
+    ∑ s, (rhoModel l d g ρ h0 h1).qSV c s v = 1 / ((2 : ℝ) ^ d * 2 ^ (g - d)) := by
+  simp only [rho_qSV]
+  rw [sum_pair_ite2, Fintype.card_fin]
+  push_cast
+  field_simp
+
+lemma rho_rowS (c : Fin (2 ^ (g + 1))) (s : Fin (2 ^ l) × Fin (2 ^ d)) :
+    ∑ v, (rhoModel l d g ρ h0 h1).qSV c s v = 1 / ((2 : ℝ) ^ l * 2 ^ d) := by
+  simp only [rho_qSV]
+  rw [sum_pair_ite, Fintype.card_fin]
+  push_cast
+  field_simp
+
+lemma rho_IV : (rhoModel l d g ρ h0 h1).IV = d := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  have h : ∀ c, miN ((rhoModel l d g ρ h0 h1).qSV c) = d * Real.log 2 := by
+    intro c
+    unfold miN
+    have term : ∀ s v, (rhoModel l d g ρ h0 h1).qSV c s v *
+        Real.log ((rhoModel l d g ρ h0 h1).qSV c s v /
+          ((∑ v', (rhoModel l d g ρ h0 h1).qSV c s v') * ∑ s', (rhoModel l d g ρ h0 h1).qSV c s' v)) =
+        (rhoModel l d g ρ h0 h1).qSV c s v * (d * Real.log 2) := by
+      intro s v
+      rw [rho_rowS, rho_colV]
+      by_cases hv : v.1 = s.2
+      · simp only [rho_qSV, hv, ↓reduceIte]
+        congr 1
+        rw [show 1 / ((2 : ℝ) ^ l * 2 ^ d * 2 ^ (g - d)) /
+            (1 / (2 ^ l * 2 ^ d) * (1 / (2 ^ d * 2 ^ (g - d)))) = 2 ^ d by field_simp,
+          Real.log_pow]
+      · simp [rho_qSV, hv]
+    simp only [term, ← sum_mul]
+    have : ∑ s, ∑ v, (rhoModel l d g ρ h0 h1).qSV c s v = 1 := by
+      simp only [rho_rowS, sum_const, card_univ, Fintype.card_prod, Fintype.card_fin, nsmul_eq_mul]
+      push_cast
+      field_simp
+    rw [this, one_mul]
+  simp only [IV, h, rho_pC, ← sum_mul, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+
+lemma rho_HV (hdg : d ≤ g) : (rhoModel l d g ρ h0 h1).HV = g := by
+  have hl2 : Real.log 2 ≠ 0 := (Real.log_pos (by norm_num)).ne'
+  have e : (2 : ℝ) ^ d * 2 ^ (g - d) = 2 ^ g := by rw [← pow_add, Nat.add_sub_cancel' hdg]
+  have h : ∀ c, entN2 ((rhoModel l d g ρ h0 h1).qSV c) = g * Real.log 2 := by
+    intro c
+    unfold entN2
+    simp only [rho_colV, e, sum_const, card_univ, Fintype.card_prod, Fintype.card_fin, nsmul_eq_mul]
+    push_cast
+    rw [e, one_div, Real.log_inv, Real.log_pow]
+    field_simp
+  simp only [HV, h, rho_pC, ← sum_mul, sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  push_cast
+  field_simp
+
+lemma rho_Opp (hdg : d ≤ g) : (rhoModel l d g ρ h0 h1).Opp = d / g := by
+  simp [Opp, rho_IV, rho_HV l d g ρ h0 h1 hdg]
+
+/-- Paramètre ρ qui donne une fiabilité de reconstruction a. -/
+noncomputable def rhoOf (l : ℕ) (a : ℝ) : ℝ := (a * 2 ^ l - 1) / (2 ^ l - 1)
+
+lemma rhoOf_bounds (l : ℕ) (hl : 1 ≤ l) (a : ℝ) (ha0 : 1 / (2 : ℝ) ^ l ≤ a) (ha1 : a ≤ 1) :
+    0 ≤ rhoOf l a ∧ rhoOf l a ≤ 1 ∧ rhoOf l a ≤ a ∧
+      rhoOf l a + (1 - rhoOf l a) / (2 : ℝ) ^ l = a := by
+  have hN : (2 : ℝ) ≤ 2 ^ l := by
+    calc (2 : ℝ) = 2 ^ 1 := by norm_num
+      _ ≤ 2 ^ l := pow_le_pow_right₀ (by norm_num) hl
+  have hN1 : (0 : ℝ) < 2 ^ l - 1 := by linarith
+  have hNp : (0 : ℝ) < 2 ^ l := by positivity
+  have haN : 1 ≤ a * 2 ^ l := by rwa [div_le_iff₀ hNp] at ha0
+  unfold rhoOf
+  refine ⟨div_nonneg (by linarith) hN1.le, ?_, ?_, ?_⟩
+  · rw [div_le_one hN1]; nlinarith
+  · rw [div_le_iff₀ hN1]; nlinarith
+  · field_simp
+    ring
+
+end CLOModel
+
+/-- **Remarques 2.19 et 2.21 (la borne aiguë est atteinte).** Pour tous entiers Δ ≤ γ
+    avec γ ≥ 1, tout λ ≥ 1 et tout κ tel que λ²·2^(−λ) ≤ κ ≤ λ², la loi
+    `rhoModel λ Δ γ ρ`, avec ρ ≤ κ/λ², satisfait les Hypothèses 2.1, 2.2 et 2.4 avec
+    α = 1 et Δ. Sa fiabilité de reconstruction optimale vaut exactement κ/λ², sa
+    confidentialité 1 − ρ et son opposabilité Δ/γ. L'ordre λ^(−2) de la borne aiguë
+    (2.61) ne peut donc pas être amélioré. Pour Δ = γ = 1, c'est le protocole de la
+    Remarque 2.19 ; pour 1 ≤ Δ < γ, le témoin combiné de la Remarque 2.21. -/
+theorem borne_aigue_atteinte (l d g : ℕ) (κ : ℝ) (hl : 1 ≤ l) (hdg : d ≤ g) (hg : 1 ≤ g)
+    (hκ0 : (l : ℝ) ^ 2 / (2 : ℝ) ^ l ≤ κ) (hκ1 : κ ≤ (l : ℝ) ^ 2) :
+    ∃ (ρ : ℝ) (h0 : 0 ≤ ρ) (h1 : ρ ≤ 1), ρ ≤ κ / (l : ℝ) ^ 2 ∧
+      (Fintype.card (Fin (2 ^ d) × Fin (2 ^ (g - d))) : ℝ) ≤
+        (2 : ℝ) ^ (1 * (rhoModel l d g ρ h0 h1).HC) ∧
+      (rhoModel l d g ρ h0 h1).IV ≤ (rhoModel l d g ρ h0 h1).I + d ∧
+      1 * (rhoModel l d g ρ h0 h1).HC - 1 ≤ (rhoModel l d g ρ h0 h1).HV ∧
+      1 ≤ 1 * (rhoModel l d g ρ h0 h1).HC - 1 ∧
+      (rhoModel l d g ρ h0 h1).I ≤ κ / l ∧
+      (rhoModel l d g ρ h0 h1).Rel (CLOModel.decRho l d g) = κ / (l : ℝ) ^ 2 ∧
+      (∀ D, (rhoModel l d g ρ h0 h1).Rel D ≤ κ / (l : ℝ) ^ 2) ∧
+      (rhoModel l d g ρ h0 h1).Conf = 1 - ρ ∧
+      (rhoModel l d g ρ h0 h1).Opp = d / g ∧
+      (rhoModel l d g ρ h0 h1).Conf * (rhoModel l d g ρ h0 h1).Rel (CLOModel.decRho l d g) *
+        (rhoModel l d g ρ h0 h1).Opp = (1 - ρ) * (κ / (l : ℝ) ^ 2) * (d / g) := by
+  have hl0 : (0 : ℝ) < l := by exact_mod_cast (show 0 < l by omega)
+  have hl2 : (0 : ℝ) < (l : ℝ) ^ 2 := by positivity
+  have ha0 : 1 / (2 : ℝ) ^ l ≤ κ / (l : ℝ) ^ 2 := by
+    rw [div_le_div_iff₀ (by positivity) hl2]
+    rw [div_le_iff₀ (by positivity)] at hκ0
+    linarith
+  have ha1 : κ / (l : ℝ) ^ 2 ≤ 1 := by rw [div_le_one hl2]; exact hκ1
+  obtain ⟨h0, h1, hρa, hrel⟩ := CLOModel.rhoOf_bounds l hl _ ha0 ha1
+  set ρ := CLOModel.rhoOf l (κ / (l : ℝ) ^ 2)
+  have hRel : (rhoModel l d g ρ h0 h1).Rel (CLOModel.decRho l d g) = κ / (l : ℝ) ^ 2 := by
+    rw [CLOModel.rho_Rel, hrel]
+  have hI := CLOModel.rho_I_le l d g ρ h0 h1
+  rw [hrel] at hI
+  have hI' : (rhoModel l d g ρ h0 h1).I ≤ κ / l := by
+    calc _ ≤ κ / (l : ℝ) ^ 2 * l := hI
+      _ = κ / l := by field_simp
+  have hInn := (rhoModel l d g ρ h0 h1).I_nonneg
+  have hg' : (1 : ℝ) ≤ g := by exact_mod_cast hg
+  refine ⟨ρ, h0, h1, hρa, ?_, ?_, ?_, ?_, hI', hRel, ?_, CLOModel.rho_Conf l d g ρ h0 h1 hl,
+    CLOModel.rho_Opp l d g ρ h0 h1 hdg, ?_⟩
+  · rw [CLOModel.rho_HC]
+    simp only [Fintype.card_prod, Fintype.card_fin, one_mul]
+    push_cast
+    rw [← pow_add, Nat.add_sub_cancel' hdg, show ((g : ℝ) + 1) = ((g + 1 : ℕ) : ℝ) by push_cast; ring,
+      Real.rpow_natCast]
+    exact pow_le_pow_right₀ (by norm_num) (by omega)
+  · rw [CLOModel.rho_IV]; linarith
+  · rw [CLOModel.rho_HC, CLOModel.rho_HV l d g ρ h0 h1 hdg]; linarith
+  · rw [CLOModel.rho_HC]; linarith
+  · intro D; rw [← hRel]; exact CLOModel.rho_Rel_le l d g ρ h0 h1 D
+  · rw [CLOModel.rho_Conf l d g ρ h0 h1 hl, hRel, CLOModel.rho_Opp l d g ρ h0 h1 hdg]
+
+namespace CLOModel
+
+variable (l d g : ℕ) (ρ : ℝ) (h0 : 0 ≤ ρ) (h1 : ρ ≤ 1)
+
+/-- Supports communs dès que ρ < 1. -/
+lemma rho_common (hρ : ρ < 1) : (rhoModel l d g ρ h0 h1).CommonSupport := by
+  intro c m₀ m₁ s _
+  simp only [rhoModel]
+  apply mul_pos (by unfold uRho; positivity)
+  unfold kRho
+  have : 0 < (1 - ρ) / (2 : ℝ) ^ l := div_pos (by linarith) (by positivity)
+  split_ifs <;> linarith
+
+/-- Divergence entre les lois de Σ pour deux messages : au plus ρ·log(a/b), en nats. -/
+lemma rho_KL_le (hρ : ρ < 1) (x : Fin (2 ^ (g + 1)) × Fin (2 ^ l) × Fin (2 ^ l)) :
+    (rhoModel l d g ρ h0 h1).KL x * Real.log 2 ≤
+      ρ * Real.log ((ρ + (1 - ρ) / (2 : ℝ) ^ l) / ((1 - ρ) / (2 : ℝ) ^ l)) := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  obtain ⟨c, m₀, m₁⟩ := x
+  set β := (1 - ρ) / (2 : ℝ) ^ l with hβ
+  set a := ρ + β with ha
+  have hβp : 0 < β := div_pos (by linarith) (by positivity)
+  have hap : 0 < a := by linarith
+  have hlog : 0 ≤ Real.log (a / β) := Real.log_nonneg (by rw [le_div_iff₀ hβp]; linarith)
+  have hD : (0 : ℝ) < 2 ^ d := by positivity
+  simp only [KL, div_mul_cancel₀ _ hl2.ne', klN, rho_qS]
+  have hk : ∀ σ m : Fin (2 ^ l), kRho l ρ σ m = if σ = m then a else β := by
+    intro σ m; unfold kRho; split_ifs <;> simp [ha, hβ]
+  by_cases hm : m₀ = m₁
+  · subst hm
+    have : ∀ s : Fin (2 ^ l) × Fin (2 ^ d),
+        kRho l ρ s.1 m₀ / 2 ^ d * Real.log (kRho l ρ s.1 m₀ / 2 ^ d / (kRho l ρ s.1 m₀ / 2 ^ d)) = 0 := by
+      intro s
+      rw [div_self (div_pos (by rw [hk]; split_ifs <;> assumption) hD).ne', Real.log_one, mul_zero]
+    simp only [this, sum_const_zero]
+    exact mul_nonneg h0 hlog
+  · have term : ∀ s : Fin (2 ^ l) × Fin (2 ^ d),
+        kRho l ρ s.1 m₀ / 2 ^ d * Real.log (kRho l ρ s.1 m₀ / 2 ^ d / (kRho l ρ s.1 m₁ / 2 ^ d)) =
+          (if s.1 = m₀ then a * Real.log (a / β) / 2 ^ d else 0) +
+            (if s.1 = m₁ then -(β * Real.log (a / β)) / 2 ^ d else 0) := by
+      intro s
+      rw [hk, hk, div_div_div_cancel_right₀ hD.ne']
+      by_cases h₀ : s.1 = m₀
+      · simp only [h₀, hm, ↓reduceIte, add_zero]
+        ring
+      · by_cases h₁ : s.1 = m₁
+        · simp only [h₁, Ne.symm hm, ↓reduceIte, zero_add]
+          rw [Real.log_div hβp.ne' hap.ne', Real.log_div hap.ne' hβp.ne']
+          ring
+        · simp only [h₀, h₁, ↓reduceIte, add_zero, div_self hβp.ne', Real.log_one, mul_zero]
+    simp only [term, sum_add_distrib, sum_pair_ite, Fintype.card_fin]
+    apply le_of_eq
+    push_cast
+    field_simp
+    ring
+
+/-- Information mutuelle exacte, en nats : a·log(2^λ·a) + (1 − a)·log(1 − ρ). -/
+lemma rho_I_eq : (rhoModel l d g ρ h0 h1).I * Real.log 2 =
+    (ρ + (1 - ρ) / (2 : ℝ) ^ l) * Real.log ((2 : ℝ) ^ l * (ρ + (1 - ρ) / (2 : ℝ) ^ l)) +
+      (1 - (ρ + (1 - ρ) / (2 : ℝ) ^ l)) * Real.log (1 - ρ) := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  set N : ℝ := (2 : ℝ) ^ l with hN
+  set D : ℝ := (2 : ℝ) ^ d with hD
+  have hNp : 0 < N := by positivity
+  have hDp : 0 < D := by positivity
+  set β := (1 - ρ) / N with hβ
+  set a := ρ + β with ha
+  have hq : ∀ c m (s : Fin (2 ^ l) × Fin (2 ^ d)),
+      (rhoModel l d g ρ h0 h1).qMS c m s = kRho l ρ s.1 m / (N * D) := by
+    intro c m s
+    rw [qMS, rho_pC]
+    simp only [rhoModel, uRho]
+    rw [hN, hD]
+    field_simp
+  have hrow : ∀ c m, ∑ s, (rhoModel l d g ρ h0 h1).qMS c m s = 1 / N := by
+    intro c m
+    simp only [hq, ← sum_div, kRho_row]
+    rw [hN, hD]
+    field_simp
+  have hcol : ∀ c (s : Fin (2 ^ l) × Fin (2 ^ d)),
+      ∑ m, (rhoModel l d g ρ h0 h1).qMS c m s = 1 / (N * D) := by
+    intro c s
+    simp only [hq, ← sum_div, kRho_sum_m]
+  have hterm : ∀ (m : Fin (2 ^ l)) (s : Fin (2 ^ l) × Fin (2 ^ d)),
+      kRho l ρ s.1 m * Real.log (N * kRho l ρ s.1 m) =
+        β * Real.log (1 - ρ) + if s.1 = m then a * Real.log (N * a) - β * Real.log (1 - ρ) else 0 := by
+    intro m s
+    by_cases hs : s.1 = m
+    · simp only [hs, ↓reduceIte]
+      have hk : kRho l ρ m m = a := by simp [kRho, ha, hβ, hN]
+      rw [hk]; ring
+    · simp only [hs, ↓reduceIte, add_zero]
+      have hk : kRho l ρ s.1 m = β := by simp [kRho, hs, hβ, hN]
+      rw [hk, show N * β = 1 - ρ by rw [hβ]; field_simp]
+  have hmi : ∀ c, miN ((rhoModel l d g ρ h0 h1).qMS c) =
+      a * Real.log (N * a) + (1 - a) * Real.log (1 - ρ) := by
+    intro c
+    unfold miN
+    have e : ∀ m (s : Fin (2 ^ l) × Fin (2 ^ d)),
+        (rhoModel l d g ρ h0 h1).qMS c m s * Real.log ((rhoModel l d g ρ h0 h1).qMS c m s /
+          ((∑ s', (rhoModel l d g ρ h0 h1).qMS c m s') *
+            ∑ m', (rhoModel l d g ρ h0 h1).qMS c m' s)) =
+        (kRho l ρ s.1 m * Real.log (N * kRho l ρ s.1 m)) / (N * D) := by
+      intro m s
+      rw [hrow, hcol, hq]
+      rw [show kRho l ρ s.1 m / (N * D) / (1 / N * (1 / (N * D))) = N * kRho l ρ s.1 m by
+        field_simp]
+      ring
+    simp only [e, hterm, ← sum_div, sum_add_distrib, sum_pair_ite, sum_const, card_univ,
+      Fintype.card_prod, Fintype.card_fin, nsmul_eq_mul]
+    rw [ha, hβ, hN, hD]
+    push_cast
+    field_simp
+    ring
+  unfold I
+  rw [div_mul_cancel₀ _ hl2.ne']
+  simp only [hmi, ← sum_mul, sum_pC, one_mul]
+
+end CLOModel
+
+/-- Inégalité de recollement : si L·(c·a − ρ) ≥ u·(ρ + c·(1 − a)), alors
+    ρ·(L + u) ≤ c·(a·L − (1 − a)·u). -/
+lemma recollement (a ρ L u c : ℝ) (h : u * (ρ + c * (1 - a)) ≤ L * (c * a - ρ)) :
+    ρ * (L + u) ≤ c * (a * L - (1 - a) * u) := by
+  nlinarith [h]
+
+/-- Hypothèse 2.3 pour le témoin, à partir de conditions numériques. -/
+theorem regularite_of_numeric (l d g : ℕ) (κ c L₀ : ℝ) (hl : 1 ≤ l)
+    (ha0 : 1 / (2 : ℝ) ^ l ≤ κ / (l : ℝ) ^ 2) (ha1 : κ / (l : ℝ) ^ 2 < 1)
+    (hL₀ : (2 : ℝ) ^ l * (κ / (l : ℝ) ^ 2) ≥ Real.exp L₀)
+    (hca : 0 < c * (κ / (l : ℝ) ^ 2) - CLOModel.rhoOf l (κ / (l : ℝ) ^ 2))
+    (hnum : CLOModel.rhoOf l (κ / (l : ℝ) ^ 2) / (1 - CLOModel.rhoOf l (κ / (l : ℝ) ^ 2)) *
+        (CLOModel.rhoOf l (κ / (l : ℝ) ^ 2) + c * (1 - κ / (l : ℝ) ^ 2)) ≤
+      L₀ * (c * (κ / (l : ℝ) ^ 2) - CLOModel.rhoOf l (κ / (l : ℝ) ^ 2)))
+    (h0 : 0 ≤ CLOModel.rhoOf l (κ / (l : ℝ) ^ 2)) (h1 : CLOModel.rhoOf l (κ / (l : ℝ) ^ 2) ≤ 1) :
+    (rhoModel l d g _ h0 h1).CommonSupport ∧
+      (rhoModel l d g _ h0 h1).KLmax ≤ c * (rhoModel l d g _ h0 h1).I := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  obtain ⟨-, -, hρa, hrel⟩ := CLOModel.rhoOf_bounds l hl _ ha0 ha1.le
+  set a := κ / (l : ℝ) ^ 2 with ha
+  set ρ := CLOModel.rhoOf l a with hρ
+  set N : ℝ := (2 : ℝ) ^ l with hN
+  have hNp : 0 < N := by positivity
+  have hρ1 : ρ < 1 := lt_of_le_of_lt hρa ha1
+  have h1ρ : 0 < 1 - ρ := by linarith
+  have hβp : 0 < (1 - ρ) / N := div_pos h1ρ hNp
+  have hap : 0 < a := lt_of_lt_of_le (by positivity) ha0
+  have hNa : 0 < N * a := mul_pos hNp hap
+  set L := Real.log (N * a) with hLdef
+  set u := ρ / (1 - ρ) with hu
+  -- −log(1 − ρ) ≤ u et log(1 − ρ) ≤ 0
+  have hlog1 : -Real.log (1 - ρ) ≤ u := by
+    have := Real.log_le_sub_one_of_pos (show 0 < 1 / (1 - ρ) by positivity)
+    rw [one_div, Real.log_inv] at this
+    rw [hu]
+    have e : (1 - ρ)⁻¹ - 1 = ρ / (1 - ρ) := by field_simp; ring
+    linarith
+  have hL : L₀ ≤ L := by
+    rw [hLdef, ← Real.log_exp L₀]
+    exact Real.log_le_log (Real.exp_pos _) hL₀
+  -- divergence et information
+  have hKL : (rhoModel l d g ρ h0 h1).KLmax * Real.log 2 ≤ ρ * (L + u) := by
+    have hab : (ρ + (1 - ρ) / N) / ((1 - ρ) / N) = N * a / (1 - ρ) := by
+      rw [hrel]; field_simp
+    have hb : Real.log (N * a / (1 - ρ)) = L - Real.log (1 - ρ) := Real.log_div hNa.ne' h1ρ.ne'
+    obtain ⟨x, -, hx⟩ := Finset.exists_mem_eq_sup' univ_nonempty (rhoModel l d g ρ h0 h1).KL
+    rw [show (rhoModel l d g ρ h0 h1).KLmax = (rhoModel l d g ρ h0 h1).KL x from hx]
+    calc _ ≤ ρ * Real.log ((ρ + (1 - ρ) / N) / ((1 - ρ) / N)) :=
+          CLOModel.rho_KL_le l d g ρ h0 h1 hρ1 x
+      _ = ρ * (L - Real.log (1 - ρ)) := by rw [hab, hb]
+      _ ≤ ρ * (L + u) := mul_le_mul_of_nonneg_left (by linarith) h0
+  have hI : (rhoModel l d g ρ h0 h1).I * Real.log 2 = a * L + (1 - a) * Real.log (1 - ρ) := by
+    rw [CLOModel.rho_I_eq, hrel]
+  have hrec := recollement a ρ L u c (by
+    calc u * (ρ + c * (1 - a)) ≤ L₀ * (c * a - ρ) := hnum
+      _ ≤ L * (c * a - ρ) := mul_le_mul_of_nonneg_right hL hca.le)
+  refine ⟨CLOModel.rho_common l d g ρ h0 h1 hρ1, ?_⟩
+  have hc : 0 ≤ c := by nlinarith
+  have h1a : 0 ≤ 1 - a := by linarith
+  rw [← mul_le_mul_iff_of_pos_right hl2, mul_assoc, hI]
+  calc _ ≤ ρ * (L + u) := hKL
+    _ ≤ c * (a * L - (1 - a) * u) := hrec
+    _ ≤ c * (a * L + (1 - a) * Real.log (1 - ρ)) := by
+        apply mul_le_mul_of_nonneg_left _ hc
+        nlinarith
+
+lemma exp_le_two_pow (n : ℕ) : Real.exp (n * 0.6931471803) ≤ (2 : ℝ) ^ n := by
+  rw [← Real.exp_log (show (0 : ℝ) < 2 ^ n by positivity), Real.log_pow]
+  exact Real.exp_le_exp.mpr (mul_le_mul_of_nonneg_left Real.log_two_gt_d9.le (Nat.cast_nonneg n))
+
+/-- Cas numérique de l'Hypothèse 2.3 pour λ = 2^j. -/
+lemma regularite_cas (d g j : ℕ) (κ : ℝ) (hκ1 : 1 ≤ κ)
+    (ha0 : 1 / (2 : ℝ) ^ (2 ^ j) ≤ κ / ((2 ^ j : ℕ) : ℝ) ^ 2)
+    (ha1 : κ / ((2 ^ j : ℕ) : ℝ) ^ 2 < 1)
+    (hj : 2 * j ≤ 2 ^ j)
+    (hca : 0 < 1.03 * (κ / ((2 ^ j : ℕ) : ℝ) ^ 2) - CLOModel.rhoOf (2 ^ j) (κ / ((2 ^ j : ℕ) : ℝ) ^ 2))
+    (hnum : CLOModel.rhoOf (2 ^ j) (κ / ((2 ^ j : ℕ) : ℝ) ^ 2) /
+        (1 - CLOModel.rhoOf (2 ^ j) (κ / ((2 ^ j : ℕ) : ℝ) ^ 2)) *
+        (CLOModel.rhoOf (2 ^ j) (κ / ((2 ^ j : ℕ) : ℝ) ^ 2) + 1.03 * (1 - κ / ((2 ^ j : ℕ) : ℝ) ^ 2)) ≤
+      ((2 ^ j - 2 * j : ℕ) * 0.6931471803) *
+        (1.03 * (κ / ((2 ^ j : ℕ) : ℝ) ^ 2) - CLOModel.rhoOf (2 ^ j) (κ / ((2 ^ j : ℕ) : ℝ) ^ 2))) :
+    ∃ (h0 : 0 ≤ CLOModel.rhoOf (2 ^ j) (κ / ((2 ^ j : ℕ) : ℝ) ^ 2))
+      (h1 : CLOModel.rhoOf (2 ^ j) (κ / ((2 ^ j : ℕ) : ℝ) ^ 2) ≤ 1),
+      (rhoModel (2 ^ j) d g _ h0 h1).CommonSupport ∧
+        (rhoModel (2 ^ j) d g _ h0 h1).KLmax ≤ 1.03 * (rhoModel (2 ^ j) d g _ h0 h1).I := by
+  have hl : 1 ≤ 2 ^ j := Nat.one_le_two_pow
+  obtain ⟨h0, h1, -, -⟩ := CLOModel.rhoOf_bounds (2 ^ j) hl _ ha0 ha1.le
+  refine ⟨h0, h1, regularite_of_numeric (2 ^ j) d g κ 1.03 _ hl ha0 ha1 ?_ hca hnum h0 h1⟩
+  refine le_trans (exp_le_two_pow _) ?_
+  have e : (((2 ^ j : ℕ) : ℝ)) ^ 2 = (2 : ℝ) ^ (2 * j) := by push_cast; rw [← pow_mul]; ring_nf
+  rw [e, show (2 : ℝ) ^ (2 ^ j) = 2 ^ (2 ^ j - 2 * j) * 2 ^ (2 * j) by
+    rw [← pow_add, Nat.sub_add_cancel hj]]
+  have hp : (0 : ℝ) < 2 ^ (2 * j) := by positivity
+  rw [mul_assoc, mul_div_cancel₀ _ hp.ne']
+  exact le_mul_of_one_le_right (by positivity) hκ1
+
+/-- **Remarque 2.19, Hypothèse 2.3.** Pour κ ∈ {1, 4} et λ ∈ {64, 128, 256}, le témoin
+    satisfait l'Hypothèse 2.3 avec β = 1,03, sur des supports communs. -/
+theorem regularite_temoin (d g : ℕ) (κ : ℕ) (j : ℕ) (hκ : κ = 1 ∨ κ = 4)
+    (hj : j = 6 ∨ j = 7 ∨ j = 8) :
+    ∃ (h0 : 0 ≤ CLOModel.rhoOf (2 ^ j) ((κ : ℝ) / ((2 ^ j : ℕ) : ℝ) ^ 2))
+      (h1 : CLOModel.rhoOf (2 ^ j) ((κ : ℝ) / ((2 ^ j : ℕ) : ℝ) ^ 2) ≤ 1),
+      (rhoModel (2 ^ j) d g _ h0 h1).CommonSupport ∧
+        (rhoModel (2 ^ j) d g _ h0 h1).KLmax ≤ 1.03 * (rhoModel (2 ^ j) d g _ h0 h1).I := by
+  rcases hκ with rfl | rfl <;> rcases hj with rfl | rfl | rfl <;>
+    exact regularite_cas d g _ _ (by norm_num) (by norm_num) (by norm_num) (by norm_num)
+      (by norm_num [CLOModel.rhoOf]) (by norm_num [CLOModel.rhoOf])
+
+/-! ### 26.2 Minorant par traits pour k traits (Proposition 4.1)
+
+Les traits prennent leurs valeurs dans un même type fini τ, ce qui ne restreint pas la
+généralité : une famille finie de types finis se plonge dans un type commun sans changer
+les informations mutuelles. Les énoncés portent sur une valeur fixée de (M, C), notation
+omise comme dans la preuve du manuscrit. L'indépendance mutuelle des traits s'écrit
+p(t) = ∏_j q_j(t_j). -/
+
+/-- Loi de (V, T_j) extraite de la loi de (V, T). -/
+noncomputable def margTrait {ν τ : Type*} [Fintype τ] [DecidableEq τ] {k : ℕ}
+    (u : ν → (Fin k → τ) → ℝ) (j : Fin k) : ν → τ → ℝ :=
+  fun v x => ∑ t : Fin k → τ, if t j = x then u v t else 0
+
+/-- **Proposition 4.1, seconde inégalité, k traits.** Si les traits T_1, …, T_k sont
+    mutuellement indépendants, ∑_j I(V;T_j) ≤ I(V;T). -/
+theorem traits_superadditif_k {ν τ : Type*} [Fintype ν] [Fintype τ] [DecidableEq τ] :
+    ∀ (k : ℕ) (u : ν → (Fin k → τ) → ℝ), (∀ v t, 0 ≤ u v t) →
+      ∀ (q : Fin k → τ → ℝ), (∀ j, ∑ x, q j x = 1) →
+      (∀ t, ∑ v, u v t = ∏ j, q j (t j)) →
+      ∑ j, miN (margTrait u j) ≤ miN u := by
+  intro k
+  induction k with
+  | zero =>
+    intro u hu q _ hind
+    simp only [univ_eq_empty, sum_empty]
+    apply miN_nonneg u hu
+    rw [Finset.sum_comm]
+    simp [hind]
+  | succ k ih =>
+    intro u hu q hq hind
+    set U : ν → τ → (Fin k → τ) → ℝ := fun v x r => u v (Fin.cons x r) with hUdef
+    have hU : ∀ v x r, 0 ≤ U v x r := fun v x r => hu v _
+    have hsumt : ∀ (f : (Fin (k + 1) → τ) → ℝ),
+        ∑ t, f t = ∑ x, ∑ r : Fin k → τ, f (Fin.cons x r) := by
+      intro f
+      rw [← (Fin.consEquiv (fun _ => τ)).sum_comp f, Fintype.sum_prod_type]
+      rfl
+    have hjoint : ∀ x r, ∑ v, U v x r = q 0 x * ∏ j, q j.succ (r j) := by
+      intro x r
+      simp only [hUdef, hind, Fin.prod_univ_succ, Fin.cons_zero, Fin.cons_succ]
+    have hprod1 : ∑ r : Fin k → τ, ∏ j, q j.succ (r j) = 1 := by
+      rw [← Fintype.prod_sum]
+      simp [hq]
+    have hm1 : ∀ x, ∑ v, ∑ r, U v x r = q 0 x := by
+      intro x
+      rw [Finset.sum_comm]
+      simp only [hjoint, ← mul_sum, hprod1, mul_one]
+    have hm2 : ∀ r, ∑ v, ∑ x, U v x r = ∏ j, q j.succ (r j) := by
+      intro r
+      rw [Finset.sum_comm]
+      simp only [hjoint, ← sum_mul, hq 0, one_mul]
+    have h2 := traits_superadditif U hU (fun x r => by rw [hjoint, hm1, hm2])
+    -- I(V;T) par réindexation de T en (T_0, T_reste)
+    have hT : miN (fun v (p : τ × (Fin k → τ)) => U v p.1 p.2) = miN u :=
+      miN_equiv u (Fin.consEquiv (fun _ => τ))
+    -- hypothèse de récurrence sur le reste
+    set w : ν → (Fin k → τ) → ℝ := fun v r => ∑ x, U v x r with hwdef
+    have hih := ih w (fun v r => sum_nonneg fun x _ => hU v x r) (fun j => q j.succ)
+      (fun j => hq j.succ) (fun r => by simp only [hwdef]; exact hm2 r)
+    have h0 : margTrait u 0 = fun v x => ∑ r, U v x r := by
+      funext v x
+      simp only [margTrait, hsumt, Fin.cons_zero]
+      rw [Finset.sum_eq_single x (fun b _ hb => by simp [hb]) (fun h => absurd (mem_univ x) h)]
+      simp [hUdef]
+    have hs : ∀ j : Fin k, margTrait u j.succ = margTrait w j := by
+      intro j
+      funext v x
+      simp only [margTrait, hsumt, Fin.cons_succ, hwdef]
+      rw [Finset.sum_comm]
+      refine sum_congr rfl fun r _ => ?_
+      split_ifs <;> simp [hUdef]
+    rw [Fin.sum_univ_succ, h0]
+    simp only [hs]
+    linarith
+
+/-- **Proposition 4.1 (k traits).** T = T(Σ) est une fonction de la preuve à valeurs dans
+    Fin k → τ, de traits mutuellement indépendants. Pour toutes statistiques g_j du verdict,
+    ∑_j I(g_j(V);T_j) ≤ ∑_j I(V;T_j) ≤ I(V;T) ≤ I(V;Σ). -/
+theorem minorant_traits {ν ν' σ τ : Type*} [Fintype ν] [Fintype ν'] [Fintype σ] [Fintype τ]
+    [DecidableEq τ] [DecidableEq ν'] (k : ℕ) (w : ν → σ → ℝ) (hw : ∀ v s, 0 ≤ w v s)
+    (T : σ → Fin k → τ) (q : Fin k → τ → ℝ) (hq : ∀ j, ∑ x, q j x = 1)
+    (hind : ∀ t, ∑ v, ∑ s, (if T s = t then w v s else 0) = ∏ j, q j (t j))
+    (g : Fin k → ν → ν') :
+    ∑ j, miN (fun v' x => ∑ v, if g j v = v' then
+        margTrait (fun v t => ∑ s, if T s = t then w v s else 0) j v x else 0) ≤
+      ∑ j, miN (margTrait (fun v t => ∑ s, if T s = t then w v s else 0) j) ∧
+    ∑ j, miN (margTrait (fun v t => ∑ s, if T s = t then w v s else 0) j) ≤
+      miN (fun v t => ∑ s, if T s = t then w v s else 0) ∧
+    miN (fun v t => ∑ s, if T s = t then w v s else 0) ≤ miN w := by
+  have hu : ∀ v t, 0 ≤ ∑ s, (if T s = t then w v s else 0) :=
+    fun v t => sum_nonneg fun s _ => by split_ifs <;> simp [hw]
+  refine ⟨sum_le_sum fun j _ => ?_, traits_superadditif_k k _ hu q hq hind,
+    trait_fonction_preuve w hw T⟩
+  exact trait_stat_le _ (fun v x => sum_nonneg fun t _ => by split_ifs <;> simp [hu]) (g j)
+
+/-- **Proposition 4.1, borne de k bits.** Pour k traits binaires, le minorant
+    ∑_j I(V;T_j) ne dépasse pas k bits. -/
+theorem minorant_k_bits {ν : Type*} [Fintype ν] (k : ℕ) (u : ν → (Fin k → Bool) → ℝ)
+    (hu : ∀ v t, 0 ≤ u v t) (h1 : ∑ v, ∑ t, u v t = 1) :
+    (∑ j, miN (margTrait u j)) / Real.log 2 ≤ k := by
+  rw [sum_div]
+  calc ∑ j, miN (margTrait u j) / Real.log 2 ≤ ∑ _j : Fin k, (1 : ℝ) := by
+        refine sum_le_sum fun j _ => trait_binaire_le _ (fun v x => sum_nonneg fun t _ => by
+          split_ifs <;> simp [hu]) ?_
+        rw [← h1]
+        refine sum_congr rfl fun v _ => ?_
+        simp only [margTrait]
+        rw [Finset.sum_comm]
+        refine sum_congr rfl fun t _ => ?_
+        rw [Finset.sum_ite_eq]
+        simp
+    _ = k := by simp
+
+/-- 2^(−λ/2) pour λ pair. -/
+lemma two_rpow_neg_half (k : ℕ) : (2 : ℝ) ^ (-((2 * k : ℕ) : ℝ) / 2) = 1 / (2 : ℝ) ^ k := by
+  rw [show -((2 * k : ℕ) : ℝ) / 2 = -((k : ℕ) : ℝ) by push_cast; ring, Real.rpow_neg (by norm_num),
+    Real.rpow_natCast, one_div]
+
+/-- Borne aiguë (2.62) avec γ = αH(C) − 1, et produit du témoin. -/
+noncomputable def borneAigue (l : ℕ) (κ Δ γ : ℝ) : ℝ :=
+  (2 * κ / ((l : ℝ) * (l - 3)) + (2 : ℝ) ^ (-(l : ℝ) / 2)) * min 1 ((κ / l + Δ) / γ)
+
+noncomputable def produitTemoin (l : ℕ) (κ Δ γ : ℝ) : ℝ :=
+  (1 - CLOModel.rhoOf l (κ / (l : ℝ) ^ 2)) * (κ / (l : ℝ) ^ 2) * (Δ / γ)
+
+/-- **Remarques 2.19 et 2.21, valeurs numériques.** Pour κ ∈ {1, 4} et λ ∈ {64, 128, 256},
+    la borne aiguë vaut entre 2,02 et 2,11 fois le produit du témoin si Δ = γ = 1
+    (Remarque 2.19), entre 2,02 et 2,13 fois si (Δ, γ) ∈ {(5, 19), (10, 40)}
+    (Remarque 2.21). -/
+theorem rapports_borne_aigue (κ k : ℕ) (hκ : κ = 1 ∨ κ = 4) (hk : k = 32 ∨ k = 64 ∨ k = 128) :
+    (2.02 * produitTemoin (2 * k) κ 1 1 ≤ borneAigue (2 * k) κ 1 1 ∧
+      borneAigue (2 * k) κ 1 1 ≤ 2.11 * produitTemoin (2 * k) κ 1 1) ∧
+    (2.02 * produitTemoin (2 * k) κ 5 19 ≤ borneAigue (2 * k) κ 5 19 ∧
+      borneAigue (2 * k) κ 5 19 ≤ 2.13 * produitTemoin (2 * k) κ 5 19) ∧
+    (2.02 * produitTemoin (2 * k) κ 10 40 ≤ borneAigue (2 * k) κ 10 40 ∧
+      borneAigue (2 * k) κ 10 40 ≤ 2.13 * produitTemoin (2 * k) κ 10 40) := by
+  unfold borneAigue produitTemoin CLOModel.rhoOf
+  rw [two_rpow_neg_half]
+  rcases hκ with rfl | rfl <;> rcases hk with rfl | rfl | rfl <;> norm_num [min_def]
+
+end ConditionalCRO
+
+end ExtensionL7
+
+/-! ## 27. Bloc de vérification de la version 3.12 -/
+
+#print axioms ConditionalCRO.borne_aigue_atteinte
+#print axioms ConditionalCRO.regularite_of_numeric
+#print axioms ConditionalCRO.regularite_temoin
+#print axioms ConditionalCRO.traits_superadditif_k
+#print axioms ConditionalCRO.minorant_traits
+#print axioms ConditionalCRO.minorant_k_bits
+#print axioms ConditionalCRO.rapports_borne_aigue

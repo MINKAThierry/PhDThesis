@@ -4,7 +4,7 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.11). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.12). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
   Renvois : manuscrit v36 (« Aux fondements de la cryptographie
@@ -15,7 +15,7 @@
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
   Importation. Les définitions et les preuves sont dans un seul fichier. La
-  versions 3.5 à 3.11 prolongent la 3.4 par ajout des sections 12 à 25 en
+  versions 3.5 à 3.12 prolongent la 3.4 par ajout des sections 12 à 27 en
   fin de fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
   restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
@@ -942,5 +942,83 @@ def DecompositionDelta : Prop :=
 def ParametresReference : Prop :=
   (1 : ℝ) * 20 - 1 = 19 ∧ (0.25 : ℝ) * 8 - 1 = 1 ∧ (0.27 : ℝ) * 11 - 1 = 1.97 ∧
     ((56 : ℝ) + 1) / 1.2 = 47.5
+
+/-! ## 13. Extension v3.12, lot L7 : atteinte de la borne aiguë et k traits
+
+Renvois au manuscrit v36. Énoncés démontrés dans la section 26 de
+`ConditionalCRO.lean` (version 3.12). -/
+
+/-- Remarques 2.19 (p. 62) et 2.21 (p. 63) : pour Δ ≤ γ, γ ≥ 1, λ ≥ 1 et
+    λ²·2^(−λ) ≤ κ ≤ λ², le protocole qui révèle M avec probabilité ρ ≤ κ/λ² satisfait
+    les Hypothèses 2.1, 2.2 et 2.4 ; sa fiabilité optimale vaut κ/λ², Conf = 1 − ρ,
+    Opp = Δ/γ et le produit vaut (1 − ρ)·(κ/λ²)·(Δ/γ). -/
+def BorneAigueAtteinte : Prop :=
+  ∀ (l d g : ℕ) (κ : ℝ), 1 ≤ l → d ≤ g → 1 ≤ g →
+    (l : ℝ) ^ 2 / (2 : ℝ) ^ l ≤ κ → κ ≤ (l : ℝ) ^ 2 →
+    ∃ (ρ : ℝ) (h0 : 0 ≤ ρ) (h1 : ρ ≤ 1), ρ ≤ κ / (l : ℝ) ^ 2 ∧
+      (Fintype.card (Fin (2 ^ d) × Fin (2 ^ (g - d))) : ℝ) ≤
+        (2 : ℝ) ^ (1 * (rhoModel l d g ρ h0 h1).HC) ∧
+      (rhoModel l d g ρ h0 h1).IV ≤ (rhoModel l d g ρ h0 h1).I + d ∧
+      1 * (rhoModel l d g ρ h0 h1).HC - 1 ≤ (rhoModel l d g ρ h0 h1).HV ∧
+      1 ≤ 1 * (rhoModel l d g ρ h0 h1).HC - 1 ∧
+      (rhoModel l d g ρ h0 h1).I ≤ κ / l ∧
+      (rhoModel l d g ρ h0 h1).Rel (CLOModel.decRho l d g) = κ / (l : ℝ) ^ 2 ∧
+      (∀ D, (rhoModel l d g ρ h0 h1).Rel D ≤ κ / (l : ℝ) ^ 2) ∧
+      (rhoModel l d g ρ h0 h1).Conf = 1 - ρ ∧
+      (rhoModel l d g ρ h0 h1).Opp = d / g ∧
+      (rhoModel l d g ρ h0 h1).Conf * (rhoModel l d g ρ h0 h1).Rel (CLOModel.decRho l d g) *
+        (rhoModel l d g ρ h0 h1).Opp = (1 - ρ) * (κ / (l : ℝ) ^ 2) * (d / g)
+
+/-- Remarques 2.19 et 2.21, valeurs numériques : pour κ ∈ {1, 4} et λ ∈ {64, 128, 256},
+    la borne aiguë vaut entre 2,02 et 2,11 fois le produit si Δ = γ = 1, entre 2,02 et
+    2,13 fois si (Δ, γ) ∈ {(5, 19), (10, 40)}. -/
+def RapportsBorneAigue : Prop :=
+  ∀ (κ k : ℕ), (κ = 1 ∨ κ = 4) → (k = 32 ∨ k = 64 ∨ k = 128) →
+    (2.02 * produitTemoin (2 * k) κ 1 1 ≤ borneAigue (2 * k) κ 1 1 ∧
+      borneAigue (2 * k) κ 1 1 ≤ 2.11 * produitTemoin (2 * k) κ 1 1) ∧
+    (2.02 * produitTemoin (2 * k) κ 5 19 ≤ borneAigue (2 * k) κ 5 19 ∧
+      borneAigue (2 * k) κ 5 19 ≤ 2.13 * produitTemoin (2 * k) κ 5 19) ∧
+    (2.02 * produitTemoin (2 * k) κ 10 40 ≤ borneAigue (2 * k) κ 10 40 ∧
+      borneAigue (2 * k) κ 10 40 ≤ 2.13 * produitTemoin (2 * k) κ 10 40)
+
+/-- Remarque 2.19 (p. 62), Hypothèse 2.3 : pour κ ∈ {1, 4} et λ ∈ {64, 128, 256}, le
+    témoin a des supports communs et vérifie KLmax ≤ 1,03·I. -/
+def RegulariteTemoin : Prop :=
+  ∀ (d g κ j : ℕ), (κ = 1 ∨ κ = 4) → (j = 6 ∨ j = 7 ∨ j = 8) →
+    ∃ (h0 : 0 ≤ CLOModel.rhoOf (2 ^ j) ((κ : ℝ) / ((2 ^ j : ℕ) : ℝ) ^ 2))
+      (h1 : CLOModel.rhoOf (2 ^ j) ((κ : ℝ) / ((2 ^ j : ℕ) : ℝ) ^ 2) ≤ 1),
+      (rhoModel (2 ^ j) d g _ h0 h1).CommonSupport ∧
+        (rhoModel (2 ^ j) d g _ h0 h1).KLmax ≤ 1.03 * (rhoModel (2 ^ j) d g _ h0 h1).I
+
+/-- Proposition 4.1 (p. 129), seconde inégalité pour k traits mutuellement
+    indépendants : ∑_j I(V;T_j) ≤ I(V;T). -/
+def TraitsSuperadditifK : Prop :=
+  ∀ {ν : Type u₁} {τ : Type u₂} [Fintype ν] [Fintype τ] [DecidableEq τ]
+    (k : ℕ) (u : ν → (Fin k → τ) → ℝ), (∀ v t, 0 ≤ u v t) →
+    ∀ (q : Fin k → τ → ℝ), (∀ j, ∑ x, q j x = 1) →
+    (∀ t, ∑ v, u v t = ∏ j, q j (t j)) →
+    ∑ j, miN (margTrait u j) ≤ miN u
+
+/-- Proposition 4.1 (p. 129), les trois inégalités pour k traits fonctions de la
+    preuve : ∑_j I(g_j(V);T_j) ≤ ∑_j I(V;T_j) ≤ I(V;T) ≤ I(V;Σ). -/
+def MinorantTraits : Prop :=
+  ∀ {ν : Type u₁} {ν' : Type u₂} {σ : Type u₃} {τ : Type u₄} [Fintype ν] [Fintype ν']
+    [Fintype σ] [Fintype τ] [DecidableEq τ] [DecidableEq ν'] (k : ℕ) (w : ν → σ → ℝ),
+    (∀ v s, 0 ≤ w v s) → ∀ (T : σ → Fin k → τ) (q : Fin k → τ → ℝ),
+    (∀ j, ∑ x, q j x = 1) →
+    (∀ t, ∑ v, ∑ s, (if T s = t then w v s else 0) = ∏ j, q j (t j)) →
+    ∀ g : Fin k → ν → ν',
+    ∑ j, miN (fun v' x => ∑ v, if g j v = v' then
+        margTrait (fun v t => ∑ s, if T s = t then w v s else 0) j v x else 0) ≤
+      ∑ j, miN (margTrait (fun v t => ∑ s, if T s = t then w v s else 0) j) ∧
+    ∑ j, miN (margTrait (fun v t => ∑ s, if T s = t then w v s else 0) j) ≤
+      miN (fun v t => ∑ s, if T s = t then w v s else 0) ∧
+    miN (fun v t => ∑ s, if T s = t then w v s else 0) ≤ miN w
+
+/-- Proposition 4.1 (p. 129), borne de k bits pour k traits binaires. -/
+def MinorantKBits : Prop :=
+  ∀ {ν : Type u₁} [Fintype ν] (k : ℕ) (u : ν → (Fin k → Bool) → ℝ),
+    (∀ v t, 0 ≤ u v t) → ∑ v, ∑ t, u v t = 1 →
+    (∑ j, miN (margTrait u j)) / Real.log 2 ≤ k
 
 end Enonces
