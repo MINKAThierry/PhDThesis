@@ -217,11 +217,38 @@ theorem krausPh_normalise (p : ℝ) (h0 : 0 ≤ p) (h1 : p ≤ 1) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [krausPh, pauliZ, Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
-      Matrix.smul_apply, Matrix.one_apply, hs, hp]
+      Matrix.smul_apply, hs, hp]
 
 /-- **Définition 2.20.** Canal de déphasage de paramètre p ∈ [0, 1]. -/
 def dephasage (p : ℝ) (h0 : 0 ≤ p) (h1 : p ≤ 1) : CPTPMap (Fin 2) (Fin 2) :=
   CPTPMap.of_kraus_CPTPMap (krausPh p) (krausPh_normalise p h0 h1)
+
+variable {d : Type*} [Fintype d] [DecidableEq d]
+
+/-- Opérateurs de Kraus du canal d'effacement (Définition 2.21), de d vers d ⊕ {⊥}
+    (codé `Option d`, `none` = ⊥) : K_⊥ = √(1 − e)·(plongement) et K_k = √e·|⊥⟩⟨k|. -/
+def krausEr (e : ℝ) : Option d → Matrix (Option d) d ℂ
+  | none => fun o j => if o = some j then ((Real.sqrt (1 - e) : ℝ) : ℂ) else 0
+  | some k => fun o j => if o = none ∧ j = k then ((Real.sqrt e : ℝ) : ℂ) else 0
+
+/-- **Définition 2.21.** Normalisation des opérateurs d'effacement, Σ_κ K_κᴴ K_κ = I. -/
+theorem krausEr_normalise (e : ℝ) (h0 : 0 ≤ e) (h1 : e ≤ 1) :
+    ∑ k, (krausEr (d := d) e k).conjTranspose * krausEr e k = 1 := by
+  have hs : ((Real.sqrt (1 - e) : ℝ) : ℂ) * ((Real.sqrt (1 - e) : ℝ) : ℂ) = ((1 - e : ℝ) : ℂ) := by
+    rw [← Complex.ofReal_mul, Real.mul_self_sqrt (by linarith)]
+  have he : ((Real.sqrt e : ℝ) : ℂ) * ((Real.sqrt e : ℝ) : ℂ) = ((e : ℝ) : ℂ) := by
+    rw [← Complex.ofReal_mul, Real.mul_self_sqrt h0]
+  ext a b
+  rw [Matrix.sum_apply, Fintype.sum_option]
+  by_cases hab : a = b
+  · subst hab
+    simp [krausEr, Matrix.mul_apply, Matrix.conjTranspose_apply, Fintype.sum_option, hs, he]
+    push_cast; ring
+  · simp [krausEr, Matrix.mul_apply, Matrix.conjTranspose_apply, Fintype.sum_option, hab]
+
+/-- **Définition 2.21.** Canal d'effacement de paramètre e ∈ [0, 1]. -/
+def effacement (e : ℝ) (h0 : 0 ≤ e) (h1 : e ≤ 1) : CPTPMap d (Option d) :=
+  CPTPMap.of_kraus_CPTPMap (krausEr e) (krausEr_normalise e h0 h1)
 
 end Kraus
 
@@ -245,3 +272,4 @@ end QuantiqueCRO
 #print axioms QuantiqueCRO.conf_depolarisation_totale
 #print axioms QuantiqueCRO.krausAD_normalise
 #print axioms QuantiqueCRO.krausPh_normalise
+#print axioms QuantiqueCRO.krausEr_normalise
