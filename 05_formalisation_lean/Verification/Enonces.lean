@@ -4,7 +4,7 @@
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé de la thèse y est écrit
   sous la forme `def NomEnonce : Prop := ...`, dans sa forme générale.
   Le fichier `Principal.lean` relie chaque énoncé au théorème existant de
-  `ConditionalCRO.lean` (version 3.12). Tout écart entre l'énoncé écrit ici et le
+  `ConditionalCRO.lean` (version 3.13). Tout écart entre l'énoncé écrit ici et le
   théorème démontré empêche la compilation de `Principal.lean`.
 
   Renvois : manuscrit v36 (« Aux fondements de la cryptographie
@@ -15,7 +15,7 @@
   l'en-tête, si bien que la ligne n du listing est la ligne n + 4 du fichier.
 
   Importation. Les définitions et les preuves sont dans un seul fichier. La
-  versions 3.5 à 3.12 prolongent la 3.4 par ajout des sections 12 à 27 en
+  versions 3.5 à 3.13 prolongent la 3.4 par ajout des sections 12 à 29 en
   fin de fichier. Les lignes 5 à 1575 sont inchangées et les numéros de ligne cités
   restent valables. Ce fichier importe donc le module
   `ConditionalCRO`, qui importe lui-même Mathlib. Il n'importe rien d'autre.
@@ -1020,5 +1020,47 @@ def MinorantKBits : Prop :=
   ∀ {ν : Type u₁} [Fintype ν] (k : ℕ) (u : ν → (Fin k → Bool) → ℝ),
     (∀ v t, 0 ≤ u v t) → ∑ v, ∑ t, u v t = 1 →
     (∑ j, miN (margTrait u j)) / Real.log 2 ≤ k
+
+/-! ## 14. Extension v3.13, lot L8a : trilemme quantique pour l'encodage diagonal
+
+Énoncés démontrés dans la section 28 de `ConditionalCRO.lean` (version 3.13). L'état de
+la preuve pour (m, c) est ρ = Σ_s P(s|m,c)|s⟩⟨s|. -/
+
+/-- Remarque 2.33 (p. 76), encodage diagonal : I(M;Σ|C) ≤ χmax. -/
+def MoyenneMaxDiagonal : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [Nonempty C] (X : CLOModel lam M C S V),
+    X.I ≤ X.chiMax
+
+/-- Lemme 2.4 (p. 70), Pinsker quantique pour des états diagonaux, en nats :
+    TDmax² ≤ D/2, sous des supports communs. -/
+def PinskerQuantiqueDiagonal : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [Nonempty M] [Nonempty C]
+    (X : CLOModel lam M C S V), X.CommonSupport →
+    X.TVmax ^ 2 ≤ X.KLmax * Real.log 2 / 2
+
+/-- Théorème 2.5 (p. 77), forme explicite, pour l'encodage diagonal et sans hypothèse
+    posée : sous les Hypothèses 2.5 à 2.8, Conf^q·Rel^q·Opp^q ≤
+    (1/γ_q)(Δ_q/λ + κ(Δ_q+1)/λ² + κ²/λ³). -/
+def TrilemmePQDiagonal : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [DecidableEq M] [DecidableEq S]
+    [Nonempty M] [Nonempty C] [Nonempty S] (X : CLOModel lam M C S V) (D : C → S → M)
+    (p : QuantumParams), X.CommonSupport →
+    X.IV ≤ X.I + p.Δq → gammaQ p ≤ X.HV → 1 ≤ gammaQ p →
+    X.KLmax * Real.log 2 ≤ p.βq * X.chiMax + p.ζq * X.DmaxDiag →
+    ∀ κ : ℝ, 0 ≤ κ → 1 ≤ lam → X.chiMax ≤ κ / lam →
+    X.ConfQdiag * X.Rel D * X.Opp ≤ (1 / gammaQ p) *
+      (p.Δq / lam + κ * (p.Δq + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3)
+
+/-- Lemme 2.8 (p. 77) pour l'encodage diagonal, sans hypothèse posée. -/
+def ConfGuaranteeDiagonal : Prop :=
+  ∀ {lam : ℕ} {M : Type u₁} {C : Type u₂} {S : Type u₃} {V : Type u₄}
+    [Fintype M] [Fintype C] [Fintype S] [Fintype V] [DecidableEq M] [DecidableEq S]
+    [Nonempty M] [Nonempty C] [Nonempty S] (X : CLOModel lam M C S V) (_D : C → S → M)
+    (p : QuantumParams), X.CommonSupport →
+    X.KLmax * Real.log 2 ≤ p.βq * X.chiMax + p.ζq * X.DmaxDiag →
+    1 - (1 / 2) * Real.sqrt (2 * p.βq * X.chiMax + 2 * p.ζq * X.DmaxDiag) ≤ X.ConfQdiag
 
 end Enonces

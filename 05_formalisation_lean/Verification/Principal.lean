@@ -2,7 +2,7 @@
   Dossier de vérification. Point d'entrée mince
   =============================================
   Une ligne par énoncé de `Enonces.lean`. Chaque ligne affirme que le théorème
-  existant de `ConditionalCRO.lean` (version 3.12) prouve exactement
+  existant de `ConditionalCRO.lean` (version 3.13) prouve exactement
   l'énoncé écrit séparément. Si un énoncé et sa preuve divergent, ce fichier ne
   compile pas. C'est le seul fichier qu'un relecteur doit ouvrir, avec
   `Enonces.lean`. Le script `verifier.sh` exécute `#print axioms` sur chaque
@@ -157,5 +157,11 @@ theorem principal_regularite_temoin : Enonces.RegulariteTemoin := regularite_tem
 theorem principal_traits_superadditif_k : Enonces.TraitsSuperadditifK := traits_superadditif_k
 theorem principal_minorant_traits : Enonces.MinorantTraits := minorant_traits
 theorem principal_minorant_k_bits : Enonces.MinorantKBits := minorant_k_bits
+
+-- 14. Extension v3.13, lot L8a (trilemme quantique pour l'encodage diagonal)
+theorem principal_moyenne_max_diagonal : Enonces.MoyenneMaxDiagonal := CLOModel.I_le_chiMax
+theorem principal_pinsker_quantique_diagonal : Enonces.PinskerQuantiqueDiagonal := CLOModel.pinsker_nats
+theorem principal_trilemme_pq_diagonal : Enonces.TrilemmePQDiagonal := trilemme_pq_diagonal
+theorem principal_conf_guarantee_diagonal : Enonces.ConfGuaranteeDiagonal := conf_guarantee_diagonal
 
 end Principal

@@ -3,7 +3,7 @@
   ===================================================================
   Une définition propre peut être vide ou triviale, ce qui rendrait sans portée
   un théorème qui l'emploie. Ce fichier montre, pour chaque définition propre de
-  `ConditionalCRO.lean` (version 3.12), un cas qui la satisfait et
+  `ConditionalCRO.lean` (version 3.13), un cas qui la satisfait et
   un cas qui ne la satisfait pas, ou deux valeurs extrêmes calculées sur des lois
   explicites. Il ne contient ni `sorry` ni `axiom`.
 
@@ -584,5 +584,42 @@ lemma margTrait_valeurs :
 lemma borneAigue_zero :
     borneAigue 4 0 0 1 = 0 ∧ produitTemoin 4 0 1 1 = 0 := by
   constructor <;> simp [borneAigue, produitTemoin]
+
+/-! ## 13. Définitions du lot L8a (version 3.13) -/
+
+/-- Tests : χmax = 0 pour le protocole qui ne révèle rien (ρ = 0) ; χmax ≥ λ pour celui
+    qui révèle M (ρ = 1). -/
+lemma chiMax_rho_zero (l d g : ℕ) : (rhoModel l d g 0 le_rfl zero_le_one).chiMax = 0 := by
+  have h : ∀ c, miN ((rhoModel l d g 0 le_rfl zero_le_one).qMS c) = 0 := by
+    intro c
+    apply miN_indep
+    intro m s
+    have hq : ∀ m (s : Fin (2 ^ l) × Fin (2 ^ d)),
+        (rhoModel l d g 0 le_rfl zero_le_one).qMS c m s = 1 / ((2 : ℝ) ^ l * 2 ^ l * 2 ^ d) := by
+      intro m s
+      rw [qMS, CLOModel.rho_pC]
+      simp only [rhoModel, uRho, kRho]
+      split_ifs <;> field_simp <;> ring
+    simp only [hq, sum_const, card_univ, Fintype.card_prod, Fintype.card_fin, nsmul_eq_mul]
+    push_cast
+    field_simp
+  apply le_antisymm
+  · exact Finset.sup'_le _ _ fun c _ => by simp [h c]
+  · obtain ⟨c⟩ := (inferInstance : Nonempty (Fin (2 ^ (g + 1))))
+    exact le_trans (by simp [h c]) (Finset.le_sup' _ (mem_univ c))
+
+lemma chiMax_rho_one (l d g : ℕ) : (l : ℝ) ≤ (rhoModel l d g 1 zero_le_one le_rfl).chiMax := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have h := CLOModel.rho_I_eq l d g 1 zero_le_one le_rfl
+  have e : (rhoModel l d g 1 zero_le_one le_rfl).I * Real.log 2 = l * Real.log 2 := by
+    rw [h]; norm_num [Real.log_pow]
+  have hI : (rhoModel l d g 1 zero_le_one le_rfl).I = l := mul_right_cancel₀ hl2.ne' e
+  rw [← hI]
+  exact CLOModel.I_le_chiMax _
+
+
+/-- `DmaxDiag` : positif ou nul pour tout modèle (ici le protocole qui ne révèle rien). -/
+lemma DmaxDiag_rho_zero (l d g : ℕ) : 0 ≤ (rhoModel l d g 0 le_rfl zero_le_one).DmaxDiag :=
+  CLOModel.DmaxDiag_nonneg _
 
 end Coherence

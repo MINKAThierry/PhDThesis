@@ -1,7 +1,7 @@
 /-
   Formalisation du Trilemme CRO Conditionnel — Annexe de thèse
   =============================================================
-  Version 3.12 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
+  Version 3.13 (27 novembre 2026), qui prolonge la 3.4 sans la modifier.
 
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -5225,3 +5225,183 @@ end ExtensionL7
 #print axioms ConditionalCRO.minorant_traits
 #print axioms ConditionalCRO.minorant_k_bits
 #print axioms ConditionalCRO.rapports_borne_aigue
+
+/-! ## 28. Trilemme quantique pour l'encodage diagonal (version 3.13, lot L8a)
+
+Ajout du 27 novembre 2026. Pour l'encodage diagonal d'un protocole CLO fini, cette
+section démontre tous les champs que le noyau quantique de la section 14 pose comme
+lemmes : Pinsker quantique (Lemme 2.4), Fano quantique (Lemme 2.6), borne de Holevo
+(Lemme 2.7) et majoration de la moyenne par le maximum (Remarque 2.33). Le Théorème 2.5
+et le Lemme 2.8 y valent donc sans hypothèse posée. -/
+
+section ExtensionL8
+
+open Finset
+
+namespace ConditionalCRO
+
+/-! ### 28.1 Instance quantique d'un encodage diagonal, sans champ posé
+
+Pour un protocole CLO fini, l'encodage diagonal ρ_Σ^{m,c} = Σ_s P(s|m,c)|s⟩⟨s| donne
+des états qui commutent. Les champs que le noyau quantique de la section 14 pose comme
+lemmes (Pinsker quantique, Fano quantique, borne de Holevo, moyenne au plus égale au
+maximum) y deviennent des théorèmes. L'information accessible est celle de la mesure
+dans la base calculatoire, qui vaut ici I(M;Σ|C) ; la fiabilité est celle d'un décodeur
+qui lit cette mesure. -/
+
+namespace CLOModel
+
+variable {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C] [Fintype S] [Fintype V]
+  [DecidableEq M] [Nonempty M] [Nonempty C] (X : CLOModel lam M C S V)
+
+/-- χmax = max_c I(M;Σ|C = c) en bits : information de Holevo maximale des ensembles
+    diagonaux. -/
+noncomputable def chiMax : ℝ :=
+  (univ : Finset C).sup' univ_nonempty fun c => miN (X.qMS c) / Real.log 2
+
+omit [DecidableEq M] [Nonempty M] in
+/-- La moyenne sur C est au plus le maximum : I(M;Σ|C) ≤ χmax. -/
+lemma I_le_chiMax : X.I ≤ X.chiMax := by
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have hle : ∀ c, miN (X.qMS c) / Real.log 2 ≤ X.chiMax := fun c =>
+    Finset.le_sup' (fun c => miN (X.qMS c) / Real.log 2) (mem_univ c)
+  unfold I
+  rw [sum_div]
+  calc ∑ c, X.pC c * miN (X.qMS c) / Real.log 2
+      = ∑ c, X.pC c * (miN (X.qMS c) / Real.log 2) := by
+        refine sum_congr rfl fun c _ => ?_; ring
+    _ ≤ ∑ c, X.pC c * X.chiMax :=
+        sum_le_sum fun c _ => mul_le_mul_of_nonneg_left (hle c) (X.pC_nonneg c)
+    _ = X.chiMax := by rw [← sum_mul, X.sum_pC, one_mul]
+
+/-- D(ρ̄^c ‖ I/d) = log|S| − H(Σ|C = c) en nats pour un état diagonal ; Dmax est son
+    maximum sur c. -/
+noncomputable def DmaxDiag [Nonempty S] : ℝ :=
+  (univ : Finset C).sup' univ_nonempty fun c => Real.log (Fintype.card S) - entN2 (X.qMS c)
+
+omit [DecidableEq M] [Nonempty M] in
+lemma DmaxDiag_nonneg [Nonempty S] : 0 ≤ X.DmaxDiag := by
+  obtain ⟨c⟩ := (inferInstance : Nonempty C)
+  refine le_trans ?_ (Finset.le_sup' (fun c => Real.log (Fintype.card S) - entN2 (X.qMS c))
+    (mem_univ c))
+  have hcard : (1 : ℝ) ≤ Fintype.card S := by exact_mod_cast Fintype.card_pos
+  rcases (X.pC_nonneg c).lt_or_eq with hc | hc
+  · have := entN2_le_log_card (X.qMS c) (X.qMS_nonneg c) (X.qMS_sum c hc)
+    linarith
+  · have hz : ∀ m s, X.qMS c m s = 0 := by
+      intro m s; unfold qMS; rw [X.P_eq_zero_of_pC c hc.symm m s, zero_div]
+    have : entN2 (X.qMS c) = 0 := by simp [entN2, hz]
+    simp only [this, sub_zero]
+    exact Real.log_nonneg hcard
+
+omit [DecidableEq M] in
+/-- **Pinsker quantique pour les états diagonaux**, en nats :
+    TDmax² ≤ D/2 avec D = max D(ρ^{m₀,c} ‖ ρ^{m₁,c}) = KLmax·ln 2. -/
+lemma pinsker_nats (hsupp : X.CommonSupport) :
+    X.TVmax ^ 2 ≤ X.KLmax * Real.log 2 / 2 := by
+  obtain ⟨x, hx⟩ := X.TVmax_mem
+  rw [hx]
+  have hKL : X.KL x ≤ X.KLmax := le_sup' X.KL (mem_univ x)
+  obtain ⟨c, m₀, m₁⟩ := x
+  have hl2 := log_two_pos'
+  have hsum : ∀ m, (∑ s, X.P c m s) = X.pC c / (Fintype.card M : ℝ) := fun m => X.unif c m
+  have hcard : (0 : ℝ) < Fintype.card M := by exact_mod_cast Fintype.card_pos
+  rcases (X.pC_nonneg c).lt_or_eq with hc | hc
+  · have hden : ∀ m, 0 < ∑ s, X.P c m s := fun m => by rw [hsum m]; positivity
+    have h1 : ∀ m, ∑ s, X.qS c m s = 1 := fun m => by
+      unfold qS; rw [← sum_div, div_self (hden m).ne']
+    have hac : ∀ s, 0 < X.qS c m₀ s → 0 < X.qS c m₁ s := by
+      intro s hs
+      have : 0 < X.P c m₀ s := by
+        unfold qS at hs
+        rcases (X.P_nonneg c m₀ s).lt_or_eq with h | h
+        · exact h
+        · rw [← h, zero_div] at hs; exact absurd hs (lt_irrefl 0)
+      exact div_pos (hsupp c m₀ m₁ s this) (hden m₁)
+    have hp := pinsker_finite (X.qS c m₀) (X.qS c m₁) (X.qS_nonneg c m₀) (X.qS_nonneg c m₁)
+      (h1 m₀) (h1 m₁) hac
+    have e : klN (X.qS c m₀) (X.qS c m₁) = X.KL (c, m₀, m₁) * Real.log 2 := by
+      unfold KL; field_simp
+    calc X.TV (c, m₀, m₁) ^ 2 ≤ klN (X.qS c m₀) (X.qS c m₁) / 2 := hp
+      _ = X.KL (c, m₀, m₁) * Real.log 2 / 2 := by rw [e]
+      _ ≤ X.KLmax * Real.log 2 / 2 := by gcongr
+  · have hz : ∀ m s, X.qS c m s = 0 := by
+      intro m s; unfold qS; rw [X.P_eq_zero_of_pC c hc.symm m s, zero_div]
+    have hTV0 : X.TV (c, m₀, m₁) = 0 := by unfold TV tv; simp [hz]
+    have hKL0 : X.KL (c, m₀, m₁) = 0 := by unfold KL klN; simp [hz]
+    rw [hTV0]
+    have : 0 ≤ X.KLmax := hKL0 ▸ hKL
+    have : 0 ≤ X.KLmax * Real.log 2 / 2 := by positivity
+    nlinarith
+
+end CLOModel
+
+/-- **Encodage diagonal comme instance du noyau quantique.** Tous les champs sont
+    démontrés : Conf^q est la vraie distance de trace des états diagonaux
+    (`confQ_diag_eq`), Pinsker quantique vient de `pinsker_nats`, Fano quantique de
+    `fano_model`, Holevo est une égalité et la moyenne est majorée par le maximum. -/
+noncomputable def diagInstance {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
+    [Fintype S] [Fintype V] [DecidableEq M] [DecidableEq S] [Nonempty M] [Nonempty C]
+    [Nonempty S] (X : CLOModel lam M C S V) (D : C → S → M) (p : QuantumParams)
+    (hs : X.CommonSupport) : QuantumProtocolInstance lam where
+  params := p
+  Conf := X.ConfQdiag
+  Rel := X.Rel D
+  Opp := X.Opp
+  I := X.I
+  χmax := X.chiMax
+  Iacc := X.I
+  IV := X.IV
+  HV := X.HV
+  TDmax := X.TVmax
+  Dmsg := X.KLmax * Real.log 2
+  Dmax := X.DmaxDiag
+  hConf := by rw [X.confQ_diag_eq]; rfl
+  hOpp := rfl
+  hTD := ⟨X.TVmax_nonneg, X.TVmax_le_one⟩
+  hRel := X.Rel_mem D
+  hI := X.I_nonneg
+  hIV := X.IV_nonneg
+  hDmax := X.DmaxDiag_nonneg
+  fano_q := X.fano_model D
+  holevo := le_rfl
+  moyenne_le_max := X.I_le_chiMax
+  pinsker_q := X.pinsker_nats hs
+
+/-- **Théorème 2.5 pour l'encodage diagonal, sans hypothèse posée.** Sous les
+    Hypothèses 2.5 et 2.6 et le régime χmax ≤ κ/λ (Hypothèse 2.8), pour λ ≥ 1,
+    Conf^q·Rel^q·Opp^q ≤ (1/γ_q)(Δ_q/λ + κ(Δ_q+1)/λ² + κ²/λ³), où Conf^q est la
+    distance de trace des états diagonaux. Pinsker quantique, Fano quantique et Holevo
+    sont démontrés pour ces états. -/
+theorem trilemme_pq_diagonal {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
+    [Fintype S] [Fintype V] [DecidableEq M] [DecidableEq S] [Nonempty M] [Nonempty C]
+    [Nonempty S] (X : CLOModel lam M C S V) (D : C → S → M) (p : QuantumParams)
+    (hs : X.CommonSupport)
+    (A5 : X.IV ≤ X.I + p.Δq) (A6 : gammaQ p ≤ X.HV) (A6γ : 1 ≤ gammaQ p)
+    (A7 : X.KLmax * Real.log 2 ≤ p.βq * X.chiMax + p.ζq * X.DmaxDiag)
+    (κ : ℝ) (hκ : 0 ≤ κ) (hlam : 1 ≤ lam) (A8 : X.chiMax ≤ κ / lam) :
+    X.ConfQdiag * X.Rel D * X.Opp ≤ (1 / gammaQ p) *
+      (p.Δq / lam + κ * (p.Δq + 1) / (lam : ℝ) ^ 2 + κ ^ 2 / (lam : ℝ) ^ 3) :=
+  trilemma_pq_explicit (diagInstance X D p hs) ⟨A5, A6, A6γ, A7⟩ κ hκ hlam A8
+
+/-- **Lemme 2.8 pour l'encodage diagonal.** Sous l'Hypothèse 2.7,
+    Conf^q ≥ 1 − ½·√(2β_q·χmax + 2ζ_q·Dmax). -/
+theorem conf_guarantee_diagonal {lam : ℕ} {M C S V : Type*} [Fintype M] [Fintype C]
+    [Fintype S] [Fintype V] [DecidableEq M] [DecidableEq S] [Nonempty M] [Nonempty C]
+    [Nonempty S] (X : CLOModel lam M C S V) (D : C → S → M) (p : QuantumParams)
+    (hs : X.CommonSupport)
+    (A7 : X.KLmax * Real.log 2 ≤ p.βq * X.chiMax + p.ζq * X.DmaxDiag) :
+    1 - (1 / 2) * Real.sqrt (2 * p.βq * X.chiMax + 2 * p.ζq * X.DmaxDiag) ≤ X.ConfQdiag :=
+  (diagInstance X D p hs).conf_guarantee A7
+
+end ConditionalCRO
+
+end ExtensionL8
+
+/-! ## 29. Bloc de vérification de la version 3.13 -/
+
+#print axioms ConditionalCRO.CLOModel.I_le_chiMax
+#print axioms ConditionalCRO.CLOModel.DmaxDiag_nonneg
+#print axioms ConditionalCRO.CLOModel.pinsker_nats
+#print axioms ConditionalCRO.trilemme_pq_diagonal
+#print axioms ConditionalCRO.conf_guarantee_diagonal

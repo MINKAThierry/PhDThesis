@@ -1,6 +1,6 @@
 # Inventaire Lean versus manuscrit (v36)
 
-Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis les lots L4 et L6 (GameBasedSOTP.lean v1.3, ConditionalCRO.lean v3.11) la première étape du lot L5c (quantique/QuantiqueCRO.lean v1.2, Physlib) et le lot L7 (ConditionalCRO.lean v3.12). Les numéros et les pages sont ceux du PDF v36.
+Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la formalisation Lean du dépôt. Mise à jour du 27 novembre 2026, après les lots L1, L5a, L2, L3 et L5b (ConditionalCRO.lean v3.9), puis les lots L4 et L6 (GameBasedSOTP.lean v1.3, ConditionalCRO.lean v3.11) la première étape du lot L5c (quantique/QuantiqueCRO.lean v1.2, Physlib) le lot L7 (ConditionalCRO.lean v3.12) et le lot L8a (ConditionalCRO.lean v3.13). Les numéros et les pages sont ceux du PDF v36.
 
 ## Synthèse
 
@@ -14,7 +14,7 @@ Ce document met en regard les 170 énoncés numérotés du manuscrit v36 et la f
 | hors champ formel | 25 |
 | **Total** | **170** |
 
-Sur 145 énoncés relevant d'une formalisation, 132 sont aujourd'hui couverts, soit 91 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b de 107 (74 %) après la première partie du lot L4 de 109 (75 %) après la deuxième de 118 (81 %) à la fin du lot L4 de 122 (84 %) après le lot L6, de 130 (90 %) après les canaux de Kraus du lot L5c et de 132 (91 %) après le lot L7. Avec le lot L7, tous les énoncés du trilemme classique relevant d'une formalisation sont couverts. La Conjecture 3.1 est classée « hypothèse formalisée » : elle est énoncée sans preuve ni axiome. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
+Sur 145 énoncés relevant d'une formalisation, 132 sont aujourd'hui couverts, soit 91 %. Avant le chantier, la couverture était de 42 énoncés (29 %) ; elle était de 57 (40 %) après le lot L1, de 79 (55 %) après le lot L5a de 85 (59 %) après le lot L2 de 100 (69 %) après le lot L3 de 104 (72 %) après le lot L5b de 107 (74 %) après la première partie du lot L4 de 109 (75 %) après la deuxième de 118 (81 %) à la fin du lot L4 de 122 (84 %) après le lot L6, de 130 (90 %) après les canaux de Kraus du lot L5c et de 132 (91 %) après le lot L7. Avec le lot L7, tous les énoncés du trilemme classique relevant d'une formalisation sont couverts. Avec le lot L8a, le Théorème 2.5 et le Lemme 2.8 valent sans hypothèse posée pour l'encodage diagonal, où Pinsker quantique, Fano quantique et Holevo sont démontrés ; dans le cas général, ces trois lemmes restent des hypothèses nommées. La Conjecture 3.1 est classée « hypothèse formalisée » : elle est énoncée sans preuve ni axiome. La Remarque 2.2 (`rem:rel_ver`), classée hors champ jusqu'ici, est devenue un énoncé formalisé avec le lot L3. Les 25 énoncés hors champ sont des remarques de statut, d'historique ou d'interprétation. Cinq d'entre eux sont des heuristiques de conception que le manuscrit déclare lui-même non prouvées. Ils ne portent aucune affirmation à démontrer.
 
 ## Couverture par type d'énoncé
 
@@ -105,10 +105,10 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Définition 2.16 | 69 | Information quantique accessible | `def:info_accessible` | non formalisé |  | L5c |
 | Définition 2.17 | 69 | Entropie min-max lissée | `def:entropie_min_max_lissee` | non formalisé |  | L5c |
 | Remarque 2.25 | 70 | Relation avec l'entropie de Shannon | `rem:relation_shannon` | démontré | vonNeumann_diag | L5b |
-| Lemme 2.4 | 70 | Inégalité de Pinsker quantique | `lem:pinsker_quantique` | hypothèse formalisée | champs pinsker_q, fano_q, holevo de QuantumProtocolInstance | L5c |
+| Lemme 2.4 | 70 | Inégalité de Pinsker quantique | `lem:pinsker_quantique` | hypothèse formalisée | champ pinsker_q ; démontré pour l'encodage diagonal : CLOModel.pinsker_nats | L5c, L8a |
 | Lemme 2.5 | 70 | Mesure douce (gentle measurement) | `lem:mesure_douce` | non formalisé |  | L5c |
-| Lemme 2.6 | 71 | Inégalité de Fano quantique | `lem:fano_quantique` | hypothèse formalisée | champs pinsker_q, fano_q, holevo de QuantumProtocolInstance | L5c |
-| Lemme 2.7 | 71 | Borne de Holevo-Helstrom | `lem:holevo_helstrom` | hypothèse formalisée | champs pinsker_q, fano_q, holevo de QuantumProtocolInstance | L5c |
+| Lemme 2.6 | 71 | Inégalité de Fano quantique | `lem:fano_quantique` | hypothèse formalisée | champs fano_q, holevo ; démontrés pour l'encodage diagonal : diagInstance | L5c, L8a |
+| Lemme 2.7 | 71 | Borne de Holevo-Helstrom | `lem:holevo_helstrom` | hypothèse formalisée | champs fano_q, holevo ; démontrés pour l'encodage diagonal : diagInstance | L5c, L8a |
 | Définition 2.18 | 72 | Canal dépolarisant | `def:canal_depolarisant` | démontré | QuantiqueCRO.depolarisant, depolarisant_extremes, conf_depolarisation_totale | L5c |
 | Définition 2.19 | 72 | Canal d'amortissement | `def:canal_amortissement` | démontré | krausAD, amortissement | L5c |
 | Définition 2.20 | 72 | Canal de déphasage | `def:canal_dephasage` | démontré | krausPh, dephasage | L5c |
@@ -135,10 +135,10 @@ Colonne Lot, lot de la feuille de route qui couvre ou couvrira l'énoncé (« �
 | Hypothèse 2.8 | 76 | Régime de préservation de la confidentialité quantique | `ass:regime_quantique` | hypothèse formalisée | QuantumAssumptions, prémisse χmax ≤ κ/λ | L5a |
 | Remarque 2.33 | 76 | Statut de l'Hypothèse ass:regime_quantique | `rem:statut_regime_quantique` | démontré, une inégalité posée dans le modèle abstrait | statut_regime_q | L5a |
 | Remarque 2.34 | 76 | Lemme 6 de la version publiée | `rem:retrait_lemma6` | démontré | cas_limite_lemme6 | L5b |
-| Lemme 2.8 | 77 | Garantie de confidentialité quantique | `lem:q_conf_mi_pq` | démontré, une inégalité posée dans le modèle abstrait | QuantumProtocolInstance.conf_guarantee | L5a |
+| Lemme 2.8 | 77 | Garantie de confidentialité quantique | `lem:q_conf_mi_pq` | démontré, une inégalité posée dans le modèle abstrait | QuantumProtocolInstance.conf_guarantee ; encodage diagonal : conf_guarantee_diagonal | L5a, L8a |
 | Remarque 2.35 | 77 | Constantes de Pinsker classique et quantique | `rem:raccord_pinsker` | démontré | constantes_pinsker | L5a |
 | Remarque 2.36 | 77 | Interprétation du Lemme lem:q_conf_mi_pq | `rem:interp_lemme7` | démontré | dilithium_Dmax | L5a |
-| Théorème 2.5 | 77 | Trilemme CRO conditionnel quantique | `thm:trilemme_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_pq_explicit, conditional_CRO_trilemma_pq | L5a |
+| Théorème 2.5 | 77 | Trilemme CRO conditionnel quantique | `thm:trilemme_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_pq_explicit, conditional_CRO_trilemma_pq ; sans hypothèse posée pour l'encodage diagonal : trilemme_pq_diagonal | L5a, L8a |
 | Remarque 2.37 | 79 | Portée du Théorème thm:trilemme_pq | `rem:scope_trilemme_pq` | démontré | regime_q_necessary | L5a |
 | Remarque 2.38 | 79 | Statut de vérification | `rem:statut_verification_pq` | hors champ formel |  | — |
 | Remarque 2.39 | 79 | Forme raffinée quantique | `rem:forme_raffinee_pq` | démontré, une inégalité posée dans le modèle abstrait | trilemma_pq_refined, seuil_Hsharp_q | L5a |
