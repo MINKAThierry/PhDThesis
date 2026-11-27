@@ -1,5 +1,5 @@
 /-
-  Couche quantique de la cryptographie institutionnelle, version 1.0 (27 novembre 2026)
+  Couche quantique de la cryptographie institutionnelle, version 1.1 (27 novembre 2026)
   =====================================================================================
   Auteurs : Thierry Emmanuel Minka Mi Nguidjoï,
             Flavien Serge Mani Onana,
@@ -14,7 +14,8 @@
   QuantumInfo, ex-Lean-QuantumInfo). Il donne les définitions quantiques du chapitre 2
   et démontre, à partir des théorèmes de Physlib, la DPI quantique de l'entropie
   relative, la positivité de l'information mutuelle conditionnelle (sous-additivité
-  forte), la sous-additivité et les bornes de l'entropie de von Neumann.
+  forte), la sous-additivité et les bornes de l'entropie de von Neumann. La version 1.1
+  ajoute le canal dépolarisant (Définition 2.18).
 
   DÉPÔT SEULEMENT
   Physlib n'est pas chargée par live.lean-lang.org et fixe Lean et Mathlib en v4.36.0.
@@ -129,6 +130,39 @@ theorem cmi_quantique_nonneg (ρ : MState (d₁ × d₂ × d₃)) : 0 ≤ qcmi �
 theorem dpi_quantique (Φ : CPTPMap d₁ d₂) (ρ σ : MState d₁) : 𝐃(Φ ρ‖Φ σ) ≤ 𝐃(ρ‖σ) :=
   sandwichedRenyiEntropy_DPI le_rfl ρ σ Φ
 
+/-! ## 4. Canal dépolarisant (Définition 2.18)
+
+Le canal dépolarisant est le mélange convexe Δ_p = p·R + (1 − p)·id, où R est le canal de
+remplacement par l'état maximalement mélangé I/d. Les mélanges de canaux sont ceux de la
+structure `Mixable` de Physlib. Comme en section 1, l'égalité décidable est classique. -/
+
+section Canaux
+
+open Classical
+
+variable {d : Type*} [Fintype d] [Nonempty d]
+
+/-- **Définition 2.18.** Canal dépolarisant Δ_p(ρ) = p·I/d + (1 − p)·ρ. -/
+def depolarisant (p : Prob) : CPTPMap d d :=
+  p [CPTPMap.replacement MState.uniform ↔ CPTPMap.id]
+
+/-- Valeurs extrêmes : Δ_1 remplace tout état par I/d, Δ_0 est l'identité. -/
+theorem depolarisant_extremes :
+    depolarisant (d := d) 1 = CPTPMap.replacement MState.uniform ∧
+      depolarisant (d := d) 0 = CPTPMap.id :=
+  ⟨Mixable.mix_one _ _, Mixable.mix_zero _ _⟩
+
+/-- **Définition 2.18.** Après une dépolarisation totale, la sortie ne dépend plus de la
+    preuve et Conf^q = 1. -/
+theorem conf_depolarisation_totale {C M : Type*} [Fintype C] [Fintype M] [Nonempty C]
+    [Nonempty M] (ρ : C → M → MState d) :
+    confQ (fun c m => depolarisant (d := d) 1 (ρ c m)) = 1 := by
+  rw [depolarisant_extremes.1]
+  simp only [CPTPMap.replacement_apply]
+  exact confQ_eq_one_of_indep (M := M) (fun _ => MState.uniform)
+
+end Canaux
+
 end QuantiqueCRO
 
 /-! ## Bloc de vérification -/
@@ -144,3 +178,5 @@ end QuantiqueCRO
 #print axioms QuantiqueCRO.information_mutuelle_nonneg
 #print axioms QuantiqueCRO.cmi_quantique_nonneg
 #print axioms QuantiqueCRO.dpi_quantique
+#print axioms QuantiqueCRO.depolarisant_extremes
+#print axioms QuantiqueCRO.conf_depolarisation_totale

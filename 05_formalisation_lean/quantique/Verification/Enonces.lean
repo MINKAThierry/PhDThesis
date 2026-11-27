@@ -2,7 +2,7 @@
   Dossier de vérification de la couche quantique. Fichier des énoncés seuls
   ========================================================================
   Ce fichier ne contient AUCUNE preuve. Chaque énoncé démontré dans
-  `QuantiqueCRO.lean` (version 1.0) y est écrit sous la forme `def X : Prop := ...`,
+  `QuantiqueCRO.lean` (version 1.1) y est écrit sous la forme `def X : Prop := ...`,
   avec son renvoi au manuscrit v36. `Principal.lean` relie chaque énoncé au théorème.
   Il importe le module `QuantiqueCRO`, qui importe Physlib (QuantumInfo).
 -/
@@ -66,5 +66,18 @@ def CMIQuantiquePositive : Prop :=
 def DPIQuantique : Prop :=
   ∀ {d₁ : Type u₁} {d₂ : Type u₂} [Fintype d₁] [DecidableEq d₁] [Fintype d₂] [DecidableEq d₂]
     (Φ : CPTPMap d₁ d₂) (ρ σ : MState d₁), 𝐃(Φ ρ‖Φ σ) ≤ 𝐃(ρ‖σ)
+
+
+/-- Définition 2.18 (p. 72) : Δ_1 est le remplacement par I/d et Δ_0 l'identité. -/
+def DepolarisantExtremes : Prop :=
+  ∀ {d : Type u₁} [Fintype d] [Nonempty d],
+    QuantiqueCRO.depolarisant (d := d) 1 = CPTPMap.replacement MState.uniform ∧
+      QuantiqueCRO.depolarisant (d := d) 0 = CPTPMap.id
+
+/-- Définition 2.18 (p. 72) : après une dépolarisation totale, Conf^q = 1. -/
+def ConfDepolarisationTotale : Prop :=
+  ∀ {d : Type u₁} {C : Type u₂} {M : Type u₃} [Fintype d] [Nonempty d] [Fintype C] [Fintype M]
+    [Nonempty C] [Nonempty M] (ρ : C → M → MState d),
+    QuantiqueCRO.confQ (fun c m => QuantiqueCRO.depolarisant (d := d) 1 (ρ c m)) = 1
 
 end Enonces
