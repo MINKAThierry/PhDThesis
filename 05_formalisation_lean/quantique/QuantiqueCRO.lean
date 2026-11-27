@@ -52,7 +52,7 @@ theorem confQ_bornes {C M S : Type*} [Fintype C] [Fintype M] [Nonempty C] [Nonem
   constructor
   · have h : (Finset.univ : Finset (C × M × M)).sup' Finset.univ_nonempty
         (fun x => TrDistance (ρ x.1 x.2.1) (ρ x.1 x.2.2)) ≤ 1 :=
-      Finset.sup'_le _ _ fun x _ => TrDistance.le_one _ _
+      Finset.sup'_le _ _ fun x _ => TrDistance.le_one (ρ x.1 x.2.1) (ρ x.1 x.2.2)
     linarith
   · obtain ⟨c⟩ := (inferInstance : Nonempty C)
     obtain ⟨m⟩ := (inferInstance : Nonempty M)
