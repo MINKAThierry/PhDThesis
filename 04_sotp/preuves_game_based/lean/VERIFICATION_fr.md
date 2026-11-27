@@ -31,7 +31,7 @@ Le script échoue si `Enonces.lean` contient une preuve, si `sorry`, `admit`, `n
 |---|---|---|
 | Version 1.1 : `GameBasedSOTP`, puis `Enonces`, `Principal` et `Coherence` | local, 27 novembre 2026, Lean 4.35.0, Mathlib v4.35.0 à imports ciblés | réussi, aucune erreur ni aucun avertissement ; 6 `#print axioms` dans le fichier, 6 sur `Principal.lean` et 5 sur `Coherence.lean`, tous standard |
 | Version 1.0 sur live.lean-lang.org et en local | 22 novembre 2026 | réussi, six `#print axioms` standard |
-| Workflow `verification_lean_sotp.yml`, `import Mathlib` complet | GitHub | en attente de la première exécution |
+| Version 1.1 avec `import Mathlib` complet, `verifier.sh` étapes 1 à 6 | faite par GitHub le 27 novembre 2026 | workflow `verification_lean_sotp.yml`, exécution 46004902085 réussie (commit 771e24b) : 6 énoncés et 5 lemmes de cohérence limités aux trois axiomes standard, `leanchecker` sur les quatre modules, `nanoda_bin` sur `Principal.lean` |
 
 ## Tableau de traçabilité
 
@@ -70,7 +70,7 @@ Les jeux IND-CONF, BIND-REL et EXT-OPP sur lois finies et leurs ponts vers Conf,
 2. **PRG et DLOG.** Leur sécurité n'est pas démontrée. Les théorèmes relient l'avantage de A à celui du réducteur B, ce qui est la forme exacte d'une réduction.
 3. **Couches Iron et Clay.** La couche Iron n'apparaît pas dans le jeu de confidentialité (son masquage parfait est le terme 1/q de l'annexe). La couche Clay n'est pas modélisée.
 4. **SOTP-Base et SOTP-High.** Ils ne sont pas mécanisés ici (lot L4).
-5. **Compilation locale à imports ciblés.** La compilation locale remplace `import Mathlib` par neuf modules de Mathlib. Le workflow GitHub compile avec `import Mathlib` complet.
+5. **Compilation locale à imports ciblés.** La compilation locale remplace `import Mathlib` par neuf modules de Mathlib. Le workflow GitHub compile avec `import Mathlib` complet. Lean 4.35.0 y affiche un avertissement qui propose le mot-clé `module`, sans effet sur les preuves.
 
 ## Reproductibilité
 

@@ -31,7 +31,7 @@ The script fails if `Enonces.lean` contains a proof, if `sorry`, `admit`, `nativ
 |---|---|---|
 | Version 1.1: `GameBasedSOTP`, then `Enonces`, `Principal` and `Coherence` | local, 27 November 2026, Lean 4.35.0, Mathlib v4.35.0 with targeted imports | passed, no error and no warning; 6 `#print axioms` in the file, 6 on `Principal.lean` and 5 on `Coherence.lean`, all standard |
 | Version 1.0 on live.lean-lang.org and locally | 22 November 2026 | passed, six standard `#print axioms` |
-| Workflow `verification_lean_sotp.yml`, full `import Mathlib` | GitHub | awaiting its first run |
+| Version 1.1 with full `import Mathlib`, `verifier.sh` steps 1 to 6 | run by GitHub on 27 November 2026 | workflow `verification_lean_sotp.yml`, run 46004902085 passed (commit 771e24b): 6 statements and 5 coherence lemmas limited to the three standard axioms, `leanchecker` on the four modules, `nanoda_bin` on `Principal.lean` |
 
 ## Traceability table
 
@@ -70,7 +70,7 @@ The IND-CONF, BIND-REL and EXT-OPP games on finite distributions and their bridg
 2. **PRG and DLOG.** Their security is not proved. The theorems relate the advantage of A to that of the reducer B, which is the exact form of a reduction.
 3. **Iron and Clay layers.** The Iron layer does not appear in the confidentiality game (its perfect hiding is the 1/q term of the appendix). The Clay layer is not modelled.
 4. **SOTP-Base and SOTP-High.** They are not mechanised here (lot L4).
-5. **Local build with targeted imports.** The local build replaces `import Mathlib` with nine Mathlib modules. The GitHub workflow builds with the full `import Mathlib`.
+5. **Local build with targeted imports.** The local build replaces `import Mathlib` with nine Mathlib modules. The GitHub workflow builds with the full `import Mathlib`. Lean 4.35.0 prints a warning there that suggests the `module` keyword, with no effect on the proofs.
 
 ## Reproducibility
 
