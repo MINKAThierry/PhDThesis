@@ -245,7 +245,7 @@ theorem krausEr_normalise (e : ℝ) (h0 : 0 ≤ e) (h1 : e ≤ 1) :
     simp [krausEr, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.of_apply, Fintype.sum_option,
       hs, he]
   · simp [krausEr, Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.of_apply, Fintype.sum_option,
-      hab]
+      hab, Ne.symm hab]
 
 /-- **Définition 2.21.** Canal d'effacement de paramètre e ∈ [0, 1]. -/
 def effacement (e : ℝ) (h0 : 0 ≤ e) (h1 : e ≤ 1) : CPTPMap d (Option d) :=
