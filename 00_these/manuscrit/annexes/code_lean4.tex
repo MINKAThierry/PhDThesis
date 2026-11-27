@@ -119,15 +119,15 @@ qu'un num\'ero de ligne cit\'e reste valable d'une version \`a l'autre.
 \midrule
 1 \`a 9 & 3.4 & Noyau alg\'ebrique : constante $c_0$, n\'egligeabilit\'e, param\`etres, instance de protocole, Lemme~\ref{lem:confidentiality_guarantee}, Th\'eor\`eme~\ref{thm:trilemme_cro_conditionnel} sous ses trois formes, t\'emoins, r\'egimes, verdict d\'eterministe, forme raffin\'ee et seuil $H^\sharp$ \\
 10 et 11 & 3.4 & Couche concr\`ete : Pinsker et Fano d\'emontr\'es pour des lois finies, trilemme sur \texttt{CLOModel}, famille t\'emoin \\
-12 et 13 & 3.5 & Information classique finie : DPI, Th\'eor\`emes~2.1 \`a 2.3, Proposition~\ref{prop:fondement_extraction} \\
-14 et 15 & 3.6 & Noyau alg\'ebrique quantique : Th\'eor\`eme~2.5, Lemme~2.8, Remarques~2.27 \`a 2.41 \\
+12 et 13 & 3.5 & Information classique finie : DPI, Th\'eor\`emes~\ref{thm:bornes_mesures} \`a~\ref{thm:composition_sequentielle}, Proposition~\ref{prop:fondement_extraction} \\
+14 et 15 & 3.6 & Noyau alg\'ebrique quantique : Th\'eor\`eme~\ref{thm:trilemme_pq}, Lemme~\ref{lem:q_conf_mi_pq}, Remarques~\ref{rem:encadrement_eta_q} \`a~\ref{rem:corollaire_publie_pq} \\
 16 et 17 & 3.7 & Borne aigu\"e de la Proposition~\ref{prop:borne_aigue} sur lois finies, t\'emoin r\'ealisable \\
 18 et 19 & 3.8 & Jeux IND-CONF, BIND-REL et EXT-OPP sur lois finies et leurs ponts vers $\Conf$, $\Relver$ et $\Opp$ \\
 20 et 21 & 3.9 & Encodage classique diagonal : distance de trace et variation totale \\
-22 et 23 & 3.10 & Construction S-OTP (Th\'eor\`eme~3.1, Remarque~3.2) \\
-24 et 25 & 3.11 & Protocoles de mesure et tableaux des chapitres~2 et~4 \\
+22 et 23 & 3.10 & Construction S-OTP (Th\'eor\`eme~\ref{thm:proprietes_sotp}, Remarque~\ref{rem:portee_sotp}) \\
+24 et 25 & 3.11 & Protocoles de mesure et tableaux des chapitres~\ref{chap:cadre_formel} et~\ref{chap:experimentation} \\
 26 et 27 & 3.12 & Remarques~\ref{rem:borne_aigue_portee} et~\ref{rem:temoin_combine}, Proposition~\ref{prop:minorant_traits} pour $k$ traits \\
-28 et 29 & 3.13 & Th\'eor\`eme~2.5 et Lemme~2.8 sans hypoth\`ese pos\'ee pour l'encodage diagonal \\
+28 et 29 & 3.13 & Th\'eor\`eme~\ref{thm:trilemme_pq} et Lemme~\ref{lem:q_conf_mi_pq} sans hypoth\`ese pos\'ee pour l'encodage diagonal \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -184,7 +184,7 @@ tableau~\ref{tab:lean4_hypotheses} donne la forme Lean des hypoth\`eses du manus
 \end{sloppypar}
 
 {\footnotesize
-\begin{longtable}{@{}p{4.6cm}p{5.2cm}p{0.9cm}p{3.6cm}@{}}
+\begin{longtable}{@{}p{4.6cm}p{5.2cm}p{0.9cm}>{\raggedright\arraybackslash}p{3.6cm}@{}}
 \caption{Tra\c{c}abilit\'e des \'enonc\'es certifi\'es}\label{tab:lean4_tracabilite}\\
 \toprule
 \textbf{\'Enonc\'e du manuscrit} & \textbf{Th\'eor\`eme Lean} & \textbf{Ligne} & \textbf{Statut} \\
@@ -326,14 +326,14 @@ Lemme~\ref{lem:q_conf_mi_pq} & \texttt{conf\_\allowbreak{}guarantee\_\allowbreak
 \endfirsthead
 \bottomrule
 \endfoot
-Hypothèse 2.1 ; 3.1 & champ \texttt{A1}, prémisse \texttt{A1} & 161, 1323 & utilisée par tous les trilemmes \\
-Hypothèse 2.2 ; 3.2 & champs \texttt{A2}, \texttt{A2γ}, prémisses \texttt{A2}, \texttt{A2γ} & 163, 1323 & utilisée par tous les trilemmes \\
-Hypothèse 2.2 & prémisse \texttt{hcard} & 1322 & **inutilisée** (d) \\
-Hypothèse 2.3 ; 3.3 & champ \texttt{A3}, prémisse \texttt{A3} & 167, 1354 & Lemme 2.3 seulement (d) \\
-Hypothèse 2.4 & prémisse \texttt{hA4} ou \texttt{A4} & 197, 1324 & utilisée par tous les trilemmes \\
-Hypothèse 3.4 & champ \texttt{fano} & 156 & posée dans le modèle abstrait, démontrée dans la couche concrète \\
-3.4.6.1 & champ \texttt{pinsker} & 155 & posée dans le modèle abstrait, démontrée dans la couche concrète \\
-3.4.9 & \texttt{CLOModel.CommonSupport} & 919 & Pinsker et Lemme 2.3 seulement \\
+Hypothèses~\ref{ass:extraction_bornee} ; \ref{ass:fano_axiom} & champ \texttt{A1}, prémisse \texttt{A1} & 161, 1323 & utilisée par tous les trilemmes \\
+Hypothèses~\ref{ass:verdicts_efficace} ; \ref{ass:pinsker_axiom} & champs \texttt{A2}, \texttt{A2γ}, prémisses \texttt{A2}, \texttt{A2γ} & 163, 1323 & utilisée par tous les trilemmes \\
+Hypothèse~\ref{ass:verdicts_efficace} & prémisse \texttt{hcard} & 1322 & \textbf{inutilisée} (d) \\
+Hypothèses~\ref{ass:regularite} ; \ref{ass:extraction_axiom} & champ \texttt{A3}, prémisse \texttt{A3} & 167, 1354 & Lemme~\ref{lem:confidentiality_guarantee} seulement (d) \\
+Hypothèse~\ref{ass:regime} & prémisse \texttt{hA4} ou \texttt{A4} & 197, 1324 & utilisée par tous les trilemmes \\
+Hypothèse~\ref{ass:reliability_axiom} & champ \texttt{fano} & 156 & posée dans le modèle abstrait, démontrée dans la couche concrète \\
+§~\ref{subsubsec:constante_pinsker} & champ \texttt{pinsker} & 155 & posée dans le modèle abstrait, démontrée dans la couche concrète \\
+§~\ref{subsec:lean4_concret} & \texttt{CLOModel.CommonSupport} & 919 & Pinsker et Lemme~\ref{lem:confidentiality_guarantee} seulement \\
 \end{longtable}
 }
 
