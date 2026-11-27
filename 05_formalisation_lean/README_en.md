@@ -90,4 +90,4 @@ A `ProtocolInstance` is a point of the abstract model. The **consistency witness
 | [`results/`](results/) | Outputs of `lake env lean ConditionalCRO.lean` for each version |
 | [`cas_limite/`](cas_limite/) | Script for the limiting case of Theorem 1 of P2 in its initial formulation |
 
-The listing of Appendix B of the thesis (`lst:lean4_complet`) is version 3.4, of which lines 5 to 1575 of the current file are an exact copy. The version history is described in [`../docs/historique_en.md`](../docs/historique_en.md). The `.lake/` folder produced by the build is not versioned.
+Since manuscript version v37, Appendix B of the thesis prints the statements of `Verification/Enonces.lean` (listing `lst:lean4_complet`) instead of the full code. The proofs are in this repository, at tag `these-v37`. Lines 5 to 1575 of the current file are an exact copy of version 3.4, printed in earlier versions of the manuscript.

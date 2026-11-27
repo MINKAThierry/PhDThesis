@@ -90,4 +90,4 @@ Une `ProtocolInstance` est un point du modèle abstrait. Le **témoin de cohére
 | [`results/`](results/) | Sorties de `lake env lean ConditionalCRO.lean` pour chaque version |
 | [`cas_limite/`](cas_limite/) | Script du cas limite du Théorème 1 de P2 dans sa formulation initiale |
 
-Le listing de l'annexe B de la thèse (`lst:lean4_complet`) est la version 3.4, dont les lignes 5 à 1575 du fichier actuel sont la copie exacte. L'historique des versions est décrit dans [`../docs/historique_fr.md`](../docs/historique_fr.md). Le dossier `.lake/` produit par la compilation n'est pas versionné.
+Depuis la version v37 du manuscrit, l'annexe B de la thèse imprime les énoncés de `Verification/Enonces.lean` (listing `lst:lean4_complet`) et non plus le code complet. Les preuves sont dans ce dépôt, à l'étiquette `these-v37`. Les lignes 5 à 1575 du fichier actuel sont la copie exacte de la version 3.4 imprimée dans les versions antérieures du manuscrit.

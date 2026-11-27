@@ -4,7 +4,7 @@
 
 Ce dossier permet de juger ce que la formalisation prouve sans lire les 5 407 lignes de `ConditionalCRO.lean`. Il suit le modèle du dépôt de la preuve Lean de l'hypothèse de Riemann (novembre 2026). Les énoncés y sont isolés des preuves, un point d'entrée mince les relie aux théorèmes et un script audite les axiomes. Les limites y sont dites franchement.
 
-Le dossier est **additif**. Les versions 3.5 à 3.13 de `ConditionalCRO.lean` (27 novembre 2026) prolongent la 3.4 par ajout des sections 12 à 29 en fin de fichier. Ses lignes 5 à 1575 restent identiques au listing B.1 de l'annexe B de la thèse, aux quatre lignes d'auteurs de l'en-tête près. Seule la ligne 4, qui porte le numéro de version, a changé. Les numéros de ligne cités pour la version 3.4 restent donc valables. Les fichiers de vérification importent `ConditionalCRO`.
+Le dossier est **additif**. Les versions 3.5 à 3.13 de `ConditionalCRO.lean` (27 novembre 2026) prolongent la 3.4 par ajout des sections 12 à 29 en fin de fichier. Ses lignes 5 à 1575 restent identiques à la version 3.4, imprimée en entier dans les versions du manuscrit antérieures à la v37 ; depuis la v37, l'annexe B imprime les énoncés de `Verification/Enonces.lean`. Seule la ligne 4, qui porte le numéro de version, a changé. Les numéros de ligne cités pour la version 3.4 restent donc valables. Les fichiers de vérification importent `ConditionalCRO`.
 
 ## Ce qu'il faut lire et dans quel ordre
 

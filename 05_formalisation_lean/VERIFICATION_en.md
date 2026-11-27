@@ -4,7 +4,7 @@
 
 This dossier lets a reader judge what the formalisation proves without reading the 5,407 lines of `ConditionalCRO.lean`. It follows the model of the repository of the Lean proof of the Riemann hypothesis (November 2026). Statements are isolated from proofs, a thin entry point links them to the theorems and a script audits the axioms. The limits are stated plainly.
 
-The dossier is **additive**. Versions 3.5 to 3.13 of `ConditionalCRO.lean` (27 November 2026) extend version 3.4 by appending sections 12 to 29 at the end of the file. Its lines 5 to 1575 remain identical to listing B.1 in Appendix B of the thesis, up to the four author lines of the header. Only line 4, which carries the version number, has changed. Line numbers cited for version 3.4 therefore remain valid. The verification files import `ConditionalCRO`.
+The dossier is **additive**. Versions 3.5 to 3.13 of `ConditionalCRO.lean` (27 November 2026) extend version 3.4 by appending sections 12 to 29 at the end of the file. Its lines 5 to 1575 remain identical to version 3.4, printed in full in manuscript versions before v37; since v37, Appendix B prints the statements of `Verification/Enonces.lean`. Only line 4, which carries the version number, has changed. Line numbers cited for version 3.4 therefore remain valid. The verification files import `ConditionalCRO`.
 
 ## What to read and in which order
 
